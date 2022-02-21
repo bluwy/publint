@@ -1,0 +1,13 @@
+{
+  "name": "puba",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "bin": "./cli.js",
+  "scripts": {
+    "cli": "node ./cli.js"
+  },
+  "dependencies": {
+    "sade": "^1.8.1"
+  }
+}

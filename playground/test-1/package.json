@@ -1,0 +1,5 @@
+{
+  "name": "test-1",
+  "private": true,
+  "exports": "./main.js"
+}
