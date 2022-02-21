@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
-import sade from 'sade'
 import fs from 'fs'
 import fsp from 'fs/promises'
 import path from 'path'
+import sade from 'sade'
+import c from 'picocolors'
 
 sade('puba [dir]', true)
   .version('0.0.1')
@@ -83,7 +84,8 @@ async function main(dir) {
   }
 
   if (warnings.length) {
-    warnings.forEach((w) => console.log(w))
+    console.log(c.bold(c.yellow('Warnings:')))
+    warnings.forEach((w, i) => console.log(c.dim(`${i + 1}: `) + w))
   } else {
     console.log('all good')
   }
@@ -111,7 +113,10 @@ async function main(dir) {
       const filePath = path.resolve(dir, exports)
       const fileContent = await expectReadFile(
         filePath,
-        `"pkg.${currentPath}" is "${exports}" but file does not exist`
+        () =>
+          `${c.bold(`pkg.${currentPath}`)} is ${c.bold(
+            exports
+          )} but file does not exist`
       )
       if (fileContent === false) return
       const format = await getFilePathFormat(filePath)
@@ -130,7 +135,7 @@ async function main(dir) {
     try {
       return await fsp.readFile(filePath, 'utf8')
     } catch {
-      warnings.push(msg)
+      warnings.push(msg())
       return false
     }
   }
