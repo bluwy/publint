@@ -111,23 +111,36 @@ async function main(dir) {
   async function crawlExports(exports, currentPath = 'exports') {
     if (typeof exports === 'string') {
       const filePath = path.resolve(dir, exports)
-      const fileContent = await expectReadFile(
-        filePath,
-        () =>
-          `${c.bold(`pkg.${currentPath}`)} is ${c.bold(
-            exports
-          )} but file does not exist`
-      )
+      const fileContent = await expectReadFile(filePath, () => {
+        // prettier-ignore
+        return `${c.bold(`pkg.${currentPath}`)} is ${c.bold(exports)} but file does not exist`
+      })
       if (fileContent === false) return
       const format = await getFilePathFormat(filePath)
-      if (!isCodeMatchingFormat(fileContent, format)) {
-        warnings.push(`exports should be ${format}`)
-      }
+      expectCodeToBeFormat(fileContent, format, () => {
+        const inverseFormat = format === 'esm' ? 'cjs' : 'esm'
+        const formatExtension = format === 'esm' ? '.mjs' : '.cjs'
+        const inverseFormatExtension = format === 'esm' ? '.cjs' : '.mjs'
+        if (filePath.endsWith('.mjs') || filePath.endsWith('.cjs')) {
+          // prettier-ignore
+          return `${c.bold(`pkg.${currentPath}`)} is ${c.bold(exports)} which ends with the ${c.yellow(path.extname(exports))} extension, but the code is written in ${c.yellow(inverseFormat.toUpperCase())}. Consider re-writting the code to ${c.yellow(format.toUpperCase())}, or use the ${c.yellow(formatExtension)} extension, e.g. ${c.bold(exports.replace(path.extname(exports), formatExtension))}`
+        } else {
+          // prettier-ignore
+          return `${c.bold(`pkg.${currentPath}`)} is ${c.bold(exports)} and is detected to be ${c.yellow(format.toUpperCase())}, but the code is written in ${c.yellow(inverseFormat.toUpperCase())}. Consider re-writting the code to ${c.yellow(format.toUpperCase())}, or use the ${c.yellow(inverseFormatExtension)} extension, e.g. ${c.bold(exports.replace(path.extname(exports), inverseFormatExtension))}`
+        }
+      })
     } else {
       // todo: check ordering? and types? (default should be last, types should be first)
       for (const key of Object.keys(exports)) {
         await crawlExports(exports[key], currentPath + '.' + key)
       }
+    }
+  }
+
+  async function expectCodeToBeFormat(code, format, msg) {
+    if (!isCodeMatchingFormat(code, format)) {
+      warnings.push(msg())
+      return false
     }
   }
 
