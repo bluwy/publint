@@ -118,6 +118,7 @@ async function main(dir) {
 
   async function crawlExports(exports, currentPath = 'exports') {
     if (typeof exports === 'string') {
+      // todo: globbing
       const filePath = path.resolve(dir, exports)
       const fileContent = await expectReadFile(filePath, () => {
         // prettier-ignore
@@ -148,7 +149,12 @@ async function main(dir) {
 
       // todo: check ordering? and types? (default should be last, types should be first)
       for (const key of exportsKeys) {
-        await crawlExports(exports[key], currentPath + '.' + key)
+        await crawlExports(
+          exports[key],
+          currentPath === 'export'
+            ? `export["${key}"]`
+            : `${currentPath} > ${key}`
+        )
       }
     }
   }
