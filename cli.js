@@ -138,8 +138,16 @@ async function main(dir) {
         }
       })
     } else {
+      const exportsKeys = Object.keys(exports)
+
+      // the types export should be the first condition
+      if ('types' in exports && exportsKeys[0] !== 'types') {
+        // prettier-ignore
+        warnings.push(`${c.bold(`pkg.${currentPath}.types`)} should be the first in the object so TypeScript can load it.`)
+      }
+
       // todo: check ordering? and types? (default should be last, types should be first)
-      for (const key of Object.keys(exports)) {
+      for (const key of exportsKeys) {
         await crawlExports(exports[key], currentPath + '.' + key)
       }
     }
