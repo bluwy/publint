@@ -72,17 +72,18 @@ async function main(dir) {
     const moduleContent = await fsp.readFile(modulePath, 'utf8')
     const format = await getFilePathFormat(modulePath)
     if (format !== 'esm') {
-      warnings.push(`module should be esm`)
+      // TODO: Note how we know this. By extension? Content?
+      // prettier-ignore
+      warnings.push(`${c.bold('pkg.module')} should be ESM, but the code is written in CJS.`)
     }
     if (!isCodeMatchingFormat(moduleContent, format)) {
       warnings.push(`module should be ${format}`)
     }
-  }
-
-  if (module && !exports) {
-    // TODO: Code example (better if copy-pastable) (maybe auto fix?)
-    // prettier-ignore
-    warnings.push(`${c.bold('pkg.module')} is used for ESM output, but ${c.bold('pkg.exports')} is not defined. This would not work for NodeJS as it does not read ${c.bold('pkg.module')}, the field is read by bundlers like Rollup and Webpack only. Consider adding ${c.bold('pkg.export')} to export the ESM output too. Usually ${c.bold('pkg.module')} can be removed alongside too.`)
+    if (!exports) {
+      // TODO: Code example (better if copy-pastable) (maybe auto fix?)
+      // prettier-ignore
+      warnings.push(`${c.bold('pkg.module')} is used for ESM output, but ${c.bold('pkg.exports')} is not defined. This would not work for NodeJS as it does not read ${c.bold('pkg.module')}, the field is read by bundlers like Rollup and Webpack only. Consider adding ${c.bold('pkg.export')} to export the ESM output too. Usually ${c.bold('pkg.module')} can be removed alongside too.`)
+    }
   }
 
   if (exports) {
