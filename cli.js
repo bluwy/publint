@@ -53,10 +53,11 @@ async function main(dir) {
     const mainContent = await fsp.readFile(mainPath, 'utf8')
     const format = await getFilePathFormat(mainPath)
     if (!isCodeMatchingFormat(mainContent, format)) {
-      warnings.push(`main should be ${format}`)
+      warnings.push(`${c.bold('pkg.main')} should be ${format}`)
     }
     if (format === 'esm') {
-      warnings.push(`consider using exports instead of main`)
+      // prettier-ignore
+      warnings.push(`${c.bold('pkg.main')} is an ESM file, but it is usually better to use ${c.bold('pkg.exports')} instead, and remove ${c.bold('pkg.main')} alongside, as compatible NodeJS versions support is as well.`)
     }
   }
 
