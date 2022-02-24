@@ -78,6 +78,12 @@ async function main(dir) {
     }
   }
 
+  if (module && !exports) {
+    // TODO: Code example (better if copy-pastable) (maybe auto fix?)
+    // prettier-ignore
+    warnings.push(`${c.bold('pkg.module')} is used for ESM output, but ${c.bold('pkg.exports')} is not defined. This would not work for NodeJS as it does not read ${c.bold('pkg.module')}, the field is read by bundlers like Rollup and Webpack only. Consider adding ${c.bold('pkg.export')} to export the ESM output too. Usually ${c.bold('pkg.module')} can be removed alongside too.`)
+  }
+
   if (exports) {
     // recursively check exports
     await crawlExports(exports)
