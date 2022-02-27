@@ -1,0 +1,7 @@
+{
+  "name": "test-2",
+  "private": true,
+  "exports": {
+    "./*.js": "./lib/*.js"
+  }
+}

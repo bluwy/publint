@@ -118,26 +118,44 @@ async function main(dir) {
 
   async function crawlExports(exports, currentPath = 'exports') {
     if (typeof exports === 'string') {
-      // todo: globbing
-      const filePath = path.resolve(dir, exports)
-      const fileContent = await expectReadFile(filePath, () => {
+      const exportsPath = path.resolve(dir, exports)
+      const isGlob = exports.includes('*')
+      const exportsFiles = isGlob
+        ? await simpleGlob(exportsPath)
+        : [exportsPath]
+
+      if (isGlob && !exportsFiles.length) {
         // prettier-ignore
-        return `${c.bold(`pkg.${currentPath}`)} is ${c.bold(exports)} but file does not exist`
-      })
-      if (fileContent === false) return
-      const format = await getFilePathFormat(filePath)
-      expectCodeToBeFormat(fileContent, format, () => {
-        const inverseFormat = format === 'esm' ? 'cjs' : 'esm'
-        const formatExtension = format === 'esm' ? '.mjs' : '.cjs'
-        const inverseFormatExtension = format === 'esm' ? '.cjs' : '.mjs'
-        if (filePath.endsWith('.mjs') || filePath.endsWith('.cjs')) {
+        warnings.push(`${c.bold(`pkg.${currentPath}`)} is ${c.bold(exports)} but does not match any files`)
+        return
+      }
+
+      // todo: group glob warnings
+      for (const filePath of exportsFiles) {
+        const fileContent = await expectReadFile(filePath, () => {
+          // Should onlt happen in !isGlob
           // prettier-ignore
-          return `${c.bold(`pkg.${currentPath}`)} is ${c.bold(exports)} which ends with the ${c.yellow(path.extname(exports))} extension, but the code is written in ${c.yellow(inverseFormat.toUpperCase())}. Consider re-writting the code to ${c.yellow(format.toUpperCase())}, or use the ${c.yellow(formatExtension)} extension, e.g. ${c.bold(exports.replace(path.extname(exports), formatExtension))}`
-        } else {
-          // prettier-ignore
-          return `${c.bold(`pkg.${currentPath}`)} is ${c.bold(exports)} and is detected to be ${c.yellow(format.toUpperCase())}, but the code is written in ${c.yellow(inverseFormat.toUpperCase())}. Consider re-writting the code to ${c.yellow(format.toUpperCase())}, or use the ${c.yellow(inverseFormatExtension)} extension, e.g. ${c.bold(exports.replace(path.extname(exports), inverseFormatExtension))}`
-        }
-      })
+          return `${c.bold(`pkg.${currentPath}`)} is ${c.bold(exports)} but file does not exist`
+        })
+        if (fileContent === false) return
+        const format = await getFilePathFormat(filePath)
+        expectCodeToBeFormat(fileContent, format, () => {
+          const inverseFormat = format === 'esm' ? 'cjs' : 'esm'
+          const formatExtension = format === 'esm' ? '.mjs' : '.cjs'
+          const inverseFormatExtension = format === 'esm' ? '.cjs' : '.mjs'
+          const is = isGlob ? 'matches' : 'is'
+          const relativeExports = isGlob
+            ? './' + path.relative(dir, filePath)
+            : exports
+          if (filePath.endsWith('.mjs') || filePath.endsWith('.cjs')) {
+            // prettier-ignore
+            return `${c.bold(`pkg.${currentPath}`)} ${is} ${c.bold(relativeExports)} which ends with the ${c.yellow(path.extname(exports))} extension, but the code is written in ${c.yellow(inverseFormat.toUpperCase())}. Consider re-writting the code to ${c.yellow(format.toUpperCase())}, or use the ${c.yellow(formatExtension)} extension, e.g. ${c.bold(exports.replace(path.extname(exports), formatExtension))}`
+          } else {
+            // prettier-ignore
+            return `${c.bold(`pkg.${currentPath}`)} ${is} ${c.bold(relativeExports)} and is detected to be ${c.yellow(format.toUpperCase())}, but the code is written in ${c.yellow(inverseFormat.toUpperCase())}. Consider re-writting the code to ${c.yellow(format.toUpperCase())}, or use the ${c.yellow(inverseFormatExtension)} extension, e.g. ${c.bold(exports.replace(path.extname(exports), inverseFormatExtension))}`
+          }
+        })
+      }
     } else {
       const exportsKeys = Object.keys(exports)
 
@@ -193,6 +211,7 @@ async function main(dir) {
  * }} Pkg
  */
 
+// todo: handle non-determined state, e.g. side-effect-only code
 function isCodeMatchingFormat(code, format) {
   return format === 'esm' ? isCodeEsm(code) : isCodeCjs(code)
 }
@@ -206,4 +225,24 @@ const CJS_CONTENT_RE =
 
 function isCodeCjs(code) {
   return CJS_CONTENT_RE.test(code)
+}
+
+async function simpleGlob(globPath) {
+  let filePaths = []
+  const [dir, ext] = globPath.split('*')
+  await scanDir(dir)
+  return filePaths
+
+  async function scanDir(dirPath) {
+    const dirents = await fsp.readdir(dirPath, { withFileTypes: true })
+    for (const dirent of dirents) {
+      const direntPath = path.join(dirPath, dirent.name)
+      if (dirent.isDirectory()) {
+        console.log(direntPath)
+        scanDir(direntPath)
+      } else if (!ext || direntPath.endsWith(ext)) {
+        filePaths.push(direntPath)
+      }
+    }
+  }
 }
