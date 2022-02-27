@@ -6,6 +6,7 @@ import path from 'path'
 import sade from 'sade'
 import c from 'picocolors'
 import { isCodeMatchingFormat, exportsGlob } from './utils.js'
+import { createNodeVfs } from './vfs.js'
 
 sade('puba [dir]', true)
   .version('0.0.1')
@@ -18,6 +19,8 @@ sade('puba [dir]', true)
  * @param {string} dir
  */
 async function main(dir) {
+  const vfs = createNodeVfs()
+
   const rootPkgPath = path.join(dir, 'package.json')
   const rootPkgContent = await fsp.readFile(rootPkgPath, 'utf8')
   const rootPkg = JSON.parse(rootPkgContent)
@@ -122,7 +125,7 @@ async function main(dir) {
       const exportsPath = path.resolve(dir, exports)
       const isGlob = exports.includes('*')
       const exportsFiles = isGlob
-        ? await exportsGlob(exportsPath)
+        ? await exportsGlob(exportsPath, vfs)
         : [exportsPath]
 
       if (isGlob && !exportsFiles.length) {

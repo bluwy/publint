@@ -7,6 +7,7 @@ import {
   isCodeEsm,
   isCodeMatchingFormat
 } from '../src/utils.js'
+import { createNodeVfs } from '../src/vfs.js'
 
 const cjsCode = [
   `require('bla')`,
@@ -71,14 +72,16 @@ test('isCodeMatchingFormat', () => {
 
 test('exportsGlob', async () => {
   const r = (s) => path.resolve(process.cwd(), 'playground/glob', s)
-  equal(await exportsGlob(r('./*.js')), [r('alpha.js')])
-  equal(await exportsGlob(r('./*.mjs')), [r('bravo.mjs')])
+  const v = createNodeVfs()
+  equal(await exportsGlob(r('./*.js'), v), [r('alpha.js')])
+  equal(await exportsGlob(r('./*.mjs'), v), [r('bravo.mjs')])
   // prettier-ignore
-  equal(await exportsGlob(r('./*.css')), [r('charlie.css'), r('quebec/romeo.css')])
-  equal(await exportsGlob(r('./*.json')), [r('delta.json'), r('package.json')])
-  equal(await exportsGlob(r('./*.cjs')), [r('quebec/sierra.cjs')])
+  equal(await exportsGlob(r('./*.css'), v), [r('charlie.css'), r('quebec/romeo.css')])
   // prettier-ignore
-  equal(await exportsGlob(r('./quebec/*')), [r('quebec/romeo.css'), r('quebec/sierra.cjs')])
+  equal(await exportsGlob(r('./*.json'), v), [r('delta.json'), r('package.json')])
+  equal(await exportsGlob(r('./*.cjs'), v), [r('quebec/sierra.cjs')])
+  // prettier-ignore
+  equal(await exportsGlob(r('./quebec/*'), v), [r('quebec/romeo.css'), r('quebec/sierra.cjs')])
 })
 
 test.run()
