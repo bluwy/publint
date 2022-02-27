@@ -133,7 +133,7 @@ async function main(dir) {
       // todo: group glob warnings
       for (const filePath of exportsFiles) {
         const fileContent = await expectReadFile(filePath, () => {
-          // Should onlt happen in !isGlob
+          // Should only happen in !isGlob
           // prettier-ignore
           return `${c.bold(`pkg.${currentPath}`)} is ${c.bold(exports)} but file does not exist`
         })
@@ -213,11 +213,19 @@ async function main(dir) {
 
 // todo: handle non-determined state, e.g. side-effect-only code
 function isCodeMatchingFormat(code, format) {
-  return format === 'esm' ? isCodeEsm(code) : isCodeCjs(code)
+  const isEsm = isCodeEsm(code)
+  const isCjs = isCodeCjs(code)
+  // If we can't determine the format, it's likely that it doesn't import/export and require/exports.
+  // Meaning it's a side-effectful file, which would always match the `format`
+  if (!isEsm && !isCjs) return true
+  return format === 'esm' ? isEsm : isCjs
 }
 
+const ESM_CONTENT_RE =
+  /\bimport\s+|\bimport\(|\bexport\s+default\s+|\bexport\s+const\s+|\bexport\s+function\s+|\bexport\s+default\s+/
+
 function isCodeEsm(code) {
-  return !isCodeCjs(code)
+  return ESM_CONTENT_RE.test(code)
 }
 
 const CJS_CONTENT_RE =
