@@ -3,12 +3,16 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "bin": "./cli.js",
+  "bin": "./src/index.js",
   "scripts": {
-    "cli": "node ./cli.js"
+    "cli": "node ./src/index.js",
+    "test": "uvu tests"
   },
   "dependencies": {
     "picocolors": "^1.0.0",
     "sade": "^1.8.1"
+  },
+  "devDependencies": {
+    "uvu": "^0.5.3"
   }
 }
