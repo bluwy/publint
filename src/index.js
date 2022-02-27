@@ -5,7 +5,7 @@ import fsp from 'fs/promises'
 import path from 'path'
 import sade from 'sade'
 import c from 'picocolors'
-import { isCodeMatchingFormat } from './utils.js'
+import { isCodeMatchingFormat, exportsGlob } from './utils.js'
 
 sade('puba [dir]', true)
   .version('0.0.1')
@@ -122,7 +122,7 @@ async function main(dir) {
       const exportsPath = path.resolve(dir, exports)
       const isGlob = exports.includes('*')
       const exportsFiles = isGlob
-        ? await simpleGlob(exportsPath)
+        ? await exportsGlob(exportsPath)
         : [exportsPath]
 
       if (isGlob && !exportsFiles.length) {
@@ -211,23 +211,3 @@ async function main(dir) {
  *   exports: Record<string, string>
  * }} Pkg
  */
-
-async function simpleGlob(globPath) {
-  let filePaths = []
-  const [dir, ext] = globPath.split('*')
-  await scanDir(dir)
-  return filePaths
-
-  async function scanDir(dirPath) {
-    const dirents = await fsp.readdir(dirPath, { withFileTypes: true })
-    for (const dirent of dirents) {
-      const direntPath = path.join(dirPath, dirent.name)
-      if (dirent.isDirectory()) {
-        console.log(direntPath)
-        scanDir(direntPath)
-      } else if (!ext || direntPath.endsWith(ext)) {
-        filePaths.push(direntPath)
-      }
-    }
-  }
-}

@@ -1,6 +1,12 @@
+import path from 'path'
 import { test } from 'uvu'
 import { equal } from 'uvu/assert'
-import { isCodeCjs, isCodeEsm, isCodeMatchingFormat } from '../src/utils.js'
+import {
+  exportsGlob,
+  isCodeCjs,
+  isCodeEsm,
+  isCodeMatchingFormat
+} from '../src/utils.js'
 
 const cjsCode = [
   `require('bla')`,
@@ -61,6 +67,18 @@ test('isCodeMatchingFormat', () => {
     equal(isCodeMatchingFormat(code, 'esm'), true)
     equal(isCodeMatchingFormat(code, 'cjs'), true)
   }
+})
+
+test('exportsGlob', async () => {
+  const r = (s) => path.resolve(process.cwd(), 'playground/glob', s)
+  equal(await exportsGlob(r('./*.js')), [r('alpha.js')])
+  equal(await exportsGlob(r('./*.mjs')), [r('bravo.mjs')])
+  // prettier-ignore
+  equal(await exportsGlob(r('./*.css')), [r('charlie.css'), r('quebec/romeo.css')])
+  equal(await exportsGlob(r('./*.json')), [r('delta.json'), r('package.json')])
+  equal(await exportsGlob(r('./*.cjs')), [r('quebec/sierra.cjs')])
+  // prettier-ignore
+  equal(await exportsGlob(r('./quebec/*')), [r('quebec/romeo.css'), r('quebec/sierra.cjs')])
 })
 
 test.run()
