@@ -147,7 +147,15 @@ async function main(dir) {
         warnings.push(`${c.bold(`pkg.${currentPath}.types`)} should be the first in the object so TypeScript can load it.`)
       }
 
-      // todo: check ordering? and types? (default should be last, types should be first)
+      // the default export should be the last condition
+      if (
+        'default' in exports &&
+        exportsKeys[exportsKeys.length - 1] !== 'default'
+      ) {
+        // prettier-ignore
+        warnings.push(`${c.bold(`pkg.${currentPath}.default`)} should be the last in the object so it doesn't take precedence over the keys following it.`)
+      }
+
       for (const key of exportsKeys) {
         await crawlExports(
           exports[key],
