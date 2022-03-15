@@ -1,0 +1,16 @@
+{
+  "name": "puba-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "puba": "workspace:*"
+  },
+  "devDependencies": {
+    "vite": "^2.8.6"
+  }
+}
