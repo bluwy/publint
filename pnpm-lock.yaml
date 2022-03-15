@@ -1,16 +1,20 @@
 lockfileVersion: 5.3
 
-specifiers:
-  picocolors: ^1.0.0
-  sade: ^1.8.1
-  uvu: ^0.5.3
+importers:
 
-dependencies:
-  picocolors: 1.0.0
-  sade: 1.8.1
+  .:
+    specifiers: {}
 
-devDependencies:
-  uvu: 0.5.3
+  pkg:
+    specifiers:
+      picocolors: ^1.0.0
+      sade: ^1.8.1
+      uvu: ^0.5.3
+    dependencies:
+      picocolors: 1.0.0
+      sade: 1.8.1
+    devDependencies:
+      uvu: 0.5.3
 
 packages:
 

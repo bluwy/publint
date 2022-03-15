@@ -1,0 +1,18 @@
+{
+  "name": "puba",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "bin": "./src/index.js",
+  "scripts": {
+    "cli": "node ./src/index.js",
+    "test": "uvu tests"
+  },
+  "dependencies": {
+    "picocolors": "^1.0.0",
+    "sade": "^1.8.1"
+  },
+  "devDependencies": {
+    "uvu": "^0.5.3"
+  }
+}
