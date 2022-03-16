@@ -1,4 +1,5 @@
 import c from 'picocolors'
+import { printMessage } from './message.js'
 import { isCodeMatchingFormat, exportsGlob } from './utils.js'
 
 /**
@@ -14,7 +15,16 @@ export async function puba({ pkgDir, vfs }) {
 
   const isPkgEsm = type === 'module'
 
+  /** @type {import('types').Message[]} */
+  let messages = []
   let warnings = []
+
+  /**
+   * @param {import('types').Message} msg
+   */
+  function addMessage(msg) {
+    messages.push(msg)
+  }
 
   // Relies on default node resolution
   // https://nodejs.org/api/modules.html#all-together
@@ -80,9 +90,21 @@ export async function puba({ pkgDir, vfs }) {
     await crawlExports(exports)
   }
 
-  if (warnings.length) {
+  if (messages.length) {
+    console.log(c.bold(c.yellow('Suggestions:')))
+    messages
+      .filter((v) => v.type === 'suggestion')
+      .forEach((m, i) => console.log(c.dim(`${i + 1}: `) + printMessage(m)))
+
     console.log(c.bold(c.yellow('Warnings:')))
-    warnings.forEach((w, i) => console.log(c.dim(`${i + 1}: `) + w))
+    messages
+      .filter((v) => v.type === 'warning')
+      .forEach((m, i) => console.log(c.dim(`${i + 1}: `) + printMessage(m)))
+
+    console.log(c.bold(c.yellow('Errors:')))
+    messages
+      .filter((v) => v.type === 'error')
+      .forEach((m, i) => console.log(c.dim(`${i + 1}: `) + printMessage(m)))
   } else {
     console.log('all good')
   }
