@@ -1,6 +1,3 @@
-import fs from 'fs'
-import fsp from 'fs/promises'
-import path from 'path'
 import c from 'picocolors'
 import { isCodeMatchingFormat, exportsGlob } from './utils.js'
 
@@ -15,8 +12,8 @@ import { isCodeMatchingFormat, exportsGlob } from './utils.js'
  * @param {Options} options
  */
 export async function puba({ dir, vfs }) {
-  const rootPkgPath = path.join(dir, 'package.json')
-  const rootPkgContent = await fsp.readFile(rootPkgPath, 'utf8')
+  const rootPkgPath = vfs.pathJoin(dir, 'package.json')
+  const rootPkgContent = await vfs.readFile(rootPkgPath)
   const rootPkg = JSON.parse(rootPkgContent)
 
   const { type, main, module, exports } = rootPkg
@@ -30,9 +27,9 @@ export async function puba({ dir, vfs }) {
   // LOAD_INDEX(X)
   if (!main && !module && !exports) {
     // check main.js only, others aren't our problem
-    const defaultPath = path.join(dir, 'index.js')
-    if (fs.existsSync(defaultPath)) {
-      const defaultContent = fsp.readFile(defaultPath, 'utf8')
+    const defaultPath = vfs.pathJoin(dir, 'index.js')
+    if (await vfs.isPathExist(defaultPath)) {
+      const defaultContent = vfs.readFile(defaultPath)
       const expectedFormat = isPkgEsm ? 'esm' : 'cjs'
       if (!isCodeMatchingFormat(defaultContent, expectedFormat)) {
         warnings.push(`index.js should be ${expectedFormat}`)
@@ -47,8 +44,8 @@ export async function puba({ dir, vfs }) {
    * - It can be used for ESM, but if you're doing so, might as well use exports
    */
   if (main) {
-    const mainPath = path.resolve(dir, main)
-    const mainContent = await fsp.readFile(mainPath, 'utf8')
+    const mainPath = vfs.pathResolve(dir, main)
+    const mainContent = await vfs.readFile(mainPath)
     const format = await getFilePathFormat(mainPath)
     if (!isCodeMatchingFormat(mainContent, format)) {
       warnings.push(`${c.bold('pkg.main')} should be ${format}`)
@@ -66,8 +63,8 @@ export async function puba({ dir, vfs }) {
    * - Should be MJS always!!
    */
   if (module) {
-    const modulePath = path.resolve(dir, module)
-    const moduleContent = await fsp.readFile(modulePath, 'utf8')
+    const modulePath = vfs.pathResolve(dir, module)
+    const moduleContent = await vfs.readFile(modulePath)
     const format = await getFilePathFormat(modulePath)
     if (format !== 'esm') {
       // TODO: Note how we know this. By extension? Content?
@@ -104,19 +101,19 @@ export async function puba({ dir, vfs }) {
   }
 
   async function getNearestPkg(filePath) {
-    let currentDir = path.dirname(filePath)
+    let currentDir = vfs.getDirName(filePath)
     while (currentDir !== dir) {
-      const pkgJsonPath = path.join(currentDir, 'package.json')
-      if (fs.existsSync(pkgJsonPath))
-        return JSON.parse(fs.readFile(pkgJsonPath, 'utf8'))
-      currentDir = path.dirname(currentDir)
+      const pkgJsonPath = vfs.pathJoin(currentDir, 'package.json')
+      if (await vfs.isPathExist(pkgJsonPath))
+        return JSON.parse(await vfs.readFile(pkgJsonPath))
+      currentDir = vfs.getDirName(currentDir)
     }
     return rootPkg
   }
 
   async function crawlExports(exports, currentPath = 'exports') {
     if (typeof exports === 'string') {
-      const exportsPath = path.resolve(dir, exports)
+      const exportsPath = vfs.pathResolve(dir, exports)
       const isGlob = exports.includes('*')
       const exportsFiles = isGlob
         ? await exportsGlob(exportsPath, vfs)
@@ -143,14 +140,14 @@ export async function puba({ dir, vfs }) {
           const inverseFormatExtension = format === 'esm' ? '.cjs' : '.mjs'
           const is = isGlob ? 'matches' : 'is'
           const relativeExports = isGlob
-            ? './' + path.relative(dir, filePath)
+            ? './' + vfs.pathRelative(dir, filePath)
             : exports
           if (filePath.endsWith('.mjs') || filePath.endsWith('.cjs')) {
             // prettier-ignore
-            return `${c.bold(`pkg.${currentPath}`)} ${is} ${c.bold(relativeExports)} which ends with the ${c.yellow(path.extname(exports))} extension, but the code is written in ${c.yellow(inverseFormat.toUpperCase())}. Consider re-writting the code to ${c.yellow(format.toUpperCase())}, or use the ${c.yellow(formatExtension)} extension, e.g. ${c.bold(exports.replace(path.extname(exports), formatExtension))}`
+            return `${c.bold(`pkg.${currentPath}`)} ${is} ${c.bold(relativeExports)} which ends with the ${c.yellow(vfs.getExtName(exports))} extension, but the code is written in ${c.yellow(inverseFormat.toUpperCase())}. Consider re-writting the code to ${c.yellow(format.toUpperCase())}, or use the ${c.yellow(formatExtension)} extension, e.g. ${c.bold(exports.replace(vfs.getExtName(exports), formatExtension))}`
           } else {
             // prettier-ignore
-            return `${c.bold(`pkg.${currentPath}`)} ${is} ${c.bold(relativeExports)} and is detected to be ${c.yellow(format.toUpperCase())}, but the code is written in ${c.yellow(inverseFormat.toUpperCase())}. Consider re-writting the code to ${c.yellow(format.toUpperCase())}, or use the ${c.yellow(inverseFormatExtension)} extension, e.g. ${c.bold(exports.replace(path.extname(exports), inverseFormatExtension))}`
+            return `${c.bold(`pkg.${currentPath}`)} ${is} ${c.bold(relativeExports)} and is detected to be ${c.yellow(format.toUpperCase())}, but the code is written in ${c.yellow(inverseFormat.toUpperCase())}. Consider re-writting the code to ${c.yellow(format.toUpperCase())}, or use the ${c.yellow(inverseFormatExtension)} extension, e.g. ${c.bold(exports.replace(vfs.getExtName(exports), inverseFormatExtension))}`
           }
         })
       }
@@ -192,7 +189,7 @@ export async function puba({ dir, vfs }) {
 
   async function expectReadFile(filePath, msg) {
     try {
-      return await fsp.readFile(filePath, 'utf8')
+      return await vfs.readFile(filePath)
     } catch {
       warnings.push(msg())
       return false
