@@ -3,11 +3,15 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "bin": "./src/index.js",
+  "bin": "./lib/cli.js",
   "types": "./index.d.ts",
-  "exports": "./src/index.js",
+  "exports": {
+    "browser": "./lib/browser.js",
+    "node": "./lib/node.js",
+    "default": "./src/index.js"
+  },
   "scripts": {
-    "cli": "node ./src/cli.js",
+    "cli": "node ./lib/cli.js",
     "test": "uvu tests"
   },
   "dependencies": {

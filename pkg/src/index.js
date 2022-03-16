@@ -2,7 +2,8 @@ import c from 'picocolors'
 import { isCodeMatchingFormat, exportsGlob } from './utils.js'
 
 /**
- * @type {import('types').puba}
+ * @param {Required<import('types').Options>} options
+ * @returns {Promise<import('types').Message[]>}
  */
 export async function puba({ pkgDir, vfs }) {
   const rootPkgPath = vfs.pathJoin(pkgDir, 'package.json')
