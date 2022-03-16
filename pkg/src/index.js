@@ -79,7 +79,7 @@ export async function puba({ pkgDir, vfs }) {
     }
     if (expectFormat === 'ESM') {
       addMessage({
-        code: 'HAS_MODULE_BUT_NO_EXPORTS',
+        code: 'HAS_ESM_MAIN_BUT_NO_EXPORTS',
         args: {},
         path: ['main'],
         type: 'suggestion'
@@ -95,20 +95,23 @@ export async function puba({ pkgDir, vfs }) {
    */
   if (module) {
     const modulePath = vfs.pathResolve(pkgDir, module)
-    const moduleContent = await vfs.readFile(modulePath)
     const format = await getFilePathFormat(modulePath, vfs)
-    if (format !== 'ESM') {
-      // TODO: Note how we know this. By extension? Content?
-      // prettier-ignore
-      warnings.push(`${c.bold('pkg.module')} should be ESM, but the code is written in CJS.`)
+    if (format === 'CJS') {
+      addMessage({
+        code: 'MODULE_SHOULD_BE_ESM',
+        args: {},
+        path: ['module'],
+        type: 'error'
+      })
     }
-    if (!isCodeMatchingFormat(moduleContent, format)) {
-      warnings.push(`module should be ${format}`)
-    }
+    // TODO: Check valid content too?
     if (!exports) {
-      // TODO: Code example (better if copy-pastable) (maybe auto fix?)
-      // prettier-ignore
-      warnings.push(`${c.bold('pkg.module')} is used for ESM output, but ${c.bold('pkg.exports')} is not defined. This would not work for NodeJS as it does not read ${c.bold('pkg.module')}, the field is read by bundlers like Rollup and Webpack only. Consider adding ${c.bold('pkg.export')} to export the ESM output too. Usually ${c.bold('pkg.module')} can be removed alongside too.`)
+      addMessage({
+        code: 'HAS_MODULE_BUT_NO_EXPORTS',
+        args: {},
+        path: ['module'],
+        type: 'suggestion'
+      })
     }
   }
 

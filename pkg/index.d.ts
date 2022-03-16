@@ -30,7 +30,9 @@ export type Message =
       { actualFormat: string; expectFormat: string }
     >
   | BaseMessage<'FILE_DOES_NOT_EXISTS'>
+  | BaseMessage<'MODULE_SHOULD_BE_ESM'>
   | BaseMessage<'HAS_MODULE_BUT_NO_EXPORTS'>
+  | BaseMessage<'HAS_ESM_MAIN_BUT_NO_EXPORTS'>
   | BaseMessage<'EXPORTS_GLOB_NO_MATCHED_FILES'>
   // | BaseMessage<'EXPORTS_GLOB_NO_MATCHED_FILES_BUT_IMPLICIT_INDEX_DETECTED'>
   | BaseMessage<'EXPORTS_TYPES_SHOULD_BE_FIRST'>
