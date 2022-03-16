@@ -2,17 +2,10 @@ import c from 'picocolors'
 import { isCodeMatchingFormat, exportsGlob } from './utils.js'
 
 /**
- * @typedef {{
- *   dir: string,
- *   vfs: import('./vfs').Vfs
- * }} Options
+ * @type {import('types').puba}
  */
-
-/**
- * @param {Options} options
- */
-export async function puba({ dir, vfs }) {
-  const rootPkgPath = vfs.pathJoin(dir, 'package.json')
+export async function puba({ pkgDir, vfs }) {
+  const rootPkgPath = vfs.pathJoin(pkgDir, 'package.json')
   const rootPkgContent = await vfs.readFile(rootPkgPath)
   const rootPkg = JSON.parse(rootPkgContent)
 
@@ -27,7 +20,7 @@ export async function puba({ dir, vfs }) {
   // LOAD_INDEX(X)
   if (!main && !module && !exports) {
     // check main.js only, others aren't our problem
-    const defaultPath = vfs.pathJoin(dir, 'index.js')
+    const defaultPath = vfs.pathJoin(pkgDir, 'index.js')
     if (await vfs.isPathExist(defaultPath)) {
       const defaultContent = vfs.readFile(defaultPath)
       const expectedFormat = isPkgEsm ? 'esm' : 'cjs'
@@ -44,7 +37,7 @@ export async function puba({ dir, vfs }) {
    * - It can be used for ESM, but if you're doing so, might as well use exports
    */
   if (main) {
-    const mainPath = vfs.pathResolve(dir, main)
+    const mainPath = vfs.pathResolve(pkgDir, main)
     const mainContent = await vfs.readFile(mainPath)
     const format = await getFilePathFormat(mainPath)
     if (!isCodeMatchingFormat(mainContent, format)) {
@@ -63,7 +56,7 @@ export async function puba({ dir, vfs }) {
    * - Should be MJS always!!
    */
   if (module) {
-    const modulePath = vfs.pathResolve(dir, module)
+    const modulePath = vfs.pathResolve(pkgDir, module)
     const moduleContent = await vfs.readFile(modulePath)
     const format = await getFilePathFormat(modulePath)
     if (format !== 'esm') {
@@ -102,7 +95,7 @@ export async function puba({ dir, vfs }) {
 
   async function getNearestPkg(filePath) {
     let currentDir = vfs.getDirName(filePath)
-    while (currentDir !== dir) {
+    while (currentDir !== pkgDir) {
       const pkgJsonPath = vfs.pathJoin(currentDir, 'package.json')
       if (await vfs.isPathExist(pkgJsonPath))
         return JSON.parse(await vfs.readFile(pkgJsonPath))
@@ -113,7 +106,7 @@ export async function puba({ dir, vfs }) {
 
   async function crawlExports(exports, currentPath = 'exports') {
     if (typeof exports === 'string') {
-      const exportsPath = vfs.pathResolve(dir, exports)
+      const exportsPath = vfs.pathResolve(pkgDir, exports)
       const isGlob = exports.includes('*')
       const exportsFiles = isGlob
         ? await exportsGlob(exportsPath, vfs)
@@ -140,7 +133,7 @@ export async function puba({ dir, vfs }) {
           const inverseFormatExtension = format === 'esm' ? '.cjs' : '.mjs'
           const is = isGlob ? 'matches' : 'is'
           const relativeExports = isGlob
-            ? './' + vfs.pathRelative(dir, filePath)
+            ? './' + vfs.pathRelative(pkgDir, filePath)
             : exports
           if (filePath.endsWith('.mjs') || filePath.endsWith('.cjs')) {
             // prettier-ignore

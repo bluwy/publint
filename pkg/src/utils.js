@@ -22,7 +22,7 @@ export function isCodeMatchingFormat(code, format) {
 /**
  * Handle `exports` glob
  * @param {string} globStr An absolute glob string that must contain one `*`
- * @param {import('./vfs').Vfs} vfs
+ * @param {import('types').Vfs} vfs
  * @returns {Promise<string[]>} Matched file paths
  */
 export async function exportsGlob(globStr, vfs) {
