@@ -4,8 +4,10 @@
   "private": true,
   "type": "module",
   "bin": "./src/index.js",
+  "types": "./index.d.ts",
+  "exports": "./src/index.js",
   "scripts": {
-    "cli": "node ./src/index.js",
+    "cli": "node ./src/cli.js",
     "test": "uvu tests"
   },
   "dependencies": {

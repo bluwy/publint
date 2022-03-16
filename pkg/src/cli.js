@@ -11,7 +11,7 @@ sade('puba [dir]', true)
   .action((dir) => {
     puba({
       dir: dir ? path.resolve(dir) : process.cwd(),
-      vfs: createNodeVfs
+      vfs: createNodeVfs()
     })
   })
   .parse(process.argv)
