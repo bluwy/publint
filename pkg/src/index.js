@@ -1,26 +1,20 @@
-#!/usr/bin/env node
-
 import fs from 'fs'
 import fsp from 'fs/promises'
 import path from 'path'
-import sade from 'sade'
 import c from 'picocolors'
 import { isCodeMatchingFormat, exportsGlob } from './utils.js'
-import { createNodeVfs } from './vfs.js'
-
-sade('puba [dir]', true)
-  .version('0.0.1')
-  .action((dir, opts) => {
-    main(dir ? path.resolve(dir) : process.cwd())
-  })
-  .parse(process.argv)
 
 /**
- * @param {string} dir
+ * @typedef {{
+ *   dir: string,
+ *   vfs: import('./vfs').Vfs
+ * }} Options
  */
-async function main(dir) {
-  const vfs = createNodeVfs()
 
+/**
+ * @param {Options} options
+ */
+export async function puba({ dir, vfs }) {
   const rootPkgPath = path.join(dir, 'package.json')
   const rootPkgContent = await fsp.readFile(rootPkgPath, 'utf8')
   const rootPkg = JSON.parse(rootPkgContent)
