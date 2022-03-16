@@ -20,7 +20,10 @@ interface BaseMessage<Code extends string, Args = Record<string, string>> {
 }
 
 export type Message =
-  | BaseMessage<'IMPLICIT_INDEX_JS_INVALID_FORMAT'>
+  | BaseMessage<
+      'IMPLICIT_INDEX_JS_INVALID_FORMAT',
+      { actualFormat: string; expectFormat: string }
+    >
   | BaseMessage<'MAIN_IS_ESM'>
   | BaseMessage<'FILE_INVALID_FORMAT'>
   | BaseMessage<'FILE_DOES_NOT_EXISTS'>

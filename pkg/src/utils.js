@@ -10,13 +10,29 @@ export function isCodeCjs(code) {
   return CJS_CONTENT_RE.test(code)
 }
 
+/**
+ * @typedef {'ESM' | 'CJS' | 'unknown'} CodeFormat
+ */
+
+/**
+ * @param {string} code
+ * @returns {CodeFormat}
+ */
+export function getCodeFormat(code) {
+  if (isCodeEsm(code)) {
+    return 'ESM'
+  } else if (isCodeCjs(code)) {
+    return 'CJS'
+  } else {
+    return 'unknown'
+  }
+}
+
 export function isCodeMatchingFormat(code, format) {
-  const isEsm = isCodeEsm(code)
-  const isCjs = isCodeCjs(code)
+  const f = getCodeFormat(code)
   // If we can't determine the format, it's likely that it doesn't import/export and require/exports.
   // Meaning it's a side-effectful file, which would always match the `format`
-  if (!isEsm && !isCjs) return true
-  return format === 'esm' ? isEsm : isCjs
+  return f === 'unknown' || f === format
 }
 
 /**

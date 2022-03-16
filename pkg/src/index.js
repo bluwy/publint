@@ -1,6 +1,6 @@
 import c from 'picocolors'
 import { printMessage } from './message.js'
-import { isCodeMatchingFormat, exportsGlob } from './utils.js'
+import { isCodeMatchingFormat, exportsGlob, getCodeFormat } from './utils.js'
 
 /**
  * @param {Required<import('types').Options>} options
@@ -33,10 +33,19 @@ export async function puba({ pkgDir, vfs }) {
     // check main.js only, others aren't our problem
     const defaultPath = vfs.pathJoin(pkgDir, 'index.js')
     if (await vfs.isPathExist(defaultPath)) {
-      const defaultContent = vfs.readFile(defaultPath)
-      const expectedFormat = isPkgEsm ? 'esm' : 'cjs'
-      if (!isCodeMatchingFormat(defaultContent, expectedFormat)) {
-        warnings.push(`index.js should be ${expectedFormat}`)
+      const defaultContent = await vfs.readFile(defaultPath)
+      const actualFormat = getCodeFormat(defaultContent)
+      const expectFormat = isPkgEsm ? 'ESM' : 'CJS'
+      if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
+        addMessage({
+          code: 'IMPLICIT_INDEX_JS_INVALID_FORMAT',
+          args: {
+            actualFormat: 'cjs',
+            expectFormat
+          },
+          path: [],
+          type: 'warning'
+        })
       }
     }
     return
