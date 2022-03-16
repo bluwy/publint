@@ -11,6 +11,7 @@
     "puba": "workspace:*"
   },
   "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.39",
     "vite": "^2.8.6"
   }
 }
