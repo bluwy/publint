@@ -1,6 +1,11 @@
 import c from 'picocolors'
 import { printMessage } from './message.js'
-import { isCodeMatchingFormat, exportsGlob, getCodeFormat } from './utils.js'
+import {
+  isCodeMatchingFormat,
+  exportsGlob,
+  getCodeFormat,
+  getFilePathFormat
+} from './utils.js'
 
 /**
  * @param {Required<import('types').Options>} options
@@ -59,13 +64,26 @@ export async function puba({ pkgDir, vfs }) {
   if (main) {
     const mainPath = vfs.pathResolve(pkgDir, main)
     const mainContent = await vfs.readFile(mainPath)
-    const format = await getFilePathFormat(mainPath)
-    if (!isCodeMatchingFormat(mainContent, format)) {
-      warnings.push(`${c.bold('pkg.main')} should be ${format}`)
+    const actualFormat = getCodeFormat(mainContent)
+    const expectFormat = await getFilePathFormat(mainPath, vfs)
+    if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
+      addMessage({
+        code: 'FILE_INVALID_FORMAT',
+        args: {
+          actualFormat,
+          expectFormat
+        },
+        path: ['main'],
+        type: 'warning'
+      })
     }
-    if (format === 'esm') {
-      // prettier-ignore
-      warnings.push(`${c.bold('pkg.main')} is an ESM file, but it is usually better to use ${c.bold('pkg.exports')} instead, and remove ${c.bold('pkg.main')} alongside, as compatible NodeJS versions support is as well.`)
+    if (expectFormat === 'ESM') {
+      addMessage({
+        code: 'HAS_MODULE_BUT_NO_EXPORTS',
+        args: {},
+        path: ['main'],
+        type: 'suggestion'
+      })
     }
   }
 
@@ -78,8 +96,8 @@ export async function puba({ pkgDir, vfs }) {
   if (module) {
     const modulePath = vfs.pathResolve(pkgDir, module)
     const moduleContent = await vfs.readFile(modulePath)
-    const format = await getFilePathFormat(modulePath)
-    if (format !== 'esm') {
+    const format = await getFilePathFormat(modulePath, vfs)
+    if (format !== 'ESM') {
       // TODO: Note how we know this. By extension? Content?
       // prettier-ignore
       warnings.push(`${c.bold('pkg.module')} should be ESM, but the code is written in CJS.`)
@@ -103,37 +121,25 @@ export async function puba({ pkgDir, vfs }) {
     console.log(c.bold(c.yellow('Suggestions:')))
     messages
       .filter((v) => v.type === 'suggestion')
-      .forEach((m, i) => console.log(c.dim(`${i + 1}: `) + printMessage(m)))
+      .forEach((m, i) =>
+        console.log(c.dim(`${i + 1}: `) + printMessage(m, rootPkg))
+      )
 
     console.log(c.bold(c.yellow('Warnings:')))
     messages
       .filter((v) => v.type === 'warning')
-      .forEach((m, i) => console.log(c.dim(`${i + 1}: `) + printMessage(m)))
+      .forEach((m, i) =>
+        console.log(c.dim(`${i + 1}: `) + printMessage(m, rootPkg))
+      )
 
     console.log(c.bold(c.yellow('Errors:')))
     messages
       .filter((v) => v.type === 'error')
-      .forEach((m, i) => console.log(c.dim(`${i + 1}: `) + printMessage(m)))
+      .forEach((m, i) =>
+        console.log(c.dim(`${i + 1}: `) + printMessage(m, rootPkg))
+      )
   } else {
     console.log('all good')
-  }
-
-  async function getFilePathFormat(filePath) {
-    if (filePath.endsWith('.mjs')) return 'esm'
-    if (filePath.endsWith('.cjs')) return 'cjs'
-    const nearestPkg = await getNearestPkg(filePath)
-    return nearestPkg.type === 'module' ? 'esm' : 'cjs'
-  }
-
-  async function getNearestPkg(filePath) {
-    let currentDir = vfs.getDirName(filePath)
-    while (currentDir !== pkgDir) {
-      const pkgJsonPath = vfs.pathJoin(currentDir, 'package.json')
-      if (await vfs.isPathExist(pkgJsonPath))
-        return JSON.parse(await vfs.readFile(pkgJsonPath))
-      currentDir = vfs.getDirName(currentDir)
-    }
-    return rootPkg
   }
 
   async function crawlExports(exports, currentPath = 'exports') {
@@ -160,9 +166,9 @@ export async function puba({ pkgDir, vfs }) {
         if (fileContent === false) return
         const format = await getFilePathFormat(filePath)
         expectCodeToBeFormat(fileContent, format, () => {
-          const inverseFormat = format === 'esm' ? 'cjs' : 'esm'
-          const formatExtension = format === 'esm' ? '.mjs' : '.cjs'
-          const inverseFormatExtension = format === 'esm' ? '.cjs' : '.mjs'
+          const inverseFormat = format === 'ESM' ? 'cjs' : 'esm'
+          const formatExtension = format === 'ESM' ? '.mjs' : '.cjs'
+          const inverseFormatExtension = format === 'ESM' ? '.cjs' : '.mjs'
           const is = isGlob ? 'matches' : 'is'
           const relativeExports = isGlob
             ? './' + vfs.pathRelative(pkgDir, filePath)
@@ -221,12 +227,3 @@ export async function puba({ pkgDir, vfs }) {
     }
   }
 }
-
-/**
- * @typedef {{
- *   name: string,
- *   main: string,
- *   module: string,
- *   exports: Record<string, string>
- * }} Pkg
- */

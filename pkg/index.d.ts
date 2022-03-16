@@ -25,7 +25,10 @@ export type Message =
       { actualFormat: string; expectFormat: string }
     >
   | BaseMessage<'MAIN_IS_ESM'>
-  | BaseMessage<'FILE_INVALID_FORMAT'>
+  | BaseMessage<
+      'FILE_INVALID_FORMAT',
+      { actualFormat: string; expectFormat: string }
+    >
   | BaseMessage<'FILE_DOES_NOT_EXISTS'>
   | BaseMessage<'HAS_MODULE_BUT_NO_EXPORTS'>
   | BaseMessage<'EXPORTS_GLOB_NO_MATCHED_FILES'>

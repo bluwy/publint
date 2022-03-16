@@ -1,3 +1,17 @@
+/**
+ * @typedef {{
+ *   name: string,
+ *   main: string,
+ *   module: string,
+ *   exports: Record<string, string>,
+ *   type: 'module' | 'commonjs'
+ * }} Pkg
+ */
+
+/**
+ * @typedef {'ESM' | 'CJS' | 'unknown'} CodeFormat
+ */
+
 const ESM_CONTENT_RE =
   /\bimport\s+|\bimport\(|\bexport\s+default\s+|\bexport\s+const\s+|\bexport\s+function\s+|\bexport\s+default\s+/
 export function isCodeEsm(code) {
@@ -9,10 +23,6 @@ const CJS_CONTENT_RE =
 export function isCodeCjs(code) {
   return CJS_CONTENT_RE.test(code)
 }
-
-/**
- * @typedef {'ESM' | 'CJS' | 'unknown'} CodeFormat
- */
 
 /**
  * @param {string} code
@@ -57,5 +67,34 @@ export async function exportsGlob(globStr, vfs) {
         filePaths.push(itemPath)
       }
     }
+  }
+}
+
+/**
+ * @param {string} filePath
+ * @returns {Promise<CodeFormat>}
+ */
+export async function getFilePathFormat(filePath, vfs) {
+  if (filePath.endsWith('.mjs')) return 'ESM'
+  if (filePath.endsWith('.cjs')) return 'CJS'
+  const nearestPkg = await getNearestPkg(filePath, vfs)
+  return nearestPkg.type === 'module' ? 'ESM' : 'CJS'
+}
+
+/**
+ *
+ * @param {string} filePath
+ * @param {import('types').Vfs} vfs
+ * @returns {Promise<Pkg>}
+ */
+export async function getNearestPkg(filePath, vfs) {
+  let currentDir = vfs.getDirName(filePath)
+  while (true) {
+    const pkgJsonPath = vfs.pathJoin(currentDir, 'package.json')
+    if (await vfs.isPathExist(pkgJsonPath))
+      return JSON.parse(await vfs.readFile(pkgJsonPath))
+    const nextDir = vfs.getDirName(currentDir)
+    if (nextDir === currentDir) break
+    currentDir = nextDir
   }
 }
