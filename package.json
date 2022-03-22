@@ -1,5 +1,6 @@
 {
   "name": "publint-monorepo",
   "private": true,
-  "type": "module"
+  "type": "module",
+  "license": "MIT"
 }

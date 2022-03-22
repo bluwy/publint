@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
+  "license": "MIT",
   "bin": "./lib/cli.js",
   "types": "./index.d.ts",
   "exports": {
