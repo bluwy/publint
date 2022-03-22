@@ -1,0 +1,14 @@
+{
+  "name": "publint-worker",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "main": "./main.js",
+  "scripts": {
+    "dev": "miniflare -wd",
+    "preview": "miniflare"
+  },
+  "devDependencies": {
+    "miniflare": "^2.3.0"
+  }
+}
