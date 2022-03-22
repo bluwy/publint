@@ -19,11 +19,11 @@ importers:
   site:
     specifiers:
       '@sveltejs/vite-plugin-svelte': ^1.0.0-next.40
-      puba: workspace:*
+      publint: workspace:*
       svelte: ^3.46.4
       vite: ^2.8.6
     dependencies:
-      puba: link:../pkg
+      publint: link:../pkg
     devDependencies:
       '@sveltejs/vite-plugin-svelte': 1.0.0-next.40_svelte@3.46.4+vite@2.8.6
       svelte: 3.46.4

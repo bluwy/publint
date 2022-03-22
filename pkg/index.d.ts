@@ -63,4 +63,4 @@ export interface Vfs {
   getExtName: (path: string) => string
 }
 
-export function puba(options?: Options): Promise<Message[]>
+export function publint(options?: Options): Promise<Message[]>

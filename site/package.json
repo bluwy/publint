@@ -1,5 +1,5 @@
 {
-  "name": "puba-site",
+  "name": "publint-site",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,7 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "puba": "workspace:*"
+    "publint": "workspace:*"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.40",

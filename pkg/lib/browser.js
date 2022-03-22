@@ -1,10 +1,10 @@
-import { puba as _puba } from '../src/index.js'
+import { publint as _publint } from '../src/index.js'
 
 /**
- * @type {import('types').puba}
+ * @type {import('types').publint}
  */
-export function puba(options) {
-  return _puba({
+export function publint(options) {
+  return _publint({
     pkgDir: options.pkgDir ?? '/',
     vfs: options.vfs
   })

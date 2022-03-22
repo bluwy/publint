@@ -2,12 +2,12 @@
 
 import path from 'path'
 import sade from 'sade'
-import { puba } from './node.js'
+import { publint } from './node.js'
 
 // TODO: Handcraft this
-sade('puba [dir]', true)
+sade('publint [dir]', true)
   .version('0.0.1')
   .action((dir) => {
-    puba({ pkgDir: dir ? path.resolve(dir) : process.cwd() })
+    publint({ pkgDir: dir ? path.resolve(dir) : process.cwd() })
   })
   .parse(process.argv)

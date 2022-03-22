@@ -11,7 +11,7 @@ import {
  * @param {Required<import('types').Options>} options
  * @returns {Promise<import('types').Message[]>}
  */
-export async function puba({ pkgDir, vfs }) {
+export async function publint({ pkgDir, vfs }) {
   const rootPkgPath = vfs.pathJoin(pkgDir, 'package.json')
   const rootPkgContent = await vfs.readFile(rootPkgPath)
   const rootPkg = JSON.parse(rootPkgContent)
