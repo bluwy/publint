@@ -20,37 +20,33 @@ export async function publint({ pkgDir, vfs }) {
 
   /** @type {import('types').Message[]} */
   let messages = []
-
-  /**
-   * @param {import('types').Message} msg
-   */
-  function addMessage(msg) {
-    messages.push(msg)
-  }
+  /** @type {Promise<void>[]} */
+  let promisesQueue = []
 
   // Relies on default node resolution
   // https://nodejs.org/api/modules.html#all-together
   // LOAD_INDEX(X)
   if (!main && !module && !exports) {
-    // check main.js only, others aren't our problem
-    const defaultPath = vfs.pathJoin(pkgDir, 'index.js')
-    if (await vfs.isPathExist(defaultPath)) {
-      const defaultContent = await vfs.readFile(defaultPath)
-      const actualFormat = getCodeFormat(defaultContent)
-      const expectFormat = isPkgEsm ? 'ESM' : 'CJS'
-      if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
-        addMessage({
-          code: 'IMPLICIT_INDEX_JS_INVALID_FORMAT',
-          args: {
-            actualFormat: 'cjs',
-            expectFormat
-          },
-          path: [],
-          type: 'warning'
-        })
+    queueAsync(async () => {
+      // check main.js only, others aren't our problem
+      const defaultPath = vfs.pathJoin(pkgDir, 'index.js')
+      if (await vfs.isPathExist(defaultPath)) {
+        const defaultContent = await vfs.readFile(defaultPath)
+        const actualFormat = getCodeFormat(defaultContent)
+        const expectFormat = isPkgEsm ? 'ESM' : 'CJS'
+        if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
+          addMessage({
+            code: 'IMPLICIT_INDEX_JS_INVALID_FORMAT',
+            args: {
+              actualFormat: 'cjs',
+              expectFormat
+            },
+            path: [],
+            type: 'warning'
+          })
+        }
       }
-    }
-    return
+    })
   }
 
   /**
@@ -59,31 +55,33 @@ export async function publint({ pkgDir, vfs }) {
    * - It can be used for ESM, but if you're doing so, might as well use exports
    */
   if (main) {
-    const mainPath = vfs.pathResolve(pkgDir, main)
-    const mainContent = await vfs.readFile(mainPath)
-    const actualFormat = getCodeFormat(mainContent)
-    const expectFormat = await getFilePathFormat(mainPath, vfs)
-    if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
-      addMessage({
-        code: 'FILE_INVALID_FORMAT',
-        args: {
-          actualFormat,
-          expectFormat,
-          actualExtension: vfs.getExtName(mainPath),
-          expectExtension: getCodeFormatExtension(expectFormat)
-        },
-        path: ['main'],
-        type: 'warning'
-      })
-    }
-    if (expectFormat === 'ESM') {
-      addMessage({
-        code: 'HAS_ESM_MAIN_BUT_NO_EXPORTS',
-        args: {},
-        path: ['main'],
-        type: 'suggestion'
-      })
-    }
+    queueAsync(async () => {
+      const mainPath = vfs.pathResolve(pkgDir, main)
+      const mainContent = await vfs.readFile(mainPath)
+      const actualFormat = getCodeFormat(mainContent)
+      const expectFormat = await getFilePathFormat(mainPath, vfs)
+      if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
+        addMessage({
+          code: 'FILE_INVALID_FORMAT',
+          args: {
+            actualFormat,
+            expectFormat,
+            actualExtension: vfs.getExtName(mainPath),
+            expectExtension: getCodeFormatExtension(expectFormat)
+          },
+          path: ['main'],
+          type: 'warning'
+        })
+      }
+      if (expectFormat === 'ESM') {
+        addMessage({
+          code: 'HAS_ESM_MAIN_BUT_NO_EXPORTS',
+          args: {},
+          path: ['main'],
+          type: 'suggestion'
+        })
+      }
+    })
   }
 
   /**
@@ -93,77 +91,104 @@ export async function publint({ pkgDir, vfs }) {
    * - Should be MJS always!!
    */
   if (module) {
-    const modulePath = vfs.pathResolve(pkgDir, module)
-    const format = await getFilePathFormat(modulePath, vfs)
-    if (format === 'CJS') {
-      addMessage({
-        code: 'MODULE_SHOULD_BE_ESM',
-        args: {},
-        path: ['module'],
-        type: 'error'
-      })
-    }
-    // TODO: Check valid content too?
-    if (!exports) {
-      addMessage({
-        code: 'HAS_MODULE_BUT_NO_EXPORTS',
-        args: {},
-        path: ['module'],
-        type: 'suggestion'
-      })
-    }
+    queueAsync(async () => {
+      const modulePath = vfs.pathResolve(pkgDir, module)
+      const format = await getFilePathFormat(modulePath, vfs)
+      if (format === 'CJS') {
+        addMessage({
+          code: 'MODULE_SHOULD_BE_ESM',
+          args: {},
+          path: ['module'],
+          type: 'error'
+        })
+      }
+      // TODO: Check valid content too?
+      if (!exports) {
+        addMessage({
+          code: 'HAS_MODULE_BUT_NO_EXPORTS',
+          args: {},
+          path: ['module'],
+          type: 'suggestion'
+        })
+      }
+    })
   }
 
   if (exports) {
     // recursively check exports
-    await crawlExports(exports)
+    crawlExports(exports)
   }
 
+  await Promise.all(promisesQueue)
   return messages
 
-  async function crawlExports(exports, currentPath = ['exports']) {
+  /**
+   * @param {import('types').Message} msg
+   */
+  function addMessage(msg) {
+    messages.push(msg)
+  }
+
+  /**
+   * @param {() => Promise<void>} fn
+   */
+  function queueAsync(fn) {
+    promisesQueue.push(fn())
+  }
+
+  function crawlExports(exports, currentPath = ['exports']) {
     if (typeof exports === 'string') {
-      const exportsPath = vfs.pathResolve(pkgDir, exports)
-      const isGlob = exports.includes('*')
-      const exportsFiles = isGlob
-        ? await exportsGlob(exportsPath, vfs)
-        : [exportsPath]
+      queueAsync(async () => {
+        const exportsPath = vfs.pathResolve(pkgDir, exports)
+        const isGlob = exports.includes('*')
+        const exportsFiles = isGlob
+          ? await exportsGlob(exportsPath, vfs)
+          : [exportsPath]
 
-      if (isGlob && !exportsFiles.length) {
-        addMessage({
-          code: 'EXPORTS_GLOB_NO_MATCHED_FILES',
-          args: {
-            pattern: exports
-          },
-          path: currentPath,
-          type: 'warning'
-        })
-        return
-      }
-
-      // todo: group glob warnings
-      for (const filePath of exportsFiles) {
-        // Could fail if in !isGlob
-        const fileContent = await vfs.readFile(filePath)
-        const actualFormat = getCodeFormat(fileContent)
-        const expectFormat = await getFilePathFormat(filePath, vfs)
-        if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
+        if (isGlob && !exportsFiles.length) {
           addMessage({
-            code: 'FILE_INVALID_FORMAT',
+            code: 'EXPORTS_GLOB_NO_MATCHED_FILES',
             args: {
-              actualFormat,
-              expectFormat,
-              actualExtension: vfs.getExtName(filePath),
-              expectExtension: getCodeFormatExtension(expectFormat),
-              actualFilePath: isGlob
-                ? './' + vfs.pathRelative(pkgDir, filePath)
-                : exports
+              pattern: exports
             },
             path: currentPath,
             type: 'warning'
           })
+          return
         }
-      }
+
+        const promises = []
+
+        // todo: group glob warnings
+        for (const filePath of exportsFiles) {
+          promises.push(
+            (async () => {
+              // Could fail if in !isGlob
+              const fileContent = await vfs.readFile(filePath)
+              const actualFormat = getCodeFormat(fileContent)
+              const expectFormat = await getFilePathFormat(filePath, vfs)
+              if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
+                addMessage({
+                  code: 'FILE_INVALID_FORMAT',
+                  args: {
+                    actualFormat,
+                    expectFormat,
+                    actualExtension: vfs.getExtName(filePath),
+                    expectExtension: getCodeFormatExtension(expectFormat),
+                    actualFilePath: isGlob
+                      ? './' + vfs.pathRelative(pkgDir, filePath)
+                      : exports
+                  },
+                  path: currentPath,
+                  type: 'warning'
+                })
+              }
+            })()
+          )
+        }
+
+        await Promise.all(promises)
+      })
     } else {
       const exportsKeys = Object.keys(exports)
 
@@ -191,7 +216,7 @@ export async function publint({ pkgDir, vfs }) {
       }
 
       for (const key of exportsKeys) {
-        await crawlExports(exports[key], currentPath.concat(key))
+        crawlExports(exports[key], currentPath.concat(key))
       }
     }
   }
