@@ -33,7 +33,7 @@ export type Message =
   | BaseMessage<'MODULE_SHOULD_BE_ESM'>
   | BaseMessage<'HAS_MODULE_BUT_NO_EXPORTS'>
   | BaseMessage<'HAS_ESM_MAIN_BUT_NO_EXPORTS'>
-  | BaseMessage<'EXPORTS_GLOB_NO_MATCHED_FILES'>
+  | BaseMessage<'EXPORTS_GLOB_NO_MATCHED_FILES', { pattern: string }>
   // | BaseMessage<'EXPORTS_GLOB_NO_MATCHED_FILES_BUT_IMPLICIT_INDEX_DETECTED'>
   | BaseMessage<'EXPORTS_TYPES_SHOULD_BE_FIRST'>
   | BaseMessage<'EXPORTS_DEFAULT_SHOULD_BE_LAST'>

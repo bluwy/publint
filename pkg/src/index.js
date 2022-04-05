@@ -154,8 +154,14 @@ export async function publint({ pkgDir, vfs }) {
         : [exportsPath]
 
       if (isGlob && !exportsFiles.length) {
-        // prettier-ignore
-        warnings.push(`${c.bold(`pkg.${currentPath}`)} is ${c.bold(exports)} but does not match any files`)
+        addMessage({
+          code: 'EXPORTS_GLOB_NO_MATCHED_FILES',
+          args: {
+            pattern: exports
+          },
+          path: currentPath.split('.'),
+          type: 'warning'
+        })
         return
       }
 
@@ -190,8 +196,12 @@ export async function publint({ pkgDir, vfs }) {
 
       // the types export should be the first condition
       if ('types' in exports && exportsKeys[0] !== 'types') {
-        // prettier-ignore
-        warnings.push(`${c.bold(`pkg.${currentPath}.types`)} should be the first in the object so TypeScript can load it.`)
+        addMessage({
+          code: 'EXPORTS_TYPES_SHOULD_BE_FIRST',
+          args: {},
+          path: currentPath.split('.'),
+          type: 'error'
+        })
       }
 
       // the default export should be the last condition
@@ -199,8 +209,12 @@ export async function publint({ pkgDir, vfs }) {
         'default' in exports &&
         exportsKeys[exportsKeys.length - 1] !== 'default'
       ) {
-        // prettier-ignore
-        warnings.push(`${c.bold(`pkg.${currentPath}.default`)} should be the last in the object so it doesn't take precedence over the keys following it.`)
+        addMessage({
+          code: 'EXPORTS_DEFAULT_SHOULD_BE_LAST',
+          args: {},
+          path: currentPath.split('.'),
+          type: 'error'
+        })
       }
 
       for (const key of exportsKeys) {
