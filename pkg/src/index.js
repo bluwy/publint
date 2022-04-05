@@ -1,5 +1,3 @@
-import c from 'picocolors'
-import { printMessage } from './message.js'
 import {
   exportsGlob,
   getCodeFormat,
@@ -121,30 +119,7 @@ export async function publint({ pkgDir, vfs }) {
     await crawlExports(exports)
   }
 
-  if (messages.length) {
-    console.log(c.bold(c.yellow('Suggestions:')))
-    messages
-      .filter((v) => v.type === 'suggestion')
-      .forEach((m, i) =>
-        console.log(c.dim(`${i + 1}: `) + printMessage(m, rootPkg))
-      )
-
-    console.log(c.bold(c.yellow('Warnings:')))
-    messages
-      .filter((v) => v.type === 'warning')
-      .forEach((m, i) =>
-        console.log(c.dim(`${i + 1}: `) + printMessage(m, rootPkg))
-      )
-
-    console.log(c.bold(c.yellow('Errors:')))
-    messages
-      .filter((v) => v.type === 'error')
-      .forEach((m, i) =>
-        console.log(c.dim(`${i + 1}: `) + printMessage(m, rootPkg))
-      )
-  } else {
-    console.log('all good')
-  }
+  return messages
 
   async function crawlExports(exports, currentPath = ['exports']) {
     if (typeof exports === 'string') {
