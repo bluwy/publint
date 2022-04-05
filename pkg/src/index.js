@@ -145,7 +145,7 @@ export async function publint({ pkgDir, vfs }) {
     console.log('all good')
   }
 
-  async function crawlExports(exports, currentPath = 'exports') {
+  async function crawlExports(exports, currentPath = ['exports']) {
     if (typeof exports === 'string') {
       const exportsPath = vfs.pathResolve(pkgDir, exports)
       const isGlob = exports.includes('*')
@@ -159,7 +159,7 @@ export async function publint({ pkgDir, vfs }) {
           args: {
             pattern: exports
           },
-          path: currentPath.split('.'),
+          path: currentPath,
           type: 'warning'
         })
         return
@@ -199,7 +199,7 @@ export async function publint({ pkgDir, vfs }) {
         addMessage({
           code: 'EXPORTS_TYPES_SHOULD_BE_FIRST',
           args: {},
-          path: currentPath.split('.'),
+          path: currentPath,
           type: 'error'
         })
       }
@@ -212,18 +212,13 @@ export async function publint({ pkgDir, vfs }) {
         addMessage({
           code: 'EXPORTS_DEFAULT_SHOULD_BE_LAST',
           args: {},
-          path: currentPath.split('.'),
+          path: currentPath,
           type: 'error'
         })
       }
 
       for (const key of exportsKeys) {
-        await crawlExports(
-          exports[key],
-          currentPath === 'export'
-            ? `export["${key}"]`
-            : `${currentPath} > ${key}`
-        )
+        await crawlExports(exports[key], currentPath.concat(key))
       }
     }
   }

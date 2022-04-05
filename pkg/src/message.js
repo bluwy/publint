@@ -39,7 +39,14 @@ export function printMessage(m, pkg) {
    * @param {string[]} path
    */
   function concatPath(path) {
-    return `pkg.` + path.join('.')
+    let formatted = 'pkg.'
+    if (path[0] === 'export') {
+      formatted += `["${path.shift()}"]`
+      formatted += path.join(' > ')
+    } else {
+      formatted += path.join('.')
+    }
+    return formatted
   }
 
   /**
