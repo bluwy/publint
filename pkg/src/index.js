@@ -35,7 +35,7 @@ export async function publint({ pkgDir, vfs }) {
         const actualFormat = getCodeFormat(defaultContent)
         const expectFormat = isPkgEsm ? 'ESM' : 'CJS'
         if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
-          addMessage({
+          messages.push({
             code: 'IMPLICIT_INDEX_JS_INVALID_FORMAT',
             args: {
               actualFormat: 'cjs',
@@ -61,7 +61,7 @@ export async function publint({ pkgDir, vfs }) {
       const actualFormat = getCodeFormat(mainContent)
       const expectFormat = await getFilePathFormat(mainPath, vfs)
       if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
-        addMessage({
+        messages.push({
           code: 'FILE_INVALID_FORMAT',
           args: {
             actualFormat,
@@ -74,7 +74,7 @@ export async function publint({ pkgDir, vfs }) {
         })
       }
       if (expectFormat === 'ESM') {
-        addMessage({
+        messages.push({
           code: 'HAS_ESM_MAIN_BUT_NO_EXPORTS',
           args: {},
           path: ['main'],
@@ -95,7 +95,7 @@ export async function publint({ pkgDir, vfs }) {
       const modulePath = vfs.pathResolve(pkgDir, module)
       const format = await getFilePathFormat(modulePath, vfs)
       if (format === 'CJS') {
-        addMessage({
+        messages.push({
           code: 'MODULE_SHOULD_BE_ESM',
           args: {},
           path: ['module'],
@@ -104,7 +104,7 @@ export async function publint({ pkgDir, vfs }) {
       }
       // TODO: Check valid content too?
       if (!exports) {
-        addMessage({
+        messages.push({
           code: 'HAS_MODULE_BUT_NO_EXPORTS',
           args: {},
           path: ['module'],
@@ -123,13 +123,6 @@ export async function publint({ pkgDir, vfs }) {
   return messages
 
   /**
-   * @param {import('types').Message} msg
-   */
-  function addMessage(msg) {
-    messages.push(msg)
-  }
-
-  /**
    * @param {() => Promise<void>} fn
    */
   function queueAsync(fn) {
@@ -146,7 +139,7 @@ export async function publint({ pkgDir, vfs }) {
           : [exportsPath]
 
         if (isGlob && !exportsFiles.length) {
-          addMessage({
+          messages.push({
             code: 'EXPORTS_GLOB_NO_MATCHED_FILES',
             args: {
               pattern: exports
@@ -168,7 +161,7 @@ export async function publint({ pkgDir, vfs }) {
               const actualFormat = getCodeFormat(fileContent)
               const expectFormat = await getFilePathFormat(filePath, vfs)
               if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
-                addMessage({
+                messages.push({
                   code: 'FILE_INVALID_FORMAT',
                   args: {
                     actualFormat,
@@ -194,7 +187,7 @@ export async function publint({ pkgDir, vfs }) {
 
       // the types export should be the first condition
       if ('types' in exports && exportsKeys[0] !== 'types') {
-        addMessage({
+        messages.push({
           code: 'EXPORTS_TYPES_SHOULD_BE_FIRST',
           args: {},
           path: currentPath,
@@ -207,7 +200,7 @@ export async function publint({ pkgDir, vfs }) {
         'default' in exports &&
         exportsKeys[exportsKeys.length - 1] !== 'default'
       ) {
-        addMessage({
+        messages.push({
           code: 'EXPORTS_DEFAULT_SHOULD_BE_LAST',
           args: {},
           path: currentPath,
