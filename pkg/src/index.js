@@ -4,7 +4,8 @@ import {
   isCodeMatchingFormat,
   exportsGlob,
   getCodeFormat,
-  getFilePathFormat
+  getFilePathFormat,
+  getCodeFormatExtension
 } from './utils.js'
 
 /**
@@ -71,7 +72,9 @@ export async function publint({ pkgDir, vfs }) {
         code: 'FILE_INVALID_FORMAT',
         args: {
           actualFormat,
-          expectFormat
+          expectFormat,
+          actualExtension: vfs.getExtName(mainPath),
+          expectExtension: getCodeFormatExtension(expectFormat)
         },
         path: ['main'],
         type: 'warning'
@@ -167,29 +170,27 @@ export async function publint({ pkgDir, vfs }) {
 
       // todo: group glob warnings
       for (const filePath of exportsFiles) {
-        const fileContent = await expectReadFile(filePath, () => {
-          // Should only happen in !isGlob
-          // prettier-ignore
-          return `${c.bold(`pkg.${currentPath}`)} is ${c.bold(exports)} but file does not exist`
-        })
-        if (fileContent === false) return
-        const format = await getFilePathFormat(filePath)
-        expectCodeToBeFormat(fileContent, format, () => {
-          const inverseFormat = format === 'ESM' ? 'cjs' : 'esm'
-          const formatExtension = format === 'ESM' ? '.mjs' : '.cjs'
-          const inverseFormatExtension = format === 'ESM' ? '.cjs' : '.mjs'
-          const is = isGlob ? 'matches' : 'is'
-          const relativeExports = isGlob
-            ? './' + vfs.pathRelative(pkgDir, filePath)
-            : exports
-          if (filePath.endsWith('.mjs') || filePath.endsWith('.cjs')) {
-            // prettier-ignore
-            return `${c.bold(`pkg.${currentPath}`)} ${is} ${c.bold(relativeExports)} which ends with the ${c.yellow(vfs.getExtName(exports))} extension, but the code is written in ${c.yellow(inverseFormat.toUpperCase())}. Consider re-writting the code to ${c.yellow(format.toUpperCase())}, or use the ${c.yellow(formatExtension)} extension, e.g. ${c.bold(exports.replace(vfs.getExtName(exports), formatExtension))}`
-          } else {
-            // prettier-ignore
-            return `${c.bold(`pkg.${currentPath}`)} ${is} ${c.bold(relativeExports)} and is detected to be ${c.yellow(format.toUpperCase())}, but the code is written in ${c.yellow(inverseFormat.toUpperCase())}. Consider re-writting the code to ${c.yellow(format.toUpperCase())}, or use the ${c.yellow(inverseFormatExtension)} extension, e.g. ${c.bold(exports.replace(vfs.getExtName(exports), inverseFormatExtension))}`
-          }
-        })
+        // Could fail if in !isGlob
+        const fileContent = await vfs.readFile(filePath)
+        const format = await getFilePathFormat(filePath, vfs)
+        const actualFormat = getCodeFormat(fileContent)
+        const expectFormat = await getFilePathFormat(fileContent, vfs)
+        if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
+          addMessage({
+            code: 'FILE_INVALID_FORMAT',
+            args: {
+              actualFormat,
+              expectFormat,
+              actualExtension: vfs.getExtName(filePath),
+              expectExtension: getCodeFormatExtension(expectFormat),
+              actualFilePath: isGlob
+                ? './' + vfs.pathRelative(pkgDir, filePath)
+                : exports
+            },
+            path: currentPath,
+            type: 'warning'
+          })
+        }
       }
     } else {
       const exportsKeys = Object.keys(exports)
@@ -220,22 +221,6 @@ export async function publint({ pkgDir, vfs }) {
       for (const key of exportsKeys) {
         await crawlExports(exports[key], currentPath.concat(key))
       }
-    }
-  }
-
-  async function expectCodeToBeFormat(code, format, msg) {
-    if (!isCodeMatchingFormat(code, format)) {
-      warnings.push(msg())
-      return false
-    }
-  }
-
-  async function expectReadFile(filePath, msg) {
-    try {
-      return await vfs.readFile(filePath)
-    } catch {
-      warnings.push(msg())
-      return false
     }
   }
 }

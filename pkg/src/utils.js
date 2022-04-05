@@ -72,6 +72,7 @@ export async function exportsGlob(globStr, vfs) {
 
 /**
  * @param {string} filePath
+ * @param {import('types').Vfs} vfs
  * @returns {Promise<CodeFormat>}
  */
 export async function getFilePathFormat(filePath, vfs) {
@@ -79,6 +80,20 @@ export async function getFilePathFormat(filePath, vfs) {
   if (filePath.endsWith('.cjs')) return 'CJS'
   const nearestPkg = await getNearestPkg(filePath, vfs)
   return nearestPkg.type === 'module' ? 'ESM' : 'CJS'
+}
+
+/**
+ * @param {CodeFormat} format
+ */
+export function getCodeFormatExtension(format) {
+  switch (format) {
+    case 'ESM':
+      return '.mjs'
+    case 'CJS':
+      return '.cjs'
+    default:
+      return '.js'
+  }
 }
 
 /**
