@@ -19,15 +19,14 @@ export async function publint({ pkgDir, vfs }) {
   const isPkgEsm = type === 'module'
 
   /** @type {import('types').Message[]} */
-  let messages = []
-  /** @type {Promise<void>[]} */
-  let promisesQueue = []
+  const messages = []
+  const promiseQueue = createPromiseQueue()
 
   // Relies on default node resolution
   // https://nodejs.org/api/modules.html#all-together
   // LOAD_INDEX(X)
   if (!main && !module && !exports) {
-    queueAsync(async () => {
+    promiseQueue.push(async () => {
       // check main.js only, others aren't our problem
       const defaultPath = vfs.pathJoin(pkgDir, 'index.js')
       if (await vfs.isPathExist(defaultPath)) {
@@ -55,7 +54,7 @@ export async function publint({ pkgDir, vfs }) {
    * - It can be used for ESM, but if you're doing so, might as well use exports
    */
   if (main) {
-    queueAsync(async () => {
+    promiseQueue.push(async () => {
       const mainPath = vfs.pathResolve(pkgDir, main)
       const mainContent = await vfs.readFile(mainPath)
       const actualFormat = getCodeFormat(mainContent)
@@ -91,7 +90,7 @@ export async function publint({ pkgDir, vfs }) {
    * - Should be MJS always!!
    */
   if (module) {
-    queueAsync(async () => {
+    promiseQueue.push(async () => {
       const modulePath = vfs.pathResolve(pkgDir, module)
       const format = await getFilePathFormat(modulePath, vfs)
       if (format === 'CJS') {
@@ -119,19 +118,20 @@ export async function publint({ pkgDir, vfs }) {
     crawlExports(exports)
   }
 
-  await Promise.all(promisesQueue)
+  await promiseQueue.wait()
   return messages
 
-  /**
-   * @param {() => Promise<void>} fn
-   */
-  function queueAsync(fn) {
-    promisesQueue.push(fn())
+  function createPromiseQueue() {
+    const promises = []
+    return {
+      push: (fn) => promises.push(fn()),
+      wait: () => Promise.all(promises)
+    }
   }
 
   function crawlExports(exports, currentPath = ['exports']) {
     if (typeof exports === 'string') {
-      queueAsync(async () => {
+      promiseQueue.push(async () => {
         const exportsPath = vfs.pathResolve(pkgDir, exports)
         const isGlob = exports.includes('*')
         const exportsFiles = isGlob
@@ -150,37 +150,35 @@ export async function publint({ pkgDir, vfs }) {
           return
         }
 
-        const promises = []
+        const pq = createPromiseQueue()
 
         // todo: group glob warnings
         for (const filePath of exportsFiles) {
-          promises.push(
-            (async () => {
-              // Could fail if in !isGlob
-              const fileContent = await vfs.readFile(filePath)
-              const actualFormat = getCodeFormat(fileContent)
-              const expectFormat = await getFilePathFormat(filePath, vfs)
-              if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
-                messages.push({
-                  code: 'FILE_INVALID_FORMAT',
-                  args: {
-                    actualFormat,
-                    expectFormat,
-                    actualExtension: vfs.getExtName(filePath),
-                    expectExtension: getCodeFormatExtension(expectFormat),
-                    actualFilePath: isGlob
-                      ? './' + vfs.pathRelative(pkgDir, filePath)
-                      : exports
-                  },
-                  path: currentPath,
-                  type: 'warning'
-                })
-              }
-            })()
-          )
+          pq.push(async () => {
+            // Could fail if in !isGlob
+            const fileContent = await vfs.readFile(filePath)
+            const actualFormat = getCodeFormat(fileContent)
+            const expectFormat = await getFilePathFormat(filePath, vfs)
+            if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
+              messages.push({
+                code: 'FILE_INVALID_FORMAT',
+                args: {
+                  actualFormat,
+                  expectFormat,
+                  actualExtension: vfs.getExtName(filePath),
+                  expectExtension: getCodeFormatExtension(expectFormat),
+                  actualFilePath: isGlob
+                    ? './' + vfs.pathRelative(pkgDir, filePath)
+                    : exports
+                },
+                path: currentPath,
+                type: 'warning'
+              })
+            }
+          })
         }
 
-        await Promise.all(promises)
+        await pq.wait()
       })
     } else {
       const exportsKeys = Object.keys(exports)
