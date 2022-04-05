@@ -1,7 +1,6 @@
 import c from 'picocolors'
 import { printMessage } from './message.js'
 import {
-  isCodeMatchingFormat,
   exportsGlob,
   getCodeFormat,
   getFilePathFormat,
@@ -23,7 +22,6 @@ export async function publint({ pkgDir, vfs }) {
 
   /** @type {import('types').Message[]} */
   let messages = []
-  let warnings = []
 
   /**
    * @param {import('types').Message} msg
@@ -172,9 +170,8 @@ export async function publint({ pkgDir, vfs }) {
       for (const filePath of exportsFiles) {
         // Could fail if in !isGlob
         const fileContent = await vfs.readFile(filePath)
-        const format = await getFilePathFormat(filePath, vfs)
         const actualFormat = getCodeFormat(fileContent)
-        const expectFormat = await getFilePathFormat(fileContent, vfs)
+        const expectFormat = await getFilePathFormat(filePath, vfs)
         if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
           addMessage({
             code: 'FILE_INVALID_FORMAT',

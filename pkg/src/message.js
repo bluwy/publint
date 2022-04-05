@@ -22,11 +22,8 @@ export function printMessage(m, pkg) {
         return `${c.bold(concatPath(m.path))} ${is} ${c.bold(relativePath)} which ends with the ${c.yellow(m.args.actualExtension)} extension, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider re-writting the code to ${c.yellow(m.args.expectFormat)}, or use the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(getPathValue(m.path).replace(m.args.actualExtension, m.args.expectExtension))}`
       } else {
         // prettier-ignore
-        return `${c.bold(concatPath(m.path))} ${is} ${c.bold(relativePath)} and is detected to be ${c.yellow(m.args.expectFormat)}, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider re-writting the code to ${c.yellow(m.args.expectFormat)}, or use the ${c.yellow(m.args.actualExtension)} extension, e.g. ${c.bold(getPathValue(m.path).replace('.js', m.args.actualExtension))}`
+        return `${c.bold(concatPath(m.path))} ${is} ${c.bold(relativePath)} and is detected to be ${c.yellow(m.args.expectFormat)}, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider re-writting the code to ${c.yellow(m.args.expectFormat)}, or use the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(getPathValue(m.path).replace('.js', m.args.expectExtension))}`
       }
-
-      // prettier-ignore
-      return `${c.bold(concatPath(m.path))} is ${getPathValue(m.path)} should be ${m.args.expectFormat} but it is ${m.args.actualFormat}`
     case 'FILE_DOES_NOT_EXIST':
       // prettier-ignore
       return `${c.bold(concatPath(m.path))} is ${getPathValue(m.path)} but file does not exist`
