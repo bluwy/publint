@@ -19,14 +19,14 @@ export function printMessage(m, pkg) {
         m.args.actualExtension.endsWith('.cjs')
       ) {
         // prettier-ignore
-        return `${c.bold(concatPath(m.path))} ${is} ${c.bold(relativePath)} which ends with the ${c.yellow(m.args.actualExtension)} extension, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider re-writting the code to ${c.yellow(m.args.expectFormat)}, or use the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(getPathValue(m.path).replace(m.args.actualExtension, m.args.expectExtension))}`
+        return `${c.bold(formatPath(m.path))} ${is} ${c.bold(relativePath)} which ends with the ${c.yellow(m.args.actualExtension)} extension, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider re-writting the code to ${c.yellow(m.args.expectFormat)}, or use the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(getPathValue(m.path).replace(m.args.actualExtension, m.args.expectExtension))}`
       } else {
         // prettier-ignore
-        return `${c.bold(concatPath(m.path))} ${is} ${c.bold(relativePath)} and is detected to be ${c.yellow(m.args.expectFormat)}, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider re-writting the code to ${c.yellow(m.args.expectFormat)}, or use the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(getPathValue(m.path).replace('.js', m.args.expectExtension))}`
+        return `${c.bold(formatPath(m.path))} ${is} ${c.bold(relativePath)} and is detected to be ${c.yellow(m.args.expectFormat)}, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider re-writting the code to ${c.yellow(m.args.expectFormat)}, or use the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(getPathValue(m.path).replace('.js', m.args.expectExtension))}`
       }
     case 'FILE_DOES_NOT_EXIST':
       // prettier-ignore
-      return `${c.bold(concatPath(m.path))} is ${getPathValue(m.path)} but file does not exist`
+      return `${c.bold(formatPath(m.path))} is ${getPathValue(m.path)} but file does not exist`
     case 'HAS_ESM_MAIN_BUT_NO_EXPORTS':
       // prettier-ignore
       return `${c.bold('pkg.main')} is an ESM file, but it is usually better to use ${c.bold('pkg.exports')} instead, and remove ${c.bold('pkg.main')} alongside, as compatible NodeJS versions support is as well.`
@@ -39,13 +39,13 @@ export function printMessage(m, pkg) {
       return `${c.bold('pkg.module')} should be ESM, but the code is written in CJS.`
     case 'EXPORTS_GLOB_NO_MATCHED_FILES':
       // prettier-ignore
-      return `${c.bold(concatPath(m.path))} is ${c.bold(getPathValue(m.path))} but does not match any files`
+      return `${c.bold(formatPath(m.path))} is ${c.bold(getPathValue(m.path))} but does not match any files`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
-      return `${c.bold(concatPath(m.path) + '.types')} should be the first in the object so TypeScript can load it.`
+      return `${c.bold(formatPath(m.path) + '.types')} should be the first in the object so TypeScript can load it.`
     case 'EXPORTS_DEFAULT_SHOULD_BE_LAST':
       // prettier-ignore
-      return `${c.bold(concatPath(m.path) + '.default')} should be the last in the object so it doesn't take precedence over the keys following it.`
+      return `${c.bold(formatPath(m.path) + '.default')} should be the last in the object so it doesn't take precedence over the keys following it.`
     default:
     // TODO
   }
@@ -53,11 +53,13 @@ export function printMessage(m, pkg) {
   /**
    * @param {string[]} path
    */
-  function concatPath(path) {
+  function formatPath(path) {
     let formatted = 'pkg.'
-    if (path[0] === 'export') {
-      formatted += `["${path.shift()}"]`
-      formatted += path.join(' > ')
+    if (path[0] === 'exports') {
+      formatted += 'exports'
+      if (path[1]) {
+        formatted += ' > ' + path.slice(1).join(' > ')
+      }
     } else {
       formatted += path.join('.')
     }
