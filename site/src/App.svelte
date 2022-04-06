@@ -1,25 +1,11 @@
 <script>
-  import NpmSearchInput from './components/NpmSearchInput.svelte'
-
-  let npmPkgName = ''
-
-  async function handleSubmit() {
-    const result = await fetch(
-      `${
-        import.meta.env.VITE_NPM_REGISTRY
-      }/${npmPkgName}/-/${npmPkgName}-${'1.0.0'}.tgz`
-    )
-    console.log(result)
-  }
+  import HomePage from './pages/Home.svelte'
+  import PackagePage from './pages/Package.svelte'
+  import { url } from './url'
 </script>
 
-<main class="flex flex-col items-center h-full mt-5">
-  <h1 class="mb-0">publint</h1>
-  <p>Lint before you publish!</p>
-  <form
-    class="flex flex-col justify-center items-center w-full"
-    on:submit|preventDefault={handleSubmit}
-  >
-    <NpmSearchInput bind:value={npmPkgName} />
-  </form>
-</main>
+{#if $url.pathname === '/'}
+  <HomePage />
+{:else}
+  <PackagePage />
+{/if}
