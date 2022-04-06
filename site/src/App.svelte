@@ -1,0 +1,19 @@
+<script>
+  import NpmSearchInput from './components/NpmSearchInput.svelte'
+
+  let npmPkgName
+
+  async function handleSubmit() {
+    const result = await fetch(
+      `${
+        import.meta.env.VITE_NPM_REGISTRY
+      }/${npmPkgName}/-/${npmPkgName}-${'1.0.0'}.tgz`
+    )
+    console.log(result)
+  }
+</script>
+
+<form on:submit|preventDefault={handleSubmit}>
+  <NpmSearchInput bind:value={npmPkgName} />
+  <button>Search</button>
+</form>

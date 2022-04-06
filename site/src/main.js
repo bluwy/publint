@@ -1,1 +1,5 @@
-document.getElementById('app').innerHTML = '<h1>Hello World</h1>'
+import App from './App.svelte'
+
+new App({
+  target: document.getElementById('app')
+})
