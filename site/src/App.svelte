@@ -13,7 +13,8 @@
   }
 </script>
 
-<main class="flex flex-col justify-center items-center h-full">
+<main class="flex flex-col items-center h-full mt-5">
+  <h1>publint</h1>
   <form
     class="flex flex-col justify-center items-center w-full"
     on:submit|preventDefault={handleSubmit}

@@ -12,7 +12,7 @@
    */
   let inputEl
   /**
-   * @type {string[]}
+   * @type {{ value: string, description?: string }[]}
    */
   let options = []
   /**
@@ -24,13 +24,13 @@
     arrowSelectIndex < 0 &&
     value &&
     options[0] &&
-    options[0].toLowerCase().startsWith(value.toLowerCase())
-      ? value + options[0].slice(value.length)
+    options[0].value.toLowerCase().startsWith(value.toLowerCase())
+      ? value + options[0].value.slice(value.length)
       : ''
 
   function handleKeyDown(e) {
     if (e.key === 'Tab' && hintText && options[0]) {
-      selectChoice(options[0])
+      value = options[0].value
       // dont tab to another component
       e.preventDefault()
     } else if (e.key === 'Enter' && options[arrowSelectIndex]) {
@@ -42,7 +42,7 @@
   function handleKeyUp(e) {
     if (e.key === 'Enter') {
       if (options[arrowSelectIndex]) {
-        selectChoice(options[arrowSelectIndex])
+        value = options[arrowSelectIndex].value
       }
       arrowSelectIndex = -1
       return
@@ -67,7 +67,7 @@
     // This will show the preview input value when pre-selecting a choice.
     if (inputEl) {
       if (arrowSelectIndex >= 0) {
-        inputEl.value = options[arrowSelectIndex]
+        inputEl.value = options[arrowSelectIndex].value
       } else {
         inputEl.value = value
       }
@@ -86,19 +86,22 @@
 
     if (result.ok) {
       const json = await result.json()
-      options = json.map((v) => v.package.name)
+      options = json.map((v) => ({
+        value: v.package.name,
+        description: v.package.description
+      }))
     }
   }, 500)
 </script>
 
-<div class="relative isolate w-full max-w-xl">
+<div class="relative isolate w-full max-w-xl group">
   <div
-    class="border-rounded-2 w-full overflow-hidden border-none shadow-lg bg-white absolute top-0 -z-1"
+    class="group-focus-within:block hidden border-rounded-2 w-full overflow-hidden border-none shadow-lg bg-white absolute top-0 -z-1 transition-shadow"
   >
     <!-- Hint for "Tab" -->
     <input
       type="text"
-      class="w-full p-4 m-0 text-base bg-transparent text-red pointer-events-none truncate"
+      class="w-full p-4 m-0 text-base bg-transparent text-red pointer-events-none truncate border-none"
       placeholder={hintText}
       readonly
       tabindex="-1"
@@ -108,14 +111,18 @@
         Set tabindex="-1" to prevent focus going into the list. Instead that can use
         keyboard arrow keys to navigate, while the ARIA labels will fill in the gap.
       -->
-      <ul class="w-full list-none m-0 p-0" tabindex="-1" role="tablist">
-        {#each options as choice, i}
-          <li class="m-0 py-0" aria-selected={arrowSelectIndex === i}>
+      <ul class="w-full list-none m-0 p-0 border-0 border-t border-gray" tabindex="-1" role="tablist">
+        {#each options as opt, i}
+          <li
+            class="m-0 py-0 aria-selected:bg-opacity-25 bg-gray bg-opacity-0 hover:bg-opacity-25 transition-colors sele"
+            class:bg-opacity-25={arrowSelectIndex === i}
+            aria-selected={arrowSelectIndex === i}
+          >
             <button
-              class="bg-gray m-0 border-none text-base w-full block text-left p-4 bg-opacity-0 hover:bg-opacity-25"
-              on:click={() => (value = choice)}
+              class="bg-transparent m-0 border-none text-base w-full block text-left p-4"
+              on:click={() => (value = opt.value)}
             >
-              {choice}
+              {opt.value}
             </button>
           </li>
         {/each}
@@ -125,7 +132,7 @@
   <input
     bind:this={inputEl}
     bind:value
-    class="w-full p-4 m-0 bg-transparent cursor-pointer focus:outline-none text-base truncate"
+    class="w-full p-4 m-0 bg-white cursor-pointer focus:outline-none text-base truncate group-focus-within:bg-transparent border-rounded-2 border-none shadow-sm group-focus-within:shadow-none transition-shadow"
     type="text"
     placeholder="npm package"
     autocomplete="off"
