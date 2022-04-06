@@ -13,7 +13,12 @@
   }
 </script>
 
-<form on:submit|preventDefault={handleSubmit}>
-  <NpmSearchInput bind:value={npmPkgName} />
-  <button>Search</button>
-</form>
+<main class="flex flex-col justify-center items-center h-full">
+  <form
+    class="flex flex-col justify-center items-center w-full"
+    on:submit|preventDefault={handleSubmit}
+  >
+    <NpmSearchInput bind:value={npmPkgName} />
+    <button>Search</button>
+  </form>
+</main>

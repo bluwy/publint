@@ -91,19 +91,41 @@
   }, 500)
 </script>
 
-<div class="relative">
-  <!-- Hint for "Tab" -->
-  <input
-    type="text"
-    class="absolute w-full p-4 text-base bg-transparent text-red pointer-events-none truncate -z-1"
-    placeholder={hintText}
-    readonly
-    tabindex="-1"
-  />
+<div class="relative isolate w-full max-w-xl">
+  <div
+    class="border-rounded-2 w-full overflow-hidden border-none shadow-lg bg-white absolute top-0 -z-1"
+  >
+    <!-- Hint for "Tab" -->
+    <input
+      type="text"
+      class="w-full p-4 m-0 text-base bg-transparent text-red pointer-events-none truncate"
+      placeholder={hintText}
+      readonly
+      tabindex="-1"
+    />
+    {#if options}
+      <!--
+        Set tabindex="-1" to prevent focus going into the list. Instead that can use
+        keyboard arrow keys to navigate, while the ARIA labels will fill in the gap.
+      -->
+      <ul class="w-full list-none m-0 p-0" tabindex="-1" role="tablist">
+        {#each options as choice, i}
+          <li class="m-0 py-0" aria-selected={arrowSelectIndex === i}>
+            <button
+              class="bg-gray m-0 border-none text-base w-full block text-left p-4 bg-opacity-0 hover:bg-opacity-25"
+              on:click={() => (value = choice)}
+            >
+              {choice}
+            </button>
+          </li>
+        {/each}
+      </ul>
+    {/if}
+  </div>
   <input
     bind:this={inputEl}
     bind:value
-    class="w-full p-4 bg-transparent cursor-pointer focus:outline-none text-base truncate"
+    class="w-full p-4 m-0 bg-transparent cursor-pointer focus:outline-none text-base truncate"
     type="text"
     placeholder="npm package"
     autocomplete="off"
@@ -111,19 +133,4 @@
     on:keydown={handleKeyDown}
     on:keyup={handleKeyUp}
   />
-  {#if options}
-    <!--
-			Set tabindex="-1" to prevent focus going into the list. Instead that can use
-			keyboard arrow keys to navigate, while the ARIA labels will fill in the gap.
-		-->
-    <ul class="absolute" tabindex="-1" role="tablist">
-      {#each options as choice, i}
-        <li aria-selected={arrowSelectIndex === i}>
-          <button on:click={() => (value = choice)}>
-            {choice}
-          </button>
-        </li>
-      {/each}
-    </ul>
-  {/if}
 </div>
