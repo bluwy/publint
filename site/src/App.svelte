@@ -14,12 +14,12 @@
 </script>
 
 <main class="flex flex-col items-center h-full mt-5">
-  <h1>publint</h1>
+  <h1 class="mb-0">publint</h1>
+  <p>Lint before you publish!</p>
   <form
     class="flex flex-col justify-center items-center w-full"
     on:submit|preventDefault={handleSubmit}
   >
     <NpmSearchInput bind:value={npmPkgName} />
-    <button>Search</button>
   </form>
 </main>

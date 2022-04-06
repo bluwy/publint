@@ -1,6 +1,6 @@
 # publint
 
-Lint before you publish! Catches common packaging errors and ensures maximum compatibility for consumers of your package.
+Lint before you publish! Catch packaging errors and ensure compatibility across environments.
 
 ## Notes
 
