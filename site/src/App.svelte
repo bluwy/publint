@@ -1,7 +1,7 @@
 <script>
   import NpmSearchInput from './components/NpmSearchInput.svelte'
 
-  let npmPkgName
+  let npmPkgName = ''
 
   async function handleSubmit() {
     const result = await fetch(
