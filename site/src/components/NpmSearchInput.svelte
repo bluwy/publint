@@ -106,12 +106,16 @@
       readonly
       tabindex="-1"
     />
-    {#if options}
+    {#if options.length}
       <!--
         Set tabindex="-1" to prevent focus going into the list. Instead that can use
         keyboard arrow keys to navigate, while the ARIA labels will fill in the gap.
       -->
-      <ul class="w-full list-none m-0 p-0 border-0 border-t border-gray" tabindex="-1" role="tablist">
+      <ul
+        class="w-full list-none m-0 p-0 border-0 border-t border-gray"
+        tabindex="-1"
+        role="tablist"
+      >
         {#each options as opt, i}
           <li
             class="m-0 py-0 aria-selected:bg-opacity-25 bg-gray bg-opacity-0 hover:bg-opacity-25 transition-colors sele"
