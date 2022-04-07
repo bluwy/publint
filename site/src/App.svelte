@@ -1,7 +1,7 @@
 <script>
   import HomePage from './pages/Home.svelte'
   import PackagePage from './pages/Package.svelte'
-  import { url } from './url'
+  import { url } from './utils/url'
 </script>
 
 {#if $url.pathname === '/'}

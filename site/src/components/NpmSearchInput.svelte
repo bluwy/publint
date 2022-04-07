@@ -1,5 +1,5 @@
 <script>
-  import { debounce } from '../utils'
+  import { debounce } from '../utils/common'
 
   /**
    * @type {string}

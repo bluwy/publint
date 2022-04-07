@@ -1,6 +1,6 @@
 <script>
   import NpmSearchInput from '../components/NpmSearchInput.svelte'
-  import { url } from '../url'
+  import { url } from '../utils/url'
 
   let npmPkgName = ''
 </script>
