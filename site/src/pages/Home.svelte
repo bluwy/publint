@@ -8,10 +8,15 @@
 <main class="flex flex-col items-center h-full mt-5">
   <h1 class="mb-0">publint</h1>
   <p>Lint before you publish!</p>
-  <form
-    class="flex flex-col justify-center items-center w-full"
-    on:submit|preventDefault={() => url.push('/' + npmPkgName)}
-  >
-    <NpmSearchInput bind:value={npmPkgName} />
-  </form>
+  <section class="flex flex-col justify-center items-center w-full">
+    <NpmSearchInput
+      on:submit={(e) =>
+        url.push(
+          '/' +
+            [e.detail.npmPkgName, e.detail.npmPkgVersion]
+              .filter(Boolean)
+              .join('@')
+        )}
+    />
+  </section>
 </main>

@@ -1,11 +1,13 @@
 <script>
+  import { createEventDispatcher } from 'svelte'
   import { debounce } from '../utils/common'
+
+  const dispatch = createEventDispatcher()
 
   /**
    * @type {string}
    */
-  export let value
-
+  let npmPkgName = ''
   /**
    * Input element used to set the value
    * @type {HTMLInputElement | undefined}
@@ -22,15 +24,15 @@
 
   $: hintText =
     arrowSelectIndex < 0 &&
-    value &&
+    npmPkgName &&
     options[0] &&
-    options[0].value.toLowerCase().startsWith(value.toLowerCase())
-      ? value + options[0].value.slice(value.length)
+    options[0].value.toLowerCase().startsWith(npmPkgName.toLowerCase())
+      ? npmPkgName + options[0].value.slice(npmPkgName.length)
       : ''
 
   function handleKeyDown(e) {
     if (e.key === 'Tab' && hintText && options[0]) {
-      value = options[0].value
+      npmPkgName = options[0].value
       // dont tab to another component
       e.preventDefault()
     } else if (e.key === 'Enter' && options[arrowSelectIndex]) {
@@ -42,7 +44,7 @@
   function handleKeyUp(e) {
     if (e.key === 'Enter') {
       if (options[arrowSelectIndex]) {
-        value = options[arrowSelectIndex].value
+        npmPkgName = options[arrowSelectIndex].value
       }
       arrowSelectIndex = -1
       return
@@ -69,16 +71,16 @@
       if (arrowSelectIndex >= 0) {
         inputEl.value = options[arrowSelectIndex].value
       } else {
-        inputEl.value = value
+        inputEl.value = npmPkgName
       }
     }
   }
 
   const handleInput = debounce(async () => {
-    if (!value) return
+    if (!npmPkgName) return
 
     const result = await fetch(
-      `${import.meta.env.VITE_NPM_SEARCH_ENDPOINT}?q=${value}&size=5`,
+      `${import.meta.env.VITE_NPM_SEARCH_ENDPOINT}?q=${npmPkgName}&size=5`,
       {
         method: 'GET'
       }
@@ -88,13 +90,22 @@
       const json = await result.json()
       options = json.map((v) => ({
         value: v.package.name,
-        description: v.package.description
+        description: v.package.description,
+        version: v.package.version
       }))
     }
   }, 500)
 </script>
 
-<div class="relative isolate w-full max-w-xl group">
+<form
+  class="relative isolate w-full max-w-xl group"
+  on:submit|preventDefault={() => {
+    dispatch('submit', {
+      npmPkgName: npmPkgName,
+      npmPkgVersion: options.find((o) => o.value === npmPkgName)?.version
+    })
+  }}
+>
   <div
     class="group-focus-within:block hidden border-rounded-2 w-full overflow-hidden border-none shadow-lg bg-white absolute top-0 -z-1 transition-shadow"
   >
@@ -118,13 +129,13 @@
       >
         {#each options as opt, i}
           <li
-            class="m-0 py-0 aria-selected:bg-opacity-25 bg-gray bg-opacity-0 hover:bg-opacity-25 transition-colors sele"
+            class="m-0 py-0 bg-gray bg-opacity-0 hover:bg-opacity-25 transition-colors sele"
             class:bg-opacity-25={arrowSelectIndex === i}
             aria-selected={arrowSelectIndex === i}
           >
             <button
               class="bg-transparent m-0 border-none text-base w-full block text-left p-4"
-              on:click={() => (value = opt.value)}
+              on:click={() => (npmPkgName = opt.value)}
             >
               {opt.value}
             </button>
@@ -135,13 +146,13 @@
   </div>
   <input
     bind:this={inputEl}
-    bind:value
+    bind:value={npmPkgName}
     class="w-full p-4 m-0 bg-white cursor-pointer focus:outline-none text-base truncate group-focus-within:bg-transparent border-rounded-2 border-none shadow-sm group-focus-within:shadow-none transition-shadow"
     type="text"
-    placeholder="npm package"
+    placeholder="Search npm package"
     autocomplete="off"
     on:input={handleInput}
     on:keydown={handleKeyDown}
     on:keyup={handleKeyUp}
   />
-</div>
+</form>
