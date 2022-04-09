@@ -37,9 +37,13 @@
   }
 </script>
 
-<main class="flex flex-col items-center h-full mt-5">
-  <h1>
-    {npmPkgName} - {npmPkgVersion}
-  </h1>
-  <NpmSearchInput {npmPkgName} />
-</main>
+{#if npmPkgName && npmPkgVersion}
+  <main class="flex flex-col items-center h-full mt-5">
+    <h1>
+      {npmPkgName} - {npmPkgVersion}
+    </h1>
+    <NpmSearchInput {npmPkgName} />
+  </main>
+{/if}
+
+<!-- TODO: Loading screen -->
