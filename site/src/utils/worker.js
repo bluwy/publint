@@ -15,7 +15,7 @@ self.addEventListener('message', async (e) => {
   const files = await untar(tarBuffer) // Handles tar (t)
 
   const messages = await publint({
-    pkgDir: 'package', // The tar file namess have appended "package"
+    pkgDir: 'package', // The tar file names have appended "package"
     vfs: {
       getDirName: (path) => path.replace(/\/[^/]*$/, ''),
       getExtName: (path) => path.replace(/^.*\./, ''),

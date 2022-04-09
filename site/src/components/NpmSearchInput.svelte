@@ -102,6 +102,8 @@
     } else {
       url.push(`/${npmPkgName}@${npmPkgVersion}`)
     }
+    // Clear options so it looks natural that an action has taken place
+    options = []
   }
 </script>
 

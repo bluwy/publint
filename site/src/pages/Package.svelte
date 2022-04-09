@@ -37,6 +37,9 @@
   }
 </script>
 
-<NpmSearchInput {npmPkgName} />
-
-{npmPkgName} - {npmPkgVersion}
+<main class="flex flex-col items-center h-full mt-5">
+  <h1>
+    {npmPkgName} - {npmPkgVersion}
+  </h1>
+  <NpmSearchInput {npmPkgName} />
+</main>
