@@ -1,22 +1,11 @@
 <script>
   import NpmSearchInput from '../components/NpmSearchInput.svelte'
-  import { url } from '../utils/url'
-
-  let npmPkgName = ''
 </script>
 
 <main class="flex flex-col items-center h-full mt-5">
   <h1 class="mb-0">publint</h1>
   <p>Lint before you publish!</p>
   <section class="flex flex-col justify-center items-center w-full">
-    <NpmSearchInput
-      on:submit={(e) =>
-        url.push(
-          '/' +
-            [e.detail.npmPkgName, e.detail.npmPkgVersion]
-              .filter(Boolean)
-              .join('@')
-        )}
-    />
+    <NpmSearchInput />
   </section>
 </main>

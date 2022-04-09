@@ -1,13 +1,11 @@
 <script>
-  import { createEventDispatcher } from 'svelte'
   import { debounce } from '../utils/common'
-
-  const dispatch = createEventDispatcher()
+  import { url } from '../utils/url'
 
   /**
    * @type {string}
    */
-  let npmPkgName = ''
+  export let npmPkgName = ''
   /**
    * Input element used to set the value
    * @type {HTMLInputElement | undefined}
@@ -95,16 +93,21 @@
       }))
     }
   }, 500)
+
+  function handleSubmit() {
+    if (!npmPkgName) return
+    const npmPkgVersion = options.find((o) => o.value === npmPkgName)?.version
+    if (npmPkgVersion) {
+      url.push(`/${npmPkgName}`)
+    } else {
+      url.push(`/${npmPkgName}@${npmPkgVersion}`)
+    }
+  }
 </script>
 
 <form
   class="relative isolate w-full max-w-xl group"
-  on:submit|preventDefault={() => {
-    dispatch('submit', {
-      npmPkgName: npmPkgName,
-      npmPkgVersion: options.find((o) => o.value === npmPkgName)?.version
-    })
-  }}
+  on:submit|preventDefault={handleSubmit}
 >
   <div
     class="group-focus-within:block hidden border-rounded-2 w-full overflow-hidden border-none shadow-lg bg-white absolute top-0 -z-1 transition-shadow"

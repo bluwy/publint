@@ -1,4 +1,5 @@
 <script>
+  import NpmSearchInput from '../components/NpmSearchInput.svelte'
   import { url } from '../utils/url'
 
   let npmPkgName, npmPkgVersion
@@ -15,10 +16,10 @@
 
   // Fetch latest version if not specified
   $: if (!npmPkgVersion) {
-    fetch(`${import.meta.env.VITE_NPM_SEARCH_ENDPOINT}/v2/package${npmPkgName}`)
+    fetch(`${import.meta.env.VITE_NPM_METADATA_ENDPOINT}/${npmPkgName}`)
       .then((v) => v.json())
       .then((v) => {
-        npmPkgVersion = v.metadata.version
+        npmPkgVersion = v.collected.metadata.version
       })
   }
 
@@ -35,5 +36,7 @@
     })
   }
 </script>
+
+<NpmSearchInput {npmPkgName} />
 
 {npmPkgName} - {npmPkgVersion}
