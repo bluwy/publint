@@ -19,7 +19,7 @@
     fetch(`${import.meta.env.VITE_NPM_METADATA_ENDPOINT}/${npmPkgName}`)
       .then((v) => v.json())
       .then((v) => {
-        npmPkgVersion = v.collected.metadata.version
+        url.replace(`/${npmPkgName}@${v.collected.metadata.version}`)
       })
   }
 
