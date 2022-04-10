@@ -35,6 +35,16 @@ export type Message =
         actualFilePath?: string
       }
     >
+  | BaseMessage<
+      'FILE_INVALID_EXPLICIT_FORMAT',
+      {
+        actualFormat: string
+        expectFormat: string
+        actualExtension: string
+        expectExtension: string
+        actualFilePath?: string
+      }
+    >
   | BaseMessage<'FILE_DOES_NOT_EXIST'>
   | BaseMessage<'MODULE_SHOULD_BE_ESM'>
   | BaseMessage<'HAS_MODULE_BUT_NO_EXPORTS'>

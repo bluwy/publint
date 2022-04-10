@@ -12,25 +12,22 @@ export function printMessage(m, pkg) {
   /** @param {string} s */
   const warn = (s) => `<strong>${s}</strong>`
 
+  let is, relativePath
+
   // TODO: verbose mode
   switch (m.code) {
     case 'IMPLICIT_INDEX_JS_INVALID_FORMAT':
       return `index.js should be ${m.args.expectFormat} but it is ${m.args.actualFormat}`
     case 'FILE_INVALID_FORMAT':
-      const isGlob = pv(m.path).includes('*')
-      const is = isGlob ? 'matches' : 'is'
-      const relativePath = m.args.actualFilePath ?? pv(m.path)
-
-      if (
-        m.args.actualExtension.endsWith('.mjs') ||
-        m.args.actualExtension.endsWith('.cjs')
-      ) {
-        // prettier-ignore
-        return `${bold(fp(m.path))} ${is} ${bold(relativePath)} which ends with the ${warn(m.args.actualExtension)} extension, but the code is written in ${warn(m.args.actualFormat)}. Consider re-writting the code to ${warn(m.args.expectFormat)}, or use the ${warn(m.args.expectExtension)} extension, e.g. ${bold(pv(m.path).replace(m.args.actualExtension, m.args.expectExtension))}`
-      } else {
-        // prettier-ignore
-        return `${bold(fp(m.path))} ${is} ${bold(relativePath)} and is detected to be ${warn(m.args.expectFormat)}, but the code is written in ${warn(m.args.actualFormat)}. Consider re-writting the code to ${warn(m.args.expectFormat)}, or use the ${warn(m.args.expectExtension)} extension, e.g. ${bold(pv(m.path).replace('.js', m.args.expectExtension))}`
-      }
+      is = pv(m.path).includes('*') ? 'matches' : 'is'
+      relativePath = m.args.actualFilePath ?? pv(m.path)
+      // prettier-ignore
+      return `${bold(fp(m.path))} ${is} ${bold(relativePath)} and is detected to be ${warn(m.args.expectFormat)}, but the code is written in ${warn(m.args.actualFormat)}. Consider re-writting the code to ${warn(m.args.expectFormat)}, or use the ${warn(m.args.expectExtension)} extension, e.g. ${bold(pv(m.path).replace('.js', m.args.expectExtension))}`
+    case 'FILE_INVALID_EXPLICIT_FORMAT':
+      is = pv(m.path).includes('*') ? 'matches' : 'is'
+      relativePath = m.args.actualFilePath ?? pv(m.path)
+      // prettier-ignore
+      return `${bold(fp(m.path))} ${is} ${bold(relativePath)} which ends with the ${warn(m.args.actualExtension)} extension, but the code is written in ${warn(m.args.actualFormat)}. Consider re-writting the code to ${warn(m.args.expectFormat)}, or use the ${warn(m.args.expectExtension)} extension, e.g. ${bold(pv(m.path).replace(m.args.actualExtension, m.args.expectExtension))}`
     case 'FILE_DOES_NOT_EXIST':
       // prettier-ignore
       return `${bold(fp(m.path))} is ${pv(m.path)} but file does not exist`

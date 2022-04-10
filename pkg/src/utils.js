@@ -97,6 +97,13 @@ export function getCodeFormatExtension(format) {
 }
 
 /**
+ * @param {string} path
+ */
+export function isExplicitExtension(path) {
+  return path.endsWith('.mjs') || path.endsWith('.cjs')
+}
+
+/**
  *
  * @param {string} filePath
  * @param {import('../lib').Vfs} vfs

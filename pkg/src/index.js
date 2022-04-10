@@ -2,7 +2,8 @@ import {
   exportsGlob,
   getCodeFormat,
   getFilePathFormat,
-  getCodeFormatExtension
+  getCodeFormatExtension,
+  isExplicitExtension
 } from './utils.js'
 
 /**
@@ -60,12 +61,15 @@ export async function publint({ pkgDir, vfs }) {
       const actualFormat = getCodeFormat(mainContent)
       const expectFormat = await getFilePathFormat(mainPath, vfs)
       if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
+        const actualExtension = vfs.getExtName(mainPath)
         messages.push({
-          code: 'FILE_INVALID_FORMAT',
+          code: isExplicitExtension(actualExtension)
+            ? 'FILE_INVALID_EXPLICIT_FORMAT'
+            : 'FILE_INVALID_FORMAT',
           args: {
             actualFormat,
             expectFormat,
-            actualExtension: vfs.getExtName(mainPath),
+            actualExtension,
             expectExtension: getCodeFormatExtension(expectFormat)
           },
           path: ['main'],
@@ -160,12 +164,15 @@ export async function publint({ pkgDir, vfs }) {
             const actualFormat = getCodeFormat(fileContent)
             const expectFormat = await getFilePathFormat(filePath, vfs)
             if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
+              const actualExtension = vfs.getExtName(filePath)
               messages.push({
-                code: 'FILE_INVALID_FORMAT',
+                code: isExplicitExtension(actualExtension)
+                  ? 'FILE_INVALID_EXPLICIT_FORMAT'
+                  : 'FILE_INVALID_FORMAT',
                 args: {
                   actualFormat,
                   expectFormat,
-                  actualExtension: vfs.getExtName(filePath),
+                  actualExtension,
                   expectExtension: getCodeFormatExtension(expectFormat),
                   actualFilePath: isGlob
                     ? './' + vfs.pathRelative(pkgDir, filePath)
