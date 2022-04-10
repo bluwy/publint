@@ -127,13 +127,13 @@ export async function getNearestPkg(filePath, vfs) {
  */
 export function formatMessagePath(path) {
   let formatted = 'pkg.'
-  if (path[0] === 'exports') {
-    formatted += 'exports'
-    if (path[1]) {
-      formatted += ' > ' + path.slice(1).join(' > ')
+  for (const part of path) {
+    // is invalid js var name
+    if (!/^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(part)) {
+      formatted += `["${part}"]`
+    } else {
+      formatted += part
     }
-  } else {
-    formatted += path.join('.')
   }
   return formatted
 }

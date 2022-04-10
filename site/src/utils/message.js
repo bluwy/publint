@@ -8,9 +8,9 @@ export function printMessage(m, pkg) {
   /** @param {string[]} path */
   const pv = (path) => getPkgPathValue(pkg, path)
   /** @param {string} s */
-  const bold = (s) => `<strong>${s}</strong>`
+  const bold = (s) => `<strong><code>${s}</code></strong>`
   /** @param {string} s */
-  const warn = (s) => `<strong>${s}</strong>`
+  const warn = (s) => `<strong><code>${s}</code></strong>`
 
   let is, relativePath
 
