@@ -1,5 +1,6 @@
 <script>
   import NpmSearchInput from '../components/NpmSearchInput.svelte'
+  import PkgNode from '../components/PkgNode.svelte'
   import { isLocalPkg } from '../utils/common'
   import { url } from '../utils/url'
 
@@ -24,13 +25,12 @@
       })
   }
 
+  let result
   $: if (npmPkgName && npmPkgVersion) {
     const worker = new Worker(new URL('../utils/worker.js', import.meta.url), {
       type: 'module'
     })
-    worker.addEventListener('message', (e) => {
-      console.log(e.data)
-    })
+    worker.addEventListener('message', (e) => (result = e.data))
     worker.postMessage({
       npmPkgName,
       npmPkgVersion
@@ -44,7 +44,18 @@
       {npmPkgName} - {npmPkgVersion}
     </h1>
     <NpmSearchInput {npmPkgName} />
+    {#if result}
+      <section class="w-full max-w-4xl my-4 bg-gray-200 rounded-md">
+        <pre class="w-full p-4 m-0 whitespace-normal">
+          <ul class="m-0 p-0 list-none">
+            <PkgNode value={result.pkgJson} />
+          </ul>
+        </pre>
+      </section>
+    {/if}
   </main>
 {/if}
 
 <!-- TODO: Loading screen -->
+<style>
+</style>
