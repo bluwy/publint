@@ -1,6 +1,7 @@
 <script>
   import NpmSearchInput from '../components/NpmSearchInput.svelte'
   import PkgNode from '../components/PkgNode.svelte'
+  import Messages from '../components/Messages.svelte'
   import { isLocalPkg } from '../utils/common'
   import { url } from '../utils/url'
 
@@ -51,6 +52,9 @@
             <PkgNode value={result.pkgJson} />
           </ul>
         </pre>
+      </section>
+      <section>
+        <Messages messages={result.messages} pkg={result.pkgJson} />
       </section>
     {/if}
   </main>
