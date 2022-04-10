@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "packfix": "node ./scripts/packFixtures.js"
   },
   "dependencies": {
     "js-untar": "^2.0.0",

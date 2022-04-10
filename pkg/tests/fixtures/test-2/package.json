@@ -1,5 +1,6 @@
 {
-  "name": "test-2",
+  "name": "publint-test-2",
+  "version": "0.0.1",
   "private": true,
   "exports": {
     "./*.js": "./lib/*.js"

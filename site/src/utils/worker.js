@@ -1,12 +1,19 @@
 import { inflate } from 'pako'
 import untar from 'js-untar'
 import { publint } from 'publint'
+import { isLocalPkg } from './common'
 
 self.addEventListener('message', async (e) => {
   const { npmPkgName, npmPkgVersion } = e.data
 
-  // prettier-ignore
-  const tarballUrl = `${import.meta.env.VITE_NPM_REGISTRY}/${npmPkgName}/-/${npmPkgName}-${npmPkgVersion}.tgz`
+  let tarballUrl
+  if (isLocalPkg(npmPkgName)) {
+    // prettier-ignore
+    tarballUrl = new URL(`/temp/${npmPkgName}-${npmPkgVersion}.tgz`, import.meta.url).href
+  } else {
+    // prettier-ignore
+    tarballUrl = `${import.meta.env.VITE_NPM_REGISTRY}/${npmPkgName}/-/${npmPkgName}-${npmPkgVersion}.tgz`
+  }
 
   // Credit: https://stackoverflow.com/a/65448758
   const result = await fetch(tarballUrl)

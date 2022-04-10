@@ -1,3 +1,8 @@
+// Serve local packages for testing. Run `pnpm packfix` first.
+export function isLocalPkg(pkgName) {
+  return import.meta.env.DEV && pkgName.startsWith('publint-')
+}
+
 export function debounce(fn, wait) {
   let t
   return function () {

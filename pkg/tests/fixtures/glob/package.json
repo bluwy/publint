@@ -1,4 +1,5 @@
 {
-  "name": "glob",
+  "name": "publint-glob",
+  "version": "0.0.1",
   "private": true
 }

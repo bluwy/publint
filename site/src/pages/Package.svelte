@@ -1,5 +1,6 @@
 <script>
   import NpmSearchInput from '../components/NpmSearchInput.svelte'
+  import { isLocalPkg } from '../utils/common'
   import { url } from '../utils/url'
 
   let npmPkgName, npmPkgVersion
@@ -11,7 +12,7 @@
     const parts = $url.pathname.slice(1).split('@')
     if (parts[0] === '') parts.shift()
     npmPkgName = parts[0]
-    npmPkgVersion = parts[1]
+    npmPkgVersion = isLocalPkg(npmPkgName) ? '0.0.1' : parts[1]
   }
 
   // Fetch latest version if not specified

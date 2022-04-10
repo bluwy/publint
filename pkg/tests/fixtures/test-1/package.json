@@ -1,5 +1,6 @@
 {
-  "name": "test-1",
+  "name": "publint-test-1",
+  "version": "0.0.1",
   "private": true,
   "exports": "./main.js"
 }
