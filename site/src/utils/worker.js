@@ -21,30 +21,35 @@ self.addEventListener('message', async (e) => {
   const tarBuffer = inflate(resultBuffer).buffer // Handles gzip (gz)
   const files = await untar(tarBuffer) // Handles tar (t)
 
-  const messages = await publint({
-    pkgDir: 'package', // The tar file names have appended "package"
-    vfs: {
-      getDirName: (path) => path.replace(/\/[^/]*$/, ''),
-      getExtName: (path) => path.replace(/^.*\./, ''),
-      isPathDir: (path) => files.some((file) => file.name.startsWith(path)),
-      isPathExist: (path) => files.some((file) => file.name === path),
-      pathJoin: (...parts) => parts.join('/'),
-      pathRelative: (from, to) => to.replace(from, ''),
-      pathResolve: (...parts) => parts.join('/'),
-      readDir: (path) =>
-        files
-          .filter((file) => file.name.startsWith(path))
-          .map((file) => file.name),
-      readFile: (path) => {
-        const file = files.find((file) => file.name === path)
-        if (file) {
-          return new TextDecoder('utf-8').decode(file.buffer)
-        } else {
-          return ''
-        }
+  /** @type {import('publint').Vfs} */
+  const vfs = {
+    getDirName: (path) => path.replace(/\/[^/]*$/, ''),
+    getExtName: (path) => path.replace(/^.*\./, ''),
+    isPathDir: (path) => files.some((file) => file.name.startsWith(path)),
+    isPathExist: (path) => files.some((file) => file.name === path),
+    pathJoin: (...parts) => parts.join('/'),
+    pathRelative: (from, to) => to.replace(from, ''),
+    pathResolve: (...parts) => parts.join('/'),
+    readDir: (path) =>
+      files
+        .filter((file) => file.name.startsWith(path))
+        .map((file) => file.name),
+    readFile: (path) => {
+      const file = files.find((file) => file.name === path)
+      if (file) {
+        return new TextDecoder('utf-8').decode(file.buffer)
+      } else {
+        return ''
       }
     }
-  })
+  }
 
-  postMessage(messages)
+  // The tar file names have appended "package"
+  const messages = await publint({ pkgDir: 'package', vfs })
+  const pkgJson = JSON.parse(await vfs.readFile('package/package.json'))
+
+  postMessage({
+    messages,
+    pkgJson
+  })
 })
