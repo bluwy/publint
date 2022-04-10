@@ -8,7 +8,7 @@
   $: keyText = key ? `"${key}": ` : ''
 </script>
 
-<li class="flex flex-col">
+<li class="flex flex-col py-1">
   {#if isValueObject}
     <span>{keyText}{isValueArray ? '[' : '{'}</span>
     <ul class="m-0 p-0 list-none pl-[2ch]">
