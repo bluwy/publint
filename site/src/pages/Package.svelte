@@ -46,20 +46,22 @@
     </h1>
     <NpmSearchInput {npmPkgName} />
     {#if result}
-      <section class="w-full max-w-4xl my-4 bg-gray-200 rounded-md">
-        <pre
-          class="relative w-full px-4 py-3 m-0 whitespace-normal text-sm md:text-base">
-          <ul class="m-0 p-0 list-none">
-            <PkgNode
-              value={result.pkgJson}
-              messagePaths={result.messages.map((v) => v.path)}
-            />
-          </ul>
-        </pre>
-      </section>
-      <section>
-        <Messages messages={result.messages} pkg={result.pkgJson} />
-      </section>
+      <div class="w-full flex my-4 gap-4 max-w-6xl">
+        <section class="w-2/3 bg-gray-200 rounded-md">
+          <pre
+            class="relative w-full px-4 py-3 m-0 whitespace-normal text-sm md:text-base">
+            <ul class="m-0 p-0 list-none">
+              <PkgNode
+                value={result.pkgJson}
+                messagePaths={result.messages.map((v) => v.path)}
+              />
+            </ul>
+          </pre>
+        </section>
+        <section class="w-1/3">
+          <Messages messages={result.messages} pkg={result.pkgJson} />
+        </section>
+      </div>
     {/if}
   </main>
 {/if}

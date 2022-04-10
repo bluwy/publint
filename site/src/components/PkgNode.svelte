@@ -4,6 +4,7 @@
 
 <script>
   import { getContext, setContext } from 'svelte'
+  import { isArrayEqual } from '../utils/common'
 
   export let key = ''
   export let value = undefined
@@ -16,15 +17,7 @@
   $: isValueArray = Array.isArray(value)
   $: isValueObject = value && typeof value === 'object'
   $: keyText = key ? `"${key}": ` : ''
-  $: isError = messagePaths.some((v) => arrayEqual(paths, v))
-
-  function arrayEqual(a, b) {
-    if (a.length !== b.length) return false
-    for (let i = 0; i < a.length; i++) {
-      if (a[i] !== b[i]) return false
-    }
-    return true
-  }
+  $: isError = messagePaths.some((v) => isArrayEqual(paths, v))
 </script>
 
 <li class="isolate flex flex-col py-1">
