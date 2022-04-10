@@ -11,7 +11,10 @@
   {#each messages as message}
     {@const offset = $errorNodePositions.get(message.path) ?? 0}
     <!-- TODO: Grouping -->
-    <li class="absolute rounded-md w-full px-4 py-2 bg-red-200" style="top: {offset}px">
+    <li
+      class="absolute rounded-md w-full px-4 py-2 bg-red-200"
+      style="top: {offset}px"
+    >
       {@html printMessage(message, pkg)}
     </li>
   {/each}

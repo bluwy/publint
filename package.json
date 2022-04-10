@@ -2,5 +2,13 @@
   "name": "publint-monorepo",
   "private": true,
   "type": "module",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "format": "prettier **/*.{js,ts,css,md,svelte} --check"
+  },
+  "devDependencies": {
+    "prettier": "^2.6.2",
+    "prettier-plugin-svelte": "^2.7.0",
+    "svelte": "^3.46.6"
+  }
 }
