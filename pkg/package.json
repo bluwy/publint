@@ -5,11 +5,20 @@
   "type": "module",
   "license": "MIT",
   "bin": "./lib/cli.js",
-  "types": "./index.d.ts",
+  "types": "./lib/index.d.ts",
   "exports": {
-    "browser": "./lib/browser.js",
-    "node": "./lib/node.js",
-    "default": "./src/index.js"
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": {
+        "browser": "./lib/browser.js",
+        "node": "./lib/node.js",
+        "default": "./src/index.js"
+      }
+    },
+    "./utils": {
+      "types": "./lib/utils.d.ts",
+      "import": "./lib/utils.js"
+    }
   },
   "scripts": {
     "cli": "node ./lib/cli.js",

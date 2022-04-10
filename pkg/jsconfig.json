@@ -1,8 +1,5 @@
 {
   "compilerOptions": {
-    "checkJs": true,
-    "paths": {
-			"types": ["./index.d.ts"]
-    }
+    "checkJs": true
   }
 }

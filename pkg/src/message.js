@@ -1,32 +1,36 @@
 import c from 'picocolors'
+import { formatMessagePath as fp, getPkgPathValue } from './utils'
 
 /**
- * @param {import('types').Message} m
+ * @param {import('../lib').Message} m
  * @param {import('./utils').Pkg} pkg
  */
 export function printMessage(m, pkg) {
+  /** @param {string[]} path */
+  const pv = (path) => getPkgPathValue(pkg, path)
+
   // TODO: verbose mode
   switch (m.code) {
     case 'IMPLICIT_INDEX_JS_INVALID_FORMAT':
       return `index.js should be ${m.args.expectFormat} but it is ${m.args.actualFormat}`
     case 'FILE_INVALID_FORMAT':
-      const isGlob = getPathValue(m.path).includes('*')
+      const isGlob = pv(m.path).includes('*')
       const is = isGlob ? 'matches' : 'is'
-      const relativePath = m.args.actualFilePath ?? getPathValue(m.path)
+      const relativePath = m.args.actualFilePath ?? pv(m.path)
 
       if (
         m.args.actualExtension.endsWith('.mjs') ||
         m.args.actualExtension.endsWith('.cjs')
       ) {
         // prettier-ignore
-        return `${c.bold(formatPath(m.path))} ${is} ${c.bold(relativePath)} which ends with the ${c.yellow(m.args.actualExtension)} extension, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider re-writting the code to ${c.yellow(m.args.expectFormat)}, or use the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(getPathValue(m.path).replace(m.args.actualExtension, m.args.expectExtension))}`
+        return `${c.bold(fp(m.path))} ${is} ${c.bold(relativePath)} which ends with the ${c.yellow(m.args.actualExtension)} extension, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider re-writting the code to ${c.yellow(m.args.expectFormat)}, or use the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(pv(m.path).replace(m.args.actualExtension, m.args.expectExtension))}`
       } else {
         // prettier-ignore
-        return `${c.bold(formatPath(m.path))} ${is} ${c.bold(relativePath)} and is detected to be ${c.yellow(m.args.expectFormat)}, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider re-writting the code to ${c.yellow(m.args.expectFormat)}, or use the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(getPathValue(m.path).replace('.js', m.args.expectExtension))}`
+        return `${c.bold(fp(m.path))} ${is} ${c.bold(relativePath)} and is detected to be ${c.yellow(m.args.expectFormat)}, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider re-writting the code to ${c.yellow(m.args.expectFormat)}, or use the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(pv(m.path).replace('.js', m.args.expectExtension))}`
       }
     case 'FILE_DOES_NOT_EXIST':
       // prettier-ignore
-      return `${c.bold(formatPath(m.path))} is ${getPathValue(m.path)} but file does not exist`
+      return `${c.bold(fp(m.path))} is ${pv(m.path)} but file does not exist`
     case 'HAS_ESM_MAIN_BUT_NO_EXPORTS':
       // prettier-ignore
       return `${c.bold('pkg.main')} is an ESM file, but it is usually better to use ${c.bold('pkg.exports')} instead, and remove ${c.bold('pkg.main')} alongside, as compatible NodeJS versions support is as well.`
@@ -39,43 +43,14 @@ export function printMessage(m, pkg) {
       return `${c.bold('pkg.module')} should be ESM, but the code is written in CJS.`
     case 'EXPORTS_GLOB_NO_MATCHED_FILES':
       // prettier-ignore
-      return `${c.bold(formatPath(m.path))} is ${c.bold(getPathValue(m.path))} but does not match any files`
+      return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but does not match any files`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
-      return `${c.bold(formatPath(m.path) + '.types')} should be the first in the object so TypeScript can load it.`
+      return `${c.bold(fp(m.path) + '.types')} should be the first in the object so TypeScript can load it.`
     case 'EXPORTS_DEFAULT_SHOULD_BE_LAST':
       // prettier-ignore
-      return `${c.bold(formatPath(m.path) + '.default')} should be the last in the object so it doesn't take precedence over the keys following it.`
+      return `${c.bold(fp(m.path) + '.default')} should be the last in the object so it doesn't take precedence over the keys following it.`
     default:
     // TODO
-  }
-
-  /**
-   * @param {string[]} path
-   */
-  function formatPath(path) {
-    let formatted = 'pkg.'
-    if (path[0] === 'exports') {
-      formatted += 'exports'
-      if (path[1]) {
-        formatted += ' > ' + path.slice(1).join(' > ')
-      }
-    } else {
-      formatted += path.join('.')
-    }
-    return formatted
-  }
-
-  /**
-   * @param {string[]} path
-   * @returns {string}
-   */
-  function getPathValue(path) {
-    let v = pkg
-    for (const p of path) {
-      v = v[p]
-    }
-    // @ts-ignore
-    return v
   }
 }

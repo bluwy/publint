@@ -48,7 +48,7 @@ export function isCodeMatchingFormat(code, format) {
 /**
  * Handle `exports` glob
  * @param {string} globStr An absolute glob string that must contain one `*`
- * @param {import('types').Vfs} vfs
+ * @param {import('../lib').Vfs} vfs
  * @returns {Promise<string[]>} Matched file paths
  */
 export async function exportsGlob(globStr, vfs) {
@@ -72,7 +72,7 @@ export async function exportsGlob(globStr, vfs) {
 
 /**
  * @param {string} filePath
- * @param {import('types').Vfs} vfs
+ * @param {import('../lib').Vfs} vfs
  * @returns {Promise<CodeFormat>}
  */
 export async function getFilePathFormat(filePath, vfs) {
@@ -99,7 +99,7 @@ export function getCodeFormatExtension(format) {
 /**
  *
  * @param {string} filePath
- * @param {import('types').Vfs} vfs
+ * @param {import('../lib').Vfs} vfs
  * @returns {Promise<Pkg>}
  */
 export async function getNearestPkg(filePath, vfs) {
@@ -112,4 +112,34 @@ export async function getNearestPkg(filePath, vfs) {
     if (nextDir === currentDir) break
     currentDir = nextDir
   }
+}
+
+/**
+ * @param {string[]} path
+ * @returns {string}
+ */
+export function formatMessagePath(path) {
+  let formatted = 'pkg.'
+  if (path[0] === 'exports') {
+    formatted += 'exports'
+    if (path[1]) {
+      formatted += ' > ' + path.slice(1).join(' > ')
+    }
+  } else {
+    formatted += path.join('.')
+  }
+  return formatted
+}
+
+/**
+ * @param {Pkg} pkg
+ * @param {string[]} path
+ * @returns {any}
+ */
+export function getPkgPathValue(pkg, path) {
+  let v = pkg
+  for (const p of path) {
+    v = v[p]
+  }
+  return v
 }

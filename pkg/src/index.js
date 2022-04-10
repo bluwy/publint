@@ -6,8 +6,8 @@ import {
 } from './utils.js'
 
 /**
- * @param {Required<import('types').Options>} options
- * @returns {Promise<import('types').Message[]>}
+ * @param {Required<import('../lib').Options>} options
+ * @returns {Promise<import('../lib').Message[]>}
  */
 export async function publint({ pkgDir, vfs }) {
   const rootPkgPath = vfs.pathJoin(pkgDir, 'package.json')
@@ -18,7 +18,7 @@ export async function publint({ pkgDir, vfs }) {
 
   const isPkgEsm = type === 'module'
 
-  /** @type {import('types').Message[]} */
+  /** @type {import('../lib').Message[]} */
   const messages = []
   const promiseQueue = createPromiseQueue()
 
