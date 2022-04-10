@@ -4,6 +4,7 @@
 
 <script>
   import { getContext, setContext } from 'svelte'
+  import { errorNodePositions } from '../stores/errors'
   import { isArrayEqual } from '../utils/common'
 
   export let key = ''
@@ -17,10 +18,18 @@
   $: isValueArray = Array.isArray(value)
   $: isValueObject = value && typeof value === 'object'
   $: keyText = key ? `"${key}": ` : ''
-  $: isError = messagePaths.some((v) => isArrayEqual(paths, v))
+
+  $: errorPath = messagePaths.find((v) => isArrayEqual(paths, v))
+  $: isError = !!errorPath
+
+  /** @type {HTMLLIElement} */
+  let li
+  $: if (isError && li) {
+    $errorNodePositions.set(errorPath, li.offsetTop)
+  }
 </script>
 
-<li class="isolate flex flex-col py-1">
+<li bind:this={li} class="isolate flex flex-col py-1">
   {#if isError}
     <div
       class="absolute flex items-center justify-end left-0 w-full bg-red-200 text-red-700 p-1 -z-1 -translate-y-1"
