@@ -47,7 +47,7 @@
     <NpmSearchInput {npmPkgName} />
     {#if result}
       <div class="w-full flex my-4 gap-4 max-w-6xl">
-        <section class="w-2/3 bg-gray-200 rounded-md">
+        <section class="w-2/3 bg-gray-200 rounded-md overflow-x-auto overflow-y-hidden">
           <pre
             class="relative w-full px-4 py-3 m-0 whitespace-normal text-sm md:text-base">
             <ul class="m-0 p-0 list-none">

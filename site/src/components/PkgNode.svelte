@@ -54,7 +54,7 @@
   {:else}
     <span class="inline-flex">
       <span class="mr-[1ch]">{keyText}</span>
-      <span class="token {typeof value}">
+      <span class="whitespace-nowrap token {typeof value}">
         {JSON.stringify(value)}
       </span>
       {comma ? ',' : ''}
