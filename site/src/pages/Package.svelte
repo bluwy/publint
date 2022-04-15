@@ -1,7 +1,6 @@
 <script>
   import NpmSearchInput from '../components/NpmSearchInput.svelte'
   import PkgNode from '../components/PkgNode.svelte'
-  import Messages from '../components/Messages.svelte'
   import { isLocalPkg } from '../utils/common'
   import { url } from '../utils/url'
 
@@ -46,25 +45,20 @@
     </h1>
     <NpmSearchInput {npmPkgName} />
     {#if result}
-      <div class="w-full flex my-4 gap-4 max-w-6xl">
-        <section
-          class="w-2/3 bg-gray-200 rounded-md overflow-x-auto overflow-y-hidden"
-        >
-          <pre
-            class="relative w-full px-4 py-3 m-0 whitespace-normal text-sm md:text-base">
-            <ul class="m-0 p-0 list-none">
-              <PkgNode
-                value={result.pkgJson}
-                messages={result.messages}
-                pkg={result.pkgJson}
-              />
-            </ul>
-          </pre>
-        </section>
-        <section class="w-1/3">
-          <Messages messages={result.messages} pkg={result.pkgJson} />
-        </section>
-      </div>
+      <section
+        class="w-full max-w-3xl my-4 bg-gray-200 rounded-md overflow-x-auto overflow-y-hidden"
+      >
+        <pre
+          class="relative w-full px-4 py-3 m-0 whitespace-normal text-sm md:text-base">
+          <ul class="m-0 p-0 list-none">
+            <PkgNode
+              value={result.pkgJson}
+              messages={result.messages}
+              pkg={result.pkgJson}
+            />
+          </ul>
+        </pre>
+      </section>
     {/if}
   </main>
 {/if}
