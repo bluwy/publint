@@ -38,8 +38,12 @@
   }
 </script>
 
+<svelte:head>
+  <title>{npmPkgName} - {npmPkgVersion} - publint</title>
+</svelte:head>
+
 {#if npmPkgName && npmPkgVersion}
-  <main class="flex flex-col items-center h-full mt-5">
+  <main class="flex flex-col items-center min-h-screen mt-5">
     <h1>
       {npmPkgName} - {npmPkgVersion}
     </h1>
