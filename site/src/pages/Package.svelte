@@ -1,4 +1,5 @@
 <script>
+  import Loading from '../components/Loading.svelte'
   import NpmSearchInput from '../components/NpmSearchInput.svelte'
   import PkgNode from '../components/PkgNode.svelte'
   import { isLocalPkg } from '../utils/common'
@@ -18,23 +19,23 @@
 
   // Fetch latest version if not specified
   $: if (!npmPkgVersion) {
-    fetch(`${import.meta.env.VITE_NPM_METADATA_ENDPOINT}/${npmPkgName}`)
-      .then((v) => v.json())
-      .then((v) => {
-        url.replace(`/${npmPkgName}@${v.collected.metadata.version}`)
-      })
+    // fetch(`${import.meta.env.VITE_NPM_METADATA_ENDPOINT}/${npmPkgName}`)
+    //   .then((v) => v.json())
+    //   .then((v) => {
+    //     url.replace(`/${npmPkgName}@${v.collected.metadata.version}`)
+    //   })
   }
 
   let result
   $: if (npmPkgName && npmPkgVersion) {
-    const worker = new Worker(new URL('../utils/worker.js', import.meta.url), {
-      type: 'module'
-    })
-    worker.addEventListener('message', (e) => (result = e.data))
-    worker.postMessage({
-      npmPkgName,
-      npmPkgVersion
-    })
+    // const worker = new Worker(new URL('../utils/worker.js', import.meta.url), {
+    //   type: 'module'
+    // })
+    // worker.addEventListener('message', (e) => (result = e.data))
+    // worker.postMessage({
+    //   npmPkgName,
+    //   npmPkgVersion
+    // })
   }
 </script>
 
@@ -42,8 +43,8 @@
   <title>{npmPkgName} - {npmPkgVersion} - publint</title>
 </svelte:head>
 
-{#if npmPkgName && npmPkgVersion}
-  <main class="flex flex-col items-center min-h-screen mt-5">
+<main class="flex flex-col items-center min-h-screen mt-5">
+  {#if npmPkgName && npmPkgVersion}
     <h1>
       {npmPkgName} - {npmPkgVersion}
     </h1>
@@ -63,8 +64,13 @@
           </ul>
         </pre>
       </section>
+    {:else}
+      <section class="text-center py-8">
+        <Loading />
+        <p>Linting package...</p>
+      </section>
     {/if}
-  </main>
-{/if}
+  {/if}
+</main>
 
 <!-- TODO: Loading screen -->
