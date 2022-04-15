@@ -1,7 +1,7 @@
 import { inflate } from 'pako'
-import untar from 'js-untar'
 import { publint } from 'publint'
 import { isLocalPkg } from './common'
+import { untar } from './untar'
 
 self.addEventListener('message', async (e) => {
   const { npmPkgName, npmPkgVersion } = e.data
@@ -19,7 +19,7 @@ self.addEventListener('message', async (e) => {
   const result = await fetch(tarballUrl)
   const resultBuffer = await result.arrayBuffer()
   const tarBuffer = inflate(resultBuffer).buffer // Handles gzip (gz)
-  const files = await untar(tarBuffer) // Handles tar (t)
+  const files = untar(tarBuffer) // Handles tar (t)
 
   /** @type {import('publint').Vfs} */
   const vfs = {
@@ -39,7 +39,7 @@ self.addEventListener('message', async (e) => {
       if (file) {
         return new TextDecoder('utf-8').decode(file.buffer)
       } else {
-        return ''
+        throw new Error('Unable to read file at path:', path)
       }
     }
   }

@@ -10,7 +10,6 @@
     "packfix": "node ./scripts/packFixtures.js"
   },
   "dependencies": {
-    "js-untar": "^2.0.0",
     "pako": "^2.0.4",
     "publint": "workspace:*"
   },
