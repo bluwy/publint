@@ -27,9 +27,9 @@ self.addEventListener('message', async (e) => {
     getExtName: (path) => path.replace(/^.*\./, ''),
     isPathDir: (path) => files.some((file) => file.name.startsWith(path)),
     isPathExist: (path) => files.some((file) => file.name === path),
-    pathJoin: (...parts) => parts.join('/'),
+    pathJoin: (...parts) =>
+      parts.map((v) => (v.startsWith('./') ? v.slice(2) : v)).join('/'),
     pathRelative: (from, to) => to.replace(from, ''),
-    pathResolve: (...parts) => parts.join('/'),
     readDir: (path) =>
       files
         .filter((file) => file.name.startsWith(path))
@@ -39,7 +39,7 @@ self.addEventListener('message', async (e) => {
       if (file) {
         return new TextDecoder('utf-8').decode(file.buffer)
       } else {
-        throw new Error('Unable to read file at path:', path)
+        throw new Error(`Unable to read file at path: ${path}`)
       }
     }
   }

@@ -73,7 +73,6 @@ export interface Vfs {
   isPathDir: (path: string) => Promise<boolean>
   isPathExist: (path: string) => Promise<boolean>
   pathJoin: (...paths: string[]) => string
-  pathResolve: (...paths: string[]) => string
   pathRelative: (from: string, to: string) => string
   getDirName: (path: string) => string
   getExtName: (path: string) => string

@@ -56,7 +56,7 @@ export async function publint({ pkgDir, vfs }) {
    */
   if (main) {
     promiseQueue.push(async () => {
-      const mainPath = vfs.pathResolve(pkgDir, main)
+      const mainPath = vfs.pathJoin(pkgDir, main)
       const mainContent = await vfs.readFile(mainPath)
       const actualFormat = getCodeFormat(mainContent)
       const expectFormat = await getFilePathFormat(mainPath, vfs)
@@ -95,7 +95,7 @@ export async function publint({ pkgDir, vfs }) {
    */
   if (module) {
     promiseQueue.push(async () => {
-      const modulePath = vfs.pathResolve(pkgDir, module)
+      const modulePath = vfs.pathJoin(pkgDir, module)
       const format = await getFilePathFormat(modulePath, vfs)
       if (format === 'CJS') {
         messages.push({
@@ -136,7 +136,7 @@ export async function publint({ pkgDir, vfs }) {
   function crawlExports(exports, currentPath = ['exports']) {
     if (typeof exports === 'string') {
       promiseQueue.push(async () => {
-        const exportsPath = vfs.pathResolve(pkgDir, exports)
+        const exportsPath = vfs.pathJoin(pkgDir, exports)
         const isGlob = exports.includes('*')
         const exportsFiles = isGlob
           ? await exportsGlob(exportsPath, vfs)

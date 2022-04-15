@@ -24,9 +24,6 @@ export function createNodeVfs() {
     pathJoin(...parts) {
       return nodePath.join(...parts)
     },
-    pathResolve(...parts) {
-      return nodePath.resolve(...parts)
-    },
     pathRelative(from, to) {
       return nodePath.relative(from, to)
     },
