@@ -3,6 +3,12 @@ import { svelte } from '@sveltejs/vite-plugin-svelte'
 import unocss from '@unocss/vite'
 
 export default defineConfig({
+  optimizeDeps: {
+    // Vite's scanner doesn't scan references via `new URL(...)`.
+    // In this app, we import the worker with the syntax, so manually add the worker for now.
+    // TODO: Fix this in Vite
+    entries: ['**/*.html', './src/utils/worker.js']
+  },
   plugins: [
     spaFallbackWithDot(),
     unocss(),
@@ -17,6 +23,7 @@ export default defineConfig({
 
 /**
  * Vite doesn't handle fallback html with dot (.), see https://github.com/vitejs/vite/issues/2415
+ * TODO: Review the PR in Vite
  * @returns {import('vite').Plugin}
  */
 function spaFallbackWithDot() {
