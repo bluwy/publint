@@ -16,10 +16,10 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.41",
-    "@unocss/core": "^0.30.12",
-    "@unocss/preset-uno": "^0.30.12",
-    "@unocss/vite": "^0.30.12",
-    "svelte": "^3.46.6",
-    "vite": "^2.9.1"
+    "@unocss/core": "^0.30.13",
+    "@unocss/preset-uno": "^0.30.13",
+    "@unocss/vite": "^0.30.13",
+    "svelte": "^3.47.0",
+    "vite": "^2.9.5"
   }
 }
