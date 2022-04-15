@@ -10,6 +10,7 @@
   export let key = ''
   export let value = undefined
   export let comma = false
+  export let indent = 0
   export let messagePaths
 
   const paths = key ? getContext(KEY).concat(key) : []
@@ -29,7 +30,11 @@
   }
 </script>
 
-<li bind:this={li} class="isolate flex flex-col py-1">
+<li
+  bind:this={li}
+  class="isolate flex flex-col py-1"
+  style:--indent-ch="{indent * 2}ch"
+>
   {#if isError}
     <div
       class="absolute flex items-center justify-end left-0 w-full bg-red-200 text-red-700 p-1 -z-1 -translate-y-1"
@@ -39,20 +44,24 @@
     </div>
   {/if}
   {#if isValueObject}
-    <span>{keyText}{isValueArray ? '[' : '{'}</span>
-    <ul class="m-0 p-0 list-none pl-[2ch]">
+    <!-- TODO: Truncate known unnecessary fields -->
+    <span class="indentable">{keyText}{isValueArray ? '[' : '{'}</span>
+    <ul class="m-0 p-0 list-none">
       {#each Object.entries(value) as [k, v], i}
         <svelte:self
           key={isValueArray ? '' : k}
           value={v}
           comma={i + 1 < Object.keys(value).length}
           {messagePaths}
+          indent={indent + 1}
         />
       {/each}
     </ul>
-    <span class="m-0">{isValueArray ? ']' : '}'}</span>
+    <span class="indentable m-0"
+      >{isValueArray ? ']' : '}'}{comma ? ',' : ''}</span
+    >
   {:else}
-    <span class="inline-flex">
+    <span class="indentable inline-flex">
       <span class="mr-[1ch]">{keyText}</span>
       <span class="whitespace-nowrap token {typeof value}">
         {JSON.stringify(value)}
@@ -77,5 +86,9 @@
 
   .token.boolean {
     color: blue;
+  }
+
+  .indentable {
+    margin-left: var(--indent-ch);
   }
 </style>
