@@ -1,5 +1,5 @@
 import c from 'picocolors'
-import { formatMessagePath as fp, getPkgPathValue } from './utils'
+import { formatMessagePath as fp, getPkgPathValue } from './utils.js'
 
 /**
  * @param {import('../lib').Message} m

@@ -56,7 +56,7 @@ export type Message =
 
 export interface Options {
   /**
-   * Path to your package that contains a packgge.json file.
+   * Path to your package that contains a package.json file.
    * Defaults to `process.cwd()` in node, `/` in browser.
    */
   pkgDir?: string

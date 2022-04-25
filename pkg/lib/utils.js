@@ -1,1 +1,1 @@
-export { formatMessagePath, getPkgPathValue } from '../src/utils'
+export { formatMessagePath, getPkgPathValue } from '../src/utils.js'

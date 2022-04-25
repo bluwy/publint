@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import fs from 'fs/promises'
-import path from 'path'
+import fs from 'node:fs/promises'
+import path from 'node:path'
 import sade from 'sade'
 import c from 'picocolors'
 import { publint } from './node.js'
