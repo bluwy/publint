@@ -22,7 +22,7 @@
   },
   "scripts": {
     "cli": "node ./lib/cli.js",
-    "test": "uvu tests"
+    "test": "uvu tests -i fixtures"
   },
   "dependencies": {
     "picocolors": "^1.0.0",

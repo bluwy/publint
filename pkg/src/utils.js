@@ -34,15 +34,10 @@ export function getCodeFormat(code) {
   } else if (isCodeCjs(code)) {
     return 'CJS'
   } else {
+    // If we can't determine the format, it's likely that it doesn't import/export and require/exports.
+    // Meaning it's a side-effectful file, which would always match the `format`
     return 'unknown'
   }
-}
-
-export function isCodeMatchingFormat(code, format) {
-  const f = getCodeFormat(code)
-  // If we can't determine the format, it's likely that it doesn't import/export and require/exports.
-  // Meaning it's a side-effectful file, which would always match the `format`
-  return f === 'unknown' || f === format
 }
 
 /**

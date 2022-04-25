@@ -1,11 +1,11 @@
-import path from 'path'
+import path from 'node:path'
 import { test } from 'uvu'
 import { equal } from 'uvu/assert'
 import {
   exportsGlob,
+  getCodeFormat,
   isCodeCjs,
-  isCodeEsm,
-  isCodeMatchingFormat
+  isCodeEsm
 } from '../src/utils.js'
 import { createNodeVfs } from '../src/vfs.js'
 
@@ -35,43 +35,42 @@ const isoCode = [`console.log('hello')`, `document.title = 'bla`]
 
 test('isCodeCjs', () => {
   for (const code of cjsCode) {
-    equal(isCodeCjs(code), true)
+    equal(isCodeCjs(code), true, code)
   }
   for (const code of esmCode) {
-    equal(isCodeCjs(code), false)
+    equal(isCodeCjs(code), false, code)
   }
   for (const code of isoCode) {
-    equal(isCodeCjs(code), false)
+    equal(isCodeCjs(code), false, code)
   }
 })
 
 test('isCodeCjs', () => {
   for (const code of cjsCode) {
-    equal(isCodeEsm(code), false)
+    equal(isCodeEsm(code), false, code)
   }
   for (const code of esmCode) {
-    equal(isCodeEsm(code), true)
+    equal(isCodeEsm(code), true, code)
   }
   for (const code of isoCode) {
-    equal(isCodeEsm(code), false)
+    equal(isCodeEsm(code), false, code)
   }
 })
 
-test('isCodeMatchingFormat', () => {
+test('getCodeFormat', () => {
   for (const code of cjsCode) {
-    equal(isCodeMatchingFormat(code, 'cjs'), true)
+    equal(getCodeFormat(code), 'CJS', code)
   }
   for (const code of esmCode) {
-    equal(isCodeMatchingFormat(code, 'esm'), true)
+    equal(getCodeFormat(code), 'ESM', code)
   }
   for (const code of isoCode) {
-    equal(isCodeMatchingFormat(code, 'esm'), true)
-    equal(isCodeMatchingFormat(code, 'cjs'), true)
+    equal(getCodeFormat(code), 'unknown', code)
   }
 })
 
 test('exportsGlob', async () => {
-  const r = (s) => path.resolve(process.cwd(), 'playground/glob', s)
+  const r = (s) => path.resolve(process.cwd(), 'tests/fixtures/glob', s)
   const v = createNodeVfs()
   equal(await exportsGlob(r('./*.js'), v), [r('alpha.js')])
   equal(await exportsGlob(r('./*.mjs'), v), [r('bravo.mjs')])
