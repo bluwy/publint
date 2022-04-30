@@ -105,6 +105,14 @@
     // Clear options so it looks natural that an action has taken place
     options = []
   }
+
+  /**
+   * @param {string} text
+   * @param {string} query
+   */
+  function highlightText(text, query) {
+    return text.replace(query, (match) => `<strong>${match}</strong>`)
+  }
 </script>
 
 <form
@@ -139,10 +147,11 @@
             aria-selected={arrowSelectIndex === i}
           >
             <button
-              class="bg-transparent m-0 border-none text-base w-full block text-left p-4"
+              class="bg-transparent flex justify-between m-0 border-none text-base w-full block text-left p-4"
               on:click={() => (npmPkgName = opt.value)}
             >
-              {opt.value}
+              <span>{@html highlightText(opt.value, npmPkgName)}</span>
+              <span class="opacity-50">{opt.version}</span>
             </button>
           </li>
         {/each}
