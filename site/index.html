@@ -8,39 +8,45 @@
     <script type="module" src="./src/main.js"></script>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app" class="h-screen"></div>
     <div class="bg-gray-700 text-white py-8">
-      <div class="mb-8 flex flex-col md:flex-row w-full max-w-6xl mx-auto gap-6">
+      <div
+        class="mb-8 flex flex-col md:flex-row w-full max-w-6xl mx-auto gap-6"
+      >
         <section class="md:w-1/2 mb-6">
           <h2>What is this</h2>
           <p class="opacity-80">
-            <code>publint</code> lints npm packages for packaging errors and
-            ensure compatibility across environments. This means that consumers of
-            your package can safely run your code in any platforms, e.g. Vite,
-            Webpack, Rollup, NodeJS, etc...
+            <code>publint</code> lints npm packages for packaging errors,
+            ensuring maximum compatibility across environments. This means that
+            consumers of your package can safely run your code in any platform,
+            e.g. Vite, Webpack, Rollup, NodeJS, etc...
           </p>
         </section>
         <section class="md:w-1/2 mb-6">
           <h2>How it works</h2>
           <p class="opacity-80">
-            When linting an npm package, the site would download the tarball
-            locally from the npm registry, and run the <code>publint</code> CLI in
-            a web worker. For larger packages, it may take a while to download and
-            lint. (There are plans for a shared global cache in the future)
+            When linting an npm package, the site would download the package
+            tarball locally from the npm registry, then a web worker will run
+            the <code>publint</code> CLI against the files. For larger packages,
+            it may take a while to download and lint. (There are plans for a
+            global shared cache)
           </p>
           <p class="opacity-80">
             Unlike <code>npm install</code>, the site would only download the
-            package itself without it's dependencies, as that's sufficient for the
-            linting process.
+            package itself without it's dependencies, as that's sufficient for
+            the linting process.
           </p>
         </section>
       </div>
       <footer class="text-center">
         <p>
           Made by
-          <a class="text-white font-bold" href="https://github.com/bluwy"
-            >Bjorn Lu</a
+          <a
+            class="text-white font-bold decoration-none hover:text-[#ffd6eb] focus:text-[#ffd6eb] transition-color"
+            href="https://github.com/bluwy"
           >
+            Bjorn Lu
+          </a>
         </p>
       </footer>
     </div>
