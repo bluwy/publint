@@ -1,5 +1,6 @@
 import { inflate } from 'pako'
 import { publint } from 'publint'
+import getNpmTarballUrl from 'get-npm-tarball-url'
 import { isLocalPkg } from './common'
 import { untar } from './untar'
 
@@ -12,7 +13,9 @@ self.addEventListener('message', async (e) => {
     tarballUrl = new URL(`/temp/${npmPkgName}-${npmPkgVersion}.tgz`, import.meta.url).href
   } else {
     // prettier-ignore
-    tarballUrl = `${import.meta.env.VITE_NPM_REGISTRY}/${npmPkgName}/-/${npmPkgName}-${npmPkgVersion}.tgz`
+    tarballUrl = getNpmTarballUrl(npmPkgName, npmPkgVersion, {
+      registry: import.meta.env.VITE_NPM_REGISTRY
+    })
   }
 
   // Unpack flow credit: https://stackoverflow.com/a/65448758

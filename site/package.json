@@ -10,6 +10,7 @@
     "packfix": "node ./scripts/packFixtures.js"
   },
   "dependencies": {
+    "get-npm-tarball-url": "^2.0.3",
     "pako": "^2.0.4",
     "publint": "workspace:*"
   },
