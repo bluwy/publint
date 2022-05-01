@@ -75,6 +75,8 @@
   }
 
   const handleInput = debounce(async () => {
+    arrowSelectIndex = -1
+
     if (!npmPkgName) return
 
     const result = await fetch(
@@ -116,7 +118,7 @@
 </script>
 
 <form
-  class="relative isolate w-full max-w-xl group"
+  class="relative isolate w-full max-w-xl group z-50"
   on:submit|preventDefault={handleSubmit}
 >
   <div
