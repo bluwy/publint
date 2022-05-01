@@ -11,9 +11,9 @@
     <div id="app" class="min-h-screen"></div>
     <div class="bg-gray-700 text-white py-8">
       <div
-        class="mb-8 flex flex-col md:flex-row w-full max-w-6xl mx-auto gap-6"
+        class="mb-2 px-4 flex flex-col md:flex-row w-full max-w-6xl mx-auto gap-6"
       >
-        <section class="md:w-1/2 mb-6">
+        <section class="md:w-1/2 mb-2">
           <h2>What is this</h2>
           <p class="opacity-80">
             <code>publint</code> lints npm packages for packaging errors,
@@ -22,7 +22,7 @@
             e.g. Vite, Webpack, Rollup, NodeJS, etc...
           </p>
         </section>
-        <section class="md:w-1/2 mb-6">
+        <section class="md:w-1/2 mb-2">
           <h2>How it works</h2>
           <p class="opacity-80">
             When linting an npm package, the site would download the package
@@ -35,6 +35,30 @@
             Unlike <code>npm install</code>, the site would only download the
             package itself without it's dependencies, as that's sufficient for
             the linting process.
+          </p>
+        </section>
+      </div>
+      <div
+        class="mb-8 px-4 flex flex-col md:flex-row w-full max-w-6xl mx-auto gap-6"
+      >
+        <section class="md:w-1/2 mb-2">
+          <h2>Use locally</h2>
+          <p class="opacity-80">
+            To run <code>publint</code> locally, simply <code>cd</code> into
+            your library and run <code>npx publint</code>! Use
+            <code>npx publint --help</code> to see the full list of options.
+          </p>
+        </section>
+        <section class="md:w-1/2 mb-2">
+          <h2>Contribute</h2>
+          <p class="opacity-80">
+            Found a bug? Head over to
+            <a
+              class="text-white font-bold decoration-none hover:text-[#ffd6eb] focus:text-[#ffd6eb] transition-color"
+              href="https://github.com/bluwy/publint"
+            >
+              https://github.com/bluwy/publint
+            </a>
           </p>
         </section>
       </div>
