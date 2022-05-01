@@ -27,11 +27,19 @@
   }
 
   let result
+  let status = ''
   $: if (npmPkgName && npmPkgVersion) {
     const worker = new Worker(new URL('../utils/worker.js', import.meta.url), {
       type: 'module'
     })
-    worker.addEventListener('message', (e) => (result = e.data))
+    worker.addEventListener('message', (e) => {
+      const message = e.data
+      if (message.type === 'status') {
+        status = message.data
+      } else if (message.type === 'result') {
+        result = message.data
+      }
+    })
     worker.postMessage({
       npmPkgName,
       npmPkgVersion
@@ -40,7 +48,9 @@
 </script>
 
 <svelte:head>
-  <title>{npmPkgName} - {npmPkgVersion} - publint</title>
+  {#if npmPkgName && npmPkgVersion}
+    <title>{npmPkgName} - {npmPkgVersion} - publint</title>
+  {/if}
 </svelte:head>
 
 <main class="flex flex-col items-center min-h-screen mt-5">
@@ -67,7 +77,7 @@
     {:else}
       <section class="text-center py-8 opacity-70">
         <Loading />
-        <p>Linting package...</p>
+        <p>{status}</p>
       </section>
     {/if}
   {/if}

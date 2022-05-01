@@ -15,9 +15,13 @@ self.addEventListener('message', async (e) => {
     tarballUrl = `${import.meta.env.VITE_NPM_REGISTRY}/${npmPkgName}/-/${npmPkgName}-${npmPkgVersion}.tgz`
   }
 
-  // Credit: https://stackoverflow.com/a/65448758
+  // Unpack flow credit: https://stackoverflow.com/a/65448758
+
+  postMessage({ type: 'status', data: 'Fetching package...' })
   const result = await fetch(tarballUrl)
   const resultBuffer = await result.arrayBuffer()
+
+  postMessage({ type: 'status', data: 'Unpacking package...' })
   const tarBuffer = inflate(resultBuffer).buffer // Handles gzip (gz)
   const files = untar(tarBuffer) // Handles tar (t)
 
@@ -44,12 +48,16 @@ self.addEventListener('message', async (e) => {
     }
   }
 
+  postMessage({ type: 'status', data: 'Linting package...' })
   // The tar file names have appended "package"
   const messages = await publint({ pkgDir: 'package', vfs })
   const pkgJson = JSON.parse(await vfs.readFile('package/package.json'))
 
   postMessage({
-    messages,
-    pkgJson
+    type: 'result',
+    data: {
+      messages,
+      pkgJson
+    }
   })
 })
