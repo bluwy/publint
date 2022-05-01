@@ -9,22 +9,22 @@ export function printMessage(m, pkg) {
   /** @param {string[]} path */
   const pv = (path) => getPkgPathValue(pkg, path)
 
-  let is, relativePath
-
   // TODO: verbose mode
   switch (m.code) {
     case 'IMPLICIT_INDEX_JS_INVALID_FORMAT':
       return `index.js should be ${m.args.expectFormat} but it is ${m.args.actualFormat}`
-    case 'FILE_INVALID_FORMAT':
-      is = pv(m.path).includes('*') ? 'matches' : 'is'
-      relativePath = m.args.actualFilePath ?? pv(m.path)
+    case 'FILE_INVALID_FORMAT': {
+      const is = pv(m.path).includes('*') ? 'matches' : 'is'
+      const relativePath = m.args.actualFilePath ?? pv(m.path)
       // prettier-ignore
       return `${c.bold(fp(m.path))} ${is} ${c.bold(relativePath)} and is detected to be ${c.yellow(m.args.expectFormat)}, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider re-writting the code to ${c.yellow(m.args.expectFormat)}, or use the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(pv(m.path).replace('.js', m.args.expectExtension))}`
-    case 'FILE_INVALID_EXPLICIT_FORMAT':
-      is = pv(m.path).includes('*') ? 'matches' : 'is'
-      relativePath = m.args.actualFilePath ?? pv(m.path)
+    }
+    case 'FILE_INVALID_EXPLICIT_FORMAT': {
+      const is = pv(m.path).includes('*') ? 'matches' : 'is'
+      const relativePath = m.args.actualFilePath ?? pv(m.path)
       // prettier-ignore
       return `${c.bold(fp(m.path))} ${is} ${c.bold(relativePath)} which ends with the ${c.yellow(m.args.actualExtension)} extension, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider re-writting the code to ${c.yellow(m.args.expectFormat)}, or use the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(pv(m.path).replace(m.args.actualExtension, m.args.expectExtension))}`
+    }
     case 'FILE_DOES_NOT_EXIST':
       // prettier-ignore
       return `${c.bold(fp(m.path))} is ${pv(m.path)} but file does not exist`

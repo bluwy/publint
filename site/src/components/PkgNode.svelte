@@ -22,6 +22,19 @@
   $: keyText = key ? `"${key}": ` : ''
 
   $: errorMessages = messages.filter((v) => isArrayEqual(paths, v.path))
+
+  function messageTypeToColor(type) {
+    switch (type) {
+      case 'error':
+        return 'border-red-400 bg-red-300'
+      case 'warning':
+        return 'border-yellow-400 bg-yellow-300'
+      case 'suggestion':
+        return 'border-blue-400 bg-blue-300'
+      default:
+        return ''
+    }
+  }
 </script>
 
 <li
@@ -57,11 +70,11 @@
   {/if}
   {#if errorMessages.length}
     <div
-      class="absolute flex items-start justify-end left-0 right-0 top-0 h-full bg-red-200 text-red-700 pt-1 px-1 -z-1 -mx-4"
+      class="absolute flex items-start justify-end left-0 right-0 top-0 h-full bg-gray-300 pt-1 px-1 -z-1 -mx-4"
     />
     <div class="-mx-4">
       {#each errorMessages as msg}
-        <div class="border-4 border-red-400 bg-red-300 px-4 py-2">
+        <div class="{messageTypeToColor(msg.type)} border-4 px-4 py-2">
           {@html printMessage(msg, pkg)}
         </div>
       {/each}
