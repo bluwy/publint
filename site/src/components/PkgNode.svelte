@@ -21,7 +21,7 @@
   $: isValueObject = value && typeof value === 'object'
   $: keyText = key ? `"${key}": ` : ''
 
-  $: errorMessage = messages.find((v) => isArrayEqual(paths, v.path))
+  $: errorMessages = messages.filter((v) => isArrayEqual(paths, v.path))
 </script>
 
 <li
@@ -55,14 +55,16 @@
       {comma ? ',' : ''}
     </span>
   {/if}
-  {#if errorMessage}
+  {#if errorMessages.length}
     <div
       class="absolute flex items-start justify-end left-0 right-0 top-0 h-full bg-red-200 text-red-700 pt-1 px-1 -z-1 -mx-4"
     />
     <div class="-mx-4">
-      <div class="border-4 border-red-400 bg-red-300 px-4 py-2">
-        {@html printMessage(errorMessage, pkg)}
-      </div>
+      {#each errorMessages as msg}
+        <div class="border-4 border-red-400 bg-red-300 px-4 py-2">
+          {@html printMessage(msg, pkg)}
+        </div>
+      {/each}
     </div>
   {/if}
 </li>
