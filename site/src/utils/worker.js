@@ -32,15 +32,20 @@ self.addEventListener('message', async (e) => {
   const vfs = {
     getDirName: (path) => path.replace(/\/[^/]*$/, ''),
     getExtName: (path) => path.replace(/^.*\./, ''),
-    isPathDir: (path) => files.some((file) => file.name.startsWith(path)),
+    isPathDir: (path) =>
+      files.some((file) => file.name.startsWith(path) && file.name !== path),
     isPathExist: (path) => files.some((file) => file.name === path),
     pathJoin: (...parts) =>
-      parts.map((v) => (v.startsWith('./') ? v.slice(2) : v)).join('/'),
-    pathRelative: (from, to) => to.replace(from, ''),
+      parts
+        .map((v) => (v.startsWith('./') ? v.slice(2) : v))
+        .join('/')
+        .replace('///', '/')
+        .replace('//', '/'), // TODO: optimize this please
+    pathRelative: (from, to) => to.replace(from, '').slice(1),
     readDir: (path) =>
       files
         .filter((file) => file.name.startsWith(path))
-        .map((file) => file.name),
+        .map((file) => file.name.slice(path.length)),
     readFile: (path) => {
       const file = files.find((file) => file.name === path)
       if (file) {

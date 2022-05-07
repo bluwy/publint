@@ -193,6 +193,7 @@ export async function publint({ pkgDir, vfs }) {
 
         // todo: group glob warnings
         for (const filePath of exportsFiles) {
+          if (filePath.endsWith('.d.ts')) continue
           pq.push(async () => {
             // Could fail if in !isGlob
             const fileContent = await readFile(filePath, currentPath)
@@ -231,7 +232,7 @@ export async function publint({ pkgDir, vfs }) {
         messages.push({
           code: 'EXPORTS_TYPES_SHOULD_BE_FIRST',
           args: {},
-          path: currentPath,
+          path: currentPath.concat('types'),
           type: 'error'
         })
       }
@@ -244,7 +245,7 @@ export async function publint({ pkgDir, vfs }) {
         messages.push({
           code: 'EXPORTS_DEFAULT_SHOULD_BE_LAST',
           args: {},
-          path: currentPath,
+          path: currentPath.concat('default'),
           type: 'error'
         })
       }

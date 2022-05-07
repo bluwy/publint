@@ -21,7 +21,9 @@
   $: isValueObject = value && typeof value === 'object'
   $: keyText = key ? `"${key}": ` : ''
 
-  $: errorMessages = messages.filter((v) => isArrayEqual(paths, v.path))
+  $: errorMessages = messages.filter(
+    (v) => v.path.length && isArrayEqual(paths, v.path)
+  )
 
   function messageTypeToColor(type) {
     switch (type) {
