@@ -11,27 +11,67 @@ import {
  * @returns {Promise<import('../lib').Message[]>}
  */
 export async function publint({ pkgDir, vfs }) {
-  const rootPkgPath = vfs.pathJoin(pkgDir, 'package.json')
-  const rootPkgContent = await vfs.readFile(rootPkgPath)
-  const rootPkg = JSON.parse(rootPkgContent)
-
-  const { type, main, module, exports } = rootPkg
-
-  const isPkgEsm = type === 'module'
-
   /** @type {import('../lib').Message[]} */
   const messages = []
   const promiseQueue = createPromiseQueue()
+
+  const rootPkgPath = vfs.pathJoin(pkgDir, 'package.json')
+  const rootPkgContent = await readFile(rootPkgPath, [])
+  if (rootPkgContent === false) return messages
+  const rootPkg = JSON.parse(rootPkgContent)
+
+  const { type, main, module, exports } = rootPkg
+  const isPkgEsm = type === 'module'
+
+  /**
+   * @param {string} path
+   * @param {string[]} pkgPath
+   * @param {string[]} tryExtensions
+   * @returns {Promise<string | false>}
+   */
+  async function readFile(path, pkgPath, tryExtensions = []) {
+    let promise = vfs.readFile(path)
+    for (const ext of tryExtensions) {
+      promise = promise.catch(() => vfs.readFile(path + ext))
+    }
+    return promise.catch(() => {
+      messages.push({
+        code: 'FILE_DOES_NOT_EXIST',
+        args: { filePath: path },
+        path: pkgPath,
+        type: 'error'
+      })
+      return false
+    })
+  }
+
+  /**
+   * @param {string} path
+   * @param {string[]} pkgPath
+   * @returns {Promise<string[] | false>}
+   */
+  async function readDir(path, pkgPath) {
+    return vfs.readDir(path).catch(() => {
+      messages.push({
+        code: 'DIR_DOES_NOT_EXIST',
+        args: { dirPath: path },
+        path: pkgPath,
+        type: 'error'
+      })
+      return false
+    })
+  }
 
   // Relies on default node resolution
   // https://nodejs.org/api/modules.html#all-together
   // LOAD_INDEX(X)
   if (!main && !module && !exports) {
     promiseQueue.push(async () => {
-      // check main.js only, others aren't our problem
+      // check index.js only, others aren't our problem
       const defaultPath = vfs.pathJoin(pkgDir, 'index.js')
       if (await vfs.isPathExist(defaultPath)) {
-        const defaultContent = await vfs.readFile(defaultPath)
+        const defaultContent = await readFile(defaultPath, [])
+        if (defaultContent === false) return
         const actualFormat = getCodeFormat(defaultContent)
         const expectFormat = isPkgEsm ? 'ESM' : 'CJS'
         if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
@@ -57,7 +97,8 @@ export async function publint({ pkgDir, vfs }) {
   if (main) {
     promiseQueue.push(async () => {
       const mainPath = vfs.pathJoin(pkgDir, main)
-      const mainContent = await vfs.readFile(mainPath)
+      const mainContent = await readFile(mainPath, ['main'])
+      if (mainContent === false) return
       const actualFormat = getCodeFormat(mainContent)
       const expectFormat = await getFilePathFormat(mainPath, vfs)
       if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
@@ -160,7 +201,8 @@ export async function publint({ pkgDir, vfs }) {
         for (const filePath of exportsFiles) {
           pq.push(async () => {
             // Could fail if in !isGlob
-            const fileContent = await vfs.readFile(filePath)
+            const fileContent = await readFile(filePath, currentPath)
+            if (fileContent === false) return
             const actualFormat = getCodeFormat(fileContent)
             const expectFormat = await getFilePathFormat(filePath, vfs)
             if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
