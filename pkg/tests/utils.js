@@ -5,7 +5,8 @@ import {
   exportsGlob,
   getCodeFormat,
   isCodeCjs,
-  isCodeEsm
+  isCodeEsm,
+  stripComments
 } from '../src/utils.js'
 import { createNodeVfs } from '../src/vfs.js'
 
@@ -67,6 +68,21 @@ test('getCodeFormat', () => {
   for (const code of isoCode) {
     equal(getCodeFormat(code), 'unknown', code)
   }
+})
+
+test('stripComments', () => {
+  const result = stripComments(`
+  // hello world
+  /*
+    mutli
+        line
+    // import {} from 'bla'
+  */
+ /**
+  * jsdoc // comment
+  */
+  `).trim()
+  equal(result, '', result)
 })
 
 test('exportsGlob', async () => {

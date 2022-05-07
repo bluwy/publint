@@ -24,11 +24,20 @@ export function isCodeCjs(code) {
   return CJS_CONTENT_RE.test(code)
 }
 
+const MULTILINE_COMMENTS_RE = /\/\*(.|[\r\n])*?\*\//gm
+const SINGLELINE_COMMENTS_RE = /\/\/.*/g
+export function stripComments(code) {
+  return code
+    .replace(MULTILINE_COMMENTS_RE, '')
+    .replace(SINGLELINE_COMMENTS_RE, '')
+}
+
 /**
  * @param {string} code
  * @returns {CodeFormat}
  */
 export function getCodeFormat(code) {
+  code = stripComments(code)
   if (isCodeEsm(code)) {
     return 'ESM'
   } else if (isCodeCjs(code)) {
