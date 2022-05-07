@@ -99,7 +99,7 @@ export async function publint({ pkgDir, vfs }) {
             actualFormat,
             expectFormat,
             actualExtension,
-            expectExtension: getCodeFormatExtension(expectFormat)
+            expectExtension: getCodeFormatExtension(actualFormat)
           },
           path: ['main'],
           type: 'warning'
@@ -198,7 +198,7 @@ export async function publint({ pkgDir, vfs }) {
             const fileContent = await readFile(filePath, currentPath)
             if (fileContent === false) return
             const actualFormat = getCodeFormat(fileContent)
-            const expectFormat = await getFilePathFormat(filePath, vfs)
+            let expectFormat = await getFilePathFormat(filePath, vfs)
             if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
               const actualExtension = vfs.getExtName(filePath)
               messages.push({
@@ -209,7 +209,7 @@ export async function publint({ pkgDir, vfs }) {
                   actualFormat,
                   expectFormat,
                   actualExtension,
-                  expectExtension: getCodeFormatExtension(expectFormat),
+                  expectExtension: getCodeFormatExtension(actualFormat),
                   actualFilePath: isGlob
                     ? './' + vfs.pathRelative(pkgDir, filePath)
                     : exports
@@ -250,6 +250,7 @@ export async function publint({ pkgDir, vfs }) {
       }
 
       for (const key of exportsKeys) {
+        if (key === 'types') continue
         crawlExports(exports[key], currentPath.concat(key))
       }
     }

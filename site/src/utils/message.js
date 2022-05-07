@@ -12,20 +12,20 @@ export function printMessage(m, pkg) {
   /** @param {string} s */
   const warn = (s) => `<strong><code>${s}</code></strong>`
 
-  let relativePath
-
   // TODO: verbose mode
   switch (m.code) {
     case 'IMPLICIT_INDEX_JS_INVALID_FORMAT':
       return `index.js should be ${m.args.expectFormat} but it is ${m.args.actualFormat}`
-    case 'FILE_INVALID_FORMAT':
-      relativePath = m.args.actualFilePath ?? pv(m.path)
+    case 'FILE_INVALID_FORMAT': {
+      const relativePath = m.args.actualFilePath ?? pv(m.path)
       // prettier-ignore
-      return `${bold(relativePath)} is detected to be ${warn(m.args.expectFormat)}, but the code is written in ${warn(m.args.actualFormat)}. Consider re-writting the code to ${warn(m.args.expectFormat)}, or use the ${warn(m.args.expectExtension)} extension, e.g. ${bold(pv(m.path).replace('.js', m.args.expectExtension))}`
-    case 'FILE_INVALID_EXPLICIT_FORMAT':
-      relativePath = m.args.actualFilePath ?? pv(m.path)
+      return `${bold(relativePath)} is written in ${warn(m.args.actualFormat)}, but is interpreted as ${warn(m.args.expectFormat)}. Consider using the ${warn(m.args.expectExtension)} extension, e.g. ${bold(pv(m.path).replace('.js', m.args.expectExtension))}`
+    }
+    case 'FILE_INVALID_EXPLICIT_FORMAT': {
+      const relativePath = m.args.actualFilePath ?? pv(m.path)
       // prettier-ignore
-      return `${bold(relativePath)} ends with the ${warn(m.args.actualExtension)} extension, but the code is written in ${warn(m.args.actualFormat)}. Consider re-writting the code to ${warn(m.args.expectFormat)}, or use the ${warn(m.args.expectExtension)} extension, e.g. ${bold(pv(m.path).replace(m.args.actualExtension, m.args.expectExtension))}`
+      return `${bold(relativePath)} ends with the ${warn(m.args.actualExtension)} extension, but the code is written in ${warn(m.args.actualFormat)}. Consider using the ${warn(m.args.expectExtension)} extension, e.g. ${bold(pv(m.path).replace(m.args.actualExtension, m.args.expectExtension))}`
+    }
     case 'FILE_DOES_NOT_EXIST':
       // prettier-ignore
       return `File does not exist`
