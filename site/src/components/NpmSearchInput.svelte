@@ -104,6 +104,8 @@
     } else {
       url.push(`/${npmPkgName}`)
     }
+    document.body.focus()
+    getSelection()?.removeAllRanges()
     // Clear options so it looks natural that an action has taken place
     options = []
   }

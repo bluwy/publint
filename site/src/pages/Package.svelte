@@ -18,15 +18,26 @@
     }
     npmPkgName = parts[0]
     npmPkgVersion = isLocalPkg(npmPkgName) ? '0.0.1' : parts[1]
+
+    // when pkg updates, reset results
+    versionFetched = false
+    result = undefined
+    status = ''
   }
 
   // Fetch latest version if not specified
-  $: if (!npmPkgVersion) {
+  let versionFetched = false
+  $: if (npmPkgVersion) {
+    versionFetched = true
+  } else {
     // prettier-ignore
     fetch(`${import.meta.env.VITE_NPM_METADATA_ENDPOINT}/${encodeURIComponent(npmPkgName)}`)
-      .then((v) => v.json())
+      .then((v) => v.ok && v.json())
       .then((v) => {
-        url.replace(`/${npmPkgName}@${v.collected.metadata.version}`)
+        if (v) {
+          url.replace(`/${npmPkgName}@${v.collected.metadata.version}`)
+        }
+        versionFetched = true
       })
   }
 
@@ -84,6 +95,9 @@
         <p>{status}</p>
       </section>
     {/if}
+  {:else if versionFetched}
+    <h1>Package does not exist</h1>
+    <NpmSearchInput {npmPkgName} />
   {/if}
 </main>
 
