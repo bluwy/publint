@@ -45,23 +45,6 @@ export async function publint({ pkgDir, vfs }) {
     })
   }
 
-  /**
-   * @param {string} path
-   * @param {string[]} pkgPath
-   * @returns {Promise<string[] | false>}
-   */
-  async function readDir(path, pkgPath) {
-    return vfs.readDir(path).catch(() => {
-      messages.push({
-        code: 'DIR_DOES_NOT_EXIST',
-        args: { dirPath: path },
-        path: pkgPath,
-        type: 'error'
-      })
-      return false
-    })
-  }
-
   // Relies on default node resolution
   // https://nodejs.org/api/modules.html#all-together
   // LOAD_INDEX(X)
