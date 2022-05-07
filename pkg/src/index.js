@@ -28,11 +28,14 @@ export async function publint({ pkgDir, vfs }) {
    * @returns {Promise<string | false>}
    */
   async function readFile(path, pkgPath, tryExtensions = []) {
-    let promise = vfs.readFile(path)
-    for (const ext of tryExtensions) {
-      promise = promise.catch(() => vfs.readFile(path + ext))
-    }
-    return promise.catch(() => {
+    try {
+      return await vfs.readFile(path)
+    } catch {
+      for (const ext of tryExtensions) {
+        try {
+          return await vfs.readFile(path + ext)
+        } catch {}
+      }
       messages.push({
         code: 'FILE_DOES_NOT_EXIST',
         args: { filePath: path },
@@ -40,7 +43,7 @@ export async function publint({ pkgDir, vfs }) {
         type: 'error'
       })
       return false
-    })
+    }
   }
 
   // Relies on default node resolution
@@ -78,7 +81,11 @@ export async function publint({ pkgDir, vfs }) {
   if (main) {
     promiseQueue.push(async () => {
       const mainPath = vfs.pathJoin(pkgDir, main)
-      const mainContent = await readFile(mainPath, ['main'])
+      const mainContent = await readFile(
+        mainPath,
+        ['main'],
+        ['.js', '/index.js']
+      )
       if (mainContent === false) return
       const actualFormat = getCodeFormat(mainContent)
       const expectFormat = await getFilePathFormat(mainPath, vfs)
@@ -118,8 +125,14 @@ export async function publint({ pkgDir, vfs }) {
   if (module) {
     promiseQueue.push(async () => {
       const modulePath = vfs.pathJoin(pkgDir, module)
-      const format = await getFilePathFormat(modulePath, vfs)
-      if (format === 'CJS') {
+      const moduleContent = await readFile(
+        modulePath,
+        ['module'],
+        ['.js', '/index.js']
+      )
+      if (moduleContent === false) return
+      const actualFormat = getCodeFormat(moduleContent)
+      if (actualFormat === 'CJS') {
         messages.push({
           code: 'MODULE_SHOULD_BE_ESM',
           args: {},
