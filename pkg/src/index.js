@@ -19,9 +19,7 @@ export async function publint({ pkgDir, vfs }) {
   const rootPkgContent = await readFile(rootPkgPath, [])
   if (rootPkgContent === false) return messages
   const rootPkg = JSON.parse(rootPkgContent)
-
-  const { type, main, module, exports } = rootPkg
-  const isPkgEsm = type === 'module'
+  const { main, module, exports } = rootPkg
 
   /**
    * @param {string} path
@@ -56,12 +54,12 @@ export async function publint({ pkgDir, vfs }) {
         const defaultContent = await readFile(defaultPath, [])
         if (defaultContent === false) return
         const actualFormat = getCodeFormat(defaultContent)
-        const expectFormat = isPkgEsm ? 'ESM' : 'CJS'
+        const expectFormat = await getFilePathFormat(defaultPath, vfs)
         if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
           messages.push({
             code: 'IMPLICIT_INDEX_JS_INVALID_FORMAT',
             args: {
-              actualFormat: 'cjs',
+              actualFormat,
               expectFormat
             },
             path: [],
