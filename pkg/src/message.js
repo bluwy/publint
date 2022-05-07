@@ -17,13 +17,13 @@ export function printMessage(m, pkg) {
       const is = pv(m.path).includes('*') ? 'matches' : 'is'
       const relativePath = m.args.actualFilePath ?? pv(m.path)
       // prettier-ignore
-      return `${c.bold(fp(m.path))} ${is} ${c.bold(relativePath)} and is written in ${c.yellow(m.args.actualFormat)}, but is interpreted as ${c.yellow(m.args.expectFormat)}. Consider using the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(pv(m.path).replace('.js', m.args.expectExtension))}`
+      return `${c.bold(fp(m.path))} ${is} ${c.bold(relativePath)} and is written in ${c.yellow(m.args.actualFormat)}, but is interpreted as ${c.yellow(m.args.expectFormat)}. Consider using the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(relativePath.replace('.js', m.args.expectExtension))}`
     }
     case 'FILE_INVALID_EXPLICIT_FORMAT': {
       const is = pv(m.path).includes('*') ? 'matches' : 'is'
       const relativePath = m.args.actualFilePath ?? pv(m.path)
       // prettier-ignore
-      return `${c.bold(fp(m.path))} ${is} ${c.bold(relativePath)} which ends with the ${c.yellow(m.args.actualExtension)} extension, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider using the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(pv(m.path).replace(m.args.actualExtension, m.args.expectExtension))}`
+      return `${c.bold(fp(m.path))} ${is} ${c.bold(relativePath)} which ends with the ${c.yellow(m.args.actualExtension)} extension, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider using the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(relativePath.replace(m.args.actualExtension, m.args.expectExtension))}`
     }
     case 'FILE_DOES_NOT_EXIST':
       // prettier-ignore
