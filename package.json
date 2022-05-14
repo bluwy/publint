@@ -7,6 +7,7 @@
     "lint": "prettier **/*.{js,ts,css,md,svelte} --check",
     "format": "prettier **/*.{js,ts,css,md,svelte} --write"
   },
+  "packageManager": "pnpm@7.1.0",
   "devDependencies": {
     "prettier": "^2.6.2",
     "prettier-plugin-svelte": "^2.7.0",
