@@ -58,7 +58,11 @@ export async function publint({ pkgDir, vfs }) {
         if (defaultContent === false) return
         const actualFormat = getCodeFormat(defaultContent)
         const expectFormat = await getFilePathFormat(defaultPath, vfs)
-        if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
+        if (
+          actualFormat !== expectFormat &&
+          actualFormat !== 'unknown' &&
+          actualFormat !== 'mixed'
+        ) {
           messages.push({
             code: 'IMPLICIT_INDEX_JS_INVALID_FORMAT',
             args: {
@@ -89,7 +93,11 @@ export async function publint({ pkgDir, vfs }) {
       if (mainContent === false) return
       const actualFormat = getCodeFormat(mainContent)
       const expectFormat = await getFilePathFormat(mainPath, vfs)
-      if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
+      if (
+        actualFormat !== expectFormat &&
+        actualFormat !== 'unknown' &&
+        actualFormat !== 'mixed'
+      ) {
         const actualExtension = vfs.getExtName(mainPath)
         messages.push({
           code: isExplicitExtension(actualExtension)
@@ -200,7 +208,11 @@ export async function publint({ pkgDir, vfs }) {
             if (fileContent === false) return
             const actualFormat = getCodeFormat(fileContent)
             let expectFormat = await getFilePathFormat(filePath, vfs)
-            if (actualFormat !== expectFormat && actualFormat !== 'unknown') {
+            if (
+              actualFormat !== expectFormat &&
+              actualFormat !== 'unknown' &&
+              actualFormat !== 'mixed'
+            ) {
               const actualExtension = vfs.getExtName(filePath)
               messages.push({
                 code: isExplicitExtension(actualExtension)

@@ -26,7 +26,6 @@ const esmCode = [
   `import foo from 'bla'`,
   `import { foo } from 'bla'`,
   `import { foo as bar } from 'bla'`,
-  `function foo() { import('bla') }`,
   'export default "bla"',
   'export const foo = "bla"',
   'export function foo() { return "bla" }'
