@@ -4,6 +4,7 @@
 
 <script>
   import { getContext, setContext } from 'svelte'
+  import { messageTypeToColor } from '../utils/colors'
   import { isArrayEqual } from '../utils/common'
   import { printMessage } from '../utils/message'
 
@@ -24,19 +25,6 @@
   $: errorMessages = messages.filter(
     (v) => v.path.length && isArrayEqual(paths, v.path)
   )
-
-  function messageTypeToColor(type) {
-    switch (type) {
-      case 'error':
-        return 'border-red-400 bg-red-300'
-      case 'warning':
-        return 'border-yellow-400 bg-yellow-300'
-      case 'suggestion':
-        return 'border-blue-400 bg-blue-300'
-      default:
-        return ''
-    }
-  }
 </script>
 
 <li

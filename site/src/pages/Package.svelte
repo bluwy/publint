@@ -1,4 +1,5 @@
 <script>
+  import Label from '../components/Label.svelte'
   import Loading from '../components/Loading.svelte'
   import NpmSearchInput from '../components/NpmSearchInput.svelte'
   import PkgNode from '../components/PkgNode.svelte'
@@ -60,6 +61,12 @@
       npmPkgVersion
     })
   }
+
+  $: suggestionCount = result?.messages.filter(
+    (v) => v.type === 'suggestion'
+  ).length
+  $: warningCount = result?.messages.filter((v) => v.type === 'warning').length
+  $: errorCount = result?.messages.filter((v) => v.type === 'error').length
 </script>
 
 <svelte:head>
@@ -75,9 +82,27 @@
     </h1>
     <NpmSearchInput {npmPkgName} />
     {#if result}
+      <section class="mt-4 flex justify-center items-center gap-4">
+        {#if result.messages.length <= 0}
+          <Label type="success">All good 🎉</Label>
+        {:else}
+          {#if suggestionCount}
+            <Label type="suggestion">{suggestionCount} suggestions</Label>
+          {/if}
+          {#if warningCount}
+            <Label type="warning">{warningCount} warnings</Label>
+          {/if}
+          {#if errorCount}
+            <Label type="error">{errorCount} errors</Label>
+          {/if}
+        {/if}
+      </section>
       <section
         class="w-full max-w-3xl my-4 bg-gray-200 rounded-md overflow-x-auto overflow-y-hidden"
       >
+        <p class="px-4 py-2 m-0 bg-gray-300 font-mono text-sm font-bold">
+          package.json
+        </p>
         <pre
           class="relative w-full px-4 py-3 m-0 whitespace-normal text-sm md:text-base">
           <ul class="m-0 p-0 list-none">
