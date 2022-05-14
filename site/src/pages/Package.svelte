@@ -87,13 +87,19 @@
           <Label type="success">All good 🎉</Label>
         {:else}
           {#if suggestionCount}
-            <Label type="suggestion">{suggestionCount} suggestions</Label>
+            <Label type="suggestion">
+              {suggestionCount} suggestion{suggestionCount === 1 ? '' : 's'}
+            </Label>
           {/if}
           {#if warningCount}
-            <Label type="warning">{warningCount} warnings</Label>
+            <Label type="warning">
+              {warningCount} warning{warningCount === 1 ? '' : 's'}
+            </Label>
           {/if}
           {#if errorCount}
-            <Label type="error">{errorCount} errors</Label>
+            <Label type="error">
+              {errorCount} error{errorCount === 1 ? '' : 's'}
+            </Label>
           {/if}
         {/if}
       </section>
