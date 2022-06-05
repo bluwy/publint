@@ -9,6 +9,6 @@
     "preview": "miniflare"
   },
   "devDependencies": {
-    "miniflare": "^2.4.0"
+    "miniflare": "^2.5.0"
   }
 }

@@ -15,10 +15,10 @@
     "publint": "workspace:*"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.44",
-    "@unocss/core": "^0.33.4",
-    "@unocss/preset-uno": "^0.33.4",
-    "@unocss/vite": "^0.33.4",
+    "@sveltejs/vite-plugin-svelte": "^1.0.0-next.47",
+    "@unocss/core": "^0.37.4",
+    "@unocss/preset-uno": "^0.37.4",
+    "@unocss/vite": "^0.37.4",
     "svelte": "^3.48.0",
     "vite": "^2.9.9"
   }
