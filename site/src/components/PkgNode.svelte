@@ -22,7 +22,7 @@
   $: isValueObject = value && typeof value === 'object'
   $: keyText = key ? `"${key}": ` : ''
 
-  $: errorMessages = messages.filter(
+  $: matchedMessages = messages.filter(
     (v) => v.path.length && isArrayEqual(paths, v.path)
   )
 </script>
@@ -61,12 +61,12 @@
       {comma ? ',' : ''}
     </span>
   {/if}
-  {#if errorMessages.length}
+  {#if matchedMessages.length}
     <div
-      class="absolute flex items-start justify-end left-0 right-0 top-0 h-full bg-gray-300 pt-1 px-1 -z-1 -mx-4"
+      class="absolute flex items-start justify-end left-0 right-0 top-0 h-full bg-gray-300 @dark:bg-gray-700 pt-1 px-1 -z-1 -mx-4"
     />
     <div class="-mx-4">
-      {#each errorMessages as msg}
+      {#each matchedMessages as msg}
         <div class="{messageTypeToColor(msg.type)} border-4 px-4 py-2">
           {@html printMessage(msg, pkg)}
         </div>
