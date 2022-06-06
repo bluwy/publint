@@ -24,7 +24,6 @@ export type Message =
       'IMPLICIT_INDEX_JS_INVALID_FORMAT',
       { actualFormat: string; expectFormat: string }
     >
-  | BaseMessage<'MAIN_IS_ESM'>
   | BaseMessage<
       'FILE_INVALID_FORMAT',
       {
@@ -50,6 +49,7 @@ export type Message =
   | BaseMessage<'HAS_MODULE_BUT_NO_EXPORTS'>
   | BaseMessage<'HAS_ESM_MAIN_BUT_NO_EXPORTS'>
   | BaseMessage<'EXPORTS_GLOB_NO_MATCHED_FILES'>
+  // TODO
   // | BaseMessage<'EXPORTS_GLOB_NO_MATCHED_FILES_BUT_IMPLICIT_INDEX_DETECTED'>
   | BaseMessage<'EXPORTS_TYPES_SHOULD_BE_FIRST'>
   | BaseMessage<'EXPORTS_DEFAULT_SHOULD_BE_LAST'>

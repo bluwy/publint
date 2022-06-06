@@ -18,7 +18,15 @@ export default defineConfig({
         useVitePreprocess: true
       }
     })
-  ]
+  ],
+  build: {
+    rollupOptions: {
+      input: {
+        main: new URL('/index.html', import.meta.url).pathname,
+        rules: new URL('/rules.html', import.meta.url).pathname
+      }
+    }
+  }
 })
 
 /**
@@ -32,7 +40,7 @@ function spaFallbackWithDot() {
     configureServer(server) {
       return () => {
         server.middlewares.use(function customSpaFallback(req, res, next) {
-          if (req.url.includes('.')) {
+          if (req.url.includes('.') && !req.url.endsWith('.html')) {
             req.url = '/index.html'
           }
           next()
