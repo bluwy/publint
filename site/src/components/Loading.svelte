@@ -1,6 +1,6 @@
 <!-- Credits: https://loading.io/css/ -->
 
-<div class="lds-dual-ring text-gray-900" />
+<div class="lds-dual-ring text-gray-900 @dark:text-gray-100" />
 
 <style>
   .lds-dual-ring {

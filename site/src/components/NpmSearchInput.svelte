@@ -124,13 +124,13 @@
   on:submit|preventDefault={handleSubmit}
 >
   <div
-    class="group-focus-within:block hidden border-rounded-2 w-full overflow-hidden border-none shadow-lg bg-white absolute top-0 -z-1 transition-shadow"
+    class="group-focus-within:block hidden border-rounded-2 w-full overflow-hidden border-none shadow-lg bg-white text-black absolute top-0 -z-1 transition-shadow"
   >
     <!-- Hint for "Tab" -->
     <input
       type="text"
       class="w-full p-4 m-0 text-base bg-transparent text-red pointer-events-none truncate border-none"
-      placeholder={hintText}
+      placeholder={hintText || ' '}
       readonly
       tabindex="-1"
     />
@@ -154,8 +154,10 @@
               class="bg-transparent flex justify-between m-0 border-none text-base w-full block text-left p-4"
               on:click={() => (npmPkgName = opt.value)}
             >
-              <span>{@html highlightText(opt.value, npmPkgName)}</span>
-              <span class="opacity-50">{opt.version}</span>
+              <span class="text-black"
+                >{@html highlightText(opt.value, npmPkgName)}</span
+              >
+              <span class="text-black opacity-50">{opt.version}</span>
             </button>
           </li>
         {/each}
@@ -165,7 +167,7 @@
   <input
     bind:this={inputEl}
     bind:value={npmPkgName}
-    class="w-full p-4 m-0 bg-white cursor-pointer focus:outline-none text-base truncate group-focus-within:bg-transparent border-rounded-2 border-none shadow-sm group-focus-within:shadow-none transition-shadow"
+    class="w-full p-4 m-0 bg-white text-black focus:outline-none text-base truncate group-focus-within:bg-transparent border-rounded-2 border-none shadow-sm group-focus-within:shadow-none transition-shadow"
     type="text"
     placeholder="Search npm package"
     autocomplete="off"
@@ -174,7 +176,7 @@
     on:keyup={handleKeyUp}
   />
   <button
-    class="absolute flex flex justify-center items-center top-0 right-0 h-full bg-transparent border-none px-4"
+    class="absolute flex flex justify-center items-center top-0 right-0 h-full bg-transparent text-black border-none px-4"
   >
     <!-- https://css.gg/search -->
     <!-- prettier-ignore -->

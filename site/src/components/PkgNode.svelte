@@ -33,7 +33,10 @@
 >
   {#if isValueObject}
     <!-- TODO: Truncate known unnecessary fields -->
-    <span class="indentable">{keyText}{isValueArray ? '[' : '{'}</span>
+    <span class="indentable">
+      <span class="text-blue-700 @dark:text-blue-300">{keyText}</span>
+      {isValueArray ? '[' : '{'}
+    </span>
     <ul class="m-0 p-0 list-none">
       {#each Object.entries(value) as [k, v], i}
         <svelte:self
@@ -51,7 +54,7 @@
     >
   {:else}
     <span class="indentable inline-flex">
-      <span class="mr-[1ch]">{keyText}</span>
+      <span class="text-blue-700 @dark:text-blue-300 mr-[1ch]">{keyText}</span>
       <span class="whitespace-nowrap token {typeof value}">
         {JSON.stringify(value)}
       </span>
@@ -91,5 +94,23 @@
 
   .indentable {
     margin-left: var(--indent-ch);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .token {
+      color: white;
+    }
+
+    .token.string {
+      color: burlywood;
+    }
+
+    .token.number {
+      color: lightyellow;
+    }
+
+    .token.boolean {
+      color: lightblue;
+    }
   }
 </style>

@@ -104,9 +104,11 @@
         {/if}
       </section>
       <section
-        class="w-full max-w-3xl my-4 bg-gray-200 rounded-md overflow-x-auto overflow-y-hidden"
+        class="w-full max-w-3xl my-4 bg-gray-200 @dark:bg-gray-900 rounded-md overflow-x-auto overflow-y-hidden"
       >
-        <p class="px-4 py-2 m-0 bg-gray-300 font-mono text-sm font-bold">
+        <p
+          class="px-4 py-2 m-0 bg-gray-300 @dark:bg-gray-800 font-mono text-sm font-bold"
+        >
           package.json
         </p>
         <pre
@@ -131,5 +133,3 @@
     <NpmSearchInput {npmPkgName} />
   {/if}
 </main>
-
-<!-- TODO: Loading screen -->

@@ -4,5 +4,10 @@ import presetUno from '@unocss/preset-uno'
 
 export default defineConfig({
   extractors: [extractorSvelte],
-  presets: [presetUno()]
+  presets: [presetUno()],
+  theme: {
+    colors: {
+      primary: '#E69B57'
+    }
+  }
 })
