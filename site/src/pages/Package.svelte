@@ -31,12 +31,20 @@
   $: if (npmPkgVersion) {
     versionFetched = true
   } else {
-    // prettier-ignore
-    fetch(`${import.meta.env.VITE_NPM_METADATA_ENDPOINT}/${encodeURIComponent(npmPkgName)}`)
+    // Note: Using the npm registry returns a huge payload.
+    // Find a better way for this (maybe a proxy server).
+    fetch(
+      `${import.meta.env.VITE_NPM_REGISTRY}/${encodeURIComponent(npmPkgName)}`,
+      {
+        headers: {
+          Accept: 'application/vnd.npm.install-v1+json'
+        }
+      }
+    )
       .then((v) => v.ok && v.json())
       .then((v) => {
         if (v) {
-          url.replace(`/${npmPkgName}@${v.collected.metadata.version}`)
+          url.replace(`/${npmPkgName}@${v['dist-tags'].latest}`)
         }
         versionFetched = true
       })

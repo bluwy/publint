@@ -80,15 +80,13 @@
     if (!npmPkgName) return
 
     const result = await fetch(
-      `${import.meta.env.VITE_NPM_SEARCH_ENDPOINT}?q=${npmPkgName}&size=5`,
-      {
-        method: 'GET'
-      }
+      // prettier-ignore
+      `${import.meta.env.VITE_NPM_REGISTRY}/-/v1/search?text=${encodeURIComponent(npmPkgName)}&size=5&quality=0.0&popularity=1.0&maintenance=0.0`
     )
 
     if (result.ok) {
       const json = await result.json()
-      options = json.map((v) => ({
+      options = json.objects.map((v) => ({
         value: v.package.name,
         description: v.package.description,
         version: v.package.version

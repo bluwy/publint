@@ -3,8 +3,6 @@
 
 interface ImportMetaEnv {
   VITE_NPM_REGISTRY: string
-  VITE_NPM_SEARCH_ENDPOINT: string
-  VITE_NPM_METADATA_ENDPOINT: string
 }
 
 interface ImportMeta {
