@@ -43,7 +43,7 @@ export function printMessage(m, pkg) {
       return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but does not match any files`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
-      return `${c.bold(fp(m.path) + '.types')} should be the first in the object so TypeScript can load it.`
+      return `${c.bold(fp(m.path) + '.types')} should be the first in the object as required by TypeScript.`
     case 'EXPORTS_DEFAULT_SHOULD_BE_LAST':
       // prettier-ignore
       return `${c.bold(fp(m.path) + '.default')} should be the last in the object so it doesn't take precedence over the keys following it.`

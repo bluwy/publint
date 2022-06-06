@@ -44,7 +44,7 @@ export function printMessage(m, pkg) {
       return `Does not match any files.`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
-      return `Should be the first in the object so TypeScript can load it.`
+      return `Should be the first in the object as required by TypeScript.`
     case 'EXPORTS_DEFAULT_SHOULD_BE_LAST':
       // prettier-ignore
       return `Should be the last in the object so it doesn't take precedence over the keys following it.`
