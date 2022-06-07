@@ -69,3 +69,7 @@ self.addEventListener('message', async (e) => {
     }
   })
 })
+
+self.addEventListener('unhandledrejection', () => {
+  postMessage({ type: 'error' })
+})

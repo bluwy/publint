@@ -41,24 +41,18 @@
         if ((v = v.objects[0])) {
           url.replace(`/${npmPkgName}@${v.package.version}`)
         }
+      })
+      .finally(() => {
         versionFetched = true
       })
   }
 
+  /** @type {Worker} */
+  let worker
   let result
   let status = ''
   $: if (npmPkgName && npmPkgVersion) {
-    const worker = new Worker(new URL('../utils/worker.js', import.meta.url), {
-      type: 'module'
-    })
-    worker.addEventListener('message', (e) => {
-      const message = e.data
-      if (message.type === 'status') {
-        status = message.data
-      } else if (message.type === 'result') {
-        result = message.data
-      }
-    })
+    if (!worker) worker = createWorker()
     worker.postMessage({
       npmPkgName,
       npmPkgVersion
@@ -70,6 +64,27 @@
   ).length
   $: warningCount = result?.messages.filter((v) => v.type === 'warning').length
   $: errorCount = result?.messages.filter((v) => v.type === 'error').length
+
+  function createWorker() {
+    const worker = new Worker(new URL('../utils/worker.js', import.meta.url), {
+      type: 'module'
+    })
+    worker.addEventListener('message', (e) => {
+      const message = e.data
+      if (message.type === 'status') {
+        status = message.data
+      } else if (message.type === 'result') {
+        result = message.data
+      } else if (message.type === 'error') {
+        status = 'Error processing package'
+      }
+    })
+    // TODO: Identify is package does not exist
+    worker.addEventListener('error', () => {
+      status = 'Error processing package'
+    })
+    return worker
+  }
 </script>
 
 <svelte:head>
@@ -78,7 +93,7 @@
   {/if}
 </svelte:head>
 
-<main class="flex flex-col items-center min-h-screen mt-5 p-4">
+<main class="flex flex-col items-center min-h-screen p-4">
   {#if npmPkgName && npmPkgVersion}
     <h1>
       {npmPkgName} - {npmPkgVersion}
@@ -127,7 +142,9 @@
       </section>
     {:else}
       <section class="text-center py-8 opacity-70">
-        <Loading />
+        {#if !status.includes('Error')}
+          <Loading />
+        {/if}
         <p>{status}</p>
       </section>
     {/if}
