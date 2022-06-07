@@ -1,8 +1,9 @@
 {
   "name": "publint",
   "version": "0.0.1",
-  "private": true,
+  "description": "Lint packaging errors",
   "type": "module",
+  "author": "Bjorn Lu",
   "license": "MIT",
   "bin": "./lib/cli.js",
   "types": "./lib/index.d.ts",
@@ -24,6 +25,27 @@
     "cli": "node ./lib/cli.js",
     "test": "uvu tests -i fixtures"
   },
+  "engines": {
+    "node": ">=16"
+  },
+  "files": [
+    "lib",
+    "src"
+  ],
+  "funding": "https://bjornlu.com/sponsor",
+  "homepage": "https://publint.bjornlu.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bluwy/publint.git",
+    "directory": "pkg"
+  },
+  "bugs": {
+    "url": "https://github.com/bluwy/publint/issues"
+  },
+  "keywords": [
+    "publish",
+    "lint"
+  ],
   "dependencies": {
     "picocolors": "^1.0.0",
     "sade": "^1.8.1"

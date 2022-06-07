@@ -33,18 +33,18 @@ importers:
       pako: ^2.0.4
       publint: workspace:*
       svelte: ^3.48.0
-      vite: ^2.9.9
+      vite: ^2.9.10
     dependencies:
       get-npm-tarball-url: 2.0.3
       pako: 2.0.4
       publint: link:../pkg
     devDependencies:
-      '@sveltejs/vite-plugin-svelte': 1.0.0-next.47_svelte@3.48.0+vite@2.9.9
+      '@sveltejs/vite-plugin-svelte': 1.0.0-next.47_svelte@3.48.0+vite@2.9.10
       '@unocss/core': 0.37.4
       '@unocss/preset-uno': 0.37.4
-      '@unocss/vite': 0.37.4_vite@2.9.9
+      '@unocss/vite': 0.37.4_vite@2.9.10
       svelte: 3.48.0
-      vite: 2.9.9
+      vite: 2.9.10
 
 packages:
 
@@ -64,7 +64,7 @@ packages:
       picomatch: 2.3.1
     dev: true
 
-  /@sveltejs/vite-plugin-svelte/1.0.0-next.47_svelte@3.48.0+vite@2.9.9:
+  /@sveltejs/vite-plugin-svelte/1.0.0-next.47_svelte@3.48.0+vite@2.9.10:
     resolution: {integrity: sha512-J6n8UN51aq/TEZGQ89/EtdXTtca3cRcTJGzi6fi+xK8LkgsHQLCZhRj+PJ+swktRSWTX9IOmQS55SqVg6bz5fA==}
     engines: {node: ^14.13.1 || >= 16}
     peerDependencies:
@@ -82,7 +82,7 @@ packages:
       magic-string: 0.26.2
       svelte: 3.48.0
       svelte-hmr: 0.14.12_svelte@3.48.0
-      vite: 2.9.9
+      vite: 2.9.10
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -138,7 +138,7 @@ packages:
       css-tree: 2.1.0
     dev: true
 
-  /@unocss/vite/0.37.4_vite@2.9.9:
+  /@unocss/vite/0.37.4_vite@2.9.10:
     resolution: {integrity: sha512-2irA+2DonCHq0HW9XBq+DCZ3nWLhL2QTKCmbtrGyJNpKWYkHb7m2bfRtKxGmdx7LeN1ThTLHuEi74q5I9IS2Ww==}
     peerDependencies:
       vite: ^2.9.0
@@ -150,7 +150,7 @@ packages:
       '@unocss/scope': 0.37.4
       '@unocss/transformer-directives': 0.37.4
       magic-string: 0.26.2
-      vite: 2.9.9
+      vite: 2.9.10
     dev: true
 
   /css-tree/2.1.0:
@@ -610,8 +610,8 @@ packages:
       sade: 1.8.1
     dev: true
 
-  /vite/2.9.9:
-    resolution: {integrity: sha512-ffaam+NgHfbEmfw/Vuh6BHKKlI/XIAhxE5QSS7gFLIngxg171mg1P3a4LSRME0z2ZU1ScxoKzphkipcYwSD5Ew==}
+  /vite/2.9.10:
+    resolution: {integrity: sha512-TwZRuSMYjpTurLqXspct+HZE7ONiW9d+wSWgvADGxhDPPyoIcNywY+RX4ng+QpK30DCa1l/oZgi2PLZDibhzbQ==}
     engines: {node: '>=12.2.0'}
     hasBin: true
     peerDependencies:
