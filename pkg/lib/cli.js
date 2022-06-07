@@ -15,18 +15,22 @@ sade('publint [dir]', true)
   .action(async (dir) => {
     const pkgDir = dir ? path.resolve(dir) : process.cwd()
     const messages = await publint({ pkgDir })
-    const rootPkgContent = await fs.readFile(
-      path.join(pkgDir, 'package.json'),
-      'utf8'
-    )
+    const rootPkgContent = await fs
+      .readFile(path.join(pkgDir, 'package.json'), 'utf8')
+      .catch(() => {
+        console.log(c.red(`Unable to read package.json at ${pkgDir}`))
+      })
+    if (!rootPkgContent) return
     const rootPkg = JSON.parse(rootPkgContent)
+
+    console.log(`${c.bold(rootPkg.name)} lint results:`)
 
     if (messages.length) {
       const suggestions = messages.filter((v) => v.type === 'suggestion')
       if (suggestions.length) {
         console.log(c.bold(c.blue('Suggestions:')))
         suggestions.forEach((m, i) =>
-          console.log(c.dim(`${i + 1}: `) + printMessage(m, rootPkg))
+          console.log(c.dim(`${i + 1}. `) + printMessage(m, rootPkg))
         )
       }
 
@@ -34,7 +38,7 @@ sade('publint [dir]', true)
       if (warnings.length) {
         console.log(c.bold(c.yellow('Warnings:')))
         warnings.forEach((m, i) =>
-          console.log(c.dim(`${i + 1}: `) + printMessage(m, rootPkg))
+          console.log(c.dim(`${i + 1}. `) + printMessage(m, rootPkg))
         )
       }
 
@@ -42,11 +46,13 @@ sade('publint [dir]', true)
       if (errors.length) {
         console.log(c.bold(c.red('Errors:')))
         errors.forEach((m, i) =>
-          console.log(c.dim(`${i + 1}: `) + printMessage(m, rootPkg))
+          console.log(c.dim(`${i + 1}. `) + printMessage(m, rootPkg))
         )
       }
+
+      process.exitCode = 1
     } else {
-      console.log(c.bold(c.green('all good')))
+      console.log(c.bold(c.green('All good!')))
     }
   })
   .parse(process.argv)
