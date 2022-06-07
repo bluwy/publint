@@ -1,4 +1,5 @@
 <script>
+  import logo from '../assets/logo.svg?raw'
   import Label from '../components/Label.svelte'
   import Loading from '../components/Loading.svelte'
   import NpmSearchInput from '../components/NpmSearchInput.svelte'
@@ -77,7 +78,7 @@
   {/if}
 </svelte:head>
 
-<main class="flex flex-col items-center min-h-screen mt-5">
+<main class="flex flex-col items-center min-h-screen mt-5 p-4">
   {#if npmPkgName && npmPkgVersion}
     <h1>
       {npmPkgName} - {npmPkgVersion}
@@ -106,15 +107,15 @@
         {/if}
       </section>
       <section
-        class="w-full max-w-3xl my-4 bg-gray-200 @dark:bg-gray-900 rounded-md overflow-x-auto overflow-y-hidden"
+        class="relative w-full max-w-3xl my-4 bg-gray-200 @dark:bg-gray-900 rounded-md overflow-x-auto overflow-y-hidden"
       >
         <p
-          class="px-4 py-2 m-0 bg-gray-300 @dark:bg-gray-800 font-mono text-sm font-bold"
+          class="absolute w-full px-4 py-2 m-0 bg-gray-300 @dark:bg-gray-800 font-mono text-sm font-bold"
         >
           package.json
         </p>
         <pre
-          class="relative w-full px-4 py-3 m-0 whitespace-normal text-sm md:text-base">
+          class="relative w-full px-4 py-3 m-0 mt-8 whitespace-normal text-sm md:text-base">
           <ul class="m-0 p-0 list-none">
             <PkgNode
               value={result.pkgJson}
@@ -135,3 +136,7 @@
     <NpmSearchInput {npmPkgName} />
   {/if}
 </main>
+
+<a class="absolute top-0 left-0 w-16 h-14 px-3" href="/">
+  {@html logo}
+</a>
