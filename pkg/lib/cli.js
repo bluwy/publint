@@ -2,14 +2,16 @@
 
 import fs from 'node:fs/promises'
 import path from 'node:path'
+import { createRequire } from 'node:module'
 import sade from 'sade'
 import c from 'picocolors'
 import { publint } from './node.js'
 import { printMessage } from '../src/message.js'
 
-// TODO: Handcraft this
+const version = createRequire(import.meta.url)('../package.json').version
+
 sade('publint [dir]', true)
-  .version('0.0.1')
+  .version(version)
   .action(async (dir) => {
     const pkgDir = dir ? path.resolve(dir) : process.cwd()
     const messages = await publint({ pkgDir })

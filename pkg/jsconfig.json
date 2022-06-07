@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
-    "checkJs": true
+    "checkJs": true,
+    "module": "ESNext",
+    "moduleResolution": "Node"
   }
 }
