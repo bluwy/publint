@@ -2,6 +2,7 @@
   "compilerOptions": {
     "checkJs": true,
     "module": "ESNext",
-    "moduleResolution": "Node"
+    "moduleResolution": "Node",
+    "jsx": "preserve"
   }
 }
