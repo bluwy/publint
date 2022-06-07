@@ -9,19 +9,19 @@
   </head>
   <body tabindex="-1">
     <div id="app" class="min-h-screen"></div>
-    <div class="bg-gray-700 text-white py-8">
+    <div class="docs bg-gray-700 text-white py-8">
       <div
         class="mb-2 px-4 flex flex-col md:flex-row w-full max-w-6xl mx-auto gap-6"
       >
         <section class="md:w-1/2 mb-2">
-          <h2 class="font-medium">What is this</h2>
-          <p class="opacity-80">
+          <h2>What is this</h2>
+          <p>
             <code>publint</code> lints npm packages for packaging errors,
             ensuring maximum compatibility across environments. This means that
             consumers of your package can safely run your code in any platform,
             e.g. Vite, Webpack, Rollup, NodeJS, etc...
           </p>
-          <p class="opacity-80">
+          <p>
             For a list of rules used by <code>publint</code>, see the
             <a
               class="text-white font-bold decoration-none hover:text-primary focus:text-primary transition-color"
@@ -33,14 +33,14 @@
           </p>
         </section>
         <section class="md:w-1/2 mb-2">
-          <h2 class="font-medium">How it works</h2>
-          <p class="opacity-80">
+          <h2>How it works</h2>
+          <p>
             When linting an npm package, the site would download the package
             tarball locally from the npm registry, then a web worker will run
             the <code>publint</code> CLI against the files. For larger packages,
             it may take a while to download and lint.
           </p>
-          <p class="opacity-80">
+          <p>
             Unlike <code>npm install</code>, the site would only download the
             package itself without it's dependencies, as that's sufficient for
             the linting process.
@@ -51,19 +51,19 @@
         class="mb-8 px-4 flex flex-col md:flex-row w-full max-w-6xl mx-auto gap-6"
       >
         <section class="md:w-1/2 mb-2">
-          <h2 class="font-medium">Use locally</h2>
-          <p class="opacity-80">
+          <h2>Use locally</h2>
+          <p>
             To run <code>publint</code> locally, simply <code>cd</code> into
             your library and run <code>npx publint</code>! Use
             <code>npx publint --help</code> to see the full list of options.
           </p>
         </section>
         <section class="md:w-1/2 mb-2">
-          <h2 class="font-medium">Contribute</h2>
-          <p class="opacity-80">
+          <h2>Contribute</h2>
+          <p>
             Found a bug? Head over to
             <a
-              class="text-white font-bold decoration-none hover:text-primary focus:text-primary transition-color"
+              class="text-white anchor-link"
               href="https://github.com/bluwy/publint"
             >
               https://github.com/bluwy/publint
@@ -74,10 +74,7 @@
       <footer class="text-center">
         <p>
           Made by
-          <a
-            class="text-white font-bold decoration-none hover:text-primary focus:text-primary transition-color"
-            href="https://github.com/bluwy"
-          >
+          <a class="text-white anchor-link" href="https://bjornlu.com">
             Bjorn Lu
           </a>
         </p>

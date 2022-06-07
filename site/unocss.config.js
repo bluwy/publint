@@ -9,5 +9,9 @@ export default defineConfig({
     colors: {
       primary: '#E69B57'
     }
+  },
+  shortcuts: {
+    'anchor-link':
+      'font-bold decoration-none hover:text-primary focus:text-primary transition-color'
   }
 })

@@ -18,8 +18,26 @@ body {
     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+.docs h1 {
+  margin-bottom: 1rem;
+}
+
+.docs h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.docs p {
+  opacity: 0.8;
+}
+
 p {
   line-height: 1.5;
+}
+
+a {
+  color: inherit;
 }
 
 @media (prefers-color-scheme: dark) {
