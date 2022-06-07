@@ -12,6 +12,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  scroll-behavior: smooth;
   background-color: #efefef;
   color: #121212;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,

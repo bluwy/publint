@@ -13,5 +13,6 @@
       <Logo />
     </div>
     <NpmSearchInput />
+    <a class="anchor-link opacity-60 my-8" href="#docs">How it works?</a>
   </section>
 </main>
