@@ -95,7 +95,7 @@
 
 <main class="flex flex-col items-center min-h-screen p-4">
   {#if npmPkgName && npmPkgVersion}
-    <h1>
+    <h1 class="mt-10">
       {npmPkgName} - {npmPkgVersion}
     </h1>
     <NpmSearchInput {npmPkgName} />
