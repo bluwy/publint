@@ -122,15 +122,15 @@
         {/if}
       </section>
       <section
-        class="relative w-full max-w-3xl my-4 bg-gray-200 @dark:bg-gray-900 rounded-md overflow-x-auto overflow-y-hidden"
+        class="w-full max-w-3xl my-4 bg-gray-200 @dark:bg-gray-900 rounded-md"
       >
         <p
-          class="absolute w-full px-4 py-2 m-0 bg-gray-300 @dark:bg-gray-800 font-mono text-sm font-bold"
+          class="px-4 py-2 m-0 bg-gray-300 @dark:bg-gray-800 font-mono text-sm font-bold"
         >
           package.json
         </p>
         <pre
-          class="relative w-full px-4 py-3 m-0 mt-8 whitespace-normal text-sm md:text-base">
+          class="relative w-full px-4 py-3 m-0 whitespace-normal text-sm md:text-base overflow-x-auto overflow-y-hidden">
           <ul class="m-0 p-0 list-none">
             <PkgNode
               value={result.pkgJson}
