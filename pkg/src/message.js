@@ -42,7 +42,7 @@ export function printMessage(m, pkg) {
       return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but does not match any files.`
     case 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING':
       // prettier-ignore
-      return `${c.bold(fp(m.path))} ends with ${c.bold('/')} which is deprecated. Use ${c.bold(fp(m.args.expectPath))}: "${c.bold(m.args.expectValue)}" instead.`
+      return `${c.bold(fp(m.path))} maps to a path that ends with ${c.bold('/')} which is deprecated. Use ${c.bold(fp(m.args.expectPath))}: "${c.bold(m.args.expectValue)}" instead.`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
       return `${c.bold(fp(m.path) + '.types')} should be the first in the object as required by TypeScript.`

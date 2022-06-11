@@ -13,6 +13,9 @@ import {
 export async function publint({ pkgDir, vfs }) {
   /** @type {import('../lib').Message[]} */
   const messages = []
+  /**
+   * A promise queue is created to run all linting tasks in parallel
+   */
   const promiseQueue = createPromiseQueue()
 
   const rootPkgPath = vfs.pathJoin(pkgDir, 'package.json')
@@ -20,6 +23,17 @@ export async function publint({ pkgDir, vfs }) {
   if (rootPkgContent === false) return messages
   const rootPkg = JSON.parse(rootPkgContent)
   const { main, module, exports } = rootPkg
+
+  /**
+   * @param {string} filePath
+   */
+  function isPathLintable(filePath) {
+    return (
+      filePath.endsWith('.js') ||
+      filePath.endsWith('.mjs') ||
+      filePath.endsWith('.cjs')
+    )
+  }
 
   /**
    * @param {string} path
@@ -69,7 +83,7 @@ export async function publint({ pkgDir, vfs }) {
               actualFormat,
               expectFormat
             },
-            path: [],
+            path: ['name'],
             type: 'warning'
           })
         }
@@ -163,6 +177,43 @@ export async function publint({ pkgDir, vfs }) {
   if (exports) {
     // recursively check exports
     crawlExports(exports)
+  } else {
+    // all files can be accessed. verify them all
+    promiseQueue.push(async () => {
+      const files = await exportsGlob(vfs.pathJoin(pkgDir, './*'), vfs)
+      const pq = createPromiseQueue()
+      for (const filePath of files) {
+        if (!isPathLintable(filePath)) continue
+        pq.push(async () => {
+          const fileContent = await readFile(filePath, [])
+          if (fileContent === false) return
+          const actualFormat = getCodeFormat(fileContent)
+          let expectFormat = await getFilePathFormat(filePath, vfs)
+          if (
+            actualFormat !== expectFormat &&
+            actualFormat !== 'unknown' &&
+            actualFormat !== 'mixed'
+          ) {
+            const actualExtension = vfs.getExtName(filePath)
+            messages.push({
+              code: isExplicitExtension(actualExtension)
+                ? 'FILE_INVALID_EXPLICIT_FORMAT'
+                : 'FILE_INVALID_FORMAT',
+              args: {
+                actualFormat,
+                expectFormat,
+                actualExtension,
+                expectExtension: getCodeFormatExtension(actualFormat),
+                actualFilePath: filePath.slice(pkgDir.length)
+              },
+              path: ['name'],
+              type: 'warning'
+            })
+          }
+        })
+      }
+      await pq.wait()
+    })
   }
 
   await promiseQueue.wait()
@@ -218,12 +269,7 @@ export async function publint({ pkgDir, vfs }) {
         // TODO: group glob warnings
         for (const filePath of exportsFiles) {
           // TODO: Maybe check .ts in the future
-          if (
-            !filePath.endsWith('.js') &&
-            !filePath.endsWith('.mjs') &&
-            !filePath.endsWith('.cjs')
-          )
-            continue
+          if (!isPathLintable(filePath)) continue
           pq.push(async () => {
             // Could fail if in !isGlob
             const fileContent = await readFile(filePath, currentPath)
