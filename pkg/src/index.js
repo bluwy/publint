@@ -215,9 +215,15 @@ export async function publint({ pkgDir, vfs }) {
 
         const pq = createPromiseQueue()
 
-        // todo: group glob warnings
+        // TODO: group glob warnings
         for (const filePath of exportsFiles) {
-          if (filePath.endsWith('.d.ts')) continue
+          // TODO: Maybe check .ts in the future
+          if (
+            !filePath.endsWith('.js') &&
+            !filePath.endsWith('.mjs') &&
+            !filePath.endsWith('.cjs')
+          )
+            continue
           pq.push(async () => {
             // Could fail if in !isGlob
             const fileContent = await readFile(filePath, currentPath)

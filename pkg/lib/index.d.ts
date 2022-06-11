@@ -19,6 +19,7 @@ interface BaseMessage<Code extends string, Args = Record<string, string>> {
   type: MessageType
 }
 
+// TODO: Check nodejs modules usage
 export type Message =
   | BaseMessage<
       'IMPLICIT_INDEX_JS_INVALID_FORMAT',
@@ -56,8 +57,6 @@ export type Message =
         expectValue: string
       }
     >
-  // TODO
-  // | BaseMessage<'EXPORTS_GLOB_NO_MATCHED_FILES_BUT_IMPLICIT_INDEX_DETECTED'>
   | BaseMessage<'EXPORTS_TYPES_SHOULD_BE_FIRST'>
   | BaseMessage<'EXPORTS_DEFAULT_SHOULD_BE_LAST'>
 
