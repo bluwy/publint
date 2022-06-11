@@ -179,6 +179,23 @@ export async function publint({ pkgDir, vfs }) {
   function crawlExports(exports, currentPath = ['exports']) {
     if (typeof exports === 'string') {
       promiseQueue.push(async () => {
+        // https://nodejs.org/docs/latest-v16.x/api/packages.html#subpath-folder-mappings
+        if (exports.endsWith('/')) {
+          const expectPath = currentPath.slice()
+          expectPath[currentPath.length - 1] += '*'
+          messages.push({
+            code: 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
+            args: {
+              expectPath,
+              expectValue: exports + '*'
+            },
+            path: currentPath,
+            type: 'warning'
+          })
+          // Help fix glob so we can further analyze other issues
+          exports += '*'
+        }
+
         const exportsPath = vfs.pathJoin(pkgDir, exports)
         const isGlob = exports.includes('*')
         const exportsFiles = isGlob
@@ -188,9 +205,7 @@ export async function publint({ pkgDir, vfs }) {
         if (isGlob && !exportsFiles.length) {
           messages.push({
             code: 'EXPORTS_GLOB_NO_MATCHED_FILES',
-            args: {
-              pattern: exports
-            },
+            args: {},
             path: currentPath,
             type: 'warning'
           })

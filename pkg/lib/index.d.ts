@@ -49,6 +49,13 @@ export type Message =
   | BaseMessage<'HAS_MODULE_BUT_NO_EXPORTS'>
   | BaseMessage<'HAS_ESM_MAIN_BUT_NO_EXPORTS'>
   | BaseMessage<'EXPORTS_GLOB_NO_MATCHED_FILES'>
+  | BaseMessage<
+      'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
+      {
+        expectPath: string[]
+        expectValue: string
+      }
+    >
   // TODO
   // | BaseMessage<'EXPORTS_GLOB_NO_MATCHED_FILES_BUT_IMPLICIT_INDEX_DETECTED'>
   | BaseMessage<'EXPORTS_TYPES_SHOULD_BE_FIRST'>

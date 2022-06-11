@@ -27,7 +27,7 @@ export function printMessage(m, pkg) {
     }
     case 'FILE_DOES_NOT_EXIST':
       // prettier-ignore
-      return `${c.bold(fp(m.path))} is ${pv(m.path)} but file does not exist`
+      return `${c.bold(fp(m.path))} is ${pv(m.path)} but file does not exist.`
     case 'HAS_ESM_MAIN_BUT_NO_EXPORTS':
       // prettier-ignore
       return `${c.bold('pkg.main')} is an ESM file, but it is usually better to use ${c.bold('pkg.exports')} instead, and remove ${c.bold('pkg.main')} alongside, as compatible NodeJS versions support it as well.`
@@ -35,12 +35,14 @@ export function printMessage(m, pkg) {
       // prettier-ignore
       return `${c.bold('pkg.module')} is used to output ESM, but ${c.bold('pkg.exports')} is not defined. This would not work for NodeJS as it does not read ${c.bold('pkg.module')}, the field is only useful for bundlers like Rollup and Webpack. Consider adding ${c.bold('pkg.exports')} to export the ESM output. ${c.bold('pkg.module')} can usually be removed alongside too.`
     case 'MODULE_SHOULD_BE_ESM':
-      // TODO: Show how we know this? Likely case is `type: module`
       // prettier-ignore
       return `${c.bold('pkg.module')} should be ESM, but the code is written in CJS.`
     case 'EXPORTS_GLOB_NO_MATCHED_FILES':
       // prettier-ignore
-      return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but does not match any files`
+      return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but does not match any files.`
+    case 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING':
+      // prettier-ignore
+      return `${c.bold(fp(m.path))} ends with ${c.bold('/')} which is deprecated. Use ${c.bold(fp(m.args.expectPath))}: "${c.bold(m.args.expectValue)}" instead.`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
       return `${c.bold(fp(m.path) + '.types')} should be the first in the object as required by TypeScript.`
