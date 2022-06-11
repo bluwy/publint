@@ -25,6 +25,12 @@
   $: matchedMessages = messages.filter(
     (v) => v.path.length && isArrayEqual(paths, v.path)
   )
+
+  const maxShownMessages = 5
+  let showAllMessages = false
+  $: shownMessages = showAllMessages
+    ? matchedMessages
+    : matchedMessages.slice(0, maxShownMessages)
 </script>
 
 <li
@@ -61,16 +67,24 @@
       {comma ? ',' : ''}
     </span>
   {/if}
-  {#if matchedMessages.length}
+  {#if shownMessages.length}
     <div
       class="absolute flex items-start justify-end left-0 right-0 top-0 h-full bg-gray-300 @dark:bg-gray-700 pt-1 px-1 -z-1 -mx-4"
     />
     <div class="-mx-4">
-      {#each matchedMessages as msg}
+      {#each shownMessages as msg}
         <div class="{messageTypeToColor(msg.type)} border-4 px-4 py-2">
           {@html printMessage(msg, pkg)}
         </div>
       {/each}
+      {#if shownMessages.length < matchedMessages.length && !showAllMessages}
+        <button
+          class="w-full px-4 py-2 text-xs bg-gray-400 @dark:bg-gray-600 hover:bg-gray-500 focus:bg-gray-500 focus:outline-none border-0"
+          on:click={() => (showAllMessages = true)}
+        >
+          Show {matchedMessages.length - shownMessages.length} more
+        </button>
+      {/if}
     </div>
   {/if}
 </li>
