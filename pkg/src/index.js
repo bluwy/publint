@@ -204,7 +204,7 @@ export async function publint({ pkgDir, vfs }) {
                 expectFormat,
                 actualExtension,
                 expectExtension: getCodeFormatExtension(actualFormat),
-                actualFilePath: filePath.slice(pkgDir.length)
+                actualFilePath: '/' + vfs.pathRelative(pkgDir, filePath)
               },
               path: ['name'],
               type: 'warning'
