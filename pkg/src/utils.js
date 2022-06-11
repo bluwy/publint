@@ -67,9 +67,14 @@ export function getCodeFormat(code) {
 export async function exportsGlob(globStr, vfs) {
   let filePaths = []
   const [dir, ext] = globStr.split('*')
-  await scanDir(dir)
+  if (await vfs.isPathDir(dir)) {
+    await scanDir(dir)
+  }
   return filePaths
 
+  /**
+   * @param {string} dirPath
+   */
   async function scanDir(dirPath) {
     const items = await vfs.readDir(dirPath)
     for (const item of items) {

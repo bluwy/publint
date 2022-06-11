@@ -15,7 +15,11 @@ export function createNodeVfs() {
       return await fsp.readdir(path)
     },
     async isPathDir(path) {
-      return (await fsp.stat(path)).isDirectory()
+      try {
+        return (await fsp.stat(path)).isDirectory()
+      } catch {
+        return false
+      }
     },
     async isPathExist(path) {
       return fs.existsSync(path)
