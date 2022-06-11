@@ -53,6 +53,17 @@
         If the <code>exports</code> entry contains glob paths, but it doesn't
         match any files, suggest the issue.
       </p>
+      <h2><code>EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING</code></h2>
+      <p>
+        The <code>exports</code> entry should not have globs defined with
+        trailing slashes. It is
+        <a
+          href="https://nodejs.org/docs/latest-v16.x/api/packages.html#subpath-folder-mappings"
+        >
+          deprecated
+        </a>
+        and should use <code>/*</code> instead.
+      </p>
       <h2><code>EXPORTS_TYPES_SHOULD_BE_FIRST</code></h2>
       <p>Ensure <code>types</code> condition to be the first.</p>
       <h2><code>EXPORTS_DEFAULT_SHOULD_BE_LAST</code></h2>

@@ -12,7 +12,6 @@ export function printMessage(m, pkg) {
   /** @param {string} s */
   const warn = (s) => `<strong><code>${s}</code></strong>`
 
-  // TODO: verbose mode
   switch (m.code) {
     case 'IMPLICIT_INDEX_JS_INVALID_FORMAT':
       return `index.js should be ${m.args.expectFormat} but it is ${m.args.actualFormat}`
@@ -36,12 +35,14 @@ export function printMessage(m, pkg) {
       // prettier-ignore
       return `${bold('pkg.module')} is used to output ESM, but ${bold('pkg.exports')} is not defined. This would not work for NodeJS as it does not read ${bold('pkg.module')}, the field is only useful for bundlers like Rollup and Webpack. Consider adding ${bold('pkg.exports')} to export the ESM output. ${bold('pkg.module')} can usually be removed alongside too.`
     case 'MODULE_SHOULD_BE_ESM':
-      // TODO: Show how we know this? Likely case is `type: module`
       // prettier-ignore
       return `Should be ESM, but the code is written in CJS.`
     case 'EXPORTS_GLOB_NO_MATCHED_FILES':
       // prettier-ignore
       return `Does not match any files.`
+    case 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING':
+      // prettier-ignore
+      return `${bold(fp(m.path))} ends with ${bold('/')} which is deprecated. Use ${bold(fp(m.args.expectPath))}: "${bold(m.args.expectValue)}" instead.`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
       return `Should be the first in the object as required by TypeScript.`

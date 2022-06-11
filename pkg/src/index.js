@@ -181,8 +181,9 @@ export async function publint({ pkgDir, vfs }) {
       promiseQueue.push(async () => {
         // https://nodejs.org/docs/latest-v16.x/api/packages.html#subpath-folder-mappings
         if (exports.endsWith('/')) {
-          const expectPath = currentPath.slice()
-          expectPath[currentPath.length - 1] += '*'
+          const expectPath = currentPath.map((part) => {
+            return part.endsWith('/') ? part + '*' : part
+          })
           messages.push({
             code: 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
             args: {
