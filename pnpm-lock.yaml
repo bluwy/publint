@@ -4,12 +4,12 @@ importers:
 
   .:
     specifiers:
-      prettier: ^2.6.2
+      prettier: ^2.7.0
       prettier-plugin-svelte: ^2.7.0
       svelte: ^3.48.0
     devDependencies:
-      prettier: 2.6.2
-      prettier-plugin-svelte: 2.7.0_kkjbqzpydplecjtkxrgomroeru
+      prettier: 2.7.0
+      prettier-plugin-svelte: 2.7.0_hkopcrdgm3iqdwvvzss26f6wjy
       svelte: 3.48.0
 
   pkg:
@@ -25,10 +25,10 @@ importers:
 
   site:
     specifiers:
-      '@sveltejs/vite-plugin-svelte': ^1.0.0-next.49
-      '@unocss/core': ^0.38.2
-      '@unocss/preset-uno': ^0.38.2
-      '@unocss/vite': ^0.38.2
+      '@sveltejs/vite-plugin-svelte': 1.0.0-next.49
+      '@unocss/core': ^0.39.0
+      '@unocss/preset-uno': ^0.39.0
+      '@unocss/vite': ^0.39.0
       get-npm-tarball-url: ^2.0.3
       pako: ^2.0.4
       publint: workspace:*
@@ -40,9 +40,9 @@ importers:
       publint: link:../pkg
     devDependencies:
       '@sveltejs/vite-plugin-svelte': 1.0.0-next.49_svelte@3.48.0+vite@2.9.12
-      '@unocss/core': 0.38.2
-      '@unocss/preset-uno': 0.38.2
-      '@unocss/vite': 0.38.2_vite@2.9.12
+      '@unocss/core': 0.39.0
+      '@unocss/preset-uno': 0.39.0
+      '@unocss/vite': 0.39.0_vite@2.9.12
       svelte: 3.48.0
       vite: 2.9.12
 
@@ -87,68 +87,68 @@ packages:
       - supports-color
     dev: true
 
-  /@unocss/config/0.38.2:
-    resolution: {integrity: sha512-ttknaVVxKX7K9ais42iJO9sxpt6mVAnQuQHUokR134Q9GrPVDbN232K+jViqWY+TuVlaSgl6Fafx1DwiYsEAbQ==}
+  /@unocss/config/0.39.0:
+    resolution: {integrity: sha512-anRVtucLuCXLqjHw/vpe1GN2y2ncFC7Ll+GeLeqM/RY63B8g1WuAI/x76D6m9VFbDMUZGaR54MVnzE4BOzOx/Q==}
     engines: {node: '>=14'}
     dependencies:
-      '@unocss/core': 0.38.2
+      '@unocss/core': 0.39.0
       unconfig: 0.3.4
     dev: true
 
-  /@unocss/core/0.38.2:
-    resolution: {integrity: sha512-GXJs1R0oRESgPv4UZKvNZCTnT5Iebn/E0bAHHaCugko2ccnqh6bHul7fcShXICwgT+hyQBPEF5SNS2BPcEjKpQ==}
+  /@unocss/core/0.39.0:
+    resolution: {integrity: sha512-S6ujOluyh/VTIMYTlD2cyfiIlZ9cd/idvBXEky+7nFYHsiQHA0WCTOvCECuLt5Rv8V+njVRF3XLBSStZ+6M+pQ==}
     dev: true
 
-  /@unocss/inspector/0.38.2:
-    resolution: {integrity: sha512-d1HojYl/ztE/+UXMcvOWw7gGewZ/GyhvaHVNsaENcH0ORPootSS1PvE2JhPYiIs43IYq6ZzRFCVH0MUqL8ARhQ==}
+  /@unocss/inspector/0.39.0:
+    resolution: {integrity: sha512-vjysyEbP7+Xg7ABJPkSEbkiiPbXBuWCk0hj7U6Oosf/m/c5ExgPeyjQlyvIwSluTtmPIdp5/shlSD94dSm+1Tg==}
     dependencies:
       gzip-size: 6.0.0
       sirv: 2.0.2
     dev: true
 
-  /@unocss/preset-mini/0.38.2:
-    resolution: {integrity: sha512-xrZHcgjLuOY12+UxnpA0zHtLFnxG1hYWS9CFa/odUM7jtjLq/u+E3LVv4/g/+mwcXyj6EIfe4ItE87s3R87zzg==}
+  /@unocss/preset-mini/0.39.0:
+    resolution: {integrity: sha512-EPZ/YP3l605BU0DP4/NRHD+VMjuHvVPjVovgq9TNSIo6Y1s/qDfCHkxfuAIzCuqDneEx3QxR9RpmevD1Jm+plQ==}
     dependencies:
-      '@unocss/core': 0.38.2
+      '@unocss/core': 0.39.0
     dev: true
 
-  /@unocss/preset-uno/0.38.2:
-    resolution: {integrity: sha512-BKDTa9FazpQFJhdDZWA6aOYq9tIBdm0XSTQC+Vk20h3yKVF3GlIBjuR5IMZ+ydEkLR/c6kjzdqqKbtHUqEyFXw==}
+  /@unocss/preset-uno/0.39.0:
+    resolution: {integrity: sha512-2Qzb1R6DIT1izO0AKxIdLskgpv/XeLQWLkHLb8OKR8cD9ZgWInnWM5Z82vrnKtBXLcaV3POyu6Kx/wR3oquyew==}
     dependencies:
-      '@unocss/core': 0.38.2
-      '@unocss/preset-mini': 0.38.2
-      '@unocss/preset-wind': 0.38.2
+      '@unocss/core': 0.39.0
+      '@unocss/preset-mini': 0.39.0
+      '@unocss/preset-wind': 0.39.0
     dev: true
 
-  /@unocss/preset-wind/0.38.2:
-    resolution: {integrity: sha512-e6I07llFT73aMPR7KOk6ebWQUS3SNvu3c5DCriS+iqbplbdQtTP5Ox6Os33FjNIwzjxz8cSwUKUhRGODuFkFyg==}
+  /@unocss/preset-wind/0.39.0:
+    resolution: {integrity: sha512-DXykxha0yHw/DXR8at4Q/FhkqaydR6Q+2yiS1DtSOfc6DBUFWjK0wQDH3CsapYury94qhfixTjUlfGDtpzn9CQ==}
     dependencies:
-      '@unocss/core': 0.38.2
-      '@unocss/preset-mini': 0.38.2
+      '@unocss/core': 0.39.0
+      '@unocss/preset-mini': 0.39.0
     dev: true
 
-  /@unocss/scope/0.38.2:
-    resolution: {integrity: sha512-8tWsn1Ur8gQzSw8Z2tsoaUWEniOPIBBlH3cZlmkVgtOzndp3/JSFRu+lPcrbvEEN7IW2N1sPV5qQ2addHgmFmA==}
+  /@unocss/scope/0.39.0:
+    resolution: {integrity: sha512-07f9DM45LeKyNFxyOplkYDy6cxfUvdTcdRkMxPCuWR9VFVvXX0V7Ea6LylLyZdefNYPfjpuBhk+nvWoxA2Fyiw==}
     dev: true
 
-  /@unocss/transformer-directives/0.38.2:
-    resolution: {integrity: sha512-x4WhCorfN2r3qgcG31RQhNeyypIYyrqvpt2J/X7s+8MBqcgMFTupQYgVsKw7mOWHlYtEiNA1K7Evr+yOHEMQaA==}
+  /@unocss/transformer-directives/0.39.0:
+    resolution: {integrity: sha512-m206WURKdyTslaiPGfFET51Yd5ZQdKi5sEYPn1zDrQmYac89HtJsj/cWc8beoSphi3+qdfWWXPqSHG9QZ3ibng==}
     dependencies:
-      '@unocss/core': 0.38.2
+      '@unocss/core': 0.39.0
       css-tree: 2.1.0
     dev: true
 
-  /@unocss/vite/0.38.2_vite@2.9.12:
-    resolution: {integrity: sha512-DuYhbH9L5tWa0bntJySIVWbGkJKH9MwxZ51QKrEHh76c+YzZZo+B8k485GJhCb9bfjT5BxpDhxxZQTaaeA3HbA==}
+  /@unocss/vite/0.39.0_vite@2.9.12:
+    resolution: {integrity: sha512-/LZnIblQ3PMVhhJUzyqpVFpybCWv3dtMOaQngvZLbkd7NjV20iuX2kpHKFIvq+tWa+Xs32N9HQvkniv19LKdIg==}
     peerDependencies:
       vite: ^2.9.0
     dependencies:
       '@rollup/pluginutils': 4.2.1
-      '@unocss/config': 0.38.2
-      '@unocss/core': 0.38.2
-      '@unocss/inspector': 0.38.2
-      '@unocss/scope': 0.38.2
-      '@unocss/transformer-directives': 0.38.2
+      '@unocss/config': 0.39.0
+      '@unocss/core': 0.39.0
+      '@unocss/inspector': 0.39.0
+      '@unocss/scope': 0.39.0
+      '@unocss/transformer-directives': 0.39.0
       magic-string: 0.26.2
       vite: 2.9.12
     dev: true
@@ -510,18 +510,18 @@ packages:
       source-map-js: 1.0.2
     dev: true
 
-  /prettier-plugin-svelte/2.7.0_kkjbqzpydplecjtkxrgomroeru:
+  /prettier-plugin-svelte/2.7.0_hkopcrdgm3iqdwvvzss26f6wjy:
     resolution: {integrity: sha512-fQhhZICprZot2IqEyoiUYLTRdumULGRvw0o4dzl5jt0jfzVWdGqeYW27QTWAeXhoupEZJULmNoH3ueJwUWFLIA==}
     peerDependencies:
       prettier: ^1.16.4 || ^2.0.0
       svelte: ^3.2.0
     dependencies:
-      prettier: 2.6.2
+      prettier: 2.7.0
       svelte: 3.48.0
     dev: true
 
-  /prettier/2.6.2:
-    resolution: {integrity: sha512-PkUpF+qoXTqhOeWL9fu7As8LXsIUZ1WYaJiY/a7McAQzxjk82OF0tibkFXVCDImZtWxbvojFjerkiLb0/q8mew==}
+  /prettier/2.7.0:
+    resolution: {integrity: sha512-nwoX4GMFgxoPC6diHvSwmK/4yU8FFH3V8XWtLQrbj4IBsK2pkYhG4kf/ljF/haaZ/aii+wNJqISrCDPgxGWDVQ==}
     engines: {node: '>=10.13.0'}
     hasBin: true
     dev: true
