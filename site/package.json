@@ -21,6 +21,6 @@
     "@unocss/preset-uno": "^0.39.0",
     "@unocss/vite": "^0.39.0",
     "svelte": "^3.48.0",
-    "vite": "^2.9.12"
+    "vite": "^3.0.0-alpha.11"
   }
 }
