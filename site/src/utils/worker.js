@@ -21,12 +21,28 @@ self.addEventListener('message', async (e) => {
   // Unpack flow credit: https://stackoverflow.com/a/65448758
 
   postMessage({ type: 'status', data: 'Fetching package...' })
-  const result = await fetch(tarballUrl)
-  const resultBuffer = await result.arrayBuffer()
+  /** @type {ArrayBuffer} */
+  let resultBuffer
+  try {
+    const result = await fetch(tarballUrl)
+    resultBuffer = await result.arrayBuffer()
+  } catch (e) {
+    postMessage({ type: 'error', data: 'Package not found' })
+    console.error(e)
+    return
+  }
 
   postMessage({ type: 'status', data: 'Unpacking package...' })
-  const tarBuffer = inflate(resultBuffer).buffer // Handles gzip (gz)
-  const files = untar(tarBuffer) // Handles tar (t)
+  /** @type {{ name: string, buffer: ArrayBuffer }[]} */
+  let files
+  try {
+    const tarBuffer = inflate(resultBuffer).buffer // Handles gzip (gz)
+    files = untar(tarBuffer) // Handles tar (t)
+  } catch (e) {
+    postMessage({ type: 'error', data: 'Failed to unpack package' })
+    console.error(e)
+    return
+  }
 
   /** @type {import('publint').Vfs} */
   const vfs = {

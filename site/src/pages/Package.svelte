@@ -50,9 +50,12 @@
   /** @type {Worker} */
   let worker
   let result
+  let error = ''
   let status = ''
   $: if (npmPkgName && npmPkgVersion) {
     if (!worker) worker = createWorker()
+    error = ''
+    status = ''
     worker.postMessage({
       npmPkgName,
       npmPkgVersion
@@ -76,12 +79,11 @@
       } else if (message.type === 'result') {
         result = message.data
       } else if (message.type === 'error') {
-        status = 'Error processing package'
+        error = message.data
       }
     })
-    // TODO: Identify is package does not exist
     worker.addEventListener('error', () => {
-      status = 'Error processing package'
+      error = 'Error processing package'
     })
     return worker
   }
@@ -142,14 +144,16 @@
       </section>
     {:else}
       <section class="text-center py-8 opacity-70">
-        {#if !status.includes('Error')}
+        {#if error}
+          <p>{error}</p>
+        {:else}
           <Loading />
+          <p>{status}</p>
         {/if}
-        <p>{status}</p>
       </section>
     {/if}
   {:else if versionFetched}
-    <h1>Package does not exist</h1>
+    <h1>Package not found</h1>
     <NpmSearchInput {npmPkgName} />
   {/if}
 </main>
