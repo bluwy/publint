@@ -2,10 +2,9 @@
   import { debounce } from '../utils/common'
   import { url } from '../utils/url'
 
-  /**
-   * @type {string}
-   */
   export let npmPkgName = ''
+  export let autofocus = false
+
   /**
    * Input element used to set the value
    * @type {HTMLInputElement | undefined}
@@ -162,6 +161,7 @@
       </ul>
     {/if}
   </div>
+  <!-- svelte-ignore a11y-autofocus -->
   <input
     bind:this={inputEl}
     bind:value={npmPkgName}
@@ -169,6 +169,7 @@
     type="text"
     placeholder="Search npm package"
     autocomplete="off"
+    {autofocus}
     on:input={handleInput}
     on:keydown={handleKeyDown}
     on:keyup={handleKeyUp}
