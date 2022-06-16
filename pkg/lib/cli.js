@@ -14,7 +14,6 @@ sade('publint [dir]', true)
   .version(version)
   .action(async (dir) => {
     const pkgDir = dir ? path.resolve(dir) : process.cwd()
-    const messages = await publint({ pkgDir })
     const rootPkgContent = await fs
       .readFile(path.join(pkgDir, 'package.json'), 'utf8')
       .catch(() => {
@@ -22,6 +21,7 @@ sade('publint [dir]', true)
       })
     if (!rootPkgContent) return
     const rootPkg = JSON.parse(rootPkgContent)
+    const messages = await publint({ pkgDir })
 
     console.log(`${c.bold(rootPkg.name)} lint results:`)
 
