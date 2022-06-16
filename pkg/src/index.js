@@ -7,10 +7,19 @@ import {
 } from './utils.js'
 
 /**
- * @param {Required<import('../lib').Options>} options
+ * Includes internal _include that used to filter paths that is packed.
+ * Mainly for node.js local usage only. So that we lint files that are packed only.
+ * Currently only used if pkg has no `exports`
+ * @typedef {Required<import('../lib').Options> & {
+ *   _include?: (filePath: string) => boolean
+ * }} Options
+ */
+
+/**
+ * @param {Options} options
  * @returns {Promise<import('../lib').Message[]>}
  */
-export async function publint({ pkgDir, vfs }) {
+export async function publint({ pkgDir, vfs, _include }) {
   /** @type {import('../lib').Message[]} */
   const messages = []
   /**
@@ -180,7 +189,11 @@ export async function publint({ pkgDir, vfs }) {
   } else {
     // all files can be accessed. verify them all
     promiseQueue.push(async () => {
-      const files = await exportsGlob(vfs.pathJoin(pkgDir, './*'), vfs)
+      const files = await exportsGlob(
+        vfs.pathJoin(pkgDir, './*'),
+        vfs,
+        _include
+      )
       const pq = createPromiseQueue()
       for (const filePath of files) {
         if (!isPathLintable(filePath)) continue

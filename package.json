@@ -16,5 +16,12 @@
     "prettier": "^2.7.0",
     "prettier-plugin-svelte": "^2.7.0",
     "svelte": "^3.48.0"
+  },
+  "pnpm": {
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "vite": "*"
+      }
+    }
   }
 }

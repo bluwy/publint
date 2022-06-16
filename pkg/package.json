@@ -47,6 +47,7 @@
     "lint"
   ],
   "dependencies": {
+    "npm-packlist": "^5.1.0",
     "picocolors": "^1.0.0",
     "sade": "^1.8.1"
   },
