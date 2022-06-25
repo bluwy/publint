@@ -13,7 +13,7 @@
     "node": ">=16"
   },
   "devDependencies": {
-    "prettier": "^2.7.0",
+    "prettier": "^2.7.1",
     "prettier-plugin-svelte": "^2.7.0",
     "svelte": "^3.48.0"
   },
