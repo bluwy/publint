@@ -8,6 +8,7 @@
   import { isArrayEqual } from '../utils/common'
   import { printMessage } from '../utils/message'
 
+  /** @type {string | number} */
   export let key = ''
   export let value = undefined
   export let comma = false
@@ -20,7 +21,7 @@
 
   $: isValueArray = Array.isArray(value)
   $: isValueObject = value && typeof value === 'object'
-  $: keyText = key ? `"${key}": ` : ''
+  $: keyText = key && isNaN(parseInt(key)) ? `"${key}": ` : ''
 
   $: matchedMessages = messages.filter(
     (v) => v.path.length && isArrayEqual(paths, v.path)
@@ -46,7 +47,7 @@
     <ul class="m-0 p-0 list-none">
       {#each Object.entries(value) as [k, v], i}
         <svelte:self
-          key={isValueArray ? '' : k}
+          key={k}
           value={v}
           comma={i + 1 < Object.keys(value).length}
           indent={indent + 1}
