@@ -47,11 +47,11 @@
     "lint"
   ],
   "dependencies": {
-    "npm-packlist": "^5.1.0",
+    "npm-packlist": "^5.1.1",
     "picocolors": "^1.0.0",
     "sade": "^1.8.1"
   },
   "devDependencies": {
-    "uvu": "^0.5.4"
+    "uvu": "^0.5.6"
   }
 }
