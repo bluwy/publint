@@ -58,10 +58,12 @@ self.addEventListener('message', async (e) => {
         .replace('///', '/')
         .replace('//', '/'), // TODO: optimize this please
     pathRelative: (from, to) => to.replace(from, '').slice(1),
-    readDir: (path) =>
-      files
+    readDir: (path) => {
+      path = path.endsWith('/') ? path : path + '/'
+      return files
         .filter((file) => file.name.startsWith(path))
-        .map((file) => file.name.slice(path.length)),
+        .map((file) => file.name.slice(path.length))
+    },
     readFile: (path) => {
       const file = files.find((file) => file.name === path)
       if (file) {
