@@ -68,6 +68,11 @@
   $: warningCount = result?.messages.filter((v) => v.type === 'warning').length
   $: errorCount = result?.messages.filter((v) => v.type === 'error').length
 
+  // Add debug logs for future self
+  $: if (result?.messages) {
+    console.debug('publint messages:', result.messages)
+  }
+
   function createWorker() {
     const worker = new Worker(new URL('../utils/worker.js', import.meta.url), {
       type: 'module'
