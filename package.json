@@ -8,7 +8,7 @@
     "lint": "prettier **/*.{js,ts,css,md,svelte} --check --cache",
     "format": "prettier **/*.{js,ts,css,md,svelte} --write --cache"
   },
-  "packageManager": "pnpm@7.1.9",
+  "packageManager": "pnpm@7.5.2",
   "engines": {
     "node": ">=16"
   },
