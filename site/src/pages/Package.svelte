@@ -1,5 +1,9 @@
 <script>
   import logo from '../assets/logo.svg?raw'
+  import githubLogo from '../assets/github.svg'
+  import gitlabLogo from '../assets/gitlab.svg'
+  import npmLogo from '../assets/npm.svg'
+  import jsdelivrLogo from '../assets/jsdelivr.svg'
   import Label from '../components/Label.svelte'
   import Loading from '../components/Loading.svelte'
   import NpmSearchInput from '../components/NpmSearchInput.svelte'
@@ -73,6 +77,12 @@
     console.debug('publint messages:', result.messages)
   }
 
+  $: repo = result?.pkgJson?.repository?.url
+    ? extractRepoUrl(result.pkgJson.repository.url)
+    : undefined
+  $: npmUrl = `https://www.npmjs.com/package/${npmPkgName}`
+  $: jsdelivrUrl = `https://www.jsdelivr.com/package/npm/${npmPkgName}`
+
   function createWorker() {
     const worker = new Worker(new URL('../utils/worker.js', import.meta.url), {
       type: 'module'
@@ -92,6 +102,15 @@
     })
     return worker
   }
+
+  function extractRepoUrl(url, version) {
+    url = url.replace(/^git\+/, '').replace(/\.git$/, '')
+    if (url.includes('github.com')) {
+      return { logo: githubLogo, url }
+    } else if (url.includes('gitlab.com')) {
+      return { logo: gitlabLogo, url }
+    }
+  }
 </script>
 
 <svelte:head>
@@ -102,9 +121,23 @@
 
 <main class="flex flex-col items-center min-h-screen p-4">
   {#if npmPkgName && npmPkgVersion}
-    <h1 class="mt-10">
-      {npmPkgName} - {npmPkgVersion}
+    <h1 class="mt-10 mb-0 font-600">
+      {npmPkgName}
+      <span class="opacity-80 font-400 text-lg">{npmPkgVersion}</span>
     </h1>
+    <p class="flex flex-row justify-center items-center gap-4 mb-10">
+      {#if repo}
+        <a class="inline-block rounded" href={repo.url}>
+          <img class="block" src={repo.logo} alt="repo logo" height="20" />
+        </a>
+      {/if}
+      <a class="inline-block rounded" href={npmUrl}>
+        <img class="block" src={npmLogo} alt="npm logo" height="18" />
+      </a>
+      <a class="inline-block rounded bg-gray" href={jsdelivrUrl}>
+        <img class="block" src={jsdelivrLogo} alt="jsdelivr logo" height="20" />
+      </a>
+    </p>
     <NpmSearchInput {npmPkgName} />
     {#if result}
       <section class="mt-4 flex justify-center items-center gap-4">
