@@ -1,0 +1,19 @@
+{
+  "name": "publint-missing-files",
+  "version": "0.0.1",
+  "private": true,
+  "main": "missing.js",
+  "jsnext:main": "./missing.js",
+  "jsnext": "./missing.js",
+  "browser": {
+    "./server/code.js": "./browser/code.js",
+    "some-module": false
+  },
+  "types": "./missing.d.ts",
+  "exports": {
+    ".": {
+      "types": "./missing.d.ts",
+      "import": "./missing.js"
+    }
+  }
+}

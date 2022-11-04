@@ -31,7 +31,7 @@ export async function publint({ pkgDir, vfs, _include }) {
   const rootPkgContent = await readFile(rootPkgPath, [])
   if (rootPkgContent === false) return messages
   const rootPkg = JSON.parse(rootPkgContent)
-  const { main, module, exports } = rootPkg
+  const { main, module, exports, browser } = rootPkg
 
   /**
    * @param {string} filePath
@@ -183,6 +183,21 @@ export async function publint({ pkgDir, vfs, _include }) {
     })
   }
 
+  // check file existance for other known package fields
+  const knownFields = ['types', 'jsnext:main', 'jsnext']
+  for (const field of knownFields) {
+    if (typeof rootPkg[field] === 'string') {
+      promiseQueue.push(async () => {
+        await readFile(rootPkg[field], [field], ['.js', '/index.js'])
+      })
+    }
+  }
+
+  // check file existance for browser field
+  if (browser) {
+    crawlBrowser(browser)
+  }
+
   if (exports) {
     // recursively check exports
     crawlExports(exports)
@@ -237,6 +252,22 @@ export async function publint({ pkgDir, vfs, _include }) {
     return {
       push: (fn) => promises.push(fn()),
       wait: () => Promise.all(promises)
+    }
+  }
+
+  /**
+   * @param {string | Record<string, any>} fieldValue
+   * @param {string[]} currentPath
+   */
+  function crawlBrowser(fieldValue, currentPath = ['browser']) {
+    if (typeof fieldValue === 'string') {
+      promiseQueue.push(async () => {
+        await readFile(fieldValue, currentPath)
+      })
+    } else if (typeof fieldValue === 'object') {
+      for (const key in fieldValue) {
+        crawlBrowser(fieldValue[key], currentPath.concat(key))
+      }
     }
   }
 
@@ -344,8 +375,14 @@ export async function publint({ pkgDir, vfs, _include }) {
       }
 
       for (const key of exportsKeys) {
-        if (key === 'types') continue
-        crawlExports(exports[key], currentPath.concat(key))
+        if (key === 'types') {
+          // only check file existance
+          promiseQueue.push(async () => {
+            await readFile(exports[key], currentPath.concat(key))
+          })
+        } else {
+          crawlExports(exports[key], currentPath.concat(key))
+        }
       }
     }
   }

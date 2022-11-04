@@ -2,11 +2,11 @@ import cp from 'child_process'
 import fs from 'fs/promises'
 import path from 'path'
 
-const fixtures = ['glob', 'test-1', 'test-2']
+const fixtures = ['glob', 'missing-files', 'test-1', 'test-2']
 
 console.log('Create ./public/temp/ dir')
 
-await fs.mkdir('./public/temp')
+await fs.mkdir('./public/temp', { recursive: true })
 
 console.log('Packing fixtures', fixtures)
 

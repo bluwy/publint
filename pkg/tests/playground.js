@@ -10,6 +10,8 @@ testFixture('glob-deprecated', [
   'EXPORTS_GLOB_NO_MATCHED_FILES'
 ])
 
+testFixture('missing-files', Array(7).fill('FILE_DOES_NOT_EXIST'))
+
 testFixture('test-1', ['FILE_INVALID_FORMAT'])
 
 testFixture('test-2', ['FILE_INVALID_FORMAT', 'FILE_INVALID_FORMAT'])
@@ -25,7 +27,7 @@ function testFixture(name, expectCodes) {
       pkgDir: path.resolve(process.cwd(), 'tests/fixtures', name)
     })
     const codes = messages.map((v) => v.code)
-    equal(codes, expectCodes, codes.join(', '))
+    equal(codes, expectCodes, JSON.stringify(messages, null, 2))
   })
 }
 
