@@ -27,7 +27,7 @@ function testFixture(name, expectCodes) {
       pkgDir: path.resolve(process.cwd(), 'tests/fixtures', name)
     })
     const codes = messages.map((v) => v.code)
-    equal(codes, expectCodes, JSON.stringify(messages, null, 2))
+    equal(codes, expectCodes, codes.join(', '))
   })
 }
 

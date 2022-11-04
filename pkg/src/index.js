@@ -263,7 +263,8 @@ export async function publint({ pkgDir, vfs, _include }) {
   function crawlBrowser(fieldValue, currentPath = ['browser']) {
     if (typeof fieldValue === 'string') {
       promiseQueue.push(async () => {
-        await readFile(fieldValue, currentPath)
+        const browserPath = vfs.pathJoin(pkgDir, fieldValue)
+        await readFile(browserPath, currentPath)
       })
     } else if (typeof fieldValue === 'object') {
       for (const key in fieldValue) {
