@@ -271,7 +271,11 @@ export async function publint({ pkgDir, vfs, _include }) {
     }
   }
 
-  function crawlExports(exports, currentPath = ['exports']) {
+  function crawlExports(
+    exports,
+    currentPath = ['exports'],
+    isAfterNodeCondition = false
+  ) {
     if (typeof exports === 'string') {
       promiseQueue.push(async () => {
         // https://nodejs.org/docs/latest-v16.x/api/packages.html#subpath-folder-mappings
@@ -318,9 +322,10 @@ export async function publint({ pkgDir, vfs, _include }) {
             // could fail if in !isGlob
             const fileContent = await readFile(filePath, currentPath)
             if (fileContent === false) return
-            // file format checks isn't required for `browser` field as nodejs
-            // doesn't use it, only bundlers do, which doesn't care of the format
-            if (currentPath.includes('browser')) return
+            // file format checks isn't required for `browser` field or exports
+            // after the node condtion, as nodejs doesn't use it, only bundlers do,
+            // which doesn't care of the format
+            if (isAfterNodeCondition || currentPath.includes('browser')) return
             const actualFormat = getCodeFormat(fileContent)
             let expectFormat = await getFilePathFormat(filePath, vfs)
             if (
@@ -377,6 +382,10 @@ export async function publint({ pkgDir, vfs, _include }) {
         })
       }
 
+      // keep special state of whether the next `crawlExports` iterations are after a node condition.
+      // if there are, we can skip code format check as nodejs doesn't touch them, except bundlers
+      // which are fine with any format.
+      let isKeyAfterNodeCondition = isAfterNodeCondition
       for (const key of exportsKeys) {
         if (key === 'types') {
           // only check file existance
@@ -384,7 +393,14 @@ export async function publint({ pkgDir, vfs, _include }) {
             await readFile(exports[key], currentPath.concat(key))
           })
         } else {
-          crawlExports(exports[key], currentPath.concat(key))
+          crawlExports(
+            exports[key],
+            currentPath.concat(key),
+            isKeyAfterNodeCondition
+          )
+          if (key === 'node') {
+            isKeyAfterNodeCondition = true
+          }
         }
       }
     }
