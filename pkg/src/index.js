@@ -188,7 +188,8 @@ export async function publint({ pkgDir, vfs, _include }) {
   for (const field of knownFields) {
     if (typeof rootPkg[field] === 'string') {
       promiseQueue.push(async () => {
-        await readFile(rootPkg[field], [field], ['.js', '/index.js'])
+        const fieldPath = vfs.pathJoin(pkgDir, rootPkg[field])
+        await readFile(fieldPath, [field], ['.js', '/index.js'])
       })
     }
   }
@@ -390,7 +391,8 @@ export async function publint({ pkgDir, vfs, _include }) {
         if (key === 'types') {
           // only check file existance
           promiseQueue.push(async () => {
-            await readFile(exports[key], currentPath.concat(key))
+            const typesPath = vfs.pathJoin(pkgDir, exports[key])
+            await readFile(typesPath, currentPath.concat(key))
           })
         } else {
           crawlExports(
