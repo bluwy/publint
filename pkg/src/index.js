@@ -184,7 +184,7 @@ export async function publint({ pkgDir, vfs, _include }) {
   }
 
   // check file existance for other known package fields
-  const knownFields = ['types', 'jsnext:main', 'jsnext']
+  const knownFields = ['types', 'jsnext:main', 'jsnext', 'unpkg', 'jsdelivr']
   for (const field of knownFields) {
     if (typeof rootPkg[field] === 'string') {
       promiseQueue.push(async () => {
