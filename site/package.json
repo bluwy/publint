@@ -13,7 +13,7 @@
   "dependencies": {
     "get-npm-tarball-url": "^2.0.3",
     "pako": "^2.0.4",
-    "publint": "workspace:0.1.1"
+    "publint": "workspace:*"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.1.0",
