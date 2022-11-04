@@ -13,8 +13,8 @@ export default defineConfig({
     spaFallbackWithDot(),
     unocss(),
     svelte({
+      prebundleSvelteLibraries: true,
       experimental: {
-        prebundleSvelteLibraries: true,
         useVitePreprocess: true
       }
     })
