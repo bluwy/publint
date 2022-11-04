@@ -134,8 +134,13 @@ export async function getNearestPkg(filePath, vfs) {
   let currentDir = vfs.getDirName(filePath)
   while (true) {
     const pkgJsonPath = vfs.pathJoin(currentDir, 'package.json')
-    if (await vfs.isPathExist(pkgJsonPath))
-      return JSON.parse(await vfs.readFile(pkgJsonPath))
+    if (await vfs.isPathExist(pkgJsonPath)) {
+      try {
+        return JSON.parse(await vfs.readFile(pkgJsonPath))
+      } catch {
+        // ignore malformed package.json **cough** resolve **cough**
+      }
+    }
     const nextDir = vfs.getDirName(currentDir)
     if (nextDir === currentDir) break
     currentDir = nextDir
