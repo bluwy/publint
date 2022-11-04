@@ -77,8 +77,8 @@
     console.debug('publint messages:', result.messages)
   }
 
-  $: repo = result?.pkgJson?.repository?.url
-    ? extractRepoUrl(result.pkgJson.repository.url)
+  $: repo = result?.pkgJson?.repository
+    ? extractRepoUrl(result?.pkgJson?.repository)
     : undefined
   $: npmUrl = `https://www.npmjs.com/package/${npmPkgName}`
   $: jsdelivrUrl = `https://www.jsdelivr.com/package/npm/${npmPkgName}`
@@ -103,8 +103,21 @@
     return worker
   }
 
-  function extractRepoUrl(url, version) {
-    url = url.replace(/^git\+/, '').replace(/\.git$/, '')
+  function extractRepoUrl(repository) {
+    if (!repository) return
+
+    if (typeof repository === 'string') {
+      return extractRepoUrlInternal(repository)
+    }
+    if (repository.url) {
+      return extractRepoUrlInternal(repository.url)
+    }
+  }
+  function extractRepoUrlInternal(url) {
+    url = url
+      .replace(/^git\+/, '')
+      .replace(/\.git$/, '')
+      .replace(/^git:\/\//, 'https://')
     if (url.includes('github.com')) {
       return { logo: githubLogo, url }
     } else if (url.includes('gitlab.com')) {
