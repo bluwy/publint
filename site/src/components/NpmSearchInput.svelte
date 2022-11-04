@@ -73,17 +73,20 @@
     }
   }
 
-  const handleInput = debounce(async () => {
+  const search = debounce(async () => {
     arrowSelectIndex = -1
+    options = []
 
     if (!npmPkgName) return
 
+    const search = npmPkgName
     const result = await fetch(
       // prettier-ignore
       `${import.meta.env.VITE_NPM_REGISTRY}/-/v1/search?text=${encodeURIComponent(npmPkgName)}&size=5&quality=0.0&popularity=1.0&maintenance=0.0`
     )
 
-    if (result.ok) {
+    // `npmPkgName` may have changed when the user types more stuff
+    if (result.ok && search === npmPkgName) {
       const json = await result.json()
       options = json.objects.map((v) => ({
         value: v.package.name,
@@ -92,6 +95,13 @@
       }))
     }
   }, 500)
+
+  function handleInput() {
+    // clear selection and reset option so we don't auto select while typing
+    arrowSelectIndex = -1
+    options = []
+    search()
+  }
 
   function handleSubmit() {
     if (!npmPkgName) return
@@ -143,7 +153,7 @@
       >
         {#each options as opt, i}
           <li
-            class="m-0 py-0 bg-gray bg-opacity-0 hover:bg-opacity-25 transition-colors sele"
+            class="m-0 py-0 bg-gray bg-opacity-0 hover:bg-opacity-25 transition-colors"
             class:bg-opacity-25={arrowSelectIndex === i}
             aria-selected={arrowSelectIndex === i}
           >
