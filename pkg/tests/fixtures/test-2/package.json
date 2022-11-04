@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "exports": {
-    "./*.js": "./lib/*.js"
+    "./*.js": "./lib/*.js",
+    "./browser": {
+      "browser": "./lib/foo.js"
+    }
   }
 }

@@ -312,12 +312,15 @@ export async function publint({ pkgDir, vfs, _include }) {
 
         // TODO: group glob warnings
         for (const filePath of exportsFiles) {
-          // TODO: Maybe check .ts in the future
+          // TODO: maybe check .ts in the future
           if (!isPathLintable(filePath)) continue
           pq.push(async () => {
-            // Could fail if in !isGlob
+            // could fail if in !isGlob
             const fileContent = await readFile(filePath, currentPath)
             if (fileContent === false) return
+            // file format checks isn't required for `browser` field as nodejs
+            // doesn't use it, only bundlers do, which doesn't care of the format
+            if (currentPath.includes('browser')) return
             const actualFormat = getCodeFormat(fileContent)
             let expectFormat = await getFilePathFormat(filePath, vfs)
             if (
