@@ -36,20 +36,14 @@
   $: if (npmPkgVersion) {
     versionFetched = true
   } else {
-    fetchPackageLatestVersionFast(npmPkgName)
-      .then((version) => {
-        if (version) {
-          return version
-        } else {
-          throw new Error()
-        }
-      })
-      .catch(() => {
-        return fetchPackageLatestVersionSlow(npmPkgName)
-      })
-      .then((version) => {
-        if (version) {
-          url.replace(`/${npmPkgName}@${version}`)
+    fetch(
+      // prettier-ignore
+      `${import.meta.env.VITE_NPM_REGISTRY}/${encodeURIComponent(npmPkgName)}/latest`
+    )
+      .then((v) => v.ok && v.json())
+      .then((v) => {
+        if (v?.version) {
+          url.replace(`/${npmPkgName}@${v.version}`)
         }
       })
       .finally(() => {
@@ -128,36 +122,6 @@
       return { logo: githubLogo, url }
     } else if (url.includes('gitlab.com')) {
       return { logo: gitlabLogo, url }
-    }
-  }
-
-  async function fetchPackageLatestVersionFast(pkgName) {
-    // use search result for smaller payload
-    const result = await fetch(
-      // prettier-ignore
-      `${import.meta.env.VITE_NPM_REGISTRY}/-/v1/search?text=${encodeURIComponent(pkgName)}&size=1&quality=0.0&popularity=1.0&maintenance=0.0`
-    )
-    if (result.ok) {
-      const json = await result.json()
-      return json.objects[0]?.package.version
-    }
-  }
-
-  async function fetchPackageLatestVersionSlow(pkgName) {
-    // use packument for unsearchable packages, but larger payload
-    const result = await fetch(
-      // prettier-ignore
-      `${import.meta.env.VITE_NPM_REGISTRY}/${encodeURIComponent(pkgName)}`,
-      {
-        headers: {
-          Accept:
-            'application/vnd.npm.install-v1+json; q=1.0, application/json; q=0.8, */*'
-        }
-      }
-    )
-    if (result.ok) {
-      const json = await result.json()
-      return json['dist-tags']?.latest
     }
   }
 </script>
