@@ -24,7 +24,7 @@ $ pnpm preview
 $ pnpm packfix
 ```
 
-The `packfix` command is a utility that packages up fixtures (mocked packages) at [../pkg/tests/fixtures](../pkg/tests/fixtures). In the dev server, you can search for the fixture name, e.g. `test-1`, and it'll load the package locally. This can be used for quick testing.
+See [CONTRIBUTING.md](../CONTRIBUTING.md) for more information.
 
 ## License
 

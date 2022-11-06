@@ -29,7 +29,7 @@ There are 2 parts to this repo:
 - [pkg](./pkg) - The `publint` npm package
 - [site](./site) - The website
 
-Visit the respective sub-package above for documentation.
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for more information.
 
 ## Sponsors
 
