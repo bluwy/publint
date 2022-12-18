@@ -35,6 +35,7 @@ export function printMessage(m, pkg) {
       // prettier-ignore
       return `${bold('pkg.module')} is used to output ESM, but ${bold('pkg.exports')} is not defined. This would not work for NodeJS as it does not read ${bold('pkg.module')}, the field is only useful for bundlers like Rollup and Webpack. Consider adding ${bold('pkg.exports')} to export the ESM output. ${bold('pkg.module')} can usually be removed alongside too.`
     case 'MODULE_SHOULD_BE_ESM':
+    case 'EXPORTS_MODULE_SHOULD_BE_ESM':
       // prettier-ignore
       return `Should be ESM, but the code is written in CJS.`
     case 'EXPORTS_GLOB_NO_MATCHED_FILES':

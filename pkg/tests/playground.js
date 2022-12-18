@@ -14,7 +14,11 @@ testFixture('missing-files', Array(7).fill('FILE_DOES_NOT_EXIST'))
 
 testFixture('test-1', ['FILE_INVALID_FORMAT'])
 
-testFixture('test-2', ['FILE_INVALID_FORMAT', 'FILE_INVALID_FORMAT'])
+testFixture('test-2', [
+  'EXPORTS_MODULE_SHOULD_BE_ESM',
+  'FILE_INVALID_FORMAT',
+  'FILE_INVALID_FORMAT'
+])
 
 /**
  *

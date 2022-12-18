@@ -7,6 +7,9 @@
     "./*.js": "./lib/*.js",
     "./browser": {
       "browser": "./lib/foo.js"
+    },
+    "./module": {
+      "module": "./lib/cjs.js"
     }
   }
 }

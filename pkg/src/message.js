@@ -45,10 +45,13 @@ export function printMessage(m, pkg) {
       return `${c.bold(fp(m.path))} maps to a path that ends with ${c.bold('/')} which is deprecated. Use ${c.bold(fp(m.args.expectPath))}: "${c.bold(m.args.expectValue)}" instead.`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
-      return `${c.bold(fp(m.path) + '.types')} should be the first in the object as required by TypeScript.`
+      return `${c.bold(fp(m.path))} should be the first in the object as required by TypeScript.`
     case 'EXPORTS_DEFAULT_SHOULD_BE_LAST':
       // prettier-ignore
-      return `${c.bold(fp(m.path) + '.default')} should be the last in the object so it doesn't take precedence over the keys following it.`
+      return `${c.bold(fp(m.path))} should be the last in the object so it doesn't take precedence over the keys following it.`
+    case 'EXPORTS_MODULE_SHOULD_BE_ESM':
+      // prettier-ignore
+      return `${c.bold(fp(m.path))} should be ESM, but the code is written in CJS.`
     default:
     // TODO
   }

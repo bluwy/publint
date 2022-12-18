@@ -324,7 +324,20 @@ export async function publint({ pkgDir, vfs, _include }) {
             // could fail if in !isGlob
             const fileContent = await readFile(filePath, currentPath)
             if (fileContent === false) return
-            // file format checks isn't required for `browser` field or exports
+            // the `module` condition is only used by bundlers and must be ESM
+            if (currentPath.includes('module')) {
+              const actualFormat = getCodeFormat(fileContent)
+              if (actualFormat === 'CJS') {
+                messages.push({
+                  code: 'EXPORTS_MODULE_SHOULD_BE_ESM',
+                  args: {},
+                  path: currentPath,
+                  type: 'error'
+                })
+              }
+              return
+            }
+            // file format checks isn't required for `browser` condition or exports
             // after the node condtion, as nodejs doesn't use it, only bundlers do,
             // which doesn't care of the format
             if (isAfterNodeCondition || currentPath.includes('browser')) return
