@@ -197,6 +197,16 @@ export async function publint({ pkgDir, vfs, _include }) {
   // check file existance for browser field
   if (browser) {
     crawlBrowser(browser)
+    // if the package has both the `browser` and `exports` fields, recommend to use
+    // the browser condition instead
+    if (exports) {
+      messages.push({
+        code: 'USE_EXPORTS_BROWSER',
+        args: {},
+        path: ['browser'],
+        type: 'suggestion'
+      })
+    }
   }
 
   if (exports) {

@@ -60,6 +60,7 @@ export type Message =
   | BaseMessage<'EXPORTS_TYPES_SHOULD_BE_FIRST'>
   | BaseMessage<'EXPORTS_DEFAULT_SHOULD_BE_LAST'>
   | BaseMessage<'EXPORTS_MODULE_SHOULD_BE_ESM'>
+  | BaseMessage<'USE_EXPORTS_BROWSER'>
 
 export interface Options {
   /**

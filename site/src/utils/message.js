@@ -50,6 +50,9 @@ export function printMessage(m, pkg) {
     case 'EXPORTS_DEFAULT_SHOULD_BE_LAST':
       // prettier-ignore
       return `Should be the last in the object so it doesn't take precedence over the keys following it.`
+    case 'USE_EXPORTS_BROWSER':
+      // prettier-ignore
+      return `${bold('pkg.browser')} can be refactored to use ${bold('pkg.exports')} and the ${bold('browser')} condition instead to declare browser-specific exports.`
     default:
     // TODO
   }
