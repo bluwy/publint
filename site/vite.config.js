@@ -9,16 +9,7 @@ export default defineConfig({
     // TODO: Fix this in Vite
     entries: ['**/*.html', './src/utils/worker.js']
   },
-  plugins: [
-    spaFallbackWithDot(),
-    unocss(),
-    svelte({
-      prebundleSvelteLibraries: true,
-      experimental: {
-        useVitePreprocess: true
-      }
-    })
-  ],
+  plugins: [spaFallbackWithDot(), unocss(), svelte()],
   build: {
     rollupOptions: {
       input: {
