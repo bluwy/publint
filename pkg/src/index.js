@@ -183,7 +183,7 @@ export async function publint({ pkgDir, vfs, _include }) {
     })
   }
 
-  // check file existance for other known package fields
+  // check file existence for other known package fields
   const knownFields = ['types', 'jsnext:main', 'jsnext', 'unpkg', 'jsdelivr']
   for (const field of knownFields) {
     if (typeof rootPkg[field] === 'string') {
@@ -194,7 +194,7 @@ export async function publint({ pkgDir, vfs, _include }) {
     }
   }
 
-  // check file existance for browser field
+  // check file existence for browser field
   if (browser) {
     crawlBrowser(browser)
     // if the package has both the `browser` and `exports` fields, recommend to use
@@ -283,6 +283,15 @@ export async function publint({ pkgDir, vfs, _include }) {
     }
   }
 
+  /**
+   * @param {string} exports
+   */
+  async function getExportsFiles(exports) {
+    const exportsPath = vfs.pathJoin(pkgDir, exports)
+    const isGlob = exports.includes('*')
+    return isGlob ? await exportsGlob(exportsPath, vfs) : [exportsPath]
+  }
+
   function crawlExports(
     exports,
     currentPath = ['exports'],
@@ -308,11 +317,8 @@ export async function publint({ pkgDir, vfs, _include }) {
           exports += '*'
         }
 
-        const exportsPath = vfs.pathJoin(pkgDir, exports)
         const isGlob = exports.includes('*')
-        const exportsFiles = isGlob
-          ? await exportsGlob(exportsPath, vfs)
-          : [exportsPath]
+        const exportsFiles = await getExportsFiles(exports)
 
         if (isGlob && !exportsFiles.length) {
           messages.push({
@@ -413,10 +419,15 @@ export async function publint({ pkgDir, vfs, _include }) {
       let isKeyAfterNodeCondition = isAfterNodeCondition
       for (const key of exportsKeys) {
         if (key === 'types') {
-          // only check file existance
+          // only check file existence
           promiseQueue.push(async () => {
-            const typesPath = vfs.pathJoin(pkgDir, exports[key])
-            await readFile(typesPath, currentPath.concat(key))
+            const typesFiles = await getExportsFiles(exports[key])
+            const typesPath = currentPath.concat(key)
+            const pq = createPromiseQueue()
+            for (const typesFile of typesFiles) {
+              pq.push(async () => await readFile(typesFile, typesPath))
+            }
+            await pq.wait()
           })
         } else {
           crawlExports(

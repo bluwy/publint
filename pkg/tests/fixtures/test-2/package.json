@@ -10,6 +10,10 @@
     },
     "./module": {
       "module": "./lib/cjs.js"
+    },
+    "./types/*": {
+      "types": "./types/*.d.ts",
+      "default": "./types/*.js"
     }
   }
 }
