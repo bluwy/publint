@@ -13,14 +13,14 @@
 </p>
 
 <p align="center">
-  <a href="https://publint.bjornlu.com">
+  <a href="https://publint.dev">
     <strong>Try it online</strong>
   </a>
 </p>
 
 <br>
 
-This package contains a CLI and API to lint packages locally. The package to be linted must exist and be built locally for the lint to succeed. To test other npm packages, try https://publint.bjornlu.com.
+This package contains a CLI and API to lint packages locally. The package to be linted must exist and be built locally for the lint to succeed. To test other npm packages, try https://publint.dev.
 
 ## Usage
 

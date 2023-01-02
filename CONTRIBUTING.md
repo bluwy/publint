@@ -21,7 +21,7 @@ The `pkg` workspace has the `lib`, `src`, and `tests` directories.
 
 ### site
 
-The `site` workspace is a Vite & Svelte multiple page application. It powers https://publint.bjornlu.com.
+The `site` workspace is a Vite & Svelte multiple page application. It powers https://publint.dev.
 
 It has a `packfix` command (`pnpm packfix`) which packages up fixtures from [pkg/tests/fixtures](./pkg/tests/fixtures). Once packed, when running the dev server, you can search for the fixture name, e.g. `publint-test-1`, and it'll load the package locally. This can be used for quick testing.
 

@@ -1,6 +1,6 @@
 # publint-site
 
-The website for https://publint.bjornlu.com.
+The website for https://publint.dev.
 
 Stack:
 

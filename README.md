@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <a href="https://publint.bjornlu.com">
+  <a href="https://publint.dev">
     <strong>Try it online</strong>
   </a>
 </p>
