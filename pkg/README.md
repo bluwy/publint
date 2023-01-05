@@ -47,7 +47,7 @@ const messages = await publint({
    * Path to your package that contains a package.json file.
    * Defaults to `process.cwd()` in node, `/` in browser.
    */
-  pkgDir: './path/to/package'
+  pkgDir: './path/to/package',
   /**
    * A virtual file-system object that handles fs/path operations.
    * This field is required if you're using in the browser.

@@ -20,6 +20,18 @@
 
 <br>
 
+## Usage
+
+```bash
+# Lint your library project
+$ npx publint
+
+# Lint a dependency
+$ npx publint ./node_modules/some-lib
+```
+
+Or try it inline at https://publint.dev. For JavaScript usage, see [pkg/README.md](./pkg/README.md).
+
 ## Development
 
 Use `pnpm install` to install all project dependencies.
