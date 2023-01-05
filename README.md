@@ -30,7 +30,7 @@ $ npx publint
 $ npx publint ./node_modules/some-lib
 ```
 
-Or try it inline at https://publint.dev. For JavaScript usage, see [pkg/README.md](./pkg/README.md).
+Or try it online at https://publint.dev. For JavaScript usage, see [pkg/README.md](./pkg/README.md).
 
 ## Development
 
