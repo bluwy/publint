@@ -3,7 +3,8 @@ import {
   getCodeFormat,
   getFilePathFormat,
   getCodeFormatExtension,
-  isExplicitExtension
+  isExplicitExtension,
+  createPromiseQueue
 } from './utils.js'
 
 /**
@@ -257,14 +258,6 @@ export async function publint({ pkgDir, vfs, _include }) {
 
   await promiseQueue.wait()
   return messages
-
-  function createPromiseQueue() {
-    const promises = []
-    return {
-      push: (fn) => promises.push(fn()),
-      wait: () => Promise.all(promises)
-    }
-  }
 
   /**
    * @param {string | Record<string, any>} fieldValue

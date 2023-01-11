@@ -176,3 +176,11 @@ export function getPkgPathValue(pkg, path) {
   }
   return v
 }
+
+export function createPromiseQueue() {
+  const promises = []
+  return {
+    push: (fn) => promises.push(fn()),
+    wait: () => Promise.all(promises)
+  }
+}
