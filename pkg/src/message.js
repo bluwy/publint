@@ -52,6 +52,9 @@ export function printMessage(m, pkg) {
     case 'EXPORTS_MODULE_SHOULD_BE_ESM':
       // prettier-ignore
       return `${c.bold(fp(m.path))} should be ESM, but the code is written in CJS.`
+    case 'EXPORTS_VALUE_INVALID':
+      // prettier-ignore
+      return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but is invalid as it does not start with "${c.bold('./')}". Use ${c.bold(m.args.suggestValue)} instead.`
     case 'USE_EXPORTS_BROWSER':
       // prettier-ignore
       return `${c.bold('pkg.browser')} can be refactored to use ${c.bold('pkg.exports')} and the ${c.bold('browser')} condition instead to declare browser-specific exports.`

@@ -10,7 +10,7 @@ self.addEventListener('message', async (e) => {
   let tarballUrl
   if (isLocalPkg(npmPkgName)) {
     // prettier-ignore
-    tarballUrl = new URL(`/temp/${npmPkgName}-${npmPkgVersion}.tgz`, import.meta.url).href
+    tarballUrl = new URL(`/temp/${npmPkgName}-${npmPkgVersion}.tgz`, self.location).href
   } else {
     // prettier-ignore
     tarballUrl = getNpmTarballUrl(npmPkgName, npmPkgVersion, {

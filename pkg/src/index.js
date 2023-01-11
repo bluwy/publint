@@ -299,6 +299,7 @@ export async function publint({ pkgDir, vfs, _include }) {
   ) {
     if (typeof exports === 'string') {
       promiseQueue.push(async () => {
+        // warn deprecated subpath mapping
         // https://nodejs.org/docs/latest-v16.x/api/packages.html#subpath-folder-mappings
         if (exports.endsWith('/')) {
           const expectPath = currentPath.map((part) => {
@@ -315,6 +316,18 @@ export async function publint({ pkgDir, vfs, _include }) {
           })
           // Help fix glob so we can further analyze other issues
           exports += '*'
+        }
+
+        // error incorrect exports value
+        if (!exports.startsWith('./')) {
+          messages.push({
+            code: 'EXPORTS_VALUE_INVALID',
+            args: {
+              suggestValue: './' + exports.replace(/^[\/]+/, '')
+            },
+            path: currentPath,
+            type: 'error'
+          })
         }
 
         const isGlob = exports.includes('*')

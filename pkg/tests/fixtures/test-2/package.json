@@ -15,6 +15,7 @@
       "types": "./types/*.d.ts",
       "default": "./types/*.js"
     },
-    "./types/internal.d.ts": null
+    "./types/internal.d.ts": null,
+    "./foo": "lib/cjs.js"
   }
 }
