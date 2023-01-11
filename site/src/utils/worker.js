@@ -75,9 +75,10 @@ self.addEventListener('message', async (e) => {
   }
 
   postMessage({ type: 'status', data: 'Linting package...' })
-  // The tar file names have appended "package"
-  const messages = await publint({ pkgDir: 'package', vfs })
-  const pkgJson = JSON.parse(await vfs.readFile('package/package.json'))
+  // The tar file names have appended "package", except for `@types` packages very strangely
+  const pkgDir = files.length ? files[0].name.split('/')[0] : 'package'
+  const messages = await publint({ pkgDir, vfs })
+  const pkgJson = JSON.parse(await vfs.readFile(pkgDir + '/package.json'))
 
   postMessage({
     type: 'result',
