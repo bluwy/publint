@@ -33,7 +33,7 @@ export function printMessage(m, pkg) {
       return `${bold('pkg.main')} is an ESM file, but it is usually better to use ${bold('pkg.exports')} instead, and remove ${bold('pkg.main')} alongside, as compatible NodeJS versions support it as well.`
     case 'HAS_MODULE_BUT_NO_EXPORTS':
       // prettier-ignore
-      return `${bold('pkg.module')} is used to output ESM, but ${bold('pkg.exports')} is not defined. This would not work for NodeJS as it does not read ${bold('pkg.module')}, the field is only useful for bundlers like Rollup and Webpack. Consider adding ${bold('pkg.exports')} to export the ESM output. ${bold('pkg.module')} can usually be removed alongside too.`
+      return `${bold('pkg.module')} is used to output ESM, but ${bold('pkg.exports')} is not defined. As NodeJS doesn't read ${bold('pkg.module')}, the ESM output may be skipped. Consider adding ${bold('pkg.exports')} to export the ESM output. ${bold('pkg.module')} can usually be removed alongside too.`
     case 'MODULE_SHOULD_BE_ESM':
     case 'EXPORTS_MODULE_SHOULD_BE_ESM':
       // prettier-ignore
