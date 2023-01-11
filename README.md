@@ -28,6 +28,9 @@ $ npx publint
 
 # Lint a dependency
 $ npx publint ./node_modules/some-lib
+
+# Lint your project's dependencies based on package.json
+$ npx publint deps
 ```
 
 Or try it online at https://publint.dev. For JavaScript usage, see [pkg/README.md](./pkg/README.md).

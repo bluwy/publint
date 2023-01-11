@@ -25,11 +25,11 @@ cli
   })
 
 cli
-  .command('deps', 'Lint dependencies declared in package.json')
+  .command('deps [dir]', 'Lint dependencies declared in package.json')
   .option('-P, --prod', 'Only check dependencies')
   .option('-D, --dev', 'Only check devDependencies')
-  .action(async (opts) => {
-    const pkgDir = process.cwd()
+  .action(async (dir, opts) => {
+    const pkgDir = dir ? path.resolve(dir) : process.cwd()
     const rootPkgContent = await fs
       .readFile(path.join(pkgDir, 'package.json'), 'utf8')
       .catch(() => {

@@ -27,15 +27,17 @@ This package contains a CLI and API to lint packages locally. The package to be 
 ### CLI
 
 ```bash
-$ publint --help
+# Lint your library project
+$ npx publint
 
-  Usage
-    $ publint [dir] [options]
+# Lint a dependency
+$ npx publint ./node_modules/some-lib
 
-  Options
-    -v, --version    Displays current version
-    -h, --help       Displays this message
+# Lint your project's dependencies based on package.json
+$ npx publint deps
 ```
+
+Use `npx publint --help` for more information.
 
 ### API
 
