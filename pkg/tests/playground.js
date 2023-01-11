@@ -25,15 +25,34 @@ testFixture('test-2', [
   'FILE_INVALID_FORMAT'
 ])
 
+testFixture(
+  'test-2',
+  [
+    'EXPORTS_VALUE_INVALID',
+    'EXPORTS_MODULE_SHOULD_BE_ESM',
+    'FILE_INVALID_FORMAT',
+    'FILE_INVALID_FORMAT'
+  ],
+  'warning'
+)
+
+testFixture(
+  'test-2',
+  ['EXPORTS_VALUE_INVALID', 'EXPORTS_MODULE_SHOULD_BE_ESM'],
+  'error'
+)
+
 /**
  *
  * @param {string} name
  * @param {import('../lib/index').Message['code'][]} expectCodes
+ * @param {import('../lib/index').Options['level']} [level]
  */
-function testFixture(name, expectCodes) {
+function testFixture(name, expectCodes, level) {
   test(name, async () => {
     const messages = await publint({
-      pkgDir: path.resolve(process.cwd(), 'tests/fixtures', name)
+      pkgDir: path.resolve(process.cwd(), 'tests/fixtures', name),
+      level
     })
     const codes = messages.map((v) => v.code)
     equal(codes, expectCodes, codes.join(', '))
