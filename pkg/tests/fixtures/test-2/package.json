@@ -14,6 +14,7 @@
     "./types/*": {
       "types": "./types/*.d.ts",
       "default": "./types/*.js"
-    }
+    },
+    "./types/internal.d.ts": null
   }
 }

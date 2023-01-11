@@ -387,7 +387,9 @@ export async function publint({ pkgDir, vfs, _include }) {
 
         await pq.wait()
       })
-    } else {
+    }
+    // `exports` could be null to disallow exports of globs from another key
+    else if (exports) {
       const exportsKeys = Object.keys(exports)
 
       // the types export should be the first condition
