@@ -44,8 +44,8 @@ cli
     const rootPkg = JSON.parse(rootPkgContent)
     /** @type {string[]} */
     const deps = []
-    if (!opts.prod) deps.push(...Object.keys(rootPkg.devDependencies || {}))
     if (!opts.dev) deps.push(...Object.keys(rootPkg.dependencies || {}))
+    if (!opts.prod) deps.push(...Object.keys(rootPkg.devDependencies || {}))
 
     if (deps.length === 0) {
       console.log(c.yellow('No dependencies found'))
