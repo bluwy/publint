@@ -38,10 +38,10 @@ export function printMessage(m, pkg) {
       return `${c.bold(fp(m.path))} is ${pv(m.path)} but file does not exist.`
     case 'HAS_ESM_MAIN_BUT_NO_EXPORTS':
       // prettier-ignore
-      return `${c.bold('pkg.main')} is an ESM file, but it is usually better to use ${c.bold('pkg.exports')} instead, and remove ${c.bold('pkg.main')} alongside, as compatible NodeJS versions support it as well.`
+      return `${c.bold('pkg.main')} is an ESM file, but it is usually better to use ${c.bold('pkg.exports')} instead, and remove ${c.bold('pkg.main')} alongside, as compatible NodeJS versions support it as well. (This will be a breaking change)`
     case 'HAS_MODULE_BUT_NO_EXPORTS':
       // prettier-ignore
-      return `${c.bold('pkg.module')} is used to output ESM, but ${c.bold('pkg.exports')} is not defined. As NodeJS doesn't read ${c.bold('pkg.module')}, the ESM output may be skipped. Consider adding ${c.bold('pkg.exports')} to export the ESM output. ${c.bold('pkg.module')} can usually be removed alongside too.`
+      return `${c.bold('pkg.module')} is used to output ESM, but ${c.bold('pkg.exports')} is not defined. As NodeJS doesn't read ${c.bold('pkg.module')}, the ESM output may be skipped. Consider adding ${c.bold('pkg.exports')} to export the ESM output. ${c.bold('pkg.module')} can usually be removed alongside too. (This will be a breaking change)`
     case 'MODULE_SHOULD_BE_ESM':
       // prettier-ignore
       return `${c.bold('pkg.module')} should be ESM, but the code is written in CJS.`
@@ -65,7 +65,7 @@ export function printMessage(m, pkg) {
       return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but is invalid as it does not start with "${c.bold('./')}". Use ${c.bold(m.args.suggestValue)} instead.`
     case 'USE_EXPORTS_BROWSER':
       // prettier-ignore
-      return `${c.bold('pkg.browser')} can be refactored to use ${c.bold('pkg.exports')} and the ${c.bold('browser')} condition instead to declare browser-specific exports.`
+      return `${c.bold('pkg.browser')} can be refactored to use ${c.bold('pkg.exports')} and the ${c.bold('browser')} condition instead to declare browser-specific exports. (This will be a breaking change)`
     default:
     // TODO
   }

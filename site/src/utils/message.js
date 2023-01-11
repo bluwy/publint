@@ -30,10 +30,10 @@ export function printMessage(m, pkg) {
       return `File does not exist`
     case 'HAS_ESM_MAIN_BUT_NO_EXPORTS':
       // prettier-ignore
-      return `${bold('pkg.main')} is an ESM file, but it is usually better to use ${bold('pkg.exports')} instead, and remove ${bold('pkg.main')} alongside, as compatible NodeJS versions support it as well.`
+      return `${bold('pkg.main')} is an ESM file, but it is usually better to use ${bold('pkg.exports')} instead, and remove ${bold('pkg.main')} alongside, as compatible NodeJS versions support it as well. (This will be a breaking change)`
     case 'HAS_MODULE_BUT_NO_EXPORTS':
       // prettier-ignore
-      return `${bold('pkg.module')} is used to output ESM, but ${bold('pkg.exports')} is not defined. As NodeJS doesn't read ${bold('pkg.module')}, the ESM output may be skipped. Consider adding ${bold('pkg.exports')} to export the ESM output. ${bold('pkg.module')} can usually be removed alongside too.`
+      return `${bold('pkg.module')} is used to output ESM, but ${bold('pkg.exports')} is not defined. As NodeJS doesn't read ${bold('pkg.module')}, the ESM output may be skipped. Consider adding ${bold('pkg.exports')} to export the ESM output. ${bold('pkg.module')} can usually be removed alongside too. (This will be a breaking change)`
     case 'MODULE_SHOULD_BE_ESM':
     case 'EXPORTS_MODULE_SHOULD_BE_ESM':
       // prettier-ignore
@@ -55,7 +55,7 @@ export function printMessage(m, pkg) {
       return `${bold(pv(m.path))} is invalid as it does not start with "${bold('./')}". Use ${bold(m.args.suggestValue)} instead.`
     case 'USE_EXPORTS_BROWSER':
       // prettier-ignore
-      return `${bold('pkg.browser')} can be refactored to use ${bold('pkg.exports')} and the ${bold('browser')} condition instead to declare browser-specific exports.`
+      return `${bold('pkg.browser')} can be refactored to use ${bold('pkg.exports')} and the ${bold('browser')} condition instead to declare browser-specific exports. (This will be a breaking change)`
     default:
     // TODO
   }
