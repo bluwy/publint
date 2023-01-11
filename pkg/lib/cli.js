@@ -19,8 +19,7 @@ cli
   })
   .action(async (dir) => {
     const pkgDir = dir ? path.resolve(dir) : process.cwd()
-    const { logs, success } = await lintDir(pkgDir)
-    if (!success) process.exitCode = 1
+    const { logs } = await lintDir(pkgDir)
     logs.forEach((l) => console.log(l))
   })
 
@@ -34,12 +33,9 @@ cli
       .readFile(path.join(pkgDir, 'package.json'), 'utf8')
       .catch(() => {
         console.log(c.red(`Unable to read package.json at ${pkgDir}`))
+        process.exitCode = 1
       })
-
-    if (!rootPkgContent) {
-      process.exitCode = 1
-      return
-    }
+    if (!rootPkgContent) return
 
     const rootPkg = JSON.parse(rootPkgContent)
     /** @type {string[]} */
@@ -68,8 +64,7 @@ cli
     for (let i = 0; i < deps.length; i++) {
       pq.push(async () => {
         const depDir = await findDepPath(deps[i], pkgDir)
-        const { logs, success } = await lintDir(depDir, true)
-        if (!success) process.exitCode = 1
+        const { logs } = await lintDir(depDir, true)
         // log this lint result
         const log = () => {
           logs.forEach((l, j) => console.log((j > 0 ? '  ' : '') + l))
@@ -108,8 +103,9 @@ async function lintDir(pkgDir, compact = false) {
     .readFile(path.join(pkgDir, 'package.json'), 'utf8')
     .catch(() => {
       logs.push(c.red(`Unable to read package.json at ${pkgDir}`))
+      process.exitCode = 1
     })
-  if (!rootPkgContent) return { logs, success: false }
+  if (!rootPkgContent) return { logs }
   const rootPkg = JSON.parse(rootPkgContent)
   const messages = await publint({ pkgDir })
 
@@ -136,6 +132,7 @@ async function lintDir(pkgDir, compact = false) {
       errors.forEach((m, i) =>
         logs.push(c.dim(`${i + 1}. `) + printMessage(m, rootPkg))
       )
+      process.exitCode = 1
     }
 
     if (compact) {
@@ -144,7 +141,7 @@ async function lintDir(pkgDir, compact = false) {
       logs.unshift(`${c.bold(rootPkg.name)} lint results:`)
     }
 
-    return { logs, success: false }
+    return { logs }
   } else {
     if (compact) {
       logs.unshift(`${c.green('✓')} ${c.bold(rootPkg.name)}`)
@@ -153,7 +150,7 @@ async function lintDir(pkgDir, compact = false) {
       logs.push(c.bold(c.green('All good!')))
     }
 
-    return { logs, success: true }
+    return { logs }
   }
 }
 
