@@ -27,6 +27,7 @@ export async function publint(options) {
   return _publint({
     pkgDir,
     vfs: options?.vfs ?? createNodeVfs(),
+    level: options?.level,
     _include: hasExports
       ? undefined
       : (p) => packedFiles.some((file) => file.startsWith(p))

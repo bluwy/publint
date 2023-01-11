@@ -73,6 +73,13 @@ export interface Options {
    * This field is required if you're using in the browser.
    */
   vfs?: Vfs
+  /**
+   * The level of messages to log (default: `'suggestion'`).
+   * - `suggestion`: logs all messages
+   * - `warning`: logs only `warning` and `error` messages
+   * - `error`: logs only `error` messages
+   */
+  level?: 'suggestion' | 'warning' | 'error'
 }
 
 export interface Vfs {

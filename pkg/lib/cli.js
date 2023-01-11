@@ -11,15 +11,21 @@ import { printMessage } from '../src/message.js'
 import { createPromiseQueue } from '../src/utils.js'
 
 const version = createRequire(import.meta.url)('../package.json').version
-const cli = sade('publint', false).version(version)
+const cli = sade('publint', false)
+  .version(version)
+  .option(
+    '--level',
+    `Level of messages to log ('suggestion' | 'warning' | 'error')`,
+    'suggestion'
+  )
 
 cli
   .command('run [dir]', 'Lint a directory (defaults to current directory)', {
     default: true
   })
-  .action(async (dir) => {
+  .action(async (dir, opts) => {
     const pkgDir = dir ? path.resolve(dir) : process.cwd()
-    const { logs } = await lintDir(pkgDir)
+    const { logs } = await lintDir(pkgDir, opts.level)
     logs.forEach((l) => console.log(l))
   })
 
@@ -64,7 +70,7 @@ cli
     for (let i = 0; i < deps.length; i++) {
       pq.push(async () => {
         const depDir = await findDepPath(deps[i], pkgDir)
-        const { logs } = await lintDir(depDir, true)
+        const { logs } = await lintDir(depDir, opts.level, true)
         // log this lint result
         const log = () => {
           logs.forEach((l, j) => console.log((j > 0 ? '  ' : '') + l))
@@ -93,9 +99,10 @@ cli.parse(process.argv)
 
 /**
  * @param {string} pkgDir
+ * @param {import('./index.js').Options['level']} level
  * @param {boolean} [compact]
  */
-async function lintDir(pkgDir, compact = false) {
+async function lintDir(pkgDir, level, compact = false) {
   /** @type {string[]} */
   const logs = []
 
@@ -107,7 +114,7 @@ async function lintDir(pkgDir, compact = false) {
     })
   if (!rootPkgContent) return { logs }
   const rootPkg = JSON.parse(rootPkgContent)
-  const messages = await publint({ pkgDir })
+  const messages = await publint({ pkgDir, level })
 
   if (messages.length) {
     const suggestions = messages.filter((v) => v.type === 'suggestion')

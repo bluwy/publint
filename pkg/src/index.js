@@ -20,7 +20,7 @@ import {
  * @param {Options} options
  * @returns {Promise<import('../lib').Message[]>}
  */
-export async function publint({ pkgDir, vfs, _include }) {
+export async function publint({ pkgDir, vfs, level, _include }) {
   /** @type {import('../lib').Message[]} */
   const messages = []
   /**
@@ -257,6 +257,13 @@ export async function publint({ pkgDir, vfs, _include }) {
   }
 
   await promiseQueue.wait()
+
+  if (level === 'warning') {
+    return messages.filter((m) => m.type !== 'suggestion')
+  } else if (level === 'error') {
+    return messages.filter((m) => m.type === 'error')
+  }
+
   return messages
 
   /**
