@@ -16,6 +16,12 @@
       "default": "./types/*.js"
     },
     "./types/internal.d.ts": null,
-    "./foo": "lib/cjs.js"
+    "./foo": "lib/cjs.js",
+    "./types/object": {
+      "types": {
+        "import": "./types/a.d.ts",
+        "default": "./types/internal.d.ts"
+      }
+    }
   }
 }

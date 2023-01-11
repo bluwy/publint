@@ -336,6 +336,16 @@ export async function publint({ pkgDir, vfs, _include }) {
           return
         }
 
+        // types. check file existence only
+        if (currentPath.includes('types')) {
+          const pq = createPromiseQueue()
+          for (const filePath of exportsFiles) {
+            pq.push(async () => await readFile(filePath, currentPath))
+          }
+          await pq.wait()
+          return
+        }
+
         const pq = createPromiseQueue()
 
         // TODO: group glob warnings
@@ -426,26 +436,13 @@ export async function publint({ pkgDir, vfs, _include }) {
       // which are fine with any format.
       let isKeyAfterNodeCondition = isAfterNodeCondition
       for (const key of exportsKeys) {
-        if (key === 'types') {
-          // only check file existence
-          promiseQueue.push(async () => {
-            const typesFiles = await getExportsFiles(exports[key])
-            const typesPath = currentPath.concat(key)
-            const pq = createPromiseQueue()
-            for (const typesFile of typesFiles) {
-              pq.push(async () => await readFile(typesFile, typesPath))
-            }
-            await pq.wait()
-          })
-        } else {
-          crawlExports(
-            exports[key],
-            currentPath.concat(key),
-            isKeyAfterNodeCondition
-          )
-          if (key === 'node') {
-            isKeyAfterNodeCondition = true
-          }
+        crawlExports(
+          exports[key],
+          currentPath.concat(key),
+          isKeyAfterNodeCondition
+        )
+        if (key === 'node') {
+          isKeyAfterNodeCondition = true
         }
       }
     }
