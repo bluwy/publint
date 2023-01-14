@@ -27,6 +27,7 @@ body {
 .docs h2 {
   margin-top: 2rem;
   margin-bottom: 1rem;
+  scroll-margin-top: 1.5rem;
   font-weight: 500;
   position: relative;
 }
@@ -39,6 +40,10 @@ body {
   background-color: #dcdcdc;
   border-radius: 0.25rem;
   padding: 0.15rem 0.25rem;
+}
+
+.docs h2.active > code {
+  background-color: hsl(29, 74%, 77%);
 }
 
 /* Header autolink */
@@ -82,6 +87,10 @@ a {
 
   .docs code {
     background-color: #434343;
+  }
+
+  .docs h2.active > code {
+    background-color: hsl(29, 74%, 28%);
   }
 
   /* Header autolink */
