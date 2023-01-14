@@ -20,7 +20,15 @@
     "@unocss/core": "^0.48.3",
     "@unocss/preset-uno": "^0.48.3",
     "@unocss/vite": "^0.48.3",
+    "rehype-autolink-headings": "^6.1.1",
+    "rehype-slug": "^5.1.0",
+    "rehype-stringify": "^9.0.3",
+    "remark": "^14.0.2",
+    "remark-gfm": "^3.0.1",
+    "remark-parse": "^10.0.1",
+    "remark-rehype": "^10.1.0",
     "svelte": "^3.55.1",
+    "unified": "^10.1.2",
     "vite": "^4.0.4"
   }
 }

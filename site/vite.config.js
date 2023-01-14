@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import { svelte } from '@sveltejs/vite-plugin-svelte'
 import unocss from '@unocss/vite'
+import { markdown } from './scripts/vitePluginMarkdown.js'
 
 export default defineConfig({
   optimizeDeps: {
@@ -9,7 +10,7 @@ export default defineConfig({
     // TODO: Fix this in Vite
     entries: ['**/*.html', './src/utils/worker.js']
   },
-  plugins: [spaFallbackWithDot(), unocss(), svelte()],
+  plugins: [spaFallbackWithDot(), unocss(), svelte(), markdown()],
   build: {
     rollupOptions: {
       input: {

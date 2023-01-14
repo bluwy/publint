@@ -9,85 +9,16 @@
   </head>
   <body tabindex="-1">
     <main class="docs w-full max-w-3xl mx-auto p-4">
-      <h1>Rules</h1>
-      <p>
-        Below is an unordered list of rules used by <code>publint</code> for
-        linting.
-      </p>
-      <h2><code>IMPLICIT_INDEX_JS_INVALID_FORMAT</code></h2>
-      <p>
-        If there are no entrypoints specified, e.g. <code>main</code>,
-        <code>module</code>, <code>exports</code>, it's assumed that the root
-        <code>index.js</code> is loaded by default. If the file has an invalid
-        format, the error is reported.
-      </p>
-      <h2><code>FILE_INVALID_FORMAT</code></h2>
-      <p>
-        If the file has an invalid format through explicit entrypoints, the
-        error is reported.
-      </p>
-      <h2><code>FILE_INVALID_EXPLICIT_FORMAT</code></h2>
-      <p>
-        If the file has an invalid format through explicit entrypoints, and the
-        file has an explicit extension too, e.g. <code>.mjs</code> and
-        <code>.cjs</code>, the error is reported.
-      </p>
-      <h2><code>FILE_DOES_NOT_EXIST</code></h2>
-      <p>The specified file does not exist.</p>
-      <h2><code>MODULE_SHOULD_BE_ESM</code></h2>
-      <p>The <code>module</code> entry should be ESM only.</p>
-      <h2><code>HAS_MODULE_BUT_NO_EXPORTS</code></h2>
-      <p>
-        If the package has a <code>module</code> entry without a
-        <code>exports</code> entry, suggest using <code>exports</code> instead.
-      </p>
-      <h2><code>HAS_ESM_MAIN_BUT_NO_EXPORTS</code></h2>
-      <p>
-        If the <code>main</code> entrypoint is an ES module, it's recommended to
-        use the <code>exports</code> field instead as it's initially introduced
-        for better ESM compatibility.
-      </p>
-      <p>
-        If you're not supporting NodeJS 12.6 and below, you can also remove the
-        <code>main</code> field as all tooling would read from
-        <code>exports</code> only and skip <code>main</code>.
-      </p>
-      <h2><code>EXPORTS_GLOB_NO_MATCHED_FILES</code></h2>
-      <p>
-        If the <code>exports</code> entry contains glob paths, but it doesn't
-        match any files, suggest the issue.
-      </p>
-      <h2><code>EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING</code></h2>
-      <p>
-        The <code>exports</code> entry should not have globs defined with
-        trailing slashes. It is
-        <a
-          href="https://nodejs.org/docs/latest-v16.x/api/packages.html#subpath-folder-mappings"
-        >
-          deprecated
-        </a>
-        and should use <code>/*</code> instead.
-      </p>
-      <h2><code>EXPORTS_TYPES_SHOULD_BE_FIRST</code></h2>
-      <p>
-        Ensure <code>types</code> condition to be the first.
-        <a
-          href="https://www.typescriptlang.org/docs/handbook/esm-node.html#packagejson-exports-imports-and-self-referencing"
-          >More info</a
-        >.
-      </p>
-      <h2><code>EXPORTS_DEFAULT_SHOULD_BE_LAST</code></h2>
-      <p>Ensure <code>default</code> condition to be the last.</p>
-      <h2><code>EXPORTS_MODULE_SHOULD_BE_ESM</code></h2>
-      <p>The <code>module</code> condition should be ESM only.</p>
-      <h2><code>EXPORTS_VALUE_INVALID</code></h2>
-      <p>The exports value should start with a "<code>./</code>".</p>
-      <h2><code>USE_EXPORTS_BROWSER</code></h2>
-      <p>
-        The <code>browser</code> and <code>exports</code>
-        <code>browser</code> condition works similarly, but it's usually better
-        to use <code>exports</code> as it's widely supported.
-      </p>
+      <div style="display: none">
+        <svg>
+          <symbol id="autolink-icon" width="24" height="24" fill="currentColor">
+            <path
+              d="M14.828 12l1.414 1.414 2.828-2.828a4 4 0 0 0-5.657-5.657l-2.828 2.828L12 9.172l2.828-2.828a2 2 0 0 1 2.828 2.828L14.828 12zM12 14.83l1.414 1.414-2.828 2.828a4 4 0 0 1-5.657-5.657l2.828-2.828L9.172 12l-2.828 2.83a2 2 0 0 0 2.828 2.828L12 14.83zm2.83-4.244a1 1 0 1 0-1.414-1.414l-4.243 4.243a1 1 0 0 0 1.414 1.414l4.243-4.243z"
+            />
+          </symbol>
+        </svg>
+      </div>
+      <!-- rules.md -->
       <footer class="my-16">
         <a class="anchor-link" href="/"> ➥ Back to main page </a>
       </footer>
