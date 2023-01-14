@@ -33,6 +33,12 @@ body {
   opacity: 0.8;
 }
 
+.docs code {
+  background-color: #434343;
+  border-radius: 0.25rem;
+  padding: 0.15rem 0.25rem;
+}
+
 p {
   line-height: 1.5;
 }
