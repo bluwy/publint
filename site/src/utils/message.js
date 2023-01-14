@@ -1,10 +1,22 @@
 import { formatMessagePath as fp, getPkgPathValue } from 'publint/utils'
 
 /**
- * @param {import('types').Message} m
+ * @param {import('publint').Message} m
  * @param {import('./utils').Pkg} pkg
  */
 export function printMessage(m, pkg) {
+  let str = messageToString(m, pkg)
+  if (str) {
+    str += ` (<a href="/rules.html#${m.code}">More info</a>)`
+  }
+  return str
+}
+
+/**
+ * @param {import('publint').Message} m
+ * @param {import('./utils').Pkg} pkg
+ */
+function messageToString(m, pkg) {
   /** @param {string[]} path */
   const pv = (path) => getPkgPathValue(pkg, path)
   /** @param {string} s */
