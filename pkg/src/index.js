@@ -137,14 +137,12 @@ export async function publint({ pkgDir, vfs, level, _include }) {
           type: 'warning'
         })
       }
-      if (expectFormat === 'ESM') {
-        messages.push({
-          code: 'HAS_ESM_MAIN_BUT_NO_EXPORTS',
-          args: {},
-          path: ['main'],
-          type: 'suggestion'
-        })
-      }
+      messages.push({
+        code: 'HAS_MAIN_BUT_NO_EXPORTS',
+        args: {},
+        path: ['main'],
+        type: 'suggestion'
+      })
     })
   }
 

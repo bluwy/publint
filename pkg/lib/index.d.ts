@@ -47,7 +47,7 @@ export type Message =
   | BaseMessage<'FILE_DOES_NOT_EXIST', { filePath: string }>
   | BaseMessage<'MODULE_SHOULD_BE_ESM'>
   | BaseMessage<'HAS_MODULE_BUT_NO_EXPORTS'>
-  | BaseMessage<'HAS_ESM_MAIN_BUT_NO_EXPORTS'>
+  | BaseMessage<'HAS_MAIN_BUT_NO_EXPORTS'>
   | BaseMessage<'EXPORTS_GLOB_NO_MATCHED_FILES'>
   | BaseMessage<
       'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',

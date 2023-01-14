@@ -36,9 +36,9 @@ export function printMessage(m, pkg) {
     case 'FILE_DOES_NOT_EXIST':
       // prettier-ignore
       return `${c.bold(fp(m.path))} is ${pv(m.path)} but file does not exist.`
-    case 'HAS_ESM_MAIN_BUT_NO_EXPORTS':
+    case 'HAS_MAIN_BUT_NO_EXPORTS':
       // prettier-ignore
-      return `${c.bold('pkg.main')} is an ESM file, but it is usually better to use ${c.bold('pkg.exports')} instead, and remove ${c.bold('pkg.main')} alongside, as compatible NodeJS versions support it as well. (This will be a breaking change)`
+      return 'pkg.main will be ignored by modern tooling since pkg.exports is present and can generally be removed. (This will be a breaking change as removing it drops support for legacy tooling).'
     case 'HAS_MODULE_BUT_NO_EXPORTS':
       // prettier-ignore
       return `${c.bold('pkg.module')} is used to output ESM, but ${c.bold('pkg.exports')} is not defined. As NodeJS doesn't read ${c.bold('pkg.module')}, the ESM output may be skipped. Consider adding ${c.bold('pkg.exports')} to export the ESM output. ${c.bold('pkg.module')} can usually be removed alongside too. (This will be a breaking change)`
