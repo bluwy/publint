@@ -2,6 +2,7 @@
   "name": "publint-test-2",
   "version": "0.0.1",
   "private": true,
+  "main": "./main.mjs",
   "browser": "./lib/bar.js",
   "exports": {
     "./*.js": "./lib/*.js",

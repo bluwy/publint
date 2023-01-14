@@ -43,10 +43,14 @@
       </p>
       <h2><code>HAS_ESM_MAIN_BUT_NO_EXPORTS</code></h2>
       <p>
-        If the <code>main</code> entrypoint is an ES module, you can likely
-        remove it as environments that supports so also supports
-        <code>exports</code>, which should be used instead, and the
-        <code>main</code> can then be removed alongside too.
+        If the <code>main</code> entrypoint is an ES module, it's recommended to
+        use the <code>exports</code> field instead as it's initially introduced
+        for better ESM compatibility.
+      </p>
+      <p>
+        If you're not supporting NodeJS 12.6 and below, you can also remove the
+        <code>main</code> field as all tooling would read from
+        <code>exports</code> only and skip <code>main</code>.
       </p>
       <h2><code>EXPORTS_GLOB_NO_MATCHED_FILES</code></h2>
       <p>
