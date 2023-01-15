@@ -25,7 +25,7 @@ cli
   })
   .action(async (dir, opts) => {
     const pkgDir = dir ? path.resolve(dir) : process.cwd()
-    const { logs } = await lintDir(pkgDir, opts.level)
+    const logs = await lintDir(pkgDir, opts.level)
     logs.forEach((l) => console.log(l))
   })
 
@@ -70,7 +70,7 @@ cli
     for (let i = 0; i < deps.length; i++) {
       pq.push(async () => {
         const depDir = await findDepPath(deps[i], pkgDir)
-        const { logs } = await lintDir(depDir, opts.level, true)
+        const logs = depDir ? await lintDir(depDir, opts.level, true) : []
         // log this lint result
         const log = () => {
           logs.forEach((l, j) => console.log((j > 0 ? '  ' : '') + l))
@@ -112,8 +112,9 @@ async function lintDir(pkgDir, level, compact = false) {
       logs.push(c.red(`Unable to read package.json at ${pkgDir}`))
       process.exitCode = 1
     })
-  if (!rootPkgContent) return { logs }
+  if (!rootPkgContent) return logs
   const rootPkg = JSON.parse(rootPkgContent)
+  const pkgName = rootPkg.name || path.basename(pkgDir)
   const messages = await publint({ pkgDir, level })
 
   if (messages.length) {
@@ -143,21 +144,21 @@ async function lintDir(pkgDir, level, compact = false) {
     }
 
     if (compact) {
-      logs.unshift(`${c.red('x')} ${c.bold(rootPkg.name)}`)
+      logs.unshift(`${c.red('x')} ${c.bold(pkgName)}`)
     } else {
-      logs.unshift(`${c.bold(rootPkg.name)} lint results:`)
+      logs.unshift(`${c.bold(pkgName)} lint results:`)
     }
 
-    return { logs }
+    return logs
   } else {
     if (compact) {
-      logs.unshift(`${c.green('✓')} ${c.bold(rootPkg.name)}`)
+      logs.unshift(`${c.green('✓')} ${c.bold(pkgName)}`)
     } else {
-      logs.unshift(`${c.bold(rootPkg.name)} lint results:`)
+      logs.unshift(`${c.bold(pkgName)} lint results:`)
       logs.push(c.bold(c.green('All good!')))
     }
 
-    return { logs }
+    return logs
   }
 }
 
@@ -171,10 +172,8 @@ if (process.versions.pnp) {
 }
 
 /**
- *
  * @param {string} dep
  * @param {string} parent
- * @returns
  */
 async function findDepPath(dep, parent) {
   if (pnp) {
