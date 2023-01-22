@@ -69,6 +69,6 @@ function messageToString(m, pkg) {
       // prettier-ignore
       return `${bold('pkg.browser')} can be refactored to use ${bold('pkg.exports')} and the ${bold('browser')} condition instead to declare browser-specific exports. (This will be a breaking change)`
     default:
-    // TODO
+      return
   }
 }

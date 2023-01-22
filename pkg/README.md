@@ -67,6 +67,18 @@ const messages = await publint({
 console.log(messages)
 ```
 
+Extra utilities are exported under `publint/utils`:
+
+```js
+import { printMessage } from 'publint/utils'
+
+for (const message of messages) {
+  // Prints default message in Node.js. Always a no-op in browsers.
+  // Useful for re-implementing the CLI in a programmatic way.
+  printMessage(message)
+}
+```
+
 ## License
 
 MIT

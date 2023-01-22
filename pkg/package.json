@@ -18,7 +18,10 @@
     },
     "./utils": {
       "types": "./lib/utils.d.ts",
-      "import": "./lib/utils.js"
+      "import": {
+        "node": "./lib/utils-node.js",
+        "default": "./lib/utils.js"
+      }
     }
   },
   "scripts": {
@@ -52,6 +55,7 @@
     "sade": "^1.8.1"
   },
   "devDependencies": {
+    "@types/npm-packlist": "3.0.0",
     "uvu": "^0.5.6"
   }
 }

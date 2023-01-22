@@ -9,7 +9,6 @@ export function printMessage(m, pkg) {
   /** @param {string[]} path */
   const pv = (path) => getPkgPathValue(pkg, path)
 
-  // TODO: verbose mode
   switch (m.code) {
     case 'IMPLICIT_INDEX_JS_INVALID_FORMAT':
       return `index.js should be ${m.args.expectFormat} but it is ${m.args.actualFormat}`
@@ -67,6 +66,6 @@ export function printMessage(m, pkg) {
       // prettier-ignore
       return `${c.bold('pkg.browser')} can be refactored to use ${c.bold('pkg.exports')} and the ${c.bold('browser')} condition instead to declare browser-specific exports. (This will be a breaking change)`
     default:
-    // TODO
+      return
   }
 }
