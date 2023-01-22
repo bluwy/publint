@@ -12,7 +12,8 @@ testFixture('glob-deprecated', [
 
 testFixture('missing-files', [
   'USE_EXPORTS_BROWSER',
-  ...Array(7).fill('FILE_DOES_NOT_EXIST')
+  ...Array(7).fill('FILE_DOES_NOT_EXIST'),
+  'FILE_NOT_PUBLISHED'
 ])
 
 testFixture('test-1', ['FILE_INVALID_FORMAT'])

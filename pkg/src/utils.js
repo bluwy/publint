@@ -62,10 +62,10 @@ export function getCodeFormat(code) {
  * Handle `exports` glob
  * @param {string} globStr An absolute glob string that must contain one `*`
  * @param {import('../lib').Vfs} vfs
- * @param {(filePath: string) => boolean} [include]
+ * @param {string[]} [packedFiles]
  * @returns {Promise<string[]>} Matched file paths
  */
-export async function exportsGlob(globStr, vfs, include) {
+export async function exportsGlob(globStr, vfs, packedFiles) {
   let filePaths = []
   const [dir, ext] = globStr.split('*')
   if (await vfs.isPathDir(dir)) {
@@ -80,7 +80,10 @@ export async function exportsGlob(globStr, vfs, include) {
     const items = await vfs.readDir(dirPath)
     for (const item of items) {
       const itemPath = vfs.pathJoin(dirPath, item)
-      if (!include || include(itemPath)) {
+      if (
+        !packedFiles ||
+        packedFiles.some((file) => file.startsWith(itemPath))
+      ) {
         if (await vfs.isPathDir(itemPath)) {
           await scanDir(itemPath)
         } else if (!ext || itemPath.endsWith(ext)) {

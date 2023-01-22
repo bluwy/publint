@@ -40,6 +40,9 @@ function messageToString(m, pkg) {
     case 'FILE_DOES_NOT_EXIST':
       // prettier-ignore
       return `File does not exist`
+    case 'FILE_NOT_PUBLISHED':
+      // prettier-ignore
+      return `${bold(fp(m.path))} is ${pv(m.path)} but the file is not published. Is it specified in ${bold('pkg.files')}?`
     case 'HAS_ESM_MAIN_BUT_NO_EXPORTS':
       // prettier-ignore
       return `${bold('pkg.main')} is an ESM file, but it is usually better to use ${bold('pkg.exports')} instead. If you don't support NodeJS 12.6 and below, you can also remove ${bold('pkg.main')}. (This will be a breaking change)`

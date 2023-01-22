@@ -12,7 +12,7 @@ import {
  * Mainly for node.js local usage only. So that we lint files that are packed only.
  * Currently only used if pkg has no `exports`
  * @typedef {Required<import('../lib').Options> & {
- *   _include?: (filePath: string) => boolean
+ *   _packedFiles?: string[]
  * }} Options
  */
 
@@ -20,7 +20,7 @@ import {
  * @param {Options} options
  * @returns {Promise<import('../lib').Message[]>}
  */
-export async function publint({ pkgDir, vfs, level, _include }) {
+export async function publint({ pkgDir, vfs, level, _packedFiles }) {
   /** @type {import('../lib').Message[]} */
   const messages = []
   /**
@@ -53,11 +53,19 @@ export async function publint({ pkgDir, vfs, level, _include }) {
    */
   async function readFile(path, pkgPath, tryExtensions = []) {
     try {
-      return await vfs.readFile(path)
+      const content = await vfs.readFile(path)
+      if (_packedFiles && !_packedFiles.includes(path)) {
+        fileNotPublished(pkgPath)
+      }
+      return content
     } catch {
       for (const ext of tryExtensions) {
         try {
-          return await vfs.readFile(path + ext)
+          const content = await vfs.readFile(path + ext)
+          if (_packedFiles && !_packedFiles.includes(path)) {
+            fileNotPublished(pkgPath)
+          }
+          return content
         } catch {}
       }
       messages.push({
@@ -68,6 +76,18 @@ export async function publint({ pkgDir, vfs, level, _include }) {
       })
       return false
     }
+  }
+
+  /**
+   * @param {string[]} pkgPath
+   */
+  function fileNotPublished(pkgPath) {
+    messages.push({
+      code: 'FILE_NOT_PUBLISHED',
+      args: {},
+      path: pkgPath,
+      type: 'error'
+    })
   }
 
   // Relies on default node resolution
@@ -219,7 +239,7 @@ export async function publint({ pkgDir, vfs, level, _include }) {
       const files = await exportsGlob(
         vfs.pathJoin(pkgDir, './*'),
         vfs,
-        _include
+        _packedFiles
       )
       const pq = createPromiseQueue()
       for (const filePath of files) {

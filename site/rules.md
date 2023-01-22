@@ -18,6 +18,10 @@ If the file has an invalid format through explicit entrypoints, and the file has
 
 The specified file does not exist.
 
+## `FILE_NOT_PUBLISHED`
+
+The specified file exists locally but isn't published to npm. This error only appears when running `publint` locally.
+
 ## `MODULE_SHOULD_BE_ESM`
 
 The `module` entry should be ESM only.

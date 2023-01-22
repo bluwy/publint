@@ -34,7 +34,10 @@ export function printMessage(m, pkg) {
     }
     case 'FILE_DOES_NOT_EXIST':
       // prettier-ignore
-      return `${c.bold(fp(m.path))} is ${pv(m.path)} but file does not exist.`
+      return `${c.bold(fp(m.path))} is ${pv(m.path)} but the file does not exist.`
+    case 'FILE_NOT_PUBLISHED':
+      // prettier-ignore
+      return `${c.bold(fp(m.path))} is ${pv(m.path)} but the file is not published. Is it specified in ${c.bold('pkg.files')}?`
     case 'HAS_ESM_MAIN_BUT_NO_EXPORTS':
       // prettier-ignore
       return `${c.bold('pkg.main')} is an ESM file, but it is usually better to use ${c.bold('pkg.exports')} instead. If you don't support NodeJS 12.6 and below, you can also remove ${c.bold('pkg.main')}. (This will be a breaking change)`
