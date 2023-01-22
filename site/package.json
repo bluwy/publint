@@ -17,9 +17,9 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.0.2",
-    "@unocss/core": "^0.48.3",
-    "@unocss/preset-uno": "^0.48.3",
-    "@unocss/vite": "^0.48.3",
+    "@unocss/core": "^0.48.4",
+    "@unocss/preset-uno": "^0.48.4",
+    "@unocss/vite": "^0.48.4",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-slug": "^5.1.0",
     "rehype-stringify": "^9.0.3",
