@@ -46,8 +46,8 @@ testFixture(
 /**
  *
  * @param {string} name
- * @param {import('../lib/index').Message['code'][]} expectCodes
- * @param {import('../lib/index').Options['level']} [level]
+ * @param {import('../index').Message['code'][]} expectCodes
+ * @param {import('../index').Options['level']} [level]
  */
 function testFixture(name, expectCodes, level) {
   test(name, async () => {

@@ -61,7 +61,7 @@ export function getCodeFormat(code) {
 /**
  * Handle `exports` glob
  * @param {string} globStr An absolute glob string that must contain one `*`
- * @param {import('../lib').Vfs} vfs
+ * @param {import('..').Vfs} vfs
  * @param {string[]} [packedFiles]
  * @returns {Promise<string[]>} Matched file paths
  */
@@ -96,7 +96,7 @@ export async function exportsGlob(globStr, vfs, packedFiles) {
 
 /**
  * @param {string} filePath
- * @param {import('../lib').Vfs} vfs
+ * @param {import('..').Vfs} vfs
  * @returns {Promise<CodeFormat>}
  */
 export async function getFilePathFormat(filePath, vfs) {
@@ -130,7 +130,7 @@ export function isExplicitExtension(path) {
 /**
  *
  * @param {string} filePath
- * @param {import('../lib').Vfs} vfs
+ * @param {import('..').Vfs} vfs
  * @returns {Promise<Pkg | undefined>}
  */
 export async function getNearestPkg(filePath, vfs) {

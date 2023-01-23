@@ -99,7 +99,7 @@ cli.parse(process.argv)
 
 /**
  * @param {string} pkgDir
- * @param {import('./index.js').Options['level']} level
+ * @param {import('../index.js').Options['level']} level
  * @param {boolean} [compact]
  */
 async function lintDir(pkgDir, level, compact = false) {

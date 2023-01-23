@@ -5,7 +5,7 @@ import { publint as _publint } from '../src/index.js'
 import { createNodeVfs } from '../src/vfs.js'
 
 /**
- * @type {import('.').publint}
+ * @type {import('..').publint}
  */
 export async function publint(options) {
   const pkgDir = options?.pkgDir ?? process.cwd()

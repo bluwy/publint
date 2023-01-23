@@ -11,17 +11,17 @@ import {
  * Includes internal _include that used to filter paths that is packed.
  * Mainly for node.js local usage only. So that we lint files that are packed only.
  * Currently only used if pkg has no `exports`
- * @typedef {Required<import('../lib').Options> & {
+ * @typedef {Required<import('..').Options> & {
  *   _packedFiles?: string[]
  * }} Options
  */
 
 /**
  * @param {Options} options
- * @returns {Promise<import('../lib').Message[]>}
+ * @returns {Promise<import('..').Message[]>}
  */
 export async function publint({ pkgDir, vfs, level, _packedFiles }) {
-  /** @type {import('../lib').Message[]} */
+  /** @type {import('..').Message[]} */
   const messages = []
   /**
    * A promise queue is created to run all linting tasks in parallel
