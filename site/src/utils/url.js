@@ -6,12 +6,14 @@ const updateHref = () => href.set(window.location.href)
 
 const _pushState = history.pushState
 history.pushState = function () {
+  // @ts-expect-error
   _pushState.apply(this, arguments)
   updateHref()
 }
 
 const _replaceState = history.replaceState
 history.replaceState = function () {
+  // @ts-expect-error
   _replaceState.apply(this, arguments)
   updateHref()
 }
@@ -21,6 +23,6 @@ window.addEventListener('hashchange', updateHref)
 
 export const url = {
   subscribe: derived(href, ($href) => new URL($href)).subscribe,
-  push: (url) => history.pushState(null, null, url),
-  replace: (url) => history.replaceState(null, null, url)
+  push: (url) => history.pushState(null, '', url),
+  replace: (url) => history.replaceState(null, '', url)
 }

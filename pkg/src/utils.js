@@ -103,7 +103,7 @@ export async function getFilePathFormat(filePath, vfs) {
   if (filePath.endsWith('.mjs')) return 'ESM'
   if (filePath.endsWith('.cjs')) return 'CJS'
   const nearestPkg = await getNearestPkg(filePath, vfs)
-  return nearestPkg.type === 'module' ? 'ESM' : 'CJS'
+  return nearestPkg?.type === 'module' ? 'ESM' : 'CJS'
 }
 
 /**
@@ -131,7 +131,7 @@ export function isExplicitExtension(path) {
  *
  * @param {string} filePath
  * @param {import('../lib').Vfs} vfs
- * @returns {Promise<Pkg>}
+ * @returns {Promise<Pkg | undefined>}
  */
 export async function getNearestPkg(filePath, vfs) {
   let currentDir = vfs.getDirName(filePath)

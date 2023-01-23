@@ -16,7 +16,7 @@ export async function publint(options) {
   return _publint({
     pkgDir,
     vfs: options?.vfs ?? createNodeVfs(),
-    level: options?.level,
+    level: options?.level ?? 'suggestion',
     _packedFiles: packedFiles
   })
 }

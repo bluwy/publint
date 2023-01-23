@@ -2,7 +2,7 @@ import { formatMessagePath as fp, getPkgPathValue } from 'publint/utils'
 
 /**
  * @param {import('publint').Message} m
- * @param {import('./utils').Pkg} pkg
+ * @param {Record<string, any>} pkg
  */
 export function printMessage(m, pkg) {
   let str = messageToString(m, pkg)
@@ -14,7 +14,7 @@ export function printMessage(m, pkg) {
 
 /**
  * @param {import('publint').Message} m
- * @param {import('./utils').Pkg} pkg
+ * @param {Record<string, any>} pkg
  */
 function messageToString(m, pkg) {
   /** @param {string[]} path */

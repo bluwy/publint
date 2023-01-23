@@ -10,7 +10,7 @@ self.addEventListener('message', async (e) => {
   let tarballUrl
   if (isLocalPkg(npmPkgName)) {
     // prettier-ignore
-    tarballUrl = new URL(`/temp/${npmPkgName}-${npmPkgVersion}.tgz`, self.location).href
+    tarballUrl = new URL(`/temp/${npmPkgName}-${npmPkgVersion}.tgz`, self.location.href).href
   } else {
     // prettier-ignore
     tarballUrl = getNpmTarballUrl(npmPkgName, npmPkgVersion, {
@@ -48,9 +48,9 @@ self.addEventListener('message', async (e) => {
   const vfs = {
     getDirName: (path) => path.replace(/\/[^/]*$/, ''),
     getExtName: (path) => path.replace(/^.*\./, ''),
-    isPathDir: (path) =>
+    isPathDir: async (path) =>
       files.some((file) => file.name.startsWith(path) && file.name !== path),
-    isPathExist: (path) => files.some((file) => file.name === path),
+    isPathExist: async (path) => files.some((file) => file.name === path),
     pathJoin: (...parts) =>
       parts
         .map((v) => (v.startsWith('./') ? v.slice(2) : v))
@@ -58,13 +58,13 @@ self.addEventListener('message', async (e) => {
         .replace('///', '/')
         .replace('//', '/'), // TODO: optimize this please
     pathRelative: (from, to) => to.replace(from, '').slice(1),
-    readDir: (path) => {
+    readDir: async (path) => {
       path = path.endsWith('/') ? path : path + '/'
       return files
         .filter((file) => file.name.startsWith(path))
         .map((file) => file.name.slice(path.length))
     },
-    readFile: (path) => {
+    readFile: async (path) => {
       const file = files.find((file) => file.name === path)
       if (file) {
         return new TextDecoder('utf-8').decode(file.buffer)

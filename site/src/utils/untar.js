@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Fork of https://github.com/InvokIT/js-untar/blob/master/src/untar-worker.js
 // MIT License
 
