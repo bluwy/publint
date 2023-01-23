@@ -46,6 +46,10 @@ body {
   background-color: hsl(29, 74%, 77%);
 }
 
+.docs a {
+  color: #e69b57;
+}
+
 /* Header autolink */
 .docs a.anchor {
   display: inline-block;
@@ -68,6 +72,11 @@ body {
 }
 .docs a.anchor svg {
   visibility: visible;
+}
+
+.docs li {
+  line-height: 1.5;
+  opacity: 0.8;
 }
 
 p {
