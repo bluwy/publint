@@ -1,6 +1,6 @@
 {
   "name": "publint",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Lint packaging errors",
   "type": "module",
   "author": "Bjorn Lu",
@@ -26,7 +26,8 @@
   },
   "scripts": {
     "cli": "node ./lib/cli.js",
-    "test": "uvu tests -i fixtures"
+    "test": "uvu tests -i fixtures",
+    "prepublishOnly": "pnpm cli"
   },
   "engines": {
     "node": ">=16"
