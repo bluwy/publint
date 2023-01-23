@@ -27,7 +27,7 @@ It has a `packfix` command (`pnpm packfix`) which packages up fixtures from [pkg
 
 ## Testing
 
-You can run the unit tests in the `pkg` directory with `pnpm test`.
+You can run the unit tests with `pnpm test` in the root or `pkg` directory.
 
 ## Pull requests
 

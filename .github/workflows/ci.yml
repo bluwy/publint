@@ -41,4 +41,3 @@ jobs:
         run: pnpm typecheck
       - name: Run tests
         run: pnpm test
-        working-directory: pkg
