@@ -1,5 +1,5 @@
 <script>
-  import logo from '../assets/logo.svg?raw'
+  import logo from '../assets/logo.svg'
   import githubLogo from '../assets/github.svg'
   import gitlabLogo from '../assets/gitlab.svg'
   import npmLogo from '../assets/npm.svg'
@@ -210,5 +210,5 @@
 </main>
 
 <a class="absolute top-0 left-0 w-16 h-14 px-3" href="/">
-  {@html logo}
+  <img src={logo} alt="publint logo" class="w-full h-full" />
 </a>
