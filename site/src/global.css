@@ -47,7 +47,8 @@ body {
 }
 
 .docs a {
-  color: #e69b57;
+  color: hsl(29, 74%, 37%);
+  font-weight: 600;
 }
 
 /* Header autolink */
@@ -100,6 +101,10 @@ a {
 
   .docs h2.active > code {
     background-color: hsl(29, 74%, 28%);
+  }
+
+  .docs a {
+    color: #e69b57;
   }
 
   /* Header autolink */

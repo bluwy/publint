@@ -13,6 +13,10 @@
       <Logo />
     </div>
     <NpmSearchInput autofocus />
-    <a class="anchor-link opacity-60 my-8" href="#docs">How it works?</a>
+    <p class="my-8 opacity-60">
+      <a class="anchor-link" href="#docs">How it works</a>
+      <strong class="inline-block mx-1">-</strong>
+      <a class="anchor-link" href="/rules.html">Rules</a>
+    </p>
   </section>
 </main>
