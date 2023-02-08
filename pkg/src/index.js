@@ -248,12 +248,19 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
           const fileContent = await readFile(filePath, [])
           if (fileContent === false) return
           const actualFormat = getCodeFormat(fileContent)
-          let expectFormat = await getFilePathFormat(filePath, vfs)
+          const expectFormat = await getFilePathFormat(filePath, vfs)
           if (
             actualFormat !== expectFormat &&
             actualFormat !== 'unknown' &&
             actualFormat !== 'mixed'
           ) {
+            // special case where if the file path contains the keyword "browser" or
+            // "bundler", but it has problems. allow skipping the problem if it's ESM.
+            const isSafeEsm =
+              actualFormat === 'ESM' &&
+              (filePath.includes('browser') || filePath.includes('bundler'))
+            if (isSafeEsm) return
+
             const actualExtension = vfs.getExtName(filePath)
             messages.push({
               code: isExplicitExtension(actualExtension)
@@ -401,12 +408,19 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
             // which doesn't care of the format
             if (isAfterNodeCondition || currentPath.includes('browser')) return
             const actualFormat = getCodeFormat(fileContent)
-            let expectFormat = await getFilePathFormat(filePath, vfs)
+            const expectFormat = await getFilePathFormat(filePath, vfs)
             if (
               actualFormat !== expectFormat &&
               actualFormat !== 'unknown' &&
               actualFormat !== 'mixed'
             ) {
+              // special case where if the file path contains the keyword "browser" or
+              // "bundler", but it has problems. allow skipping the problem if it's ESM.
+              const isSafeEsm =
+                actualFormat === 'ESM' &&
+                (filePath.includes('browser') || filePath.includes('bundler'))
+              if (isSafeEsm) return
+              
               const actualExtension = vfs.getExtName(filePath)
               messages.push({
                 code: isExplicitExtension(actualExtension)
