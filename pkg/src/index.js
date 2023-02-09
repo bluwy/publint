@@ -420,7 +420,7 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
                 actualFormat === 'ESM' &&
                 (filePath.includes('browser') || filePath.includes('bundler'))
               if (isSafeEsm) return
-              
+
               const actualExtension = vfs.getExtName(filePath)
               messages.push({
                 code: isExplicitExtension(actualExtension)
