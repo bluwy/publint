@@ -37,6 +37,7 @@ body {
 }
 
 .docs code {
+  color: #121212;
   background-color: #dcdcdc;
   border-radius: 0.25rem;
   padding: 0.15rem 0.25rem;
@@ -96,6 +97,7 @@ a {
   }
 
   .docs code {
+    color: #efefef;
     background-color: #434343;
   }
 
