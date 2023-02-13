@@ -61,7 +61,7 @@
     >
   {:else}
     <span class="indentable inline-flex">
-      <span class="text-blue-700 @dark:text-blue-300 mr-[1ch]">{keyText}</span>
+      <span class="text-blue-700 @dark:text-blue-300 mr-[1ch] min-w-max">{keyText}</span>
       <span class="whitespace-nowrap token {typeof value}">
         {JSON.stringify(value)}
       </span>
