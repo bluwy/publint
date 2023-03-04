@@ -21,8 +21,12 @@ concurrency:
 jobs:
   test:
     name: Test
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 5
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+      fail-fast: false
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
