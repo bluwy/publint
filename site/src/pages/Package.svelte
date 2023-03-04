@@ -140,7 +140,7 @@
     </h1>
     <p class="flex flex-row justify-center items-center gap-4 mb-10">
       {#if repo}
-        <a class="inline-block rounded" href={repo.url}>
+        <a class="inline-block rounded @light:filter-invert" href={repo.url}>
           <img class="block" src={repo.logo} alt="repo logo" height="20" />
         </a>
       {/if}
