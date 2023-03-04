@@ -1,6 +1,6 @@
 {
   "name": "publint",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Lint packaging errors",
   "type": "module",
   "author": "Bjorn Lu",
