@@ -66,10 +66,17 @@ export function getCodeFormat(code) {
  * @returns {Promise<string[]>} Matched file paths
  */
 export async function exportsGlob(globStr, vfs, packedFiles) {
-  let filePaths = []
-  const [dir, ext] = globStr.split('*')
-  if (await vfs.isPathDir(dir)) {
-    await scanDir(dir)
+  /** @type {string[]} */
+  const filePaths = []
+  const globStrRe = new RegExp(
+    `^${slash(globStr).split('*').map(escapeRegExp).join('(.+)')}$`
+  )
+  // the longest directory that doesn't contain `*`
+  const topDir = globStr.split('*')[0].match(/(.+)[/\\]/)?.[1]
+
+  // TODO: maybe error if no topDir?
+  if (topDir && (await vfs.isPathDir(topDir))) {
+    await scanDir(topDir)
   }
   return filePaths
 
@@ -86,12 +93,42 @@ export async function exportsGlob(globStr, vfs, packedFiles) {
       ) {
         if (await vfs.isPathDir(itemPath)) {
           await scanDir(itemPath)
-        } else if (!ext || itemPath.endsWith(ext)) {
-          filePaths.push(itemPath)
+        } else {
+          const matched = slash(itemPath).match(globStrRe)
+          // if have multiple `*`, all matched should be the same because the key
+          // can only have one `*`
+          if (matched) {
+            if (matched.length > 2) {
+              let allGlobSame = true
+              for (let i = 2; i < matched.length; i++) {
+                if (matched[i] !== matched[1]) {
+                  allGlobSame = false
+                  break
+                }
+              }
+              if (allGlobSame) {
+                filePaths.push(itemPath)
+              }
+            } else {
+              filePaths.push(itemPath)
+            }
+          }
         }
       }
     }
   }
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+/**
+ * @param {string} str
+ */
+function slash(str) {
+  return str.replace(/\\/g, '/')
 }
 
 /**

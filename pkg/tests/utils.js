@@ -96,6 +96,9 @@ test('exportsGlob', async () => {
   equal(await exportsGlob(r('./*.cjs'), v), [r('quebec/sierra.cjs')])
   // prettier-ignore
   equal(await exportsGlob(r('./quebec/*'), v), [r('quebec/romeo.css'), r('quebec/sierra.cjs')])
+  equal(await exportsGlob(r('./*lph*.js'), v), [r('alpha.js')])
+  // prettier-ignore
+  equal(await exportsGlob(r('./qu*b*c/si*rra.cjs'), v), [r('quebec/sierra.cjs')])
 })
 
 test.run()
