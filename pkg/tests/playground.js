@@ -16,6 +16,8 @@ testFixture('missing-files', [
   'FILE_NOT_PUBLISHED'
 ])
 
+testFixture('publish-config', ['USE_EXPORTS_BROWSER', 'FILE_DOES_NOT_EXIST'])
+
 testFixture('test-1', ['FILE_INVALID_FORMAT'])
 
 testFixture('test-2', [

@@ -224,3 +224,16 @@ export function createPromiseQueue() {
     wait: () => Promise.all(promises)
   }
 }
+
+/**
+ * @param {Record<string, any>} pkgJson
+ * @param {string} field
+ * @returns {[value: any, path: string[]]}
+ */
+export function getPublishedField(pkgJson, field) {
+  if (pkgJson.publishConfig?.[field]) {
+    return [pkgJson.publishConfig[field], ['publishConfig', field]]
+  } else {
+    return [pkgJson[field], [field]]
+  }
+}

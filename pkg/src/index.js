@@ -4,7 +4,8 @@ import {
   getFilePathFormat,
   getCodeFormatExtension,
   isExplicitExtension,
-  createPromiseQueue
+  createPromiseQueue,
+  getPublishedField
 } from './utils.js'
 
 /**
@@ -32,7 +33,9 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
   const rootPkgContent = await readFile(rootPkgPath, [])
   if (rootPkgContent === false) return messages
   const rootPkg = JSON.parse(rootPkgContent)
-  const { main, module, exports, browser } = rootPkg
+  const [main, mainPkgPath] = getPublishedField(rootPkg, 'main')
+  const [module, modulePkgPath] = getPublishedField(rootPkg, 'module')
+  const [exports, exportsPkgPath] = getPublishedField(rootPkg, 'exports')
 
   /**
    * @param {string} filePath
@@ -129,11 +132,10 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
   if (main) {
     promiseQueue.push(async () => {
       const mainPath = vfs.pathJoin(pkgDir, main)
-      const mainContent = await readFile(
-        mainPath,
-        ['main'],
-        ['.js', '/index.js']
-      )
+      const mainContent = await readFile(mainPath, mainPkgPath, [
+        '.js',
+        '/index.js'
+      ])
       if (mainContent === false) return
       const actualFormat = getCodeFormat(mainContent)
       const expectFormat = await getFilePathFormat(mainPath, vfs)
@@ -153,7 +155,7 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
             actualExtension,
             expectExtension: getCodeFormatExtension(actualFormat)
           },
-          path: ['main'],
+          path: mainPkgPath,
           type: 'warning'
         })
       }
@@ -161,7 +163,7 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
         messages.push({
           code: 'HAS_ESM_MAIN_BUT_NO_EXPORTS',
           args: {},
-          path: ['main'],
+          path: mainPkgPath,
           type: 'suggestion'
         })
       }
@@ -177,18 +179,17 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
   if (module) {
     promiseQueue.push(async () => {
       const modulePath = vfs.pathJoin(pkgDir, module)
-      const moduleContent = await readFile(
-        modulePath,
-        ['module'],
-        ['.js', '/index.js']
-      )
+      const moduleContent = await readFile(modulePath, modulePkgPath, [
+        '.js',
+        '/index.js'
+      ])
       if (moduleContent === false) return
       const actualFormat = getCodeFormat(moduleContent)
       if (actualFormat === 'CJS') {
         messages.push({
           code: 'MODULE_SHOULD_BE_ESM',
           args: {},
-          path: ['module'],
+          path: modulePkgPath,
           type: 'error'
         })
       }
@@ -197,7 +198,7 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
         messages.push({
           code: 'HAS_MODULE_BUT_NO_EXPORTS',
           args: {},
-          path: ['module'],
+          path: modulePkgPath,
           type: 'suggestion'
         })
       }
@@ -207,24 +208,26 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
   // check file existence for other known package fields
   const knownFields = ['types', 'jsnext:main', 'jsnext', 'unpkg', 'jsdelivr']
   for (const field of knownFields) {
-    if (typeof rootPkg[field] === 'string') {
+    const [fieldValue, fieldPkgPath] = getPublishedField(rootPkg, field)
+    if (typeof fieldValue === 'string') {
       promiseQueue.push(async () => {
-        const fieldPath = vfs.pathJoin(pkgDir, rootPkg[field])
-        await readFile(fieldPath, [field], ['.js', '/index.js'])
+        const fieldPath = vfs.pathJoin(pkgDir, fieldValue)
+        await readFile(fieldPath, fieldPkgPath, ['.js', '/index.js'])
       })
     }
   }
 
   // check file existence for browser field
+  const [browser, browserPkgPath] = getPublishedField(rootPkg, 'browser')
   if (browser) {
-    crawlBrowser(browser)
+    crawlBrowser(browser, browserPkgPath)
     // if the package has both the `browser` and `exports` fields, recommend to use
     // the browser condition instead
     if (exports) {
       messages.push({
         code: 'USE_EXPORTS_BROWSER',
         args: {},
-        path: ['browser'],
+        path: browserPkgPath,
         type: 'suggestion'
       })
     }
@@ -232,7 +235,7 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
 
   if (exports) {
     // recursively check exports
-    crawlExports(exports)
+    crawlExports(exports, exportsPkgPath)
   } else {
     // all files can be accessed. verify them all
     promiseQueue.push(async () => {
@@ -297,7 +300,7 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
    * @param {string | Record<string, any>} fieldValue
    * @param {string[]} currentPath
    */
-  function crawlBrowser(fieldValue, currentPath = ['browser']) {
+  function crawlBrowser(fieldValue, currentPath) {
     if (typeof fieldValue === 'string') {
       promiseQueue.push(async () => {
         const browserPath = vfs.pathJoin(pkgDir, fieldValue)
@@ -319,11 +322,12 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
     return isGlob ? await exportsGlob(exportsPath, vfs) : [exportsPath]
   }
 
-  function crawlExports(
-    exports,
-    currentPath = ['exports'],
-    isAfterNodeCondition = false
-  ) {
+  /**
+   * @param {any} exports
+   * @param {string[]} currentPath
+   * @param {boolean} isAfterNodeCondition
+   */
+  function crawlExports(exports, currentPath, isAfterNodeCondition = false) {
     if (typeof exports === 'string') {
       promiseQueue.push(async () => {
         // warn deprecated subpath mapping

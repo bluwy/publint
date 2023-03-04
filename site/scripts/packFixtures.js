@@ -2,7 +2,10 @@ import cp from 'child_process'
 import fs from 'fs/promises'
 import path from 'path'
 
-const fixtures = ['glob', 'missing-files', 'test-1', 'test-2']
+const fixtureDir = path.resolve('../pkg/tests/fixtures')
+const fixtures = (await fs.readdir(fixtureDir, { withFileTypes: true }))
+  .filter((dirent) => dirent.isDirectory())
+  .map((dirent) => dirent.name)
 
 console.log('Create ./public/temp/ dir')
 
@@ -12,7 +15,7 @@ console.log('Packing fixtures', fixtures)
 
 await Promise.all(
   fixtures.map((fixture) => {
-    const fixturePath = path.resolve('../pkg/tests/fixtures', fixture)
+    const fixturePath = path.resolve(fixtureDir, fixture)
     const proc = cp.exec(
       `npm pack ${fixturePath} --pack-destination=./public/temp/`
     )

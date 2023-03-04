@@ -1,0 +1,21 @@
+{
+  "name": "publint-publish-config",
+  "version": "0.0.1",
+  "private": true,
+  "main": "missing.js",
+  "browser": "missing.js",
+  "exports": {
+    ".": {
+      "import": "./missing.js"
+    }
+  },
+  "publishConfig": {
+    "browser": "index.js",
+    "exports": {
+      ".": {
+        "import": "./index.js",
+        "require": "./index.js"
+      }
+    }
+  }
+}
