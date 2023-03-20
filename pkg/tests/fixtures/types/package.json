@@ -1,0 +1,13 @@
+{
+  "name": "publint-types",
+  "version": "0.0.1",
+  "private": true,
+  "types": "./main.d.ts",
+  "exports": {
+    ".": {
+      "node": {
+        "import": "./stub.js"
+      }
+    }
+  }
+}

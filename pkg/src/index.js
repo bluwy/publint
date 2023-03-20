@@ -555,7 +555,7 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
       const [types] = getPublishedField(rootPkg, 'types')
       if (types) {
         typesFilePath = types
-      } else if (await readFile('./index.d.ts')) {
+      } else if (await readFile(vfs.pathJoin(pkgDir, './index.d.ts'))) {
         typesFilePath = './index.d.ts'
       }
     } else {
