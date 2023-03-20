@@ -5,7 +5,8 @@ import {
   getCodeFormatExtension,
   isExplicitExtension,
   createPromiseQueue,
-  getPublishedField
+  getPublishedField,
+  objectHasKeyNested
 } from './utils.js'
 
 /**
@@ -49,15 +50,16 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
   }
 
   /**
-   * @param {string} path
-   * @param {string[]} pkgPath
-   * @param {string[]} tryExtensions
+   * @param {string} path file path to read
+   * @param {string[]} [pkgPath] current path that tries to read this file.
+   *   pass `undefined` to prevent error reporting if the file is missing.
+   * @param {string[]} tryExtensions list of extensions to try before giving up
    * @returns {Promise<string | false>}
    */
-  async function readFile(path, pkgPath, tryExtensions = []) {
+  async function readFile(path, pkgPath = undefined, tryExtensions = []) {
     try {
       const content = await vfs.readFile(path)
-      if (_packedFiles && !_packedFiles.includes(path)) {
+      if (pkgPath && _packedFiles && !_packedFiles.includes(path)) {
         fileNotPublished(pkgPath)
       }
       return content
@@ -65,18 +67,20 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
       for (const ext of tryExtensions) {
         try {
           const content = await vfs.readFile(path + ext)
-          if (_packedFiles && !_packedFiles.includes(path)) {
+          if (pkgPath && _packedFiles && !_packedFiles.includes(path)) {
             fileNotPublished(pkgPath)
           }
           return content
         } catch {}
       }
-      messages.push({
-        code: 'FILE_DOES_NOT_EXIST',
-        args: { filePath: path },
-        path: pkgPath,
-        type: 'error'
-      })
+      if (pkgPath) {
+        messages.push({
+          code: 'FILE_DOES_NOT_EXIST',
+          args: { filePath: path },
+          path: pkgPath,
+          type: 'error'
+        })
+      }
       return false
     }
   }
@@ -236,6 +240,8 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
   if (exports) {
     // recursively check exports
     crawlExports(exports, exportsPkgPath)
+    // make sure types are exported for moduleResolution bundler
+    doCheckTypesExported()
   } else {
     // all files can be accessed. verify them all
     promiseQueue.push(async () => {
@@ -491,5 +497,70 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
         }
       }
     }
+  }
+
+  function doCheckTypesExported() {
+    if (typeof exports === 'string') {
+      checkTypesExported()
+    } else if (typeof exports === 'object') {
+      const exportsKeys = Object.keys(exports)
+      if (exportsKeys.length === 0) return
+
+      // check if the `exports` directly map to condition keys (doesn't start with '.').
+      // if so, we work on it directly.
+      if (!exportsKeys[0].startsWith('.')) {
+        checkTypesExported()
+      }
+      // else this `exports` may have multiple export entrypoints, check for '.'
+      // TODO: check for other entrypoints
+      else if ('.' in exports) {
+        checkTypesExported('.')
+      }
+    }
+  }
+
+  /**
+   * @param {string | undefined} exportsRootKey
+   */
+  function checkTypesExported(exportsRootKey = undefined) {
+    promiseQueue.push(async () => {
+      const typesFilePath = await findTypesFilePath(exportsRootKey)
+      const exportsRootValue = exportsRootKey
+        ? exports[exportsRootKey]
+        : exports
+
+      if (
+        typesFilePath && // check has existing types?
+        (typeof exportsRootValue === 'string' || // if the root value is just a string, types is not exported
+          !objectHasKeyNested(exportsRootValue, 'types')) // else if object, check has types condition
+      ) {
+        messages.push({
+          code: 'TYPES_NOT_EXPORTED',
+          args: { typesFilePath },
+          path: exportsRootKey
+            ? exportsPkgPath.concat(exportsRootKey)
+            : exportsPkgPath,
+          type: 'warning'
+        })
+      }
+    })
+  }
+
+  /**
+   * @param {string | undefined} exportsKey
+   */
+  async function findTypesFilePath(exportsKey) {
+    let typesFilePath
+    if (exportsKey == null || exportsKey === '.') {
+      const [types] = getPublishedField(rootPkg, 'types')
+      if (types) {
+        typesFilePath = types
+      } else if (await readFile('./index.d.ts')) {
+        typesFilePath = './index.d.ts'
+      }
+    } else {
+      // TODO: handle nested exports key
+    }
+    return typesFilePath
   }
 }

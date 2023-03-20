@@ -71,6 +71,14 @@ function messageToString(m, pkg) {
     case 'USE_EXPORTS_BROWSER':
       // prettier-ignore
       return `${bold('pkg.browser')} can be refactored to use ${bold('pkg.exports')} and the ${bold('browser')} condition instead to declare browser-specific exports. (This will be a breaking change)`
+    case 'TYPES_NOT_EXPORTED': {
+      let target = 'This entrypoint'
+      if (m.path[m.path.length - 1] === 'exports') {
+        target = 'The library'
+      }
+      // prettier-ignore
+      return `${target} has types at ${bold(m.args.typesFilePath)} but it is not exported from ${bold('pkg.exports')}. Consider adding it to ${bold(fp(m.path) + '.types')} to be compatible with TypeScript's ${bold('"moduleResolution": "bundler"')} compiler option.`
+    }
     default:
       return
   }

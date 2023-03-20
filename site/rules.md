@@ -63,6 +63,10 @@ Ensure `types` condition to be the first. The [TypeScript docs](https://www.type
 
 For example, a scenario where both the `types` and `import` condition could be active, `types` should be first so that it matches and returns a `.d.ts` file, rather than a `.js` file from the `import` condition.
 
+## `TYPES_NOT_EXPORTED`
+
+Since TypeScript 5.0, it has supported the [`"moduleResolution": "bundler"` compiler option](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#moduleresolution-bundler), which has stricter rules on loading types. When an `exports` field is found, only the `types` condition declared there is respected. The `types` field and individual `.d.ts` files are completely ignored to respect the `exports` field module resolution algorithm.
+
 ## `EXPORTS_DEFAULT_SHOULD_BE_LAST`
 
 Ensure `default` condition to be the last according to the [Node.js docs](https://nodejs.org/api/packages.html#conditional-exports), but it's also because the `exports` field is order-based.

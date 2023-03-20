@@ -237,3 +237,16 @@ export function getPublishedField(pkgJson, field) {
     return [pkgJson[field], [field]]
   }
 }
+
+/**
+ * @param {Record<string, any>} obj
+ * @param {string} key
+ */
+export function objectHasKeyNested(obj, key) {
+  for (const k in obj) {
+    if (k === key) return true
+    if (typeof obj[k] === 'object' && objectHasKeyNested(obj[k], key))
+      return true
+  }
+  return false
+}
