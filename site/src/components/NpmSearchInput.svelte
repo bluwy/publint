@@ -11,7 +11,7 @@
    */
   let inputEl
   /**
-   * @type {{ value: string, description?: string }[]}
+   * @type {{ value: string, description?: string, version: string }[]}
    */
   let options = []
   /**
