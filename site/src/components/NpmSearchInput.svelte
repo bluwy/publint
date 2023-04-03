@@ -149,12 +149,13 @@
       <ul
         class="w-full list-none m-0 p-0 border-0 border-t border-gray"
         tabindex="-1"
-        role="tablist"
+        role="listbox"
       >
         {#each options as opt, i}
           <li
             class="m-0 py-0 bg-gray bg-opacity-0 hover:bg-opacity-25 transition-colors"
             class:bg-opacity-25={arrowSelectIndex === i}
+            role="option"
             aria-selected={arrowSelectIndex === i}
           >
             <button
