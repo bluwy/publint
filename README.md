@@ -49,7 +49,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for more information.
 ## Sponsors
 
 <p align="center">
-  <a href="https://bjornlu.com/sponsors.svg">
+  <a href="https://bjornlu.com/sponsor">
     <img src="https://bjornlu.com/sponsors.svg" alt="Sponsors" />
   </a>
 </p>
