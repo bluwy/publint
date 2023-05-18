@@ -180,6 +180,8 @@
     type="text"
     placeholder="Search npm package"
     autocomplete="off"
+    autocapitalize="off"
+    autocorrect="off"
     {autofocus}
     on:input={handleInput}
     on:keydown={handleKeyDown}
