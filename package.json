@@ -15,12 +15,12 @@
     "node": ">=16"
   },
   "devDependencies": {
-    "@types/node": "^18.15.11",
+    "@types/node": "^18.16.12",
     "@types/pnpapi": "^0.0.2",
-    "prettier": "^2.8.7",
+    "prettier": "^2.8.8",
     "prettier-plugin-svelte": "^2.10.0",
-    "svelte": "^3.58.0",
-    "typescript": "^5.0.3"
+    "svelte": "^3.59.1",
+    "typescript": "^5.0.4"
   },
   "pnpm": {
     "peerDependencyRules": {

@@ -1,5 +1,5 @@
 import { defineConfig } from '@unocss/vite'
-import { extractorSvelte } from '@unocss/core'
+import extractorSvelte from '@unocss/extractor-svelte'
 import presetUno from '@unocss/preset-uno'
 
 export default defineConfig({
