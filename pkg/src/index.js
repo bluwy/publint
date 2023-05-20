@@ -22,7 +22,7 @@ import {
  * @param {Options} options
  * @returns {Promise<import('..').Message[]>}
  */
-export async function publint({ pkgDir, vfs, level, _packedFiles }) {
+export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   /** @type {import('..').Message[]} */
   const messages = []
   /**
@@ -293,6 +293,14 @@ export async function publint({ pkgDir, vfs, level, _packedFiles }) {
   }
 
   await promiseQueue.wait()
+
+  if (strict) {
+    for (const message of messages) {
+      if (message.type === 'warning') {
+        message.type = 'error'
+      }
+    }
+  }
 
   if (level === 'warning') {
     return messages.filter((m) => m.type !== 'suggestion')

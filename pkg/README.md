@@ -61,7 +61,11 @@ const messages = await publint({
    * - `warning`: logs only `warning` and `error` messages
    * - `error`: logs only `error` messages
    */
-  level: 'warning'
+  level: 'warning',
+  /**
+   * Report warnings as errors.
+   */
+  strict: true
 })
 
 console.log(messages)

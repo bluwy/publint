@@ -82,6 +82,10 @@ export interface Options {
    * - `error`: logs only `error` messages
    */
   level?: 'suggestion' | 'warning' | 'error'
+  /**
+   * Report warnings as errors.
+   */
+  strict?: boolean
 }
 
 export interface Vfs {
