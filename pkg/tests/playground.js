@@ -18,6 +18,8 @@ testFixture('missing-files', [
   'FILE_NOT_PUBLISHED'
 ])
 
+testFixture('no-exports-module', [])
+
 testFixture('publish-config', ['USE_EXPORTS_BROWSER', 'FILE_DOES_NOT_EXIST'])
 
 testFixture('test-1', ['TYPES_NOT_EXPORTED', 'FILE_INVALID_FORMAT'])

@@ -137,6 +137,12 @@ function slash(str) {
  * @returns {Promise<CodeFormat>}
  */
 export async function getFilePathFormat(filePath, vfs) {
+  // React Native bundler treats `.native.js` as special platform extension, the real format
+  // can be found after stripping `.native.js`, which I think is good enough?
+  // https://reactnative.dev/docs/platform-specific-code#native-specific-extensions-ie-sharing-code-with-nodejs-and-web
+  // https://github.com/apollographql/apollo-client/issues/9976#issuecomment-1545472585
+  // https://github.com/facebook/metro/issues/535
+  if (filePath.endsWith('.native.js')) filePath = filePath.slice(0, -10)
   if (filePath.endsWith('.mjs')) return 'ESM'
   if (filePath.endsWith('.cjs')) return 'CJS'
   const nearestPkg = await getNearestPkg(filePath, vfs)
