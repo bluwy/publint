@@ -71,11 +71,16 @@ Extra utilities are exported under `publint/utils`:
 
 ```js
 import { printMessage } from 'publint/utils'
+import fs from 'node:fs/promises'
+
+const pkg = JSON.parse(
+  await fs.readFile('./path/to/package/package.json', 'utf8')
+)
 
 for (const message of messages) {
   // Prints default message in Node.js. Always a no-op in browsers.
   // Useful for re-implementing the CLI in a programmatic way.
-  printMessage(message)
+  printMessage(message, pkg)
 }
 ```
 
