@@ -256,3 +256,43 @@ export function objectHasKeyNested(obj, key) {
   }
   return false
 }
+
+/**
+ * @param {Record<string, Record<string, string[]>>} typesVersion
+ * @returns {(importPath: string) => string[] | undefined}
+ */
+export function createTypesVersionMapper(typesVersion) {
+  /** @type {Record<string, string[]>} */
+  let latestMap
+
+  // we only want to map version with ranges
+  const typesVersionKeys = Object.keys(typesVersion).filter(
+    (version) => version[0] === '>' || version[0] === '<' || version[0] === '*'
+  )
+  if (typesVersionKeys.length === 0) {
+    return () => undefined
+  } else if (typesVersionKeys.length === 1) {
+    latestMap = typesVersion[typesVersionKeys[0]]
+  } else {
+    const firstKey = typesVersionKeys[0]
+    // if `typesVersion` has many keys, we use a trick here:
+    // - if the first starts with `*`, that's a catch-all and it's the latest.
+    // - if the first starts with `>`, the order is likely `>3.2`, `>3.1`, etc, so the first is latest.
+    // - if the first starts with `<`, the order is likely `<3.1`, `<3.2`, etc, so the last is latest.
+    if (firstKey[0] === '*') {
+      latestMap = typesVersion[firstKey]
+    } else if (firstKey[0] === '>') {
+      latestMap = typesVersion[firstKey]
+    } else if (firstKey[0] === '<') {
+      latestMap = typesVersion[typesVersionKeys[typesVersionKeys.length - 1]]
+    }
+  }
+
+  /**
+   * @param {string} importPath e.g. `/bar`
+   */
+  return function mapper(importPath) {
+    // wip
+    return undefined
+  }
+}
