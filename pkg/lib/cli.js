@@ -71,7 +71,9 @@ cli
     for (let i = 0; i < deps.length; i++) {
       pq.push(async () => {
         const depDir = await findDepPath(deps[i], pkgDir)
-        const logs = depDir ? await lintDir(depDir, opts.level, opts.strict, true) : []
+        const logs = depDir
+          ? await lintDir(depDir, opts.level, opts.strict, true)
+          : []
         // log this lint result
         const log = () => {
           logs.forEach((l, j) => console.log((j > 0 ? '  ' : '') + l))
