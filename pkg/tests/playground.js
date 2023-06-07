@@ -33,36 +33,71 @@ testFixture('test-2', [
 ])
 
 testFixture(
-  'test-2',
+  'test-2 (level: warning)',
   [
     'EXPORTS_VALUE_INVALID',
     'EXPORTS_MODULE_SHOULD_BE_ESM',
     'FILE_INVALID_FORMAT',
     'FILE_INVALID_FORMAT'
   ],
-  'warning'
+  { level: 'warning' }
 )
 
 testFixture(
-  'test-2',
+  'test-2 (level: error)',
   ['EXPORTS_VALUE_INVALID', 'EXPORTS_MODULE_SHOULD_BE_ESM'],
-  'error'
+  { level: 'error' }
+)
+
+testFixture(
+  'test-2 (strict: true)',
+  [
+    'EXPORTS_VALUE_INVALID',
+    'EXPORTS_MODULE_SHOULD_BE_ESM',
+    'FILE_INVALID_FORMAT',
+    'FILE_INVALID_FORMAT'
+  ],
+  { level: 'error', strict: true }
+)
+
+testFixture(
+  'test-2 (strict: true)',
+  [
+    { code: 'USE_EXPORTS_BROWSER', type: 'suggestion' },
+    { code: 'EXPORTS_VALUE_INVALID', type: 'error' },
+    { code: 'EXPORTS_MODULE_SHOULD_BE_ESM', type: 'error' },
+    { code: 'FILE_INVALID_FORMAT', type: 'error' },
+    { code: 'FILE_INVALID_FORMAT', type: 'error' }
+  ],
+  { strict: true }
 )
 
 testFixture('types', ['TYPES_NOT_EXPORTED'])
 
 /**
- *
- * @param {string} name
- * @param {import('../index').Message['code'][]} expectCodes
- * @param {import('../index').Options['level']} [level]
+ * @typedef {{
+ *  level?: import('../index').Options['level']
+ *  strict?: import('../index').Options['strict']
+ *  debug?: boolean
+ * }} TestOptions
  */
-function testFixture(name, expectCodes, level, debug = false) {
-  test(name, async () => {
-    const pkgDir = path.resolve(process.cwd(), 'tests/fixtures', name)
-    const messages = await publint({ pkgDir, level })
 
-    if (debug) {
+/**
+ * @param {string} name
+ * @param {import('../index').Message['code'][] | Pick<import('../index').Message, 'code' | 'type'>[]} expectCodes
+ * @param {TestOptions} [options]
+ */
+function testFixture(name, expectCodes, options) {
+  test(name, async () => {
+    const fixtureName = name.replace(/\(.*$/, '').trim()
+    const pkgDir = path.resolve(process.cwd(), 'tests/fixtures', fixtureName)
+    const messages = await publint({
+      pkgDir,
+      level: options?.level,
+      strict: options?.strict
+    })
+
+    if (options?.debug) {
       const pkg = JSON.parse(
         await fs.readFile(path.join(pkgDir, 'package.json'), 'utf-8')
       )
@@ -72,8 +107,14 @@ function testFixture(name, expectCodes, level, debug = false) {
       console.log()
     }
 
-    const codes = messages.map((v) => v.code)
-    equal(codes, expectCodes, codes.join(', '))
+    // you can test an array of obe
+    if (typeof expectCodes[0] === 'object') {
+      const codes = messages.map((v) => ({ code: v.code, type: v.type }))
+      equal(codes, expectCodes, codes.join(', '))
+    } else {
+      const codes = messages.map((v) => v.code)
+      equal(codes, expectCodes, codes.join(', '))
+    }
   })
 }
 

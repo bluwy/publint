@@ -11,6 +11,7 @@ export function publint(options) {
   return _publint({
     pkgDir: options.pkgDir ?? '/',
     vfs: options.vfs,
-    level: options.level ?? 'suggestion'
+    level: options.level ?? 'suggestion',
+    strict: options?.strict ?? false
   })
 }
