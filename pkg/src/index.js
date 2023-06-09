@@ -6,7 +6,8 @@ import {
   isExplicitExtension,
   createPromiseQueue,
   getPublishedField,
-  objectHasKeyNested
+  objectHasKeyNested,
+  createTypesVersionsResolver
 } from './utils.js'
 
 /**
@@ -209,8 +210,42 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
     })
   }
 
+  // check file existence for types field
+  const [types, typesPkgPath] = getPublishedField(rootPkg, 'types')
+  const [typesVersions] = getPublishedField(rootPkg, 'typesVersions')
+  if (typeof types === 'string') {
+    // if have no `typesVersions`, do a simple file existence check
+    if (!typesVersions) {
+      const fieldPath = vfs.pathJoin(pkgDir, types)
+      await readFile(fieldPath, typesPkgPath)
+    }
+    // if have `typesVersions`, do a more complex check
+    else {
+      const resolver = createTypesVersionsResolver(typesVersions, vfs, pkgDir)
+      promiseQueue.push(async () => {
+        // a map of ts version and the matched paths
+        const resolved = await resolver(types)
+        /** @type {string[]} */
+        const unresolvedTsVersions = []
+        for (const version of Object.keys(resolved)) {
+          const resolvedPaths = resolved[version]
+          if (!resolvedPaths || resolvedPaths.length === 0) {
+            unresolvedTsVersions.push(version)
+            continue
+          }
+        }
+        messages.push({
+          code: 'TYPES_FILE_DOES_NOT_EXIST',
+          args: { missingInTsVersions: unresolvedTsVersions },
+          path: typesPkgPath,
+          type: 'error'
+        })
+      })
+    }
+  }
+
   // check file existence for other known package fields
-  const knownFields = ['types', 'jsnext:main', 'jsnext', 'unpkg', 'jsdelivr']
+  const knownFields = ['jsnext:main', 'jsnext', 'unpkg', 'jsdelivr']
   for (const field of knownFields) {
     const [fieldValue, fieldPkgPath] = getPublishedField(rootPkg, field)
     if (typeof fieldValue === 'string') {

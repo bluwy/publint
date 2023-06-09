@@ -35,6 +35,25 @@ export function printMessage(m, pkg) {
     case 'FILE_DOES_NOT_EXIST':
       // prettier-ignore
       return `${c.bold(fp(m.path))} is ${pv(m.path)} but the file does not exist.`
+    case 'TYPES_FILE_DOES_NOT_EXIST': {
+      const tsVersions = m.args.missingInTsVersions
+      let tsVersionsStr = ''
+      if (tsVersions.length === 1 && tsVersions[0] === '*') {
+        tsVersionsStr = 'all TypeScript versions'
+      } else {
+        const filteredTsVersions = tsVersions.filter((v) => v !== '*')
+        const hasFallback = filteredTsVersions.length !== tsVersions.length
+        tsVersionsStr = `TypeScript ${filteredTsVersions.join(', ')}`
+        if (hasFallback) {
+          const otherVersions = Object.keys(pv(m.path)).filter((v) => v !== '*')
+          tsVersionsStr += `, and all other versions not matching ${otherVersions.join(
+            ', '
+          )}`
+        }
+      }
+      // prettier-ignore
+      return `${c.bold(fp(m.path))} does not match to a path when mapped by the ${c.bold('typesVersions')} field in ${tsVersionsStr}.`
+    }
     case 'FILE_NOT_PUBLISHED':
       // prettier-ignore
       return `${c.bold(fp(m.path))} is ${pv(m.path)} but the file is not published. Is it specified in ${c.bold('pkg.files')}?`

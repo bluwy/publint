@@ -45,6 +45,7 @@ export type Message =
       }
     >
   | BaseMessage<'FILE_DOES_NOT_EXIST', { filePath: string }> // TODO: remove `filePath`
+  | BaseMessage<'TYPES_FILE_DOES_NOT_EXIST', { missingInTsVersions: string[] }>
   | BaseMessage<'FILE_NOT_PUBLISHED'>
   | BaseMessage<'MODULE_SHOULD_BE_ESM'>
   | BaseMessage<'HAS_MODULE_BUT_NO_EXPORTS'>

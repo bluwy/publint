@@ -258,41 +258,100 @@ export function objectHasKeyNested(obj, key) {
 }
 
 /**
- * @param {Record<string, Record<string, string[]>>} typesVersion
- * @returns {(importPath: string) => string[] | undefined}
+ * Given a `typesVersions` config, return a resolver function that will resolve
+ * a given path based on the `typesVersion` behaviour. This tries to match TypeScript's
+ * behaviour as much as possible, but it likely doesn't in some case.
+ * @param {Record<string, Record<string, string[]>>} typesVersions
+ * @param {import('..').Vfs} vfs
+ * @param {string} pkgDir
+ * @returns {(filePath: string) => Promise<Record<string, string[] | undefined>>}
  */
-export function createTypesVersionMapper(typesVersion) {
-  /** @type {Record<string, string[]>} */
-  let latestMap
+export function createTypesVersionsResolver(typesVersions, vfs, pkgDir) {
+  const typesVersionsKeys = Object.keys(typesVersions)
 
-  // we only want to map version with ranges
-  const typesVersionKeys = Object.keys(typesVersion).filter(
-    (version) => version[0] === '>' || version[0] === '<' || version[0] === '*'
-  )
-  if (typesVersionKeys.length === 0) {
-    return () => undefined
-  } else if (typesVersionKeys.length === 1) {
-    latestMap = typesVersion[typesVersionKeys[0]]
-  } else {
-    const firstKey = typesVersionKeys[0]
-    // if `typesVersion` has many keys, we use a trick here:
-    // - if the first starts with `*`, that's a catch-all and it's the latest.
-    // - if the first starts with `>`, the order is likely `>3.2`, `>3.1`, etc, so the first is latest.
-    // - if the first starts with `<`, the order is likely `<3.1`, `<3.2`, etc, so the last is latest.
-    if (firstKey[0] === '*') {
-      latestMap = typesVersion[firstKey]
-    } else if (firstKey[0] === '>') {
-      latestMap = typesVersion[firstKey]
-    } else if (firstKey[0] === '<') {
-      latestMap = typesVersion[typesVersionKeys[typesVersionKeys.length - 1]]
+  if (typesVersionsKeys.length === 0) {
+    return async (filePath) => {
+      const fullFilePath = vfs.pathJoin(pkgDir, filePath)
+      return {
+        ['*']: (await vfs.isPathExist(fullFilePath))
+          ? [fullFilePath]
+          : undefined
+      }
     }
   }
 
   /**
-   * @param {string} importPath e.g. `/bar`
+   * @param {string} filePath e.g. `/`, `/foo`, `foo`, `/bar/index.js`
    */
-  return function mapper(importPath) {
-    // wip
-    return undefined
+  return async (filePath) => {
+    /** @type {Record<string, string[] | undefined>} */
+    const result = {}
+    for (const tsVersion of typesVersionsKeys) {
+      const tsMap = typesVersions[tsVersion]
+      const tsMapKeys = Object.keys(tsMap)
+
+      // fast-path for root mapping
+      if (filePath === '/') {
+        result[tsVersion] = tsMap.index
+        continue
+      }
+
+      // try to match each key as regex
+      for (const key of tsMapKeys) {
+        const regex = tsMapKeyToRegex(key)
+        const matched = filePath.match(regex)
+        if (matched) {
+          let possibleResolvedPaths = tsMap[key].map((p) =>
+            p[0] === '/' ? p : '/' + p
+          )
+          // handle glob *
+          if (key.includes('*')) {
+            possibleResolvedPaths = possibleResolvedPaths.map((p) =>
+              p.replace('*', matched[1])
+            )
+          }
+          // make sure path exists
+          for (let i = 0; i < possibleResolvedPaths.length; i++) {
+            const p = vfs.pathJoin(pkgDir, possibleResolvedPaths[i])
+            if (await vfs.isPathExist(p)) break
+
+            const exts = ['.d.ts', '.js', '/index.d.ts', '/index.js']
+            for (const ext of exts) {
+              if (await vfs.isPathExist(p + ext)) {
+                // update to real matched path
+                possibleResolvedPaths[i] = p + ext
+                break
+              }
+            }
+
+            // mark empty string to be filtered out later since it doesn't match a real path
+            possibleResolvedPaths[i] = ''
+          }
+          result[tsVersion] = possibleResolvedPaths.filter(Boolean)
+        }
+      }
+    }
+
+    // default mapping if it doesn't match any typescript version
+    // NOTE: this doesn't handle mappings that have `>4.0` and `<=4.0` as keys,
+    // but that's a problem for another day :D
+    if (!result['*']) {
+      result['*'] = (await vfs.isPathExist(filePath)) ? [filePath] : undefined
+    }
+    return result
   }
+}
+
+/**
+ * Convert TS map key to regex. The regex returns [1] if has *.
+ * NOTE: This does not support more than one *, I'm not sure if that's allowed.
+ * @param {string} key e.g. index, foo, *, /nested/*
+ */
+function tsMapKeyToRegex(key) {
+  // strip leading slash
+  if (key[0] === '/') {
+    key = key.slice(1)
+  }
+
+  return new RegExp(`^\/?${key.split('*').map(escapeRegExp).join('(.+)')}$`)
 }
