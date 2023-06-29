@@ -8,6 +8,14 @@
       "node": {
         "import": "./stub.js"
       }
+    },
+    "./nested": {
+      "import": {
+        "types": "./nested.d.mts",
+        "default": "./nested.mjs"
+      },
+      "types": "./nested.d.ts",
+      "default": "./nested.js"
     }
   }
 }

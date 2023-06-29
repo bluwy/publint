@@ -469,12 +469,29 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
 
       // the types export should be the first condition
       if ('types' in exports && exportsKeys[0] !== 'types') {
-        messages.push({
-          code: 'EXPORTS_TYPES_SHOULD_BE_FIRST',
-          args: {},
-          path: currentPath.concat('types'),
-          type: 'error'
-        })
+        // check preceding conditions before the `types` condition, if there are nested
+        // conditions, check if they also have the `types` condition. If they do, there's
+        // a good chance those take precendence over this non-first `types` condition, which
+        // is fine and is usually used as fallback instead.
+        const precedingKeys = exportsKeys.slice(0, exportsKeys.indexOf('types'))
+        let isPrecededByNestedTypesCondition = false
+        for (const key of precedingKeys) {
+          if (
+            typeof exports[key] === 'object' &&
+            objectHasKeyNested(exports[key], 'types')
+          ) {
+            isPrecededByNestedTypesCondition = true
+            break
+          }
+        }
+        if (!isPrecededByNestedTypesCondition) {
+          messages.push({
+            code: 'EXPORTS_TYPES_SHOULD_BE_FIRST',
+            args: {},
+            path: currentPath.concat('types'),
+            type: 'error'
+          })
+        }
       }
 
       // the default export should be the last condition
