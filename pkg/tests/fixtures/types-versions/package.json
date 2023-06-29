@@ -1,0 +1,7 @@
+{
+  "name": "publint-types-versions",
+  "version": "0.0.1",
+  "private": true,
+  "types": "./main.d.ts",
+  "typesVersions": {}
+}

@@ -74,6 +74,8 @@ testFixture(
 
 testFixture('types', ['TYPES_NOT_EXPORTED'])
 
+testFixture('types-versions', [])
+
 /**
  * @typedef {{
  *  level?: import('../index').Options['level']
