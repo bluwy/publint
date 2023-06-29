@@ -10,17 +10,17 @@
     "typecheck": "tsc",
     "test": "pnpm --dir pkg test"
   },
-  "packageManager": "pnpm@8.5.1",
+  "packageManager": "pnpm@8.6.5",
   "engines": {
     "node": ">=16"
   },
   "devDependencies": {
-    "@types/node": "^18.16.12",
+    "@types/node": "^18.16.18",
     "@types/pnpapi": "^0.0.2",
     "prettier": "^2.8.8",
-    "prettier-plugin-svelte": "^2.10.0",
-    "svelte": "^3.59.1",
-    "typescript": "^5.0.4"
+    "prettier-plugin-svelte": "^2.10.1",
+    "svelte": "^4.0.1",
+    "typescript": "^5.1.6"
   },
   "pnpm": {
     "peerDependencyRules": {
