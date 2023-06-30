@@ -2,8 +2,8 @@ import c from 'picocolors'
 import { formatMessagePath as fp, getPkgPathValue } from './utils.js'
 
 /**
- * @param {import('..').Message} m
- * @param {import('./utils').Pkg} pkg
+ * @param {import('../index.d.ts').Message} m
+ * @param {import('./utils.js').Pkg} pkg
  */
 export function printMessage(m, pkg) {
   /** @param {string[]} path */

@@ -78,15 +78,15 @@ testFixture('types-versions', [])
 
 /**
  * @typedef {{
- *  level?: import('../index').Options['level']
- *  strict?: import('../index').Options['strict']
+ *  level?: import('../index.d.ts').Options['level']
+ *  strict?: import('../index.d.ts').Options['strict']
  *  debug?: boolean
  * }} TestOptions
  */
 
 /**
  * @param {string} name
- * @param {import('../index').Message['code'][] | Pick<import('../index').Message, 'code' | 'type'>[]} expectCodes
+ * @param {import('../index.d.ts').Message['code'][] | Pick<import('../index.d.ts').Message, 'code' | 'type'>[]} expectCodes
  * @param {TestOptions} [options]
  */
 function testFixture(name, expectCodes, options) {

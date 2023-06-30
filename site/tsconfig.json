@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
     "checkJs": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "allowJs": true,
     "target": "ESNext",
-    "jsx": "preserve",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "noEmit": true,
     "strict": true,
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["pkg/**/*", "site/src/**/*"]
+  "include": ["src/**/*"]
 }

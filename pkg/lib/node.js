@@ -1,11 +1,10 @@
-import fs from 'node:fs/promises'
 import path from 'node:path'
 import packlist from 'npm-packlist'
 import { publint as _publint } from '../src/index.js'
 import { createNodeVfs } from '../src/vfs.js'
 
 /**
- * @type {import('..').publint}
+ * @type {import('../index.d.ts').publint}
  */
 export async function publint(options) {
   const pkgDir = options?.pkgDir ?? process.cwd()

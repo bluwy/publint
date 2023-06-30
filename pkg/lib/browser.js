@@ -1,7 +1,7 @@
 import { publint as _publint } from '../src/index.js'
 
 /**
- * @type {import('..').publint}
+ * @type {import('../index.d.ts').publint}
  */
 export function publint(options) {
   if (!options?.vfs) {

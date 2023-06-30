@@ -7,7 +7,7 @@
   "scripts": {
     "lint": "prettier **/*.{js,ts,css,md,svelte} --check --cache",
     "format": "prettier **/*.{js,ts,css,md,svelte} --write --cache",
-    "typecheck": "tsc",
+    "typecheck": "tsc -p pkg && tsc -p site",
     "test": "pnpm --dir pkg test"
   },
   "packageManager": "pnpm@8.6.5",

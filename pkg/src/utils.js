@@ -70,7 +70,7 @@ export function getCodeFormat(code) {
 /**
  * Handle `exports` glob
  * @param {string} globStr An absolute glob string that must contain one `*`
- * @param {import('..').Vfs} vfs
+ * @param {import('../index.d.ts').Vfs} vfs
  * @param {string[]} [packedFiles]
  * @returns {Promise<string[]>} Matched file paths
  */
@@ -145,7 +145,7 @@ function slash(str) {
 
 /**
  * @param {string} filePath
- * @param {import('..').Vfs} vfs
+ * @param {import('../index.d.ts').Vfs} vfs
  * @returns {Promise<CodeFormat>}
  */
 export async function getFilePathFormat(filePath, vfs) {
@@ -212,7 +212,7 @@ export function isFileContentLintable(fileContent) {
 
 /**
  * @param {string} filePath
- * @param {import('..').Vfs} vfs
+ * @param {import('../index.d.ts').Vfs} vfs
  * @returns {Promise<Pkg | undefined>}
  */
 export async function getNearestPkg(filePath, vfs) {
