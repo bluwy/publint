@@ -15,6 +15,9 @@
 // Reference: https://github.com/unjs/mlly/blob/c5ae321725cbabe230c16c315d474c36eee6a30c/src/syntax.ts#L7
 const ESM_CONTENT_RE =
   /([\s;]|^)(import[\w,{}\s*]*from|import\s*['"*{]|export\b\s*(?:[*{]|default|type|function|const|var|let|async function)|import\.meta\b)/m
+/**
+ * @param {string} code
+ */
 export function isCodeEsm(code) {
   return ESM_CONTENT_RE.test(code)
 }
@@ -22,12 +25,18 @@ export function isCodeEsm(code) {
 // Reference: https://github.com/unjs/mlly/blob/c5ae321725cbabe230c16c315d474c36eee6a30c/src/syntax.ts#L15
 const CJS_CONTENT_RE =
   /([\s;]|^)(module.exports\b|exports\.\w|require\s*\(|global\.\w|Object\.(defineProperty|defineProperties|assign)\s*\(\s*exports\b)/m
+/**
+ * @param {string} code
+ */
 export function isCodeCjs(code) {
   return CJS_CONTENT_RE.test(code)
 }
 
 const MULTILINE_COMMENTS_RE = /\/\*(.|[\r\n])*?\*\//gm
 const SINGLELINE_COMMENTS_RE = /\/\/.*/g
+/**
+ * @param {string} code
+ */
 export function stripComments(code) {
   return code
     .replace(MULTILINE_COMMENTS_RE, '')
@@ -119,7 +128,10 @@ export async function exportsGlob(globStr, vfs, packedFiles) {
   }
 }
 
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
+/**
+ * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping
+ * @param {string} string
+ */
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
@@ -190,7 +202,6 @@ export function isFilePathLintable(filePath) {
 //  * @flow
 //  */
 const FLOW_COMMENT_RE = /^\s*(?:\/\/|\/\*\*?|\*)\s*@flow/m
-
 /**
  * don't lint Flow files, which is annotated by an initial `@flow` comment
  * @param {string} fileContent
