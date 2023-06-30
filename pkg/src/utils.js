@@ -171,7 +171,35 @@ export function isExplicitExtension(path) {
 }
 
 /**
- *
+ * only lint JS files. TS and others not supported.
+ * @param {string} filePath
+ */
+export function isFilePathLintable(filePath) {
+  return (
+    filePath.endsWith('.js') ||
+    filePath.endsWith('.mjs') ||
+    filePath.endsWith('.cjs')
+  )
+}
+
+// support:
+// // @flow
+// /* @flow */
+// /** @flow */
+// /**
+//  * @flow
+//  */
+const FLOW_COMMENT_RE = /^\s*(?:\/\/|\/\*\*?|\*)\s*@flow/m
+
+/**
+ * don't lint Flow files, which is annotated by an initial `@flow` comment
+ * @param {string} fileContent
+ */
+export function isFileContentLintable(fileContent) {
+  return !FLOW_COMMENT_RE.test(fileContent)
+}
+
+/**
  * @param {string} filePath
  * @param {import('..').Vfs} vfs
  * @returns {Promise<Pkg | undefined>}

@@ -6,6 +6,8 @@ import {
   getCodeFormat,
   isCodeCjs,
   isCodeEsm,
+  isFileContentLintable,
+  isFilePathLintable,
   stripComments
 } from '../src/utils.js'
 import { createNodeVfs } from '../src/vfs.js'
@@ -55,6 +57,38 @@ test('isCodeCjs', () => {
   for (const code of isoCode) {
     equal(isCodeEsm(code), false, code)
   }
+})
+
+test('isFilePathLintable', () => {
+  equal(isFilePathLintable('foo.js'), true)
+  equal(isFilePathLintable('foo.mjs'), true)
+  equal(isFilePathLintable('foo.cjs'), true)
+  equal(isFilePathLintable('foo.test.js'), true)
+  equal(isFilePathLintable('foo.ts'), false)
+  equal(isFilePathLintable('foo.ts.js'), true)
+  equal(isFilePathLintable('foo.js.ts'), false)
+})
+
+test('isFileContentLintable', () => {
+  equal(isFileContentLintable(`console.log('foo')`), true)
+  equal(isFileContentLintable(`//@flow\nfoo`), false)
+  equal(isFileContentLintable(`// @flow\nfoo`), false)
+  equal(isFileContentLintable(`// @flow strict\nfoo`), false)
+  equal(isFileContentLintable(`'use strict';\n// @flow`), false)
+  equal(isFileContentLintable(`/*@flow*/\nfoo`), false)
+  equal(isFileContentLintable(`/* @flow */\nfoo`), false)
+  equal(isFileContentLintable(`/* @flow strict */\nfoo`), false)
+  equal(isFileContentLintable(`'use strict';\n/* @flow */`), false)
+  equal(isFileContentLintable(`console.log('// @flow')`), true)
+  equal(isFileContentLintable(`console.log('/* @flow */')`), true)
+  equal(isFileContentLintable(`/** @flow */`), false)
+  equal(
+    isFileContentLintable(`
+/**
+ * @flow
+ */`),
+    false
+  )
 })
 
 test('getCodeFormat', () => {

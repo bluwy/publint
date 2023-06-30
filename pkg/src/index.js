@@ -6,7 +6,9 @@ import {
   isExplicitExtension,
   createPromiseQueue,
   getPublishedField,
-  objectHasKeyNested
+  objectHasKeyNested,
+  isFilePathLintable,
+  isFileContentLintable
 } from './utils.js'
 
 /**
@@ -37,17 +39,6 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   const [main, mainPkgPath] = getPublishedField(rootPkg, 'main')
   const [module, modulePkgPath] = getPublishedField(rootPkg, 'module')
   const [exports, exportsPkgPath] = getPublishedField(rootPkg, 'exports')
-
-  /**
-   * @param {string} filePath
-   */
-  function isPathLintable(filePath) {
-    return (
-      filePath.endsWith('.js') ||
-      filePath.endsWith('.mjs') ||
-      filePath.endsWith('.cjs')
-    )
-  }
 
   /**
    * @param {string} path file path to read
@@ -258,10 +249,11 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
       )
       const pq = createPromiseQueue()
       for (const filePath of files) {
-        if (!isPathLintable(filePath)) continue
+        if (!isFilePathLintable(filePath)) continue
         pq.push(async () => {
           const fileContent = await readFile(filePath, [])
           if (fileContent === false) return
+          if (!isFileContentLintable(fileContent)) return
           const actualFormat = getCodeFormat(fileContent)
           const expectFormat = await getFilePathFormat(filePath, vfs)
           if (
@@ -409,11 +401,12 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
         // TODO: group glob warnings
         for (const filePath of exportsFiles) {
           // TODO: maybe check .ts in the future
-          if (!isPathLintable(filePath)) continue
+          if (!isFilePathLintable(filePath)) continue
           pq.push(async () => {
             // could fail if in !isGlob
             const fileContent = await readFile(filePath, currentPath)
             if (fileContent === false) return
+            if (!isFileContentLintable(fileContent)) return
             // the `module` condition is only used by bundlers and must be ESM
             if (currentPath.includes('module')) {
               const actualFormat = getCodeFormat(fileContent)
