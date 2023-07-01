@@ -1,0 +1,11 @@
+{
+  "name": "publint-exports-styles",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    "./array": {
+      "import": ["./array.js", "./non-existent.js", "std:lib"]
+    },
+    "./array-direct": ["./array.js", "./non-existent.js"]
+  }
+}

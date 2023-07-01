@@ -5,6 +5,14 @@ import { equal } from 'uvu/assert'
 import { publint } from '../lib/node.js'
 import { printMessage } from '../lib/utils-node.js'
 
+testFixture('exports-styles', [
+  'EXPORTS_VALUE_INVALID',
+  'FILE_DOES_NOT_EXIST',
+  'FILE_DOES_NOT_EXIST',
+  'FILE_INVALID_FORMAT',
+  'FILE_INVALID_FORMAT'
+])
+
 testFixture('glob', [])
 
 testFixture('glob-deprecated', [
