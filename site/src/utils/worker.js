@@ -48,8 +48,10 @@ self.addEventListener('message', async (e) => {
   const vfs = {
     getDirName: (path) => path.replace(/\/[^/]*$/, ''),
     getExtName: (path) => path.replace(/^.*\./, ''),
-    isPathDir: async (path) =>
-      files.some((file) => file.name.startsWith(path) && file.name !== path),
+    isPathDir: async (path) => {
+      path = path.endsWith('/') ? path : path + '/'
+      return files.some((file) => file.name.startsWith(path))
+    },
     isPathExist: async (path) => files.some((file) => file.name === path),
     pathJoin: (...parts) =>
       parts
