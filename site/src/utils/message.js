@@ -62,7 +62,7 @@ function messageToString(m, pkg) {
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
       return `Should be the first in the object as required by TypeScript.`
-    case 'EXPORTS_MODULE_SHOULD_PRECEED_IMPORT_REQUIRE': {
+    case 'EXPORTS_MODULE_SHOULD_PRECEDE_IMPORT_REQUIRE': {
       let conditions = `the ${m.args.conditions
         .map((cond) => `"${bold(cond)}"`)
         .join(' and ')} condition`

@@ -493,7 +493,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
         }
       }
 
-      // a 'module' export should always preceed 'import' or 'require'
+      // a 'module' export should always precede 'import' or 'require'
       if ('module' in exports) {
         const conditions = []
         if (
@@ -511,7 +511,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
 
         if (conditions.length > 0) {
           messages.push({
-            code: 'EXPORTS_MODULE_SHOULD_PRECEED_IMPORT_REQUIRE',
+            code: 'EXPORTS_MODULE_SHOULD_PRECEDE_IMPORT_REQUIRE',
             args: { conditions },
             path: currentPath.concat('module'),
             type: 'error'

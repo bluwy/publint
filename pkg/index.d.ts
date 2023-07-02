@@ -59,7 +59,7 @@ export type Message =
     >
   | BaseMessage<'EXPORTS_TYPES_SHOULD_BE_FIRST'>
   | BaseMessage<
-      'EXPORTS_MODULE_SHOULD_PRECEED_IMPORT_REQUIRE',
+      'EXPORTS_MODULE_SHOULD_PRECEDE_IMPORT_REQUIRE',
       { conditions: string[] }
     >
   | BaseMessage<'EXPORTS_DEFAULT_SHOULD_BE_LAST'>
