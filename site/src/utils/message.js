@@ -62,6 +62,9 @@ function messageToString(m, pkg) {
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
       return `Should be the first in the object as required by TypeScript.`
+    case 'EXPORTS_MODULE_SHOULD_PRECEED_IMPORT_REQUIRE':
+      // prettier-ignore
+      return `${bold(fp(m.path))} should come before ${m.args.conditions.map(cond => `'${cond}'`).join(' or ')} so it can take precedence when used by a bundler.`
     case 'EXPORTS_DEFAULT_SHOULD_BE_LAST':
       // prettier-ignore
       return `Should be the last in the object so it doesn't take precedence over the keys following it.`
