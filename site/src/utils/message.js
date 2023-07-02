@@ -64,7 +64,7 @@ function messageToString(m, pkg) {
       return `Should be the first in the object as required by TypeScript.`
     case 'EXPORTS_MODULE_SHOULD_PRECEED_IMPORT_REQUIRE': {
       let conditions = `the ${m.args.conditions
-        .map((cond) => bold(cond))
+        .map((cond) => `"${bold(cond)}"`)
         .join(' and ')} condition`
       if (m.args.conditions.length !== 1) {
         conditions += 's'
@@ -80,7 +80,7 @@ function messageToString(m, pkg) {
       return `${bold(pv(m.path))} is invalid as it does not start with "${bold('./')}". Use ${bold(m.args.suggestValue)} instead.`
     case 'USE_EXPORTS_BROWSER':
       // prettier-ignore
-      return `${bold('pkg.browser')} can be refactored to use ${bold('pkg.exports')} and the ${bold('browser')} condition instead to declare browser-specific exports. (This will be a breaking change)`
+      return `${bold('pkg.browser')} can be refactored to use ${bold('pkg.exports')} and the ${bold('"browser"')} condition instead to declare browser-specific exports. (This will be a breaking change)`
     case 'TYPES_NOT_EXPORTED': {
       let target = 'This entrypoint'
       if (m.path[m.path.length - 1] === 'exports') {

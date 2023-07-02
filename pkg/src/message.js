@@ -58,7 +58,7 @@ export function printMessage(m, pkg) {
       return `${c.bold(fp(m.path))} should be the first in the object as required by TypeScript.`
     case 'EXPORTS_MODULE_SHOULD_PRECEED_IMPORT_REQUIRE': {
       let conditions = `the ${m.args.conditions
-        .map((cond) => c.bold(cond))
+        .map((cond) => `"${c.bold(cond)}"`)
         .join(' and ')} condition`
       if (m.args.conditions.length !== 1) {
         conditions += 's'
@@ -77,7 +77,7 @@ export function printMessage(m, pkg) {
       return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but is invalid as it does not start with "${c.bold('./')}". Use ${c.bold(m.args.suggestValue)} instead.`
     case 'USE_EXPORTS_BROWSER':
       // prettier-ignore
-      return `${c.bold('pkg.browser')} can be refactored to use ${c.bold('pkg.exports')} and the ${c.bold('browser')} condition instead to declare browser-specific exports. (This will be a breaking change)`
+      return `${c.bold('pkg.browser')} can be refactored to use ${c.bold('pkg.exports')} and the ${c.bold('"browser"')} condition instead to declare browser-specific exports. (This will be a breaking change)`
     case 'TYPES_NOT_EXPORTED': {
       let target = fp(m.path)
       if (target.endsWith('.exports')) {

@@ -83,6 +83,15 @@ body {
 
 p {
   line-height: 1.5;
+  font-size: 1rem;
+}
+
+code {
+  font-size: 1rem;
+}
+
+h2 code {
+  font-size: inherit;
 }
 
 a {
