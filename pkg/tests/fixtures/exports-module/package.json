@@ -1,0 +1,12 @@
+{
+  "name": "publint-exports-module",
+  "version": "0.0.1",
+  "private": true,
+  "exports": {
+    ".": {
+      "import": "./main.mjs",
+      "require": "./main.js",
+      "module": "./main.mjs"
+    }
+  }
+}

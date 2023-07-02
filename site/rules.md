@@ -57,6 +57,10 @@ If the `exports` field contains glob paths, but it doesn't match any files, repo
 
 The `exports` field should not have globs defined with trailing slashes. It is [deprecated](https://nodejs.org/docs/latest-v16.x/api/packages.html#subpath-folder-mappings) and should use [subpath patterns](https://nodejs.org/api/packages.html#subpath-patterns), e.g. a trailing `/*` instead.
 
+## `EXPORTS_MODULE_SHOULD_PRECEED_IMPORT_REQUIRE`
+
+Ensure `module` condition to come before `import` or `require` conditions. Due to the way conditions are matched top-to-bottom, the `module` condition (used in bundler contexts only) must come before an `import` or `require` definition, so it has the opportunity to take precedence.
+
 ## `EXPORTS_TYPES_SHOULD_BE_FIRST`
 
 Ensure `types` condition to be the first. The [TypeScript docs](https://www.typescriptlang.org/docs/handbook/esm-node.html#packagejson-exports-imports-and-self-referencing) recommends so, but it's also because the `exports` field is order-based.

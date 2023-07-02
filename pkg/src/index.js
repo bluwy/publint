@@ -493,6 +493,32 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
         }
       }
 
+      // a 'module' export should always preceed 'import' or 'require'
+      if ('module' in exports) {
+        const conditions = []
+        if (
+          'require' in exports &&
+          exportsKeys.indexOf('module') > exportsKeys.indexOf('require')
+        ) {
+          conditions.push('require')
+        }
+        if (
+          'import' in exports &&
+          exportsKeys.indexOf('module') > exportsKeys.indexOf('import')
+        ) {
+          conditions.push('import')
+        }
+
+        if (conditions.length > 0) {
+          messages.push({
+            code: 'EXPORTS_MODULE_SHOULD_PRECEED_IMPORT_REQUIRE',
+            args: { conditions },
+            path: currentPath.concat('module'),
+            type: 'error'
+          })
+        }
+      }
+
       // the default export should be the last condition
       if (
         'default' in exports &&
