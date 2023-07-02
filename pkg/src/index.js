@@ -493,32 +493,30 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
         }
       }
 
-      // a 'module' export should always preceed 'require'
-      if (
-        'module' in exports &&
-        'require' in exports &&
-        exportsKeys.indexOf('module') > exportsKeys.indexOf('require')
-      ) {
-        messages.push({
-          code: 'EXPORTS_MODULE_SHOULD_PRECEED_REQUIRE',
-          args: {},
-          path: currentPath.concat('module'),
-          type: 'error'
-        })
-      }
+      // a 'module' export should always preceed 'import' or 'require'
+      if ('module' in exports) {
+        const conditions = []
+        if (
+          'require' in exports &&
+          exportsKeys.indexOf('module') > exportsKeys.indexOf('require')
+        ) {
+          conditions.push('require')
+        }
+        if (
+          'import' in exports &&
+          exportsKeys.indexOf('module') > exportsKeys.indexOf('import')
+        ) {
+          conditions.push('import')
+        }
 
-      // a 'module' export should always preceed 'import'
-      if (
-        'module' in exports &&
-        'import' in exports &&
-        exportsKeys.indexOf('module') > exportsKeys.indexOf('import')
-      ) {
-        messages.push({
-          code: 'EXPORTS_MODULE_SHOULD_PRECEED_IMPORT',
-          args: {},
-          path: currentPath.concat('module'),
-          type: 'error'
-        })
+        if (conditions.length > 0) {
+          messages.push({
+            code: 'EXPORTS_MODULE_SHOULD_PRECEED_IMPORT_REQUIRE',
+            args: { conditions },
+            path: currentPath.concat('module'),
+            type: 'error'
+          })
+        }
       }
 
       // the default export should be the last condition

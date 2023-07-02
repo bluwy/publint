@@ -58,8 +58,10 @@ export type Message =
       }
     >
   | BaseMessage<'EXPORTS_TYPES_SHOULD_BE_FIRST'>
-  | BaseMessage<'EXPORTS_MODULE_SHOULD_PRECEED_IMPORT'>
-  | BaseMessage<'EXPORTS_MODULE_SHOULD_PRECEED_REQUIRE'>
+  | BaseMessage<
+      'EXPORTS_MODULE_SHOULD_PRECEED_IMPORT_REQUIRE',
+      { conditions: string[] }
+    >
   | BaseMessage<'EXPORTS_DEFAULT_SHOULD_BE_LAST'>
   | BaseMessage<'EXPORTS_MODULE_SHOULD_BE_ESM'>
   | BaseMessage<'EXPORTS_VALUE_INVALID', { suggestValue: string }>
