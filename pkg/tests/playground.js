@@ -28,6 +28,11 @@ testFixture('missing-files', [
 
 testFixture('no-exports-module', [])
 
+testFixture('exports-module', [
+  'EXPORTS_MODULE_SHOULD_PRECEED_REQUIRE',
+  'EXPORTS_MODULE_SHOULD_PRECEED_IMPORT'
+])
+
 testFixture('publish-config', ['USE_EXPORTS_BROWSER', 'FILE_DOES_NOT_EXIST'])
 
 testFixture('test-1', ['TYPES_NOT_EXPORTED', 'FILE_INVALID_FORMAT'])
