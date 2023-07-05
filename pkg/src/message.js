@@ -56,15 +56,9 @@ export function printMessage(m, pkg) {
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
       return `${c.bold(fp(m.path))} should be the first in the object as required by TypeScript.`
-    case 'EXPORTS_MODULE_SHOULD_PRECEDE_IMPORT_REQUIRE': {
-      let conditions = `the ${m.args.conditions
-        .map((cond) => `"${c.bold(cond)}"`)
-        .join(' and ')} condition`
-      if (m.args.conditions.length !== 1) {
-        conditions += 's'
-      }
+    case 'EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE': {
       // prettier-ignore
-      return `${c.bold(fp(m.path))} should come before ${conditions} so it can take precedence when used by a bundler.`
+      return `${c.bold(fp(m.path))} should come before the "require" condition so it can take precedence when used by a bundler.`
     }
     case 'EXPORTS_DEFAULT_SHOULD_BE_LAST':
       // prettier-ignore

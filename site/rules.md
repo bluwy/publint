@@ -57,9 +57,9 @@ If the `"exports"` field contains glob paths, but it doesn't match any files, re
 
 The `"exports"` field should not have globs defined with trailing slashes. It is [deprecated](https://nodejs.org/docs/latest-v16.x/api/packages.html#subpath-folder-mappings) and should use [subpath patterns](https://nodejs.org/api/packages.html#subpath-patterns), e.g. a trailing `/*` instead.
 
-## `EXPORTS_MODULE_SHOULD_PRECEDE_IMPORT_REQUIRE`
+## `EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE`
 
-Ensure the `"module"` condition comes before the `"import"` and `"require"` conditions. Due to the way conditions are matched top-to-bottom, the `"module"` condition (used in bundler contexts only) must come before an `"import"` or `"require"` condition, so it has the opportunity to take precedence.
+Ensure the `"module"` condition comes before the `"require"` condition. Due to the way conditions are matched top-to-bottom, the `"module"` condition (used in bundler contexts only) must come before a `"require"` condition, so it has the opportunity to take precedence.
 
 ## `EXPORTS_TYPES_SHOULD_BE_FIRST`
 

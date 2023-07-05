@@ -28,7 +28,7 @@ testFixture('missing-files', [
 
 testFixture('no-exports-module', [])
 
-testFixture('exports-module', ['EXPORTS_MODULE_SHOULD_PRECEDE_IMPORT_REQUIRE'])
+testFixture('exports-module', ['EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE'])
 
 testFixture('publish-config', ['USE_EXPORTS_BROWSER', 'FILE_DOES_NOT_EXIST'])
 
