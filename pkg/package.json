@@ -7,6 +7,7 @@
   "license": "MIT",
   "bin": "./lib/cli.js",
   "types": "./index.d.ts",
+  "main": "./src/index.js",
   "exports": {
     ".": {
       "types": "./index.d.ts",
