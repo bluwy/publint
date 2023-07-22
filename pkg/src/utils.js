@@ -298,3 +298,50 @@ export function objectHasKeyNested(obj, key) {
   }
   return false
 }
+
+/**
+ * @param {string} filePath
+ */
+export function getAdjacentDtsPath(filePath) {
+  // foo.js  -> foo.d.ts
+  // foo.mjs -> foo.d.mts
+  // foo.cjs -> foo.d.cts
+  // foo.jsx -> foo.d.ts
+  return filePath.replace(/\.([mc]?)jsx?$/, '.d.$1ts')
+}
+
+const DTS_RE = /\.d\.[mc]?ts$/
+/**
+ * @param {string} filePath
+ */
+export function isDtsFile(filePath) {
+  return filePath.endsWith('.d.ts')
+}
+
+/**
+ * simplified `exports` field resolver that expects `exportsValue` to be the path value directly.
+ * no path matching will happen. `exportsValue` should be an object that contains only conditions
+ * and their values, or a string
+ * @param {Record<string, any> | string | string[]} exportsValue
+ * @param {string[]} conditions
+ * @param {string[]} [currentPath] matched conditions while resolving the exports
+ * @returns {{ value: string, path: string[] } | undefined}
+ */
+export function resolveExports(exportsValue, conditions, currentPath = []) {
+  if (typeof exportsValue === 'string') {
+    return { value: exportsValue, path: currentPath }
+  } else if (Array.isArray(exportsValue)) {
+    return { value: exportsValue[0], path: currentPath }
+  }
+
+  for (const key in exportsValue) {
+    if (conditions.includes(key) || key === 'default') {
+      return resolveExports(
+        exportsValue[key],
+        conditions,
+        currentPath.concat(key)
+      )
+    }
+  }
+}
+

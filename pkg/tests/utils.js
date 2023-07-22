@@ -3,6 +3,7 @@ import { test } from 'uvu'
 import { equal } from 'uvu/assert'
 import {
   exportsGlob,
+  getAdjacentDtsPath,
   getCodeFormat,
   isCodeCjs,
   isCodeEsm,
@@ -133,6 +134,15 @@ test('exportsGlob', async () => {
   equal(await exportsGlob(r('./*lph*.js'), v), [r('alpha.js')])
   // prettier-ignore
   equal(await exportsGlob(r('./qu*b*c/si*rra.cjs'), v), [r('quebec/sierra.cjs')])
+})
+
+test('getAdjacentDtsPath', () => {
+  equal(getAdjacentDtsPath('foo.js'), 'foo.d.ts')
+  equal(getAdjacentDtsPath('foo.mjs'), 'foo.d.mts')
+  equal(getAdjacentDtsPath('foo.cjs'), 'foo.d.cts')
+  equal(getAdjacentDtsPath('foo.jsx'), 'foo.d.ts')
+  equal(getAdjacentDtsPath('foo.test.js'), 'foo.test.d.ts')
+  equal(getAdjacentDtsPath('path/foo.js'), 'path/foo.d.ts')
 })
 
 test.run()

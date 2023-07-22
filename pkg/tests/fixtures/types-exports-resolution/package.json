@@ -1,0 +1,11 @@
+{
+  "name": "publint-types-exports-resolution",
+  "version": "0.0.1",
+  "private": true,
+  "types": "./main.d.ts",
+  "exports": {
+    ".": {
+      "import": "./main.js"
+    }
+  }
+}

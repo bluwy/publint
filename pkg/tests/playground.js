@@ -84,6 +84,13 @@ testFixture(
 
 testFixture('types', ['TYPES_NOT_EXPORTED'])
 
+testFixture('types-exports-resolution', [])
+
+testFixture('types-exports-resolution-dual', [
+  'TYPES_NOT_EXPORTED',
+  'TYPES_NOT_EXPORTED'
+])
+
 testFixture('types-versions', [])
 
 /**

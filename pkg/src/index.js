@@ -8,7 +8,10 @@ import {
   getPublishedField,
   objectHasKeyNested,
   isFilePathLintable,
-  isFileContentLintable
+  isFileContentLintable,
+  getAdjacentDtsPath,
+  resolveExports,
+  isDtsFile
 } from './utils.js'
 
 /**
@@ -568,19 +571,47 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
         ? exports[exportsRootKey]
         : exports
 
-      if (
-        typesFilePath && // check has existing types?
-        (typeof exportsRootValue === 'string' || // if the root value is just a string, types is not exported
-          !objectHasKeyNested(exportsRootValue, 'types')) // else if object, check has types condition
-      ) {
-        messages.push({
-          code: 'TYPES_NOT_EXPORTED',
-          args: { typesFilePath },
-          path: exportsRootKey
-            ? exportsPkgPath.concat(exportsRootKey)
-            : exportsPkgPath,
-          type: 'warning'
-        })
+      // detect if this package intend to ship types
+      if (typesFilePath) {
+        const exportsPath = exportsRootKey
+          ? exportsPkgPath.concat(exportsRootKey)
+          : exportsPkgPath
+
+        const seenPathStrings = new Set()
+
+        // NOTE: got lazy. here we check for the import/require result in different environments
+        // to make sure we cover possible cases. however, a better way it to resolve the exports
+        // and scan also the possible environment conditions, and return an array instead.
+        for (const env of [undefined, 'node', 'browser', 'worker']) {
+          for (const format of ['import', 'require']) {
+            const result = resolveExports(
+              exportsRootValue,
+              // @ts-expect-error till this day, ts still doesn't understand `filter(Boolean)`
+              ['types', format, env].filter(Boolean),
+              exportsPath
+            )
+
+            if (!result) continue
+
+            const pathString = result.path.join('.')
+            if (seenPathStrings.has(pathString)) continue
+            seenPathStrings.add(pathString)
+
+            if (!isDtsFile(result.value)) {
+              const hasAdjacentDtsFile = await vfs.isPathExist(
+                vfs.pathJoin(pkgDir, getAdjacentDtsPath(result.value))
+              )
+              if (!hasAdjacentDtsFile) {
+                messages.push({
+                  code: 'TYPES_NOT_EXPORTED',
+                  args: { typesFilePath },
+                  path: result.path,
+                  type: 'warning'
+                })
+              }
+            }
+          }
+        }
       }
     })
   }
