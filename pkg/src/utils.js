@@ -372,7 +372,8 @@ export function resolveExports(
   // intends to dual export. helpful for better logging heuristics.
   if (
     _metadata.dualPublish === false &&
-    ('import' in exportsValue || 'require' in exportsValue)
+    'import' in exportsValue &&
+    'require' in exportsValue
   ) {
     _metadata.dualPublish = true
   }
