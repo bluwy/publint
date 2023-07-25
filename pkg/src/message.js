@@ -95,7 +95,7 @@ export function printMessage(m, pkg) {
         expectPath.push(m.args.condition)
       }
       // prettier-ignore
-      return `${c.bold(fp(m.path))} types is an invalid format when resolving with the "${c.bold(m.args.condition)}" condition. Consider splitting out two ${c.bold("types")} condition for ${c.bold("import")} and ${c.bold("require")}, and use the ${c.yellow(m.args.expectExtension)} extension, `
+      return `${c.bold(fp(m.path))} types is an invalid format when resolving with the "${c.bold(m.args.condition)}" condition. Consider splitting out two ${c.bold("types")} conditions for ${c.bold("import")} and ${c.bold("require")}, and use the ${c.yellow(m.args.expectExtension)} extension, `
         + `e.g. ${c.bold(fp(expectPath))}: "${c.bold(pv(m.path).replace(m.args.actualExtension, m.args.expectExtension))}"`
     }
     default:

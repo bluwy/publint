@@ -98,7 +98,7 @@ function messageToString(m, pkg) {
         expectPath.push(m.args.condition)
       }
       // prettier-ignore
-      return `The types is an invalid format when resolving with the "${bold(m.args.condition)}" condition. Consider splitting out two ${bold("types")} condition for ${bold("import")} and ${bold("require")}, and use the ${warn(m.args.expectExtension)} extension, `
+      return `The types is an invalid format when resolving with the "${bold(m.args.condition)}" condition. Consider splitting out two ${bold("types")} conditions for ${bold("import")} and ${bold("require")}, and use the ${warn(m.args.expectExtension)} extension, `
           + `e.g. ${bold(fp(expectPath))}: "${bold(pv(m.path).replace(m.args.actualExtension, m.args.expectExtension))}"`
     }
     default:
