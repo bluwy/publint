@@ -69,7 +69,35 @@ For example, a scenario where both the `"types"` and `"import"` condition could 
 
 ## `TYPES_NOT_EXPORTED`
 
-Since TypeScript 5.0, it has supported the [`"moduleResolution": "bundler"` compiler option](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#moduleresolution-bundler), which has stricter rules on loading types. When an `"exports"` field is found, only the `"types"` condition declared there is respected. The `"types"` field and individual `.d.ts` files are completely ignored to respect the `"exports"` field module resolution algorithm.
+Since TypeScript 5.0, it has supported the [`"moduleResolution": "bundler"` compiler option](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#moduleresolution-bundler) which has stricter rules on loading types. When an `"exports"` field is found, only the `"types"` condition declared there is respected, or if the resolved JS file has the correct adjacent `.d.ts` file. For example, `./dist/index.js` -> `./dist/index.d.ts`, `./dist/index.mjs` -> `./dist/index.d.mts`, and `./dist/index.cjs` -> `./dist/index.d.cts`.
+
+The root `"types"` field is ignored to respect the `"exports"` field module resolution algorithm.
+
+This message may also provide helpful hints depending on the types format, which is explained below.
+
+## `EXPORT_TYPES_INVALID_FORMAT`
+
+When specifying the `"types"` conditions in the `"exports"` field, the types format is determined via its extension or its closest `package.json` `"type"` value, similar to the rule in [`IMPLICIT_INDEX_JS_INVALID_FORMAT`](#implicit_index_js_invalid_format). In short:
+
+- If the file ends with `.d.mts`, or if it's `.d.ts` and the closest `package.json` has `"type": "module"`, it's interpreted as ESM.
+- If the file ends with `.d.cjs`, or if it's `.d.ts` and the closest `package.json` does not have `"type": "module"`, it's interpreted as CJS.
+
+An example of a correct configuration looks like this:
+
+```json
+{
+  "exports": {
+    "import": {
+      "types": "./index.d.mts",
+      "default": "./index.mjs"
+    },
+    "import": {
+      "types": "./index.d.cts",
+      "default": "./index.cjs"
+    }
+  }
+}
+```
 
 ## `EXPORTS_DEFAULT_SHOULD_BE_LAST`
 

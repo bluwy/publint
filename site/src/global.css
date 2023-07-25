@@ -43,6 +43,11 @@ body {
   padding: 0.15rem 0.25rem;
 }
 
+.docs code[class*='language-'] {
+  display: block;
+  padding: 0.5rem 0.8rem;
+}
+
 .docs h2.active > code {
   background-color: hsl(29, 74%, 77%);
 }
