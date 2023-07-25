@@ -5,8 +5,8 @@
   "author": "Bjorn Lu",
   "license": "MIT",
   "scripts": {
-    "lint": "prettier **/*.{js,ts,css,md,svelte} --check --cache",
-    "format": "prettier **/*.{js,ts,css,md,svelte} --write --cache",
+    "lint": "prettier **/*.{js,ts,css,md,svelte} --check",
+    "format": "prettier **/*.{js,ts,css,md,svelte} --write",
     "typecheck": "tsc -p pkg && tsc -p site",
     "test": "pnpm --dir pkg test"
   },
@@ -15,11 +15,11 @@
     "node": ">=16"
   },
   "devDependencies": {
-    "@types/node": "^18.16.18",
+    "@types/node": "^18.17.0",
     "@types/pnpapi": "^0.0.2",
-    "prettier": "^2.8.8",
-    "prettier-plugin-svelte": "^2.10.1",
-    "svelte": "^4.0.1",
+    "prettier": "^3.0.0",
+    "prettier-plugin-svelte": "^3.0.0",
+    "svelte": "^4.1.1",
     "typescript": "^5.1.6"
   },
   "pnpm": {
