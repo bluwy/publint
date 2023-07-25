@@ -1,13 +1,13 @@
 {
-  "name": "publint-types-exports-resolution-dual",
+  "name": "publint-types-exports-resolution-dual-explicit",
   "version": "0.0.1",
   "private": true,
   "types": "./main-special.d.ts",
   "exports": {
     ".": {
       "types": "./main-special.d.ts",
-      "import": "./main.js",
-      "require": "./main.cjs"
+      "import": "./main.mjs",
+      "require": "./main.js"
     }
   }
 }
