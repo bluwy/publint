@@ -10,18 +10,14 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "import": {
-        "browser": "./lib/browser.js",
-        "node": "./lib/node.js",
-        "default": "./src/index.js"
-      }
+      "browser": "./lib/browser.js",
+      "node": "./lib/node.js",
+      "default": "./src/index.js"
     },
     "./utils": {
       "types": "./utils.d.ts",
-      "import": {
-        "node": "./lib/utils-node.js",
-        "default": "./lib/utils.js"
-      }
+      "node": "./lib/utils-node.js",
+      "default": "./lib/utils.js"
     }
   },
   "scripts": {

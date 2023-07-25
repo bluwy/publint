@@ -1,4 +1,4 @@
-import { Message } from './index.js'
+import type { Message } from './index.js'
 
 type Pkg = Record<string, any>
 
