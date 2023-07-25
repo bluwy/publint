@@ -21,33 +21,33 @@ testFixture('glob-deprecated', [
 ])
 
 testFixture('missing-files', [
-  'USE_EXPORTS_BROWSER',
+  'EXPORT_TYPES_INVALID_FORMAT',
   ...Array(7).fill('FILE_DOES_NOT_EXIST'),
   'FILE_NOT_PUBLISHED',
-  'EXPORT_TYPES_INVALID_FORMAT'
+  'USE_EXPORTS_BROWSER'
 ])
 
 testFixture('no-exports-module', [])
 
 testFixture('exports-module', ['EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE'])
 
-testFixture('publish-config', ['USE_EXPORTS_BROWSER', 'FILE_DOES_NOT_EXIST'])
+testFixture('publish-config', ['FILE_DOES_NOT_EXIST', 'USE_EXPORTS_BROWSER'])
 
-testFixture('test-1', ['TYPES_NOT_EXPORTED', 'FILE_INVALID_FORMAT'])
+testFixture('test-1', ['FILE_INVALID_FORMAT', 'TYPES_NOT_EXPORTED'])
 
 testFixture('test-2', [
-  'USE_EXPORTS_BROWSER',
-  'EXPORTS_VALUE_INVALID',
   'EXPORTS_MODULE_SHOULD_BE_ESM',
+  'EXPORTS_VALUE_INVALID',
   'FILE_INVALID_FORMAT',
-  'FILE_INVALID_FORMAT'
+  'FILE_INVALID_FORMAT',
+  'USE_EXPORTS_BROWSER'
 ])
 
 testFixture(
   'test-2 (level: warning)',
   [
-    'EXPORTS_VALUE_INVALID',
     'EXPORTS_MODULE_SHOULD_BE_ESM',
+    'EXPORTS_VALUE_INVALID',
     'FILE_INVALID_FORMAT',
     'FILE_INVALID_FORMAT'
   ],
@@ -56,15 +56,15 @@ testFixture(
 
 testFixture(
   'test-2 (level: error)',
-  ['EXPORTS_VALUE_INVALID', 'EXPORTS_MODULE_SHOULD_BE_ESM'],
+  ['EXPORTS_MODULE_SHOULD_BE_ESM', 'EXPORTS_VALUE_INVALID'],
   { level: 'error' }
 )
 
 testFixture(
   'test-2 (strict: true)',
   [
-    'EXPORTS_VALUE_INVALID',
     'EXPORTS_MODULE_SHOULD_BE_ESM',
+    'EXPORTS_VALUE_INVALID',
     'FILE_INVALID_FORMAT',
     'FILE_INVALID_FORMAT'
   ],
@@ -74,11 +74,11 @@ testFixture(
 testFixture(
   'test-2 (strict: true)',
   [
-    { code: 'USE_EXPORTS_BROWSER', type: 'suggestion' },
-    { code: 'EXPORTS_VALUE_INVALID', type: 'error' },
     { code: 'EXPORTS_MODULE_SHOULD_BE_ESM', type: 'error' },
+    { code: 'EXPORTS_VALUE_INVALID', type: 'error' },
     { code: 'FILE_INVALID_FORMAT', type: 'error' },
-    { code: 'FILE_INVALID_FORMAT', type: 'error' }
+    { code: 'FILE_INVALID_FORMAT', type: 'error' },
+    { code: 'USE_EXPORTS_BROWSER', type: 'suggestion' }
   ],
   { strict: true }
 )
@@ -121,6 +121,10 @@ function testFixture(name, expectCodes, options) {
       strict: options?.strict
     })
 
+    // unfortunately the messages are not always in order as checks are ran in parallel,
+    // here we sort it to make the tests more consistent
+    messages.sort((a, b) => a.code.localeCompare(b.code))
+
     if (options?.debug) {
       const pkg = JSON.parse(
         await fs.readFile(path.join(pkgDir, 'package.json'), 'utf-8')
@@ -131,7 +135,7 @@ function testFixture(name, expectCodes, options) {
       console.log()
     }
 
-    // you can test an array of obe
+    // you can test an array of objects
     if (typeof expectCodes[0] === 'object') {
       const codes = messages.map((v) => ({ code: v.code, type: v.type }))
       equal(codes, expectCodes, codes.join(', '))
