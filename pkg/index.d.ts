@@ -63,7 +63,24 @@ export type Message =
   | BaseMessage<'EXPORTS_MODULE_SHOULD_BE_ESM'>
   | BaseMessage<'EXPORTS_VALUE_INVALID', { suggestValue: string }>
   | BaseMessage<'USE_EXPORTS_BROWSER'>
-  | BaseMessage<'TYPES_NOT_EXPORTED', { typesFilePath: string }>
+  | BaseMessage<
+      'TYPES_NOT_EXPORTED',
+      {
+        typesFilePath: string
+        actualExtension?: string
+        expectExtension?: string
+      }
+    >
+  | BaseMessage<
+      'EXPORT_TYPES_INVALID_FORMAT',
+      {
+        condition: string
+        actualFormat: string
+        expectFormat: string
+        actualExtension: string
+        expectExtension: string
+      }
+    >
 
 export interface Options {
   /**

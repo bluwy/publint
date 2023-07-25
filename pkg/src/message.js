@@ -73,16 +73,42 @@ export function printMessage(m, pkg) {
       // prettier-ignore
       return `${c.bold('pkg.browser')} can be refactored to use ${c.bold('pkg.exports')} and the ${c.bold('"browser"')} condition instead to declare browser-specific exports. (This will be a breaking change)`
     case 'TYPES_NOT_EXPORTED': {
-      let target = fp(m.path)
-      if (target.endsWith('.exports')) {
-        target = 'The library'
+      const typesFilePath = exportsRel(m.args.typesFilePath)
+      if (m.args.actualExtension && m.args.expectExtension) {
+        // prettier-ignore
+        return `${c.bold(fp(m.path))} types is not exported. Consider adding ${c.bold(fp(m.path) + '.types')} to be compatible with TypeScript's ${c.bold('"moduleResolution": "bundler"')} compiler option. `
+          + `Note that you cannot use "${c.bold(typesFilePath)}" because it has a mismatching format. Instead, you can duplicate the file and use the ${c.bold(m.args.expectExtension)} extension, e.g. `
+          + `${c.bold(fp(m.path) + '.types')}: "${c.bold(typesFilePath.replace(m.args.actualExtension, m.args.expectExtension))}"`
       } else {
-        target = c.bold(target)
+        // prettier-ignore
+        return `${c.bold(fp(m.path))} types is not exported. Consider adding ${c.bold(fp(m.path) + '.types')}: "${c.bold(typesFilePath)}" to be compatible with TypeScript's ${c.bold('"moduleResolution": "bundler"')} compiler option.`
+      }
+    }
+    case 'EXPORT_TYPES_INVALID_FORMAT': {
+      // convert ['exports', 'types'] -> ['exports', '<condition>', 'types']
+      // convert ['exports', 'types', 'node'] -> ['exports', 'types', 'node', '<condition>']
+      const expectPath = m.path.slice()
+      const typesIndex = m.path.findIndex((p) => p === 'types')
+      if (typesIndex === m.path.length - 1) {
+        expectPath.splice(typesIndex, 0, m.args.condition)
+      } else {
+        expectPath.push(m.args.condition)
       }
       // prettier-ignore
-      return `${target} has types at ${c.bold(m.args.typesFilePath)} but it is not exported from ${c.bold('pkg.exports')}. Consider adding it to ${c.bold(fp(m.path) + '.types')} to be compatible with TypeScript's ${c.bold('"moduleResolution": "bundler"')} compiler option.`
+      return `${c.bold(fp(m.path))} types is an invalid format when resolving with the "${c.bold(m.args.condition)}" condition. Consider splitting out two ${c.bold("types")} condition for ${c.bold("import")} and ${c.bold("require")}, and use the ${c.yellow(m.args.expectExtension)} extension, `
+        + `e.g. ${c.bold(fp(expectPath))}: "${c.bold(pv(m.path).replace(m.args.actualExtension, m.args.expectExtension))}"`
     }
     default:
       return
   }
+}
+
+/**
+ * Make sure s is an `"exports"` compatible relative path
+ * @param {string} s
+ */
+function exportsRel(s) {
+  if (s[0] === '.') return s
+  if (s[0] === '/') return '.' + s
+  return './' + s
 }

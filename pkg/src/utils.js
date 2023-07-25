@@ -146,7 +146,7 @@ function slash(str) {
 /**
  * @param {string} filePath
  * @param {import('../index.d.ts').Vfs} vfs
- * @returns {Promise<CodeFormat>}
+ * @returns {Promise<Exclude<CodeFormat, 'mixed' | 'unknown'>>}
  */
 export async function getFilePathFormat(filePath, vfs) {
   // React Native bundler treats `.native.js` as special platform extension, the real format
@@ -162,6 +162,18 @@ export async function getFilePathFormat(filePath, vfs) {
 }
 
 /**
+ * @param {string} filePath
+ * @param {import('../index.d.ts').Vfs} vfs
+ * @returns {Promise<Exclude<CodeFormat, 'mixed' | 'unknown'>>}
+ */
+export async function getDtsFilePathFormat(filePath, vfs) {
+  if (filePath.endsWith('.d.mts')) return 'ESM'
+  if (filePath.endsWith('.d.cts')) return 'CJS'
+  const nearestPkg = await getNearestPkg(filePath, vfs)
+  return nearestPkg?.type === 'module' ? 'ESM' : 'CJS'
+}
+
+/**
  * @param {CodeFormat} format
  */
 export function getCodeFormatExtension(format) {
@@ -172,6 +184,20 @@ export function getCodeFormatExtension(format) {
       return '.cjs'
     default:
       return '.js'
+  }
+}
+
+/**
+ * @param {CodeFormat} format
+ */
+export function getDtsCodeFormatExtension(format) {
+  switch (format) {
+    case 'ESM':
+      return '.mts'
+    case 'CJS':
+      return '.cts'
+    default:
+      return '.ts'
   }
 }
 
@@ -325,13 +351,30 @@ export function isDtsFile(filePath) {
  * @param {Record<string, any> | string | string[]} exportsValue
  * @param {string[]} conditions
  * @param {string[]} [currentPath] matched conditions while resolving the exports
- * @returns {{ value: string, path: string[] } | undefined}
+ * @param {{ dualPublish: boolean }} [_metadata]
+ * @returns {{ value: string, path: string[], dualPublish: boolean } | undefined}
  */
-export function resolveExports(exportsValue, conditions, currentPath = []) {
+export function resolveExports(
+  exportsValue,
+  conditions,
+  currentPath = [],
+  _metadata = { dualPublish: false }
+) {
   if (typeof exportsValue === 'string') {
-    return { value: exportsValue, path: currentPath }
+    // prettier-ignore
+    return { value: exportsValue, path: currentPath, dualPublish: _metadata.dualPublish }
   } else if (Array.isArray(exportsValue)) {
-    return { value: exportsValue[0], path: currentPath }
+    // prettier-ignore
+    return { value: exportsValue[0], path: currentPath, dualPublish: _metadata.dualPublish }
+  }
+
+  // while traversing the exports object, also keep info it the path we're traversing
+  // intends to dual export. helpful for better logging heuristics.
+  if (
+    _metadata.dualPublish === false &&
+    ('import' in exportsValue || 'require' in exportsValue)
+  ) {
+    _metadata.dualPublish = true
   }
 
   for (const key in exportsValue) {
@@ -339,9 +382,9 @@ export function resolveExports(exportsValue, conditions, currentPath = []) {
       return resolveExports(
         exportsValue[key],
         conditions,
-        currentPath.concat(key)
+        currentPath.concat(key),
+        _metadata
       )
     }
   }
 }
-

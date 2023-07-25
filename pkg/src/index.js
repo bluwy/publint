@@ -11,7 +11,9 @@ import {
   isFileContentLintable,
   getAdjacentDtsPath,
   resolveExports,
-  isDtsFile
+  isDtsFile,
+  getDtsFilePathFormat,
+  getDtsCodeFormatExtension
 } from './utils.js'
 
 /**
@@ -554,7 +556,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
         checkTypesExported()
       }
       // else this `exports` may have multiple export entrypoints, check for '.'
-      // TODO: check for other entrypoints
+      // TODO: check for other entrypoints, move logic into `crawlExports`
       else if ('.' in exports) {
         checkTypesExported('.')
       }
@@ -577,7 +579,8 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
           ? exportsPkgPath.concat(exportsRootKey)
           : exportsPkgPath
 
-        const seenPathStrings = new Set()
+        // keyed strings for seen resolved paths, so we don't trigger duplicate messages for the same thing
+        const seenResolvedKeys = new Set()
 
         // NOTE: got lazy. here we check for the import/require result in different environments
         // to make sure we cover possible cases. however, a better way it to resolve the exports
@@ -593,18 +596,74 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
 
             if (!result) continue
 
-            const pathString = result.path.join('.')
-            if (seenPathStrings.has(pathString)) continue
-            seenPathStrings.add(pathString)
+            // check if we've seen this resolve before. we also key by format as we want to distinguish
+            // incorrect exports, but only when the "exports -> path" contains that format, otherwise
+            // it's intentional fallback behaviour by libraries and we don't want to trigger a false alarm.
+            // e.g. libraries that only `"exports": "./index.mjs"` means it's ESM only, so we don't key
+            // the format, so the next run with `"require"` condition is skipped.
+            // different env can share the same key as code can usually be used for multiple environments.
+            const seenKey =
+              result.path.join('.') + (result.dualPublish ? format : '')
+            if (seenResolvedKeys.has(seenKey)) continue
+            seenResolvedKeys.add(seenKey)
 
-            if (!isDtsFile(result.value)) {
+            if (isDtsFile(result.value)) {
+              // if we have resolve to a dts file, it might not be ours because typescript requires
+              // `.d.mts` and `.d.cts` for esm and cjs (`.js` and nearest type: module behaviour applies).
+              // check if we're hitting this case :(
+              const dtsActualFormat = await getDtsFilePathFormat(
+                vfs.pathJoin(pkgDir, result.value),
+                vfs
+              )
+              // get the intended format from the conditions. yes, while the `import` condition can actually
+              // point to a CJS file, what we're checking here is the intent of the expected format.
+              // otherwise the package could currently have the wrong format (which we would emit a message above),
+              // but when we reach here, we don't want to base on that incorrect format.
+              const dtsExpectFormat = format === 'import' ? 'ESM' : 'CJS'
+              if (dtsActualFormat !== dtsExpectFormat) {
+                messages.push({
+                  code: 'EXPORT_TYPES_INVALID_FORMAT',
+                  args: {
+                    condition: format,
+                    actualFormat: dtsActualFormat,
+                    expectFormat: dtsExpectFormat,
+                    actualExtension: vfs.getExtName(result.value),
+                    expectExtension: getDtsCodeFormatExtension(dtsExpectFormat)
+                  },
+                  path: result.path,
+                  type: 'warning'
+                })
+              }
+            } else {
+              // adjacent dts file here is always in the correct format
               const hasAdjacentDtsFile = await vfs.isPathExist(
                 vfs.pathJoin(pkgDir, getAdjacentDtsPath(result.value))
               )
+              // if there's no adjacent dts file, it's likely they don't support moduleResolution: bundler.
+              // try to provide a warning.
               if (!hasAdjacentDtsFile) {
+                // before we recommend using `typesFilePath` for this export condition, we need to make sure
+                // it's of a matching format
+                const dtsActualFormat = await getDtsFilePathFormat(
+                  vfs.pathJoin(pkgDir, typesFilePath),
+                  vfs
+                )
+                const dtsExpectFormat = format === 'import' ? 'ESM' : 'CJS'
+                // if it's a matching format, we can recommend using the types file for this exports condition too.
+                // if not, we need to tell them to create a `.d.[mc]ts` file and not use `typesFilePath`.
+                // this is signalled in `matchingFormat`, where the message handler should check for it.
+                const isMatchingFormat = dtsActualFormat === dtsExpectFormat
                 messages.push({
                   code: 'TYPES_NOT_EXPORTED',
-                  args: { typesFilePath },
+                  args: {
+                    typesFilePath,
+                    actualExtension: isMatchingFormat
+                      ? undefined
+                      : vfs.getExtName(typesFilePath),
+                    expectExtension: isMatchingFormat
+                      ? undefined
+                      : getDtsCodeFormatExtension(dtsExpectFormat)
+                  },
                   path: result.path,
                   type: 'warning'
                 })

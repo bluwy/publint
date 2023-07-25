@@ -23,7 +23,8 @@ testFixture('glob-deprecated', [
 testFixture('missing-files', [
   'USE_EXPORTS_BROWSER',
   ...Array(7).fill('FILE_DOES_NOT_EXIST'),
-  'FILE_NOT_PUBLISHED'
+  'FILE_NOT_PUBLISHED',
+  'EXPORT_TYPES_INVALID_FORMAT'
 ])
 
 testFixture('no-exports-module', [])
@@ -89,6 +90,10 @@ testFixture('types-exports-resolution', [])
 testFixture('types-exports-resolution-dual', [
   'TYPES_NOT_EXPORTED',
   'TYPES_NOT_EXPORTED'
+])
+
+testFixture('types-exports-resolution-dual-explicit', [
+  'EXPORT_TYPES_INVALID_FORMAT'
 ])
 
 testFixture('types-versions', [])

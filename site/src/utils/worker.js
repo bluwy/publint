@@ -47,7 +47,7 @@ self.addEventListener('message', async (e) => {
   /** @type {import('publint').Vfs} */
   const vfs = {
     getDirName: (path) => path.replace(/\/[^/]*$/, ''),
-    getExtName: (path) => path.replace(/^.*\./, ''),
+    getExtName: (path) => path.replace(/^.*\./, '.'),
     isPathDir: async (path) => {
       path = path.endsWith('/') ? path : path + '/'
       return files.some((file) => file.name.startsWith(path))
