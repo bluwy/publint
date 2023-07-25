@@ -7,7 +7,7 @@ import { createRequire } from 'node:module'
 import sade from 'sade'
 import c from 'picocolors'
 import { publint } from './node.js'
-import { printMessage } from '../src/message.js'
+import { formatMessage } from '../src/message.js'
 import { createPromiseQueue } from '../src/utils.js'
 
 const version = createRequire(import.meta.url)('../package.json').version
@@ -126,7 +126,7 @@ async function lintDir(pkgDir, level, strict, compact = false) {
     if (suggestions.length) {
       logs.push(c.bold(c.blue('Suggestions:')))
       suggestions.forEach((m, i) =>
-        logs.push(c.dim(`${i + 1}. `) + printMessage(m, rootPkg))
+        logs.push(c.dim(`${i + 1}. `) + formatMessage(m, rootPkg))
       )
     }
 
@@ -134,7 +134,7 @@ async function lintDir(pkgDir, level, strict, compact = false) {
     if (warnings.length) {
       logs.push(c.bold(c.yellow('Warnings:')))
       warnings.forEach((m, i) =>
-        logs.push(c.dim(`${i + 1}. `) + printMessage(m, rootPkg))
+        logs.push(c.dim(`${i + 1}. `) + formatMessage(m, rootPkg))
       )
     }
 
@@ -142,7 +142,7 @@ async function lintDir(pkgDir, level, strict, compact = false) {
     if (errors.length) {
       logs.push(c.bold(c.red('Errors:')))
       errors.forEach((m, i) =>
-        logs.push(c.dim(`${i + 1}. `) + printMessage(m, rootPkg))
+        logs.push(c.dim(`${i + 1}. `) + formatMessage(m, rootPkg))
       )
       process.exitCode = 1
     }

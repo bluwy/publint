@@ -74,7 +74,7 @@ console.log(messages)
 Extra utilities are exported under `publint/utils`:
 
 ```js
-import { printMessage } from 'publint/utils'
+import { formatMessage } from 'publint/utils'
 import fs from 'node:fs/promises'
 
 const pkg = JSON.parse(
@@ -84,7 +84,7 @@ const pkg = JSON.parse(
 for (const message of messages) {
   // Prints default message in Node.js. Always a no-op in browsers.
   // Useful for re-implementing the CLI in a programmatic way.
-  printMessage(message, pkg)
+  console.log(formatMessage(message, pkg))
 }
 ```
 

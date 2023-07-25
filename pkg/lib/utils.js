@@ -2,8 +2,8 @@ export { formatMessagePath, getPkgPathValue } from '../src/utils.js'
 
 /**
  * no-op. leave users to implement themselves.
- * @type {import('../utils.d.ts').printMessage}
+ * @type {import('../utils.d.ts').formatMessage}
  */
-export function printMessage() {
+export function formatMessage() {
   return
 }

@@ -6,7 +6,7 @@
   import { getContext, setContext } from 'svelte'
   import { messageTypeToColor } from '../utils/colors'
   import { isArrayEqual } from '../utils/common'
-  import { printMessage } from '../utils/message'
+  import { formatMessage } from '../utils/message'
 
   /** @type {string | number} */
   export let key = ''
@@ -77,7 +77,7 @@
     <div class="-mx-4">
       {#each shownMessages as msg}
         <div class="{messageTypeToColor(msg.type)} border-4 px-4 py-2">
-          {@html printMessage(msg, pkg)}
+          {@html formatMessage(msg, pkg)}
         </div>
       {/each}
       {#if shownMessages.length < matchedMessages.length && !showAllMessages}

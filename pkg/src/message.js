@@ -5,7 +5,7 @@ import { formatMessagePath as fp, getPkgPathValue } from './utils.js'
  * @param {import('../index.d.ts').Message} m
  * @param {import('./utils.js').Pkg} pkg
  */
-export function printMessage(m, pkg) {
+export function formatMessage(m, pkg) {
   /** @param {string[]} path */
   const pv = (path) => getPkgPathValue(pkg, path)
 

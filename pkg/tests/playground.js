@@ -3,7 +3,7 @@ import path from 'node:path'
 import { test } from 'uvu'
 import { equal } from 'uvu/assert'
 import { publint } from '../lib/node.js'
-import { printMessage } from '../lib/utils-node.js'
+import { formatMessage } from '../lib/utils-node.js'
 
 testFixture('exports-styles', [
   'EXPORTS_VALUE_INVALID',
@@ -131,7 +131,7 @@ function testFixture(name, expectCodes, options) {
       )
       console.log()
       console.log('Logs:', name)
-      messages.forEach((m) => console.log(printMessage(m, pkg)))
+      messages.forEach((m) => console.log(formatMessage(m, pkg)))
       console.log()
     }
 

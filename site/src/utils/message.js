@@ -4,7 +4,7 @@ import { formatMessagePath as fp, getPkgPathValue } from 'publint/utils'
  * @param {import('publint').Message} m
  * @param {Record<string, any>} pkg
  */
-export function printMessage(m, pkg) {
+export function formatMessage(m, pkg) {
   let str = messageToString(m, pkg)
   if (str) {
     str += ` (<a href="/rules.html#${m.code.toLowerCase()}">More info</a>)`
