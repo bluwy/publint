@@ -115,7 +115,7 @@ function testFixture(name, expectCodes, options) {
   test(name, async () => {
     const fixtureName = name.replace(/\(.*$/, '').trim()
     const pkgDir = path.resolve(process.cwd(), 'tests/fixtures', fixtureName)
-    const messages = await publint({
+    const { messages } = await publint({
       pkgDir,
       level: options?.level,
       strict: options?.strict

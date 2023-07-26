@@ -117,4 +117,8 @@ export interface Vfs {
   getExtName: (path: string) => string
 }
 
-export declare function publint(options?: Options): Promise<Message[]>
+export interface Result {
+  messages: Message[]
+}
+
+export declare function publint(options?: Options): Promise<Result>

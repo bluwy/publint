@@ -44,7 +44,7 @@ Use `npx publint --help` for more information.
 ```js
 import { publint } from 'publint'
 
-const messages = await publint({
+const { messages } = await publint({
   /**
    * Path to your package that contains a package.json file.
    * Defaults to `process.cwd()` in node, `/` in browser.

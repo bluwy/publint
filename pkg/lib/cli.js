@@ -119,7 +119,7 @@ async function lintDir(pkgDir, level, strict, compact = false) {
   if (!rootPkgContent) return logs
   const rootPkg = JSON.parse(rootPkgContent)
   const pkgName = rootPkg.name || path.basename(pkgDir)
-  const messages = await publint({ pkgDir, level, strict })
+  const { messages } = await publint({ pkgDir, level, strict })
 
   if (messages.length) {
     const suggestions = messages.filter((v) => v.type === 'suggestion')

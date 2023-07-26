@@ -27,7 +27,7 @@ import {
 
 /**
  * @param {Options} options
- * @returns {Promise<import('../index.js').Message[]>}
+ * @returns {Promise<import('../index.d.ts').Result>}
  */
 export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   /** @type {import('../index.d.ts').Message[]} */
@@ -39,7 +39,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
 
   const rootPkgPath = vfs.pathJoin(pkgDir, 'package.json')
   const rootPkgContent = await readFile(rootPkgPath, [])
-  if (rootPkgContent === false) return messages
+  if (rootPkgContent === false) return { messages }
   const rootPkg = JSON.parse(rootPkgContent)
   const [main, mainPkgPath] = getPublishedField(rootPkg, 'main')
   const [module, modulePkgPath] = getPublishedField(rootPkg, 'module')
@@ -306,12 +306,12 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   }
 
   if (level === 'warning') {
-    return messages.filter((m) => m.type !== 'suggestion')
+    return { messages: messages.filter((m) => m.type !== 'suggestion') }
   } else if (level === 'error') {
-    return messages.filter((m) => m.type === 'error')
+    return { messages: messages.filter((m) => m.type === 'error') }
   }
 
-  return messages
+  return { messages }
 
   /**
    * @param {string | Record<string, any>} fieldValue
