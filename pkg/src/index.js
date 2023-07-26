@@ -607,12 +607,16 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
             if (seenResolvedKeys.has(seenKey)) continue
             seenResolvedKeys.add(seenKey)
 
+            const resolvedPath = vfs.pathJoin(pkgDir, result.value)
+            // if path doesn't exist, let the missing file error message take over instead
+            if (!(await vfs.isPathExist(resolvedPath))) continue
+
             if (isDtsFile(result.value)) {
               // if we have resolve to a dts file, it might not be ours because typescript requires
               // `.d.mts` and `.d.cts` for esm and cjs (`.js` and nearest type: module behaviour applies).
               // check if we're hitting this case :(
               const dtsActualFormat = await getDtsFilePathFormat(
-                vfs.pathJoin(pkgDir, result.value),
+                resolvedPath,
                 vfs
               )
               // get the intended format from the conditions. yes, while the `import` condition can actually
