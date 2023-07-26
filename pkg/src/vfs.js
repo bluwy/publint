@@ -24,7 +24,6 @@ export function createNodeVfs() {
     async isPathExist(path) {
       return fs.existsSync(path)
     },
-    // TODO: Manually create these
     pathJoin(...parts) {
       return nodePath.join(...parts)
     },

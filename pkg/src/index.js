@@ -72,7 +72,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
       if (pkgPath) {
         messages.push({
           code: 'FILE_DOES_NOT_EXIST',
-          args: { filePath: path },
+          args: {},
           path: pkgPath,
           type: 'error'
         })
