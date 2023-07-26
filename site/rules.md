@@ -69,7 +69,13 @@ For example, a scenario where both the `"types"` and `"import"` condition could 
 
 ## `TYPES_NOT_EXPORTED`
 
-Since TypeScript 5.0, it has supported the [`"moduleResolution": "bundler"` compiler option](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#moduleresolution-bundler) which has stricter rules on loading types. When an `"exports"` field is found, only the `"types"` condition declared there is respected, or if the resolved JS file has the correct adjacent `.d.ts` file. For example, `./dist/index.js` -> `./dist/index.d.ts`, `./dist/index.mjs` -> `./dist/index.d.mts`, and `./dist/index.cjs` -> `./dist/index.d.cts`.
+Since TypeScript 5.0, it has supported the [`"moduleResolution": "bundler"` compiler option](https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#moduleresolution-bundler) which has stricter rules on loading types (Additionally also affected by `"node16"` and `nodenext"`, and the [`"resolvePackageJsonExports"` compiler option](https://www.typescriptlang.org/tsconfig#resolvePackageJsonExports)).
+
+When an `"exports"` field is found, only the `"types"` condition declared is respected, or if the resolved JS file has the correct adjacent `.d.ts` file. For example:
+
+- `./dist/index.js` -> `./dist/index.d.ts`
+- `./dist/index.mjs` -> `./dist/index.d.mts`
+- `./dist/index.cjs` -> `./dist/index.d.cts`.
 
 The root `"types"` field is ignored to respect the `"exports"` field module resolution algorithm.
 
