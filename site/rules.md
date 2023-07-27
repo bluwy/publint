@@ -97,7 +97,7 @@ An example of a correct configuration looks like this:
       "types": "./index.d.mts",
       "default": "./index.mjs"
     },
-    "import": {
+    "require": {
       "types": "./index.d.cts",
       "default": "./index.cjs"
     }
