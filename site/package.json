@@ -17,10 +17,10 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.3",
-    "@unocss/core": "^0.53.6",
-    "@unocss/extractor-svelte": "^0.53.6",
-    "@unocss/preset-uno": "^0.53.6",
-    "@unocss/vite": "^0.53.6",
+    "@unocss/core": "^0.54.1",
+    "@unocss/extractor-svelte": "^0.54.1",
+    "@unocss/preset-uno": "^0.54.1",
+    "@unocss/vite": "^0.54.1",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-slug": "^5.1.0",
     "rehype-stringify": "^9.0.3",
@@ -28,8 +28,8 @@
     "remark-gfm": "^3.0.1",
     "remark-parse": "^10.0.2",
     "remark-rehype": "^10.1.0",
-    "svelte": "^4.1.1",
+    "svelte": "^4.1.2",
     "unified": "^10.1.2",
-    "vite": "^4.4.7"
+    "vite": "^4.4.8"
   }
 }
