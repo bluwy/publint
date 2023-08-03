@@ -103,6 +103,9 @@
     return worker
   }
 
+  /**
+   * @param {string | Record<string, string> | undefined} repository
+   */
   function extractRepoUrl(repository) {
     if (!repository) return
 
@@ -113,6 +116,9 @@
       return extractRepoUrlInternal(repository.url)
     }
   }
+  /**
+   * @param {string} url
+   */
   function extractRepoUrlInternal(url) {
     url = url
       .replace(/^git\+/, '')
@@ -122,6 +128,8 @@
       return { logo: githubLogo, url }
     } else if (url.includes('gitlab.com')) {
       return { logo: gitlabLogo, url }
+    } else if (url.split('/').length === 2) {
+      return { logo: githubLogo, url: `https://github.com/${url}` }
     }
   }
 </script>
