@@ -364,8 +364,12 @@ export function resolveExports(
     // prettier-ignore
     return { value: exportsValue, path: currentPath, dualPublish: _metadata.dualPublish }
   } else if (Array.isArray(exportsValue)) {
-    // prettier-ignore
-    return { value: exportsValue[0], path: currentPath, dualPublish: _metadata.dualPublish }
+    return resolveExports(
+      exportsValue[0],
+      conditions,
+      currentPath.concat('0'),
+      _metadata
+    )
   }
 
   // while traversing the exports object, also keep info it the path we're traversing
