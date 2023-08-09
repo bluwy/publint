@@ -8,9 +8,15 @@ import { createNodeVfs } from '../src/vfs.js'
  */
 export async function publint(options) {
   const pkgDir = options?.pkgDir ?? process.cwd()
-  const packedFiles = (await packlist({ path: pkgDir })).map((file) =>
-    path.join(pkgDir, file)
-  )
+
+  /** @type {string[] | undefined} */
+  let packedFiles
+  // only search for packed files if the consumer is not running on a virtual filesystem
+  if (options?.vfs == null) {
+    packedFiles = (await packlist({ path: pkgDir })).map((file) =>
+      path.join(pkgDir, file)
+    )
+  }
 
   return _publint({
     pkgDir,
