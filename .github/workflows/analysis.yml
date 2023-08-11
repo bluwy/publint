@@ -35,12 +35,8 @@ jobs:
       - name: Setup git
         run: |
           git config --global init.defaultBranch master
-          git config --global credential.helper store
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git config --global user.password "$GIST_TOKEN"
-        env:
-          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
       - name: Update gist
         run: pnpm gist
         working-directory: analysis
