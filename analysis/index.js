@@ -1,5 +1,6 @@
 import fss from 'node:fs'
 import fs from 'node:fs/promises'
+import path from 'node:path'
 import _getNpmTarballUrl from 'get-npm-tarball-url'
 import { npmHighImpact } from 'npm-high-impact'
 import { inflate } from 'pako'
@@ -21,11 +22,12 @@ const getNpmTarballUrl = _getNpmTarballUrl.default
 */
 
 const cachedResultsFileUrl = new URL('./cache/_results.json', import.meta.url)
+const usedCacheFileBaseNames = ['_results.json']
 
 try {
   await fs.mkdir('./cache', { recursive: true })
 
-  const packages = npmHighImpact.slice(0, 100)
+  const packages = npmHighImpact.slice(0, 200)
   const limit = pLimit(5)
   const severities = await Promise.all(
     packages.map((pkg) =>
@@ -46,6 +48,16 @@ try {
 } catch (e) {
   console.error(e)
   process.exitCode = 1
+} finally {
+  // cleanup unused cache
+  const cachedFiles = await fs.readdir('./cache')
+  await Promise.all(
+    cachedFiles.map(async (file) => {
+      if (!usedCacheFileBaseNames.includes(file)) {
+        await fs.rm(new URL(`./cache/${file}`, import.meta.url))
+      }
+    })
+  )
 }
 
 /**
@@ -54,6 +66,7 @@ try {
 async function processPkg(pkg) {
   const version = await fetchPkgLatestVersion(pkg)
   const cachedFileUrl = getCacheTarFileUrl(pkg, version)
+  usedCacheFileBaseNames.push(path.basename(cachedFileUrl.href))
 
   /** @type {ArrayBuffer} */
   let resultBuffer
