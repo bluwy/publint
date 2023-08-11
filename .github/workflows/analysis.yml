@@ -1,0 +1,48 @@
+name: Analysis
+
+on:
+  workflow_dispatch:
+
+jobs:
+  analysis:
+    name: Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
+      - name: Cache analysis downloads
+        uses: actions/cache@v3
+        with:
+          path: |
+            analysis/cache
+            !analysis/cache/_results.json
+          key: ${{ runner.os }}-analysis
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run analysis
+        run: pnpm start
+        working-directory: analysis
+      - name: Setup git
+        run: |
+          git config --global init.defaultBranch master
+          git config --global credential.helper store
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git config --global user.password "$GIST_TOKEN"
+        env:
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+      - name: Update gist
+        run: pnpm gist
+        working-directory: analysis
+        env:
+          ANALYSIS_GIST: https://bluwy:${{ secrets.GIST_TOKEN }}@gist.github.com/64b0c283d8f0f3f8a8f4eea03c75a3b8.git
