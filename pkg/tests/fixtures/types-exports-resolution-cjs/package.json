@@ -1,0 +1,12 @@
+{
+  "name": "publint-types-exports-resolution-cjs",
+  "version": "0.0.1",
+  "private": true,
+  "types": "./main.d.ts",
+  "exports": {
+    ".": {
+      "types": "./main.d.ts",
+      "default": "./main.js"
+    }
+  }
+}

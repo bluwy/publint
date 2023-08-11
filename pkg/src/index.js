@@ -619,11 +619,44 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
                 resolvedPath,
                 vfs
               )
-              // get the intended format from the conditions. yes, while the `import` condition can actually
-              // point to a CJS file, what we're checking here is the intent of the expected format.
-              // otherwise the package could currently have the wrong format (which we would emit a message above),
-              // but when we reach here, we don't want to base on that incorrect format.
-              const dtsExpectFormat = format === 'import' ? 'ESM' : 'CJS'
+
+              /** @type {'ESM' | 'CJS' | undefined} */
+              let dtsExpectFormat = undefined
+
+              // get the intended format from the conditions without types, e.g. if the adjacent file
+              // is a CJS file, despite resolving with the "import" condition, make sure the dts format
+              // is expected to be CJS too.
+              // only run this if not dual publish since we know dual publish should have both ESM and CJS
+              // versions of the dts file, and we don't need to be lenient.
+              // NOTE: could there be setups with CJS code and ESM types? seems a bit weird.
+              if (!result.dualPublish) {
+                const nonTypesResult = resolveExports(
+                  exportsRootValue,
+                  // @ts-expect-error till this day, ts still doesn't understand `filter(Boolean)`
+                  [format, env].filter(Boolean),
+                  exportsPath
+                )
+                if (nonTypesResult?.value) {
+                  const nonTypesResolvedPath = vfs.pathJoin(
+                    pkgDir,
+                    nonTypesResult.value
+                  )
+                  if (await vfs.isPathExist(nonTypesResolvedPath)) {
+                    dtsExpectFormat = await getFilePathFormat(
+                      nonTypesResolvedPath,
+                      vfs
+                    )
+                  }
+                }
+              }
+
+              // fallback if we can't determine the non types format, we base on the condition instead.
+              // NOTE: this favours "import" condition over "require" when the library doesn't dual publish
+              // because we run "import" first in the for loop.
+              if (dtsExpectFormat == null) {
+                dtsExpectFormat = format === 'import' ? 'ESM' : 'CJS'
+              }
+
               if (dtsActualFormat !== dtsExpectFormat) {
                 messages.push({
                   code: 'EXPORT_TYPES_INVALID_FORMAT',
