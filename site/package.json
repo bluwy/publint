@@ -16,11 +16,11 @@
     "publint": "workspace:*"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^2.4.3",
-    "@unocss/core": "^0.54.1",
-    "@unocss/extractor-svelte": "^0.54.1",
-    "@unocss/preset-uno": "^0.54.1",
-    "@unocss/vite": "^0.54.1",
+    "@sveltejs/vite-plugin-svelte": "^2.4.5",
+    "@unocss/core": "^0.55.0",
+    "@unocss/extractor-svelte": "^0.55.0",
+    "@unocss/preset-uno": "^0.55.0",
+    "@unocss/vite": "^0.55.0",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-slug": "^5.1.0",
     "rehype-stringify": "^9.0.3",
@@ -30,6 +30,6 @@
     "remark-rehype": "^10.1.0",
     "svelte": "^4.1.2",
     "unified": "^10.1.2",
-    "vite": "^4.4.8"
+    "vite": "^4.4.9"
   }
 }
