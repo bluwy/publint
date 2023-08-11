@@ -321,7 +321,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
     if (typeof fieldValue === 'string') {
       promiseQueue.push(async () => {
         const browserPath = vfs.pathJoin(pkgDir, fieldValue)
-        await readFile(browserPath, currentPath)
+        await readFile(browserPath, currentPath, ['.js', '/index.js'])
       })
     } else if (typeof fieldValue === 'object') {
       for (const key in fieldValue) {
