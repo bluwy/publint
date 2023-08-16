@@ -4,10 +4,11 @@
 
 The project requires [`pnpm 8`](https://pnpm.io) and [`Node.js 16`](https://nodejs.org/en/). Run `pnpm install` to install dependencies of all workspace packages.
 
-There are 2 parts to this repo:
+There are 3 parts to this repo:
 
 - [pkg](./pkg) - The `publint` npm package
 - [site](./site) - The website
+- [analysis](./analysis) - The analysis automation that lints popular npm packages for displaying their results on the website
 
 ## Development
 

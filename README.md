@@ -39,7 +39,7 @@ Or try it online at https://publint.dev. For JavaScript usage, see [pkg/README.m
 
 Use `pnpm install` to install all project dependencies.
 
-There are 2 parts to this repo:
+There are 3 parts to this repo:
 
 - [pkg](./pkg) - The `publint` npm package
 - [site](./site) - The website
