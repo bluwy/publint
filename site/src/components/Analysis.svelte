@@ -9,6 +9,9 @@
 
   let open = false
 
+  /**
+   * @param {number} num
+   */
   function numberToSeveritySrc(num) {
     switch (num) {
       case 0:
@@ -22,6 +25,9 @@
     }
   }
 
+  /**
+   * @param {number} num
+   */
   function numberToSeverityText(num) {
     switch (num) {
       case 0:
@@ -35,6 +41,9 @@
     }
   }
 
+  /**
+   * @param {number} num
+   */
   function numberToClass(num) {
     switch (num) {
       case 0:
@@ -46,6 +55,16 @@
       case 3:
         return 'border-red-200 bg-red-100 @dark:border-red-700 @dark:bg-red-900 hover:bg-red-200 focus:bg-red-200 @dark:hover:bg-red-800 @dark:focus:bg-red-800'
     }
+  }
+
+  /**
+   * Given `foo@1.2.3` or `@foo/bar@1.2.3`, return `foo` or `@foo/bar`.
+   * @param {string} str
+   */
+  function getPackageName(str) {
+    const lastAtIndex = str.lastIndexOf('@')
+    if (lastAtIndex === -1 || lastAtIndex === 0) return str
+    return str.slice(0, lastAtIndex)
   }
 </script>
 
@@ -69,7 +88,7 @@
           src={numberToSeveritySrc(value)}
           alt={numberToSeverityText(value)}
         />
-        <span class="opacity-90 align-middle">{key}</span>
+        <span class="opacity-90 align-middle">{getPackageName(key)}</span>
       </a>
     {/each}
   </div>

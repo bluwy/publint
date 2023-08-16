@@ -60,7 +60,11 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
       }
       return content
     } catch {
-      for (const ext of tryExtensions) {
+      for (let ext of tryExtensions) {
+        // remove duplicated slashes
+        if (ext[0] === '/' && path[path.length - 1] === '/') {
+          ext = ext.slice(1)
+        }
         try {
           const content = await vfs.readFile(path + ext)
           if (pkgPath && _packedFiles && !_packedFiles.includes(path)) {

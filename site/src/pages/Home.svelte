@@ -9,7 +9,7 @@
   fetch(
     import.meta.env.DEV
       ? '/temp/analysis.json'
-      : 'https://publint.dev/publint_analysis.json'
+      : 'https://publint.dev/analysis.json'
   )
     .then(async (res) => {
       analysis = await res.json()
@@ -25,9 +25,7 @@
 </svelte:head>
 
 <main class="flex flex-col items-center {analysis ? '' : 'min-h-screen'}">
-  <section
-    class="main-section flex flex-col items-center w-full px-4 mb-10"
-  >
+  <section class="main-section flex flex-col items-center w-full px-4 mb-10">
     <Logo />
     <NpmSearchInput autofocus />
     <p class="my-8">

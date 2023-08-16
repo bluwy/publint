@@ -43,6 +43,7 @@ There are 2 parts to this repo:
 
 - [pkg](./pkg) - The `publint` npm package
 - [site](./site) - The website
+- [analysis](./analysis) - The analysis automation that lints popular npm packages for displaying their results on the website
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for more information.
 

@@ -29,7 +29,7 @@ try {
 
   const packages = npmHighImpact.slice(0, 200)
   const limit = pLimit(5)
-  const severities = await Promise.all(
+  const processed = await Promise.all(
     packages.map((pkg) =>
       limit(() =>
         processPkg(pkg).catch((e) => {
@@ -42,7 +42,8 @@ try {
 
   const result = {}
   for (let i = 0; i < packages.length; i++) {
-    result[packages[i]] = severities[i]
+    const p = processed[i]
+    result[`${packages[i]}@${p.version}`] = p.severity
   }
   await fs.writeFile(cachedResultsFileUrl, JSON.stringify(result, null, 2))
 } catch (e) {
@@ -94,7 +95,7 @@ async function processPkg(pkg) {
   // Provide feedback
   console.log(pkg, severity)
 
-  return severity
+  return { version, severity }
 }
 
 /**
