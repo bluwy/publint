@@ -1,6 +1,7 @@
 import cp from 'child_process'
-import fs from 'fs/promises'
-import path from 'path'
+import fs from 'node:fs/promises'
+import fss from 'node:fs'
+import path from 'node:path'
 
 const fixtureDir = path.resolve('../pkg/tests/fixtures')
 const fixtures = (await fs.readdir(fixtureDir, { withFileTypes: true }))
@@ -25,5 +26,11 @@ await Promise.all(
     })
   })
 )
+
+console.log('Copy analysis results')
+const results = path.resolve('../analysis/cache/_results.json')
+if (fss.existsSync(results)) {
+  await fs.copyFile(results, './public/temp/analysis.json')
+}
 
 console.log('Done')

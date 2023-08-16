@@ -7,11 +7,16 @@ export default defineConfig({
   presets: [presetUno()],
   theme: {
     colors: {
-      primary: '#E69B57'
+      primary: '#E69B57',
+      primaryLight: '#E6AB73',
+      primaryDark: '#CF7522'
     }
   },
   shortcuts: {
     'anchor-link':
-      'font-bold decoration-none hover:text-primary focus:text-primary transition-color'
+      'font-medium decoration-none hover:text-primary-dark focus:text-primary-dark @dark:hover:text-primary-light @dark:focus:text-primary-light transition-color',
+    'anchor-link-with-hint': 'anchor-link text-primary',
+    'action-button':
+      'font-medium decoration-none px-4 py-3 border-none rounded hover:bg-primary-light focus:bg-primary-light @dark:hover:bg-primary @dark:focus:bg-primary transition-background-color cursor-pointer'
   }
 })
