@@ -31,7 +31,7 @@
     <p class="my-8">
       <a class="anchor-link" href="#docs">How it works</a>
       <strong class="inline-block mx-1">·</strong>
-      <a class="anchor-link" href="/rules.html">Rules</a>
+      <a class="anchor-link" href="/rules.html">Lint rules</a>
     </p>
   </section>
   {#if analysis}

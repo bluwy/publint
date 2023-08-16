@@ -11,7 +11,7 @@
     <div id="app"></div>
     <div
       id="docs"
-      class="docs bg-gray-300 text-dark @dark:bg-gray-700 @dark:text-white py-8"
+      class="docs bg-gray-300 text-dark @dark:bg-gray-800 @dark:text-white py-8"
     >
       <div
         class="mb-2 px-4 flex flex-col md:flex-row w-full max-w-6xl mx-auto gap-6"
@@ -19,29 +19,22 @@
         <section class="md:w-1/2 mb-2">
           <h2>What is publint?</h2>
           <p>
-            <code>publint</code> lints npm packages for packaging errors,
-            ensuring maximum compatibility across environments. This means that
-            consumers of your package can safely run your code in any platform,
-            e.g. Vite, Webpack, Rollup, Node.js, etc.
+            <code>publint</code> lints npm packages to ensure widest
+            compatibility across environments, such as Vite, Webpack, Rollup,
+            Node.js, etc.
           </p>
           <p>
-            A full list of rules can be found at the
-            <a class="anchor-link-with-hint" href="/rules.html"> rules page </a>
-            .
+            A full list of lint rules can be found at the
+            <a class="anchor-link-with-hint" href="/rules.html">rules page</a>.
           </p>
         </section>
         <section class="md:w-1/2 mb-2">
           <h2>How it works</h2>
           <p>
-            When linting an npm package, the site downloads the package tarball
-            locally from the npm registry, then a web worker will run the
-            <code>publint</code> CLI against the files. For larger packages, it
-            may take a while to download and lint.
-          </p>
-          <p>
-            Unlike <code>npm install</code>, the site would only download the
-            package itself without it's dependencies, as that's sufficient for
-            the linting process.
+            When linting an npm package, the site downloads the tarball from the
+            npm registry, and runs <code>publint</code> against it in a web
+            worker. For larger packages, it may take a while to download and
+            lint.
           </p>
         </section>
       </div>
@@ -50,24 +43,29 @@
       >
         <section class="md:w-1/2 mb-2">
           <h2>Use locally</h2>
-          <p>
-            In the root of your library directory, run
-            <code>npx publint</code>! If you're an end-user and would like to
-            lint the dependencies you use instead, run
-            <code>npx publint deps</code>. Use
-            <code>npx publint --help</code> to see the full list of options.
-          </p>
+          <ul>
+            <li>
+              Run <code>npx publint</code> in your library directory to lint
+              locally.
+            </li>
+            <li>Run <code>npx publint --deps</code> to lint dependencies.</li>
+            <li>
+              Run <code>npx publint --help</code> for the full list of options.
+            </li>
+          </ul>
         </section>
         <section class="md:w-1/2 mb-2">
-          <h2>Other tools</h2>
-          <p>
-            <a
-              class="anchor-link-with-hint"
-              href="https://arethetypeswrong.github.io"
-            >
-              Are the types wrong?
-            </a>
-          </p>
+          <h2>Other resources</h2>
+          <ul>
+            <li>
+              <a
+                class="anchor-link-with-hint"
+                href="https://arethetypeswrong.github.io"
+              >
+                Are the types wrong?
+              </a>
+            </li>
+          </ul>
         </section>
       </div>
       <footer class="text-center">
