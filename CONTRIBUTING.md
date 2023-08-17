@@ -26,11 +26,9 @@ The `site` workspace is a Vite & Svelte multiple page application. It powers htt
 
 It has a `packfix` command (`pnpm packfix`) which packages up fixtures from [pkg/tests/fixtures](./pkg/tests/fixtures). Once packed, when running the dev server, you can search for the fixture name, e.g. `publint-test-1`, and it'll load the package locally. This can be used for quick testing.
 
-The `packfix` command also copies over the analysis results if ran below.
-
 ### analysis
 
-The `analysis` workspace contains a simple `index.js` script that runs `publint` on popular npm packages. Run `pnpm start` to run the script to compute the results. The downloaded package tarballs and results are cached in the `cache` directory, so subsequent runs are faster.
+The `analysis` workspace contains a simple `index.js` script that runs `publint` on popular npm packages. Run `pnpm start` to run the script to compute the results. The downloaded package tarballs and results are cached in the `cache` directory, so subsequent runs are faster. The results are written to `cache/_results.json` and also loaded by the site locally.
 
 The `pnpm gist` command uploads and stores the results to a [GitHub gist](https://gist.github.com/bluwy/64b0c283d8f0f3f8a8f4eea03c75a3b8). It is then proxied and served by https://publint.dev/analysis.json. This is automated to run on CI and by me ([@bluwy](https://github.com/bluwy)) only.
 

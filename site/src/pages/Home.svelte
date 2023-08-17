@@ -6,11 +6,7 @@
   /** @type {Record<string, number> | undefined} */
   let analysis
 
-  fetch(
-    import.meta.env.DEV
-      ? '/temp/analysis.json'
-      : 'https://publint.dev/analysis.json'
-  )
+  fetch('/analysis.json')
     .then(async (res) => {
       analysis = await res.json()
     })

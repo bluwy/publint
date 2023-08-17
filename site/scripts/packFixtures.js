@@ -27,10 +27,4 @@ await Promise.all(
   })
 )
 
-console.log('Copy analysis results')
-const results = path.resolve('../analysis/cache/_results.json')
-if (fss.existsSync(results)) {
-  await fs.copyFile(results, './public/temp/analysis.json')
-}
-
 console.log('Done')
