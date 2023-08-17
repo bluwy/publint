@@ -1,21 +1,29 @@
+<script>
+  export let size = 80
+</script>
+
 <!-- Credits: https://loading.io/css/ -->
 
-<div class="lds-dual-ring text-gray-900 @dark:text-gray-100" />
+<div
+  class="lds-dual-ring text-gray-900 @dark:text-gray-100"
+  style:--size={size + 'px'}
+  style:--border={Math.max(size * 0.075, 1) + 'px'}
+/>
 
 <style>
   .lds-dual-ring {
     display: inline-block;
-    width: 80px;
-    height: 80px;
+    width: var(--size);
+    height: var(--size);
   }
   .lds-dual-ring:after {
     content: ' ';
     display: block;
-    width: 64px;
-    height: 64px;
-    margin: 8px;
+    width: 80%;
+    height: 80%;
+    margin: 10%;
     border-radius: 50%;
-    border: 6px solid currentColor;
+    border: var(--border) solid currentColor;
     border-color: currentColor transparent currentColor transparent;
     animation: lds-dual-ring 1.2s linear infinite;
   }
