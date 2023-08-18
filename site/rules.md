@@ -125,7 +125,7 @@ The `"browser"` field with a string value and `"exports"` `"browser"` condition 
 
 ## `USE_EXPORTS_OR_IMPORTS_BROWSER`
 
-The `"browser"` field and `"exports"`/`"imports"` `"browser"` condition works similarly to define the browser counterpart of a package.  With the overlap, it's usually better to use the `"exports"`/`"imports"` field instead as it's widely supported, and keeps one true way of defining your package entrypoints.
+The `"browser"` field and `"exports"`/`"imports"` `"browser"` condition works similarly to define the browser counterpart of a package. With the overlap, it's usually better to use the `"exports"`/`"imports"` field instead as it's widely supported, and keeps one true way of defining your package entrypoints.
 
 For example, the following `"browser"` field can be switched like this.
 
