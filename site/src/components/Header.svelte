@@ -4,7 +4,7 @@
 </script>
 
 <!-- NOTE: this is copied from rules.html -->
-<header class="absolute top-0 left-0 w-full z-10">
+<header class="absolute top-0 left-0 w-full z-10 px-4">
   <nav class="bookmark-nav flex gap-4 justify-end max-w-3xl mx-auto">
     <a class="bookmark decoration-none" href="/" title="Go to main page">
       <img src={homeIcon} alt="home icon" width="20" height="20" />

@@ -130,8 +130,8 @@ button {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: 0 100%;
-  width: 2.5rem;
-  height: 5rem;
+  width: 2rem;
+  height: 4rem;
   padding-bottom: 0.75rem;
   border-top-right-radius: 0.2rem;
   transition: height 0.2s;
@@ -250,5 +250,10 @@ button {
     padding-left: 0;
     padding-right: 4px;
     transform: translateY(-50%);
+  }
+
+  .bookmark {
+    width: 2.5rem;
+    height: 5rem;
   }
 }
