@@ -28,6 +28,8 @@
       <a class="anchor-link" href="#docs">How it works</a>
       <strong class="inline-block mx-1">·</strong>
       <a class="anchor-link" href="/rules.html">Lint rules</a>
+      <strong class="inline-block mx-1">·</strong>
+      <a class="anchor-link" href="https://github.com/bluwy/publint">GitHub</a>
     </p>
   </section>
   {#if analysis}

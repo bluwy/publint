@@ -1,9 +1,9 @@
 <script>
-  import logo from '../assets/logo.svg'
   import githubLogo from '../assets/github.svg'
   import gitlabLogo from '../assets/gitlab.svg'
   import npmLogo from '../assets/npm.svg'
   import jsdelivrLogo from '../assets/jsdelivr.svg'
+  import Header from '../components/Header.svelte'
   import Label from '../components/Label.svelte'
   import Loading from '../components/Loading.svelte'
   import NpmSearchInput from '../components/NpmSearchInput.svelte'
@@ -141,10 +141,11 @@
 </svelte:head>
 
 <main class="flex flex-col items-center min-h-screen p-4">
-  {#if npmPkgName && npmPkgVersion}
+  <Header />
+  {#if npmPkgName}
     <h1 class="mt-10 mb-0 font-600">
       {npmPkgName}
-      <span class="opacity-80 font-400 text-lg">{npmPkgVersion}</span>
+      <span class="opacity-80 font-400 text-lg">{npmPkgVersion || ''}</span>
     </h1>
     <p class="flex flex-row justify-center items-center gap-4 mb-10">
       {#if repo}
@@ -216,7 +217,3 @@
     <NpmSearchInput {npmPkgName} />
   {/if}
 </main>
-
-<a class="absolute top-0 left-0 w-16 h-14 px-3" href="/">
-  <img src={logo} alt="publint logo" class="w-full h-full" />
-</a>
