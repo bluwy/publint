@@ -210,7 +210,14 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   }
 
   // check file existence for other known package fields
-  const knownFields = ['types', 'typings', 'jsnext:main', 'jsnext', 'unpkg', 'jsdelivr']
+  const knownFields = [
+    'types',
+    'typings',
+    'jsnext:main',
+    'jsnext',
+    'unpkg',
+    'jsdelivr'
+  ]
   // if has typesVersions field, it complicates `types`/`typings` field resolution a lot.
   // for now skip it, but further improvements are tracked at
   // https://github.com/bluwy/publint/issues/42

@@ -57,7 +57,11 @@ testFixture(
 
 testFixture(
   'test-2 (level: error)',
-  ['EXPORTS_MODULE_SHOULD_BE_ESM', 'EXPORTS_VALUE_INVALID', 'FILE_DOES_NOT_EXIST'],
+  [
+    'EXPORTS_MODULE_SHOULD_BE_ESM',
+    'EXPORTS_VALUE_INVALID',
+    'FILE_DOES_NOT_EXIST'
+  ],
   { level: 'error' }
 )
 
