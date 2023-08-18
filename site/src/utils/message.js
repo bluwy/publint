@@ -74,7 +74,10 @@ function messageToString(m, pkg) {
       return `${bold(pv(m.path))} is invalid as it does not start with "${bold('./')}". Use ${bold(m.args.suggestValue)} instead.`
     case 'USE_EXPORTS_BROWSER':
       // prettier-ignore
-      return `${bold('pkg.browser')} can be refactored to use ${bold('pkg.exports')} and the ${bold('"browser"')} condition instead to declare browser-specific exports. (This will be a breaking change)`
+      return `${bold('pkg.browser')} with a string value can be refactored to use ${bold('pkg.exports')} and the ${bold('"browser"')} condition instead to declare browser-specific exports. (This will be a breaking change)`
+    case 'USE_EXPORTS_OR_IMPORTS_BROWSER':
+      // prettier-ignore
+      return `${bold('pkg.browser')} with a object value can be refactored to use ${bold('pkg.exports')}/${bold('pkg.imports')} and the ${bold('"browser"')} condition instead to declare browser-specific exports. (This will be a breaking change)`
     case 'TYPES_NOT_EXPORTED': {
       const typesFilePath = exportsRel(m.args.typesFilePath)
       if (m.args.actualExtension && m.args.expectExtension) {

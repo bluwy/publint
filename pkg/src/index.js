@@ -234,12 +234,21 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
     // if the package has both the `browser` and `exports` fields, recommend to use
     // the browser condition instead
     if (exports) {
-      messages.push({
-        code: 'USE_EXPORTS_BROWSER',
-        args: {},
-        path: browserPkgPath,
-        type: 'suggestion'
-      })
+      if (typeof browser === 'string') {
+        messages.push({
+          code: 'USE_EXPORTS_BROWSER',
+          args: {},
+          path: browserPkgPath,
+          type: 'suggestion'
+        })
+      } else {
+        messages.push({
+          code: 'USE_EXPORTS_OR_IMPORTS_BROWSER',
+          args: {},
+          path: browserPkgPath,
+          type: 'suggestion'
+        })
+      }
     }
   }
 

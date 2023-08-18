@@ -121,12 +121,43 @@ The `"exports"` field value should always start with a `./`. It does not support
 
 ## `USE_EXPORTS_BROWSER`
 
-The `"browser"` field and `"exports"` `"browser"` condition works similarly to define the browser counterpart of a package. With the overlap, it's usually better to use the `"exports"` field instead as it's widely supported, and keeps one true way of defining your package entrypoints.
+The `"browser"` field with a string value and `"exports"` `"browser"` condition works similarly to define the browser counterpart of a package. With the overlap, it's usually better to use the `"exports"` field instead as it's widely supported, and keeps one true way of defining your package entrypoints.
 
-It's important to note that the `"browser"` field can be used for [many more cases](https://github.com/defunctzombie/package-browser-field-spec), like:
+## `USE_EXPORTS_OR_IMPORTS_BROWSER`
 
-- Replace the root entrypoint with a browser-safe file.
-- Replace a nested file or module specifier with a browser-safe file.
-- Ignore a specific module specifier so it's not loaded.
+The `"browser"` field and `"exports"`/`"imports"` `"browser"` condition works similarly to define the browser counterpart of a package.  With the overlap, it's usually better to use the `"exports"`/`"imports"` field instead as it's widely supported, and keeps one true way of defining your package entrypoints.
 
-So switching to the `"exports"` field may not be a one-to-one migration, and that's fine! Once you're ready to restructure your code, you can make these changes going forward.
+For example, the following `"browser"` field can be switched like this.
+
+```json
+{
+  "browser": {
+    "module-a": "./shims/module-a.js",
+    "module-b": false,
+    "./server/only.js": "./shims/client-only.js"
+  }
+}
+```
+
+```json
+{
+  "imports": {
+    "#module-a": {
+      "browser": "./shims/module-a.js",
+      "default": "module-a"
+    },
+    "#module-b": {
+      "browser": "./empty.js",
+      "default": "module-b"
+    },
+    "#server-only.js": {
+      "browser": "./shims/client-only.js",
+      "default": "./server/only.js"
+    }
+  }
+}
+```
+
+Note that you'll need to change all imports to use the specifier defined in `"imports"` field (e.g. `import foo from "module-a"` -> `import foo from "#module-a"`).
+
+So switching to the `"exports"`/`"imports"` field may not be a one-to-one migration, and that's fine! Once you're ready to restructure your code, you can make these changes going forward.

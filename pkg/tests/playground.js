@@ -23,7 +23,7 @@ testFixture('glob-deprecated', [
 testFixture('missing-files', [
   ...Array(7).fill('FILE_DOES_NOT_EXIST'),
   'FILE_NOT_PUBLISHED',
-  'USE_EXPORTS_BROWSER'
+  'USE_EXPORTS_OR_IMPORTS_BROWSER'
 ])
 
 testFixture('no-exports-module', [])
