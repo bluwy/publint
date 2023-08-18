@@ -7,6 +7,7 @@
   import Label from '../components/Label.svelte'
   import Loading from '../components/Loading.svelte'
   import NpmSearchInput from '../components/NpmSearchInput.svelte'
+  import PackageVersion from '../components/PackageVersion.svelte'
   import PkgNode from '../components/PkgNode.svelte'
   import { isLocalPkg } from '../utils/common'
   import { url } from '../utils/url'
@@ -145,7 +146,7 @@
   {#if npmPkgName}
     <h1 class="mt-10 mb-0 font-600">
       {npmPkgName}
-      <span class="opacity-80 font-400 text-lg">{npmPkgVersion || ''}</span>
+      <PackageVersion version={npmPkgVersion} pkgName={npmPkgName} />
     </h1>
     <p class="flex flex-row justify-center items-center gap-4 mb-10">
       {#if repo}
