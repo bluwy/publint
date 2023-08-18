@@ -55,6 +55,7 @@ body {
 .docs a {
   color: #cf7522;
   font-weight: 500;
+  transition: color cubic-bezier(0.4, 0, 0.2, 1) 150ms;
 }
 
 /* Header autolink */
@@ -187,10 +188,10 @@ button {
     rgb(31, 41, 55) 100%
   );
   filter: blur(50px);
-  /* clip top by 0.2rem so it appears that the bookmark wraps around the glow */
+  /* clip top by 0.2rem (-0.02rem to negate border) so it appears that the bookmark wraps around the glow */
   clip-path: polygon(
-    -100rem 2.2rem,
-    100rem 2.2rem,
+    -100rem 2.18rem,
+    100rem 2.18rem,
     100rem 100rem,
     -100rem 100rem
   );
@@ -214,6 +215,11 @@ button {
 
   .docs a {
     color: #e6ab73;
+  }
+
+  .docs a:hover,
+  .docs a:focus {
+    color: #e69b57;
   }
 
   /* Header autolink */
