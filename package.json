@@ -5,8 +5,8 @@
   "author": "Bjorn Lu",
   "license": "MIT",
   "scripts": {
-    "lint": "prettier **/*.{js,ts,css,md,svelte,html} --check",
-    "format": "prettier **/*.{js,ts,css,md,svelte,html} --write",
+    "lint": "prettier \"**/*.{js,ts,css,md,svelte,html}\" --check",
+    "format": "prettier \"**/*.{js,ts,css,md,svelte,html}\" --write",
     "typecheck": "tsc -p pkg && tsc -p site && tsc -p analysis",
     "test": "pnpm --dir pkg test"
   },
