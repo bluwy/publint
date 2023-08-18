@@ -41,7 +41,7 @@
       `${import.meta.env.VITE_JSDELIVR_API}/packages/npm/${encodeURIComponent(pkgName)}`,
       {
         headers: {
-          'User-Agent': 'publint'
+          Accept: 'application/json'
         }
       }
     )
@@ -65,7 +65,6 @@
     if (versionsLoading) return
     open = false
   }}
-  on:focusout={() => (open = false)}
   on:keydown={(e) => {
     if (e.key === 'Escape') open = false
   }}
