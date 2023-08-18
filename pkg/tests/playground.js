@@ -37,6 +37,7 @@ testFixture('test-1', ['FILE_INVALID_FORMAT', 'TYPES_NOT_EXPORTED'])
 testFixture('test-2', [
   'EXPORTS_MODULE_SHOULD_BE_ESM',
   'EXPORTS_VALUE_INVALID',
+  'FILE_DOES_NOT_EXIST',
   'FILE_INVALID_FORMAT',
   'FILE_INVALID_FORMAT',
   'USE_EXPORTS_BROWSER'
@@ -47,6 +48,7 @@ testFixture(
   [
     'EXPORTS_MODULE_SHOULD_BE_ESM',
     'EXPORTS_VALUE_INVALID',
+    'FILE_DOES_NOT_EXIST',
     'FILE_INVALID_FORMAT',
     'FILE_INVALID_FORMAT'
   ],
@@ -55,7 +57,7 @@ testFixture(
 
 testFixture(
   'test-2 (level: error)',
-  ['EXPORTS_MODULE_SHOULD_BE_ESM', 'EXPORTS_VALUE_INVALID'],
+  ['EXPORTS_MODULE_SHOULD_BE_ESM', 'EXPORTS_VALUE_INVALID', 'FILE_DOES_NOT_EXIST'],
   { level: 'error' }
 )
 
@@ -64,6 +66,7 @@ testFixture(
   [
     'EXPORTS_MODULE_SHOULD_BE_ESM',
     'EXPORTS_VALUE_INVALID',
+    'FILE_DOES_NOT_EXIST',
     'FILE_INVALID_FORMAT',
     'FILE_INVALID_FORMAT'
   ],
@@ -75,6 +78,7 @@ testFixture(
   [
     { code: 'EXPORTS_MODULE_SHOULD_BE_ESM', type: 'error' },
     { code: 'EXPORTS_VALUE_INVALID', type: 'error' },
+    { code: 'FILE_DOES_NOT_EXIST', type: 'error' },
     { code: 'FILE_INVALID_FORMAT', type: 'error' },
     { code: 'FILE_INVALID_FORMAT', type: 'error' },
     { code: 'USE_EXPORTS_BROWSER', type: 'suggestion' }

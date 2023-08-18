@@ -4,6 +4,7 @@
   "private": true,
   "main": "./main.mjs",
   "browser": "./lib/bar.js",
+  "typings": "./doesn't-exist.d.ts",
   "exports": {
     "./*.js": "./lib/*.js",
     "./browser": {
