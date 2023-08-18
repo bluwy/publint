@@ -43,7 +43,9 @@ try {
   const result = {}
   for (let i = 0; i < packages.length; i++) {
     const p = processed[i]
-    result[`${packages[i]}@${p.version}`] = p.severity
+    if (p) {
+      result[`${packages[i]}@${p.version}`] = p.severity
+    }
   }
   await fs.writeFile(cachedResultsFileUrl, JSON.stringify(result, null, 2))
 } catch (e) {
@@ -80,7 +82,7 @@ async function processPkg(pkg) {
   }
 
   const tarBuffer = inflate(resultBuffer).buffer // Handles gzip (gz)
-  /** @type {import('./tarball').TarballFile[]} */
+  /** @type {import('../site/src/utils/tarball.js').TarballFile[]} */
   const files = untar(tarBuffer) // Handles tar (t)
   const vfs = createTarballVfs(files)
 
@@ -142,7 +144,7 @@ async function fetchPkgLatestVersion(pkg) {
 }
 
 /**
- * @param {import('publint').Message[]} messages
+ * @param {import('publint').Message} message
  */
 function messageToSeverity(message) {
   switch (message.type) {
