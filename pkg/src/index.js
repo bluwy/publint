@@ -347,7 +347,9 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   async function getExportsFiles(exports) {
     const exportsPath = vfs.pathJoin(pkgDir, exports)
     const isGlob = exports.includes('*')
-    return isGlob ? await exportsGlob(exportsPath, vfs) : [exportsPath]
+    return isGlob
+      ? await exportsGlob(exportsPath, vfs, _packedFiles)
+      : [exportsPath]
   }
 
   /**
