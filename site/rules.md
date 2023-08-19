@@ -121,13 +121,15 @@ The `"exports"` field value should always start with a `./`. It does not support
 
 ## `USE_EXPORTS_BROWSER`
 
-The `"browser"` field with a string value and `"exports"` `"browser"` condition works similarly to define the browser counterpart of a package. With the overlap, it's usually better to use the `"exports"` field instead as it's widely supported, and keeps one true way of defining your package entrypoints.
+A `"browser"` field with a string value works similarly to the `"exports"` `"browser"` condition, to define the browser-specific exports of a package. Between the two, it's usually better to use the `"exports"` field instead as it's standardized, widely supported, and keeps one true way of defining your package entrypoints.
 
 ## `USE_EXPORTS_OR_IMPORTS_BROWSER`
 
-The `"browser"` field and `"exports"`/`"imports"` `"browser"` condition works similarly to define the browser counterpart of a package. With the overlap, it's usually better to use the `"exports"`/`"imports"` field instead as it's widely supported, and keeps one true way of defining your package entrypoints.
+The `"browser"` field with an object value works similarly to the `"exports"`/`"imports"` `"browser"` condition, to define the browser-specific exports of a package. Between the two, it's usually better to use the `"exports"`/`"imports"` field instead as it's standardized, widely supported, and keeps one true way of defining your package entrypoints.
 
-For example, the following `"browser"` field can be switched like this.
+For example, the following `"browser"` field can be converted like below.
+
+Before:
 
 ```json
 {
@@ -138,6 +140,8 @@ For example, the following `"browser"` field can be switched like this.
   }
 }
 ```
+
+After:
 
 ```json
 {
@@ -158,6 +162,4 @@ For example, the following `"browser"` field can be switched like this.
 }
 ```
 
-Note that you'll need to change all imports to use the specifier defined in `"imports"` field (e.g. `import foo from "module-a"` -> `import foo from "#module-a"`).
-
-So switching to the `"exports"`/`"imports"` field may not be a one-to-one migration, and that's fine! Once you're ready to restructure your code, you can make these changes going forward.
+Note that you'll need to change all imports to use the specifier defined in the `"imports"` field. For example, `import foo from "module-a"` -> `import foo from "#module-a"`.

@@ -71,10 +71,11 @@ export function formatMessage(m, pkg) {
       return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but is invalid as it does not start with "${c.bold('./')}". Use ${c.bold(m.args.suggestValue)} instead.`
     case 'USE_EXPORTS_BROWSER':
       // prettier-ignore
-      return `${c.bold('pkg.browser')} with a string value can be refactored to use ${c.bold('pkg.exports')} and the ${c.bold('"browser"')} condition instead to declare browser-specific exports. (This will be a breaking change)`
+      return `${c.bold('pkg.browser')} with a string value can be refactored to use ${c.bold('pkg.exports')} and the ${c.bold('"browser"')} condition to declare browser-specific exports. ` +
+      `e.g. ${c.bold('pkg.exports["."].browser')}: "${c.bold(pv(m.path))}". (This will be a breaking change)`
     case 'USE_EXPORTS_OR_IMPORTS_BROWSER':
       // prettier-ignore
-      return `${c.bold('pkg.browser')} with a object value can be refactored to use ${c.bold('pkg.exports')}/${c.bold('pkg.imports')} and the ${c.bold('"browser"')} condition instead to declare browser-specific exports. (This will be a breaking change)`
+      return `${c.bold('pkg.browser')} with an object value can be refactored to use ${c.bold('pkg.exports')}/${c.bold('pkg.imports')} and the ${c.bold('"browser"')} condition to declare browser-specific exports. (This will be a breaking change)`
     case 'TYPES_NOT_EXPORTED': {
       const typesFilePath = exportsRel(m.args.typesFilePath)
       if (m.args.actualExtension && m.args.expectExtension) {
