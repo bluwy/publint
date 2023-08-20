@@ -163,3 +163,16 @@ After:
 ```
 
 Note that you'll need to change all imports to use the specifier defined in the `"imports"` field. For example, `import foo from "module-a"` -> `import foo from "#module-a"`.
+
+Depending on your setup, you can also use the `"exports"` field to directly export the browser-specific entrypoint. For example:
+
+```json
+{
+  "exports": {
+    ".": {
+      "browser": "./lib.browser.js",
+      "default": "./lib.js"
+    }
+  }
+}
+```
