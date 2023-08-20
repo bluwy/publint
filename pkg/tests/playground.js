@@ -35,6 +35,7 @@ testFixture('publish-config', ['FILE_DOES_NOT_EXIST', 'USE_EXPORTS_BROWSER'])
 testFixture('test-1', ['FILE_INVALID_FORMAT', 'TYPES_NOT_EXPORTED'])
 
 testFixture('test-2', [
+  'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
   'EXPORTS_MODULE_SHOULD_BE_ESM',
   'EXPORTS_VALUE_INVALID',
   'FILE_DOES_NOT_EXIST',
@@ -80,6 +81,7 @@ testFixture(
 testFixture(
   'test-2 (strict: true)',
   [
+    { code: 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING', type: 'suggestion' },
     { code: 'EXPORTS_MODULE_SHOULD_BE_ESM', type: 'error' },
     { code: 'EXPORTS_VALUE_INVALID', type: 'error' },
     { code: 'FILE_DOES_NOT_EXIST', type: 'error' },

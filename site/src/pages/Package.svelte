@@ -41,18 +41,19 @@
       // prettier-ignore
       `${import.meta.env.VITE_NPM_REGISTRY}/${encodeURIComponent(npmPkgName)}/latest`
     )
-    .then(async (res) => {
-      const result = await res.json()
-      if (typeof result === 'string') {
-        error = result
-        return
-      }
-      if (result?.version) {
-        url.replace(`/${npmPkgName}@${result.version}`)
-      }
-    }).finally(() => {
-      versionFetched = true
-    })
+      .then(async (res) => {
+        const result = await res.json()
+        if (typeof result === 'string') {
+          error = result
+          return
+        }
+        if (result?.version) {
+          url.replace(`/${npmPkgName}@${result.version}`)
+        }
+      })
+      .finally(() => {
+        versionFetched = true
+      })
   }
 
   /** @type {Worker} */

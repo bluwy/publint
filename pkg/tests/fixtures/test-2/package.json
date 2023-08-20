@@ -13,6 +13,9 @@
     "./module": {
       "module": "./lib/cjs.js"
     },
+    "./types/": {
+      "default": "./types/"
+    },
     "./types/*": {
       "types": "./types/*.d.ts",
       "default": "./types/*.js"

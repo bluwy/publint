@@ -13,7 +13,8 @@ import {
   resolveExports,
   isDtsFile,
   getDtsFilePathFormat,
-  getDtsCodeFormatExtension
+  getDtsCodeFormatExtension,
+  getPkgPathValue
 } from './utils.js'
 
 /**
@@ -351,57 +352,64 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   }
 
   /**
-   * @param {string} exports
+   * @param {string} exportsValue
    */
-  async function getExportsFiles(exports) {
-    const exportsPath = vfs.pathJoin(pkgDir, exports)
-    const isGlob = exports.includes('*')
+  async function getExportsFiles(exportsValue) {
+    const exportsPath = vfs.pathJoin(pkgDir, exportsValue)
+    const isGlob = exportsValue.includes('*')
     return isGlob
       ? await exportsGlob(exportsPath, vfs, _packedFiles)
       : [exportsPath]
   }
 
   /**
-   * @param {any} exports
+   * @param {any} exportsValue
    * @param {string[]} currentPath
    * @param {boolean} isAfterNodeCondition
    */
-  function crawlExports(exports, currentPath, isAfterNodeCondition = false) {
-    if (typeof exports === 'string') {
+  function crawlExports(
+    exportsValue,
+    currentPath,
+    isAfterNodeCondition = false
+  ) {
+    if (typeof exportsValue === 'string') {
       promiseQueue.push(async () => {
         // warn deprecated subpath mapping
         // https://nodejs.org/docs/latest-v16.x/api/packages.html#subpath-folder-mappings
-        if (exports.endsWith('/')) {
+        if (exportsValue.endsWith('/')) {
           const expectPath = currentPath.map((part) => {
             return part.endsWith('/') ? part + '*' : part
           })
+          const expectPathAlreadyExist = !!getPkgPathValue(rootPkg, expectPath)
           messages.push({
             code: 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
             args: {
               expectPath,
-              expectValue: exports + '*'
+              expectValue: exportsValue + '*'
             },
             path: currentPath,
-            type: 'warning'
+            // if a trailing glob is also specified, that means this key is for backwards compat only.
+            // lower severity to suggestion instead.
+            type: expectPathAlreadyExist ? 'suggestion' : 'warning'
           })
-          // Help fix glob so we can further analyze other issues
-          exports += '*'
+          // help fix glob so we can further analyze other issues
+          exportsValue += '*'
         }
 
         // error incorrect exports value
-        if (!exports.startsWith('./')) {
+        if (!exportsValue.startsWith('./')) {
           messages.push({
             code: 'EXPORTS_VALUE_INVALID',
             args: {
-              suggestValue: './' + exports.replace(/^[\/]+/, '')
+              suggestValue: './' + exportsValue.replace(/^[\/]+/, '')
             },
             path: currentPath,
             type: 'error'
           })
         }
 
-        const isGlob = exports.includes('*')
-        const exportsFiles = await getExportsFiles(exports)
+        const isGlob = exportsValue.includes('*')
+        const exportsFiles = await getExportsFiles(exportsValue)
 
         if (isGlob && !exportsFiles.length) {
           messages.push({
@@ -477,7 +485,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
                   expectExtension: getCodeFormatExtension(actualFormat),
                   actualFilePath: isGlob
                     ? './' + vfs.pathRelative(pkgDir, filePath)
-                    : exports
+                    : exportsValue
                 },
                 path: currentPath,
                 type: 'warning'
@@ -490,11 +498,11 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
       })
     }
     // `exports` could be null to disallow exports of globs from another key
-    else if (exports) {
-      const exportsKeys = Object.keys(exports)
+    else if (exportsValue) {
+      const exportsKeys = Object.keys(exportsValue)
 
       // the types export should be the first condition
-      if ('types' in exports && exportsKeys[0] !== 'types') {
+      if ('types' in exportsValue && exportsKeys[0] !== 'types') {
         // check preceding conditions before the `types` condition, if there are nested
         // conditions, check if they also have the `types` condition. If they do, there's
         // a good chance those take precendence over this non-first `types` condition, which
@@ -503,8 +511,8 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
         let isPrecededByNestedTypesCondition = false
         for (const key of precedingKeys) {
           if (
-            typeof exports[key] === 'object' &&
-            objectHasKeyNested(exports[key], 'types')
+            typeof exportsValue[key] === 'object' &&
+            objectHasKeyNested(exportsValue[key], 'types')
           ) {
             isPrecededByNestedTypesCondition = true
             break
@@ -523,8 +531,8 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
       // if there is a 'require' and a 'module' condition at the same level,
       // then 'module' should always precede 'require'
       if (
-        'module' in exports &&
-        'require' in exports &&
+        'module' in exportsValue &&
+        'require' in exportsValue &&
         exportsKeys.indexOf('module') > exportsKeys.indexOf('require')
       ) {
         messages.push({
@@ -537,7 +545,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
 
       // the default export should be the last condition
       if (
-        'default' in exports &&
+        'default' in exportsValue &&
         exportsKeys[exportsKeys.length - 1] !== 'default'
       ) {
         messages.push({
@@ -554,7 +562,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
       let isKeyAfterNodeCondition = isAfterNodeCondition
       for (const key of exportsKeys) {
         crawlExports(
-          exports[key],
+          exportsValue[key],
           currentPath.concat(key),
           isKeyAfterNodeCondition
         )
