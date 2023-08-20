@@ -14,7 +14,8 @@ import {
   isDtsFile,
   getDtsFilePathFormat,
   getDtsCodeFormatExtension,
-  getPkgPathValue
+  getPkgPathValue,
+  replaceLast
 } from './utils.js'
 
 /**
@@ -295,6 +296,18 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
             if (isSafeEsm) return
 
             const actualExtension = vfs.getExtName(filePath)
+            const expectExtension = getCodeFormatExtension(actualFormat)
+
+            // test if the expected extension and file path already exist. if so, skip warning as
+            // this invalid format file is probably intentional for other use.
+            // NOTE: only relax this for globbed files, as they're implicitly exported.
+            const expectFilePath = replaceLast(
+              filePath,
+              actualExtension,
+              expectExtension
+            )
+            if (await vfs.isPathExist(expectFilePath)) return
+
             messages.push({
               code: isExplicitExtension(actualExtension)
                 ? 'FILE_INVALID_EXPLICIT_FORMAT'
@@ -303,7 +316,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
                 actualFormat,
                 expectFormat,
                 actualExtension,
-                expectExtension: getCodeFormatExtension(actualFormat),
+                expectExtension,
                 actualFilePath: '/' + vfs.pathRelative(pkgDir, filePath)
               },
               path: ['name'],
@@ -474,6 +487,18 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
               if (isSafeEsm) return
 
               const actualExtension = vfs.getExtName(filePath)
+              const expectExtension = getCodeFormatExtension(actualFormat)
+
+              // test if the expected extension and file path already exist. if so, skip warning as
+              // this invalid format file is probably intentional for other use.
+              // NOTE: only relax this for globbed files, as they're implicitly exported.
+              const expectFilePath = replaceLast(
+                filePath,
+                actualExtension,
+                expectExtension
+              )
+              if (await vfs.isPathExist(expectFilePath)) return
+
               messages.push({
                 code: isExplicitExtension(actualExtension)
                   ? 'FILE_INVALID_EXPLICIT_FORMAT'
@@ -482,7 +507,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
                   actualFormat,
                   expectFormat,
                   actualExtension,
-                  expectExtension: getCodeFormatExtension(actualFormat),
+                  expectExtension,
                   actualFilePath: isGlob
                     ? './' + vfs.pathRelative(pkgDir, filePath)
                     : exportsValue

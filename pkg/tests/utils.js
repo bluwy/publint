@@ -122,8 +122,10 @@ test('stripComments', () => {
 test('exportsGlob', async () => {
   const r = (s) => path.resolve(process.cwd(), 'tests/fixtures/glob', s)
   const v = createNodeVfs()
-  equal(await exportsGlob(r('./*.js'), v), [r('alpha.js')])
-  equal(await exportsGlob(r('./*.mjs'), v), [r('bravo.mjs')])
+  // prettier-ignore
+  equal(await exportsGlob(r('./*.js'), v), [r('alpha.js'), r('dual-extension/index.js')])
+  // prettier-ignore
+  equal(await exportsGlob(r('./*.mjs'), v), [r('bravo.mjs'), r('dual-extension/index.mjs')])
   // prettier-ignore
   equal(await exportsGlob(r('./*.css'), v), [r('charlie.css'), r('quebec/romeo.css')])
   // prettier-ignore
