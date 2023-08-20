@@ -63,6 +63,7 @@ export type Message =
   | BaseMessage<'EXPORTS_MODULE_SHOULD_BE_ESM'>
   | BaseMessage<'EXPORTS_VALUE_INVALID', { suggestValue: string }>
   | BaseMessage<'USE_EXPORTS_BROWSER'>
+  | BaseMessage<'USE_EXPORTS_OR_IMPORTS_BROWSER'>
   | BaseMessage<
       'TYPES_NOT_EXPORTED',
       {
