@@ -41,15 +41,18 @@
       // prettier-ignore
       `${import.meta.env.VITE_NPM_REGISTRY}/${encodeURIComponent(npmPkgName)}/latest`
     )
-      .then((v) => v.ok && v.json())
-      .then((v) => {
-        if (v?.version) {
-          url.replace(`/${npmPkgName}@${v.version}`)
-        }
-      })
-      .finally(() => {
-        versionFetched = true
-      })
+    .then(async (res) => {
+      const result = await res.json()
+      if (typeof result === 'string') {
+        error = result
+        return
+      }
+      if (result?.version) {
+        url.replace(`/${npmPkgName}@${result.version}`)
+      }
+    }).finally(() => {
+      versionFetched = true
+    })
   }
 
   /** @type {Worker} */
@@ -146,7 +149,9 @@
   {#if npmPkgName}
     <h1 class="mt-10 mb-0 font-600">
       {npmPkgName}
-      <PackageVersion version={npmPkgVersion} pkgName={npmPkgName} />
+      {#if !error}
+        <PackageVersion version={npmPkgVersion} pkgName={npmPkgName} />
+      {/if}
     </h1>
     <p class="flex flex-row justify-center items-center gap-4 mb-10">
       {#if repo}
