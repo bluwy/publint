@@ -30,12 +30,12 @@ function messageToString(m, pkg) {
     case 'FILE_INVALID_FORMAT': {
       const relativePath = m.args.actualFilePath ?? pv(m.path)
       // prettier-ignore
-      return `${bold(relativePath)} is written in ${warn(m.args.actualFormat)}, but is interpreted as ${warn(m.args.expectFormat)}. Consider using the ${warn(m.args.expectExtension)} extension, e.g. ${bold(relativePath.replace('.js', m.args.expectExtension))}`
+      return `${bold(relativePath)} is written in ${warn(m.args.actualFormat)}, but is interpreted as ${warn(m.args.expectFormat)}. Consider using the ${warn(m.args.expectExtension)} extension, e.g. ${bold(replaceLast(relativePath, '.js', m.args.expectExtension))}`
     }
     case 'FILE_INVALID_EXPLICIT_FORMAT': {
       const relativePath = m.args.actualFilePath ?? pv(m.path)
       // prettier-ignore
-      return `${bold(relativePath)} ends with the ${warn(m.args.actualExtension)} extension, but the code is written in ${warn(m.args.actualFormat)}. Consider using the ${warn(m.args.expectExtension)} extension, e.g. ${bold(relativePath.replace(m.args.actualExtension, m.args.expectExtension))}`
+      return `${bold(relativePath)} ends with the ${warn(m.args.actualExtension)} extension, but the code is written in ${warn(m.args.actualFormat)}. Consider using the ${warn(m.args.expectExtension)} extension, e.g. ${bold(replaceLast(relativePath, m.args.actualExtension, m.args.expectExtension))}`
     }
     case 'FILE_DOES_NOT_EXIST':
       // prettier-ignore
@@ -85,7 +85,7 @@ function messageToString(m, pkg) {
         // prettier-ignore
         return `The types is not exported. Consider adding ${bold(fp(m.path) + '.types')} to be compatible with TypeScript's ${bold('"moduleResolution": "bundler"')} compiler option. `
             + `Note that you cannot use "${bold(typesFilePath)}" because it has a mismatching format. Instead, you can duplicate the file and use the ${bold(m.args.expectExtension)} extension, e.g. `
-            + `${bold(fp(m.path) + '.types')}: "${bold(typesFilePath.replace(m.args.actualExtension, m.args.expectExtension))}"`
+            + `${bold(fp(m.path) + '.types')}: "${bold(replaceLast(typesFilePath,m.args.actualExtension, m.args.expectExtension))}"`
       } else {
         // prettier-ignore
         return `The types is not exported. Consider adding ${bold(fp(m.path) + '.types')}: "${bold(typesFilePath)}" to be compatible with TypeScript's ${bold('"moduleResolution": "bundler"')} compiler option.`
@@ -103,7 +103,7 @@ function messageToString(m, pkg) {
       }
       // prettier-ignore
       return `The types is an invalid format when resolving with the "${bold(m.args.condition)}" condition. Consider splitting out two ${bold("types")} conditions for ${bold("import")} and ${bold("require")}, and use the ${warn(m.args.expectExtension)} extension, `
-          + `e.g. ${bold(fp(expectPath))}: "${bold(pv(m.path).replace(m.args.actualExtension, m.args.expectExtension))}"`
+          + `e.g. ${bold(fp(expectPath))}: "${bold(replaceLast(pv(m.path), m.args.actualExtension, m.args.expectExtension))}"`
     }
     default:
       return
@@ -118,4 +118,15 @@ function exportsRel(s) {
   if (s[0] === '.') return s
   if (s[0] === '/') return '.' + s
   return './' + s
+}
+
+/**
+ * @param {string} str
+ * @param {string} search
+ * @param {string} replace
+ */
+function replaceLast(str, search, replace) {
+  const index = str.lastIndexOf(search)
+  if (index === -1) return str
+  return str.slice(0, index) + replace + str.slice(index + search.length)
 }

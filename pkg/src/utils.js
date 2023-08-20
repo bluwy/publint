@@ -393,3 +393,14 @@ export function resolveExports(
     }
   }
 }
+
+/**
+ * @param {string} str
+ * @param {string} search
+ * @param {string} replace
+ */
+export function replaceLast(str, search, replace) {
+  const index = str.lastIndexOf(search)
+  if (index === -1) return str
+  return str.slice(0, index) + replace + str.slice(index + search.length)
+}
