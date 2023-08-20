@@ -90,6 +90,7 @@ body {
 .docs li {
   line-height: 1.5;
   opacity: 0.8;
+  list-style: none;
 }
 
 p {
@@ -195,6 +196,24 @@ button {
     100rem 100rem,
     -100rem 100rem
   );
+}
+
+.aside-menu-container {
+  top: 80px;
+  left: 100%;
+}
+.docs .aside-menu-list {
+  margin-top: 80px;
+  width: 200px;
+  text-overflow: ellipsis;
+}
+.aside-menu-list li {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.aside-link {
+  text-decoration: none;
 }
 
 @media (prefers-color-scheme: dark) {

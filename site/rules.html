@@ -9,7 +9,7 @@
     <script type="module" src="./src/rules.js"></script>
   </head>
   <body tabindex="-1">
-    <main class="docs w-full max-w-3xl mx-auto p-4 pt-10">
+    <main class="docs w-full max-w-3xl mx-auto p-4 pt-10 relative">
       <div style="display: none">
         <svg>
           <symbol id="autolink-icon" width="24" height="24" fill="currentColor">
@@ -43,6 +43,9 @@
           </a>
         </nav>
       </header>
+      <div class="absolute aside-menu-container">
+        <div class="fixed top-0 aside-menu"></div>
+      </div>
       <!-- rules.md -->
       <footer class="my-16">
         <a class="anchor-link" href="/"> ➥ Back to main page </a>
