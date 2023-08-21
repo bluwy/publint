@@ -101,9 +101,22 @@ function messageToString(m, pkg) {
       } else {
         expectPath.push(m.args.condition)
       }
+
+      let additionalMessage = ''
+      // ambiguous default export
+      if (m.args.expectFormat === 'ESM' && m.args.actualFormat === 'CJS') {
+        additionalMessage = `This causes the types to be ambiguous when default importing the package due to its implied interop. `
+      }
+      // incorrect dynamic import restriction
+      else if (m.args.expectFormat === 'CJS' && m.args.actualFormat === 'ESM') {
+        additionalMessage = `This causes the types to only work when dynamically importing the package, even though the package exports CJS. `
+      }
+
       // prettier-ignore
-      return `The types is an invalid format when resolving with the "${bold(m.args.condition)}" condition. Consider splitting out two ${bold("types")} conditions for ${bold("import")} and ${bold("require")}, and use the ${warn(m.args.expectExtension)} extension, `
-          + `e.g. ${bold(fp(expectPath))}: "${bold(replaceLast(pv(m.path), m.args.actualExtension, m.args.expectExtension))}"`
+      return `The types is interpreted as ${m.args.actualFormat} when resolving with the "${bold(m.args.condition)}" condition. `
+        + additionalMessage
+        + `Consider splitting out two ${bold('"types"')} conditions for ${bold('"import"')} and ${bold('"require"')}, and use the ${warn(m.args.expectExtension)} extension, `
+        + `e.g. ${bold(fp(expectPath))}: "${bold(replaceLast(pv(m.path), m.args.actualExtension, m.args.expectExtension))}"`
     }
     default:
       return
