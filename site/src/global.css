@@ -36,9 +36,9 @@ body {
   opacity: 0.8;
 }
 
-.docs code {
+.docs :not(pre) code {
   color: #121212;
-  background-color: #dcdcdc;
+  background-color: #cdcac9;
   border-radius: 0.25rem;
   padding: 0.15rem 0.25rem;
 }
@@ -46,6 +46,11 @@ body {
 .docs code[class*='language-'] {
   display: block;
   padding: 0.5rem 0.8rem;
+}
+
+.docs .shiki {
+  border-radius: 0.25rem;
+  padding: 0.5rem;
 }
 
 .docs h2.active > code {
@@ -204,7 +209,7 @@ button {
     background-color: #2c2c2c;
   }
 
-  .docs code {
+  .docs :not(pre) code {
     color: #efefef;
     background-color: #434343;
   }
@@ -225,6 +230,12 @@ button {
   /* Header autolink */
   .docs a.anchor {
     color: #6fa6ff;
+  }
+
+  .shiki,
+  .shiki span {
+    background-color: var(--shiki-dark-bg) !important;
+    color: var(--shiki-dark) !important;
   }
 
   button {

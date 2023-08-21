@@ -61,9 +61,7 @@
     >
   {:else}
     <span class="indentable inline-flex">
-      <span class="text-blue-700 @dark:text-blue-300 mr-[1ch] min-w-max"
-        >{keyText}</span
-      >
+      <span class="key mr-[1ch] min-w-max">{keyText}</span>
       <span class="whitespace-nowrap token {typeof value}">
         {JSON.stringify(value)}
       </span>
@@ -93,20 +91,26 @@
 </li>
 
 <style>
+  /* NOTE: these styles must match shiki in the rules page */
+
+  .key {
+    color: #0451a5;
+  }
+
   .token {
     color: black;
   }
 
   .token.string {
-    color: brown;
+    color: #a31515;
   }
 
   .token.number {
-    color: yellow;
+    color: #098658;
   }
 
   .token.boolean {
-    color: blue;
+    color: #0000ff;
   }
 
   .indentable {
@@ -114,20 +118,24 @@
   }
 
   @media (prefers-color-scheme: dark) {
+    .key {
+      color: #9cdcfe;
+    }
+
     .token {
       color: white;
     }
 
     .token.string {
-      color: burlywood;
+      color: #ce9178;
     }
 
     .token.number {
-      color: lightyellow;
+      color: #b5cea8;
     }
 
     .token.boolean {
-      color: lightblue;
+      color: #569cd6;
     }
   }
 </style>
