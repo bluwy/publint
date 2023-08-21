@@ -24,23 +24,3 @@ function setHashActive(hash, active) {
     heading.classList.remove('active')
   }
 }
-
-function renderAsideMenu() {
-  const hashElements = document.querySelectorAll('h2')
-  const ul = document.createElement('ul')
-  ul.className = 'aside-menu-list relative left-0'
-  hashElements.forEach(el => {
-    const text = el.id
-    const li = document.createElement('li')
-    const a = document.createElement('a')
-    a.className = 'aside-link'
-    a.textContent = text
-    a.title = text
-    a.href = `#${text}`
-    li.appendChild(a)
-    ul.appendChild(li)
-  })
-  const asideMenu = document.querySelector('.aside-menu')
-  asideMenu?.appendChild(ul)
-}
-renderAsideMenu()

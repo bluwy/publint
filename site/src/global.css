@@ -199,18 +199,18 @@ button {
 }
 
 .aside-menu-container {
-  top: 80px;
-  left: 100%;
+  margin-right: 40px;
 }
 .docs .aside-menu-list {
   margin-top: 80px;
-  width: 200px;
-  text-overflow: ellipsis;
 }
-.aside-menu-list li {
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
+.aside-menu-list.hide {
+  visibility: hidden;
+}
+.aside-menu-list.show {
+  position: fixed; 
+  top: 0; 
+  z-index: 5;
 }
 .aside-link {
   text-decoration: none;
@@ -274,5 +274,11 @@ button {
   .bookmark {
     width: 2.5rem;
     height: 5rem;
+  }
+}
+
+@media screen and (max-width: 1290px) {
+  .aside-menu-container {
+    display: none;
   }
 }

@@ -59,7 +59,39 @@ export function markdown() {
       if (html.includes('<!-- rules.md -->')) {
         const markdown = await fs.readFile(rulesPath, 'utf-8')
         const rules = (await markdownProcessor.process(markdown)).toString()
-        return html.replace('<!-- rules.md -->', rules)
+        const idMatch = /<h2\s*id="(.*?)">/g
+        const links = []
+        let execResult, htmlText = ''
+        while(execResult = idMatch.exec(rules)) {
+          links.push(execResult[1])
+        }
+        htmlText = `
+        <div class="aside-menu-container">
+          <div class="aside-menu">
+            <ul class="aside-menu-list hide">
+              ${links.map(link => {
+                return `<li>
+                  <a class="aside-link" title="${link}" href="#${link}">${link}</a>
+                </li>`
+              }).join('\n')}
+            </ul>
+            <ul class="aside-menu-list show">
+              ${links.map(link => {
+                return `<li>
+                  <a class="aside-link" title="${link}" href="#${link}">${link}</a>
+                </li>`
+              }).join('\n')}
+            </ul>
+          </div>
+        </div>
+        <div class="max-w-3xl">
+          ${rules}
+          <footer class="my-16">
+            <a class="anchor-link" href="/"> ➥ Back to main page </a>
+          </footer>
+        </div>
+        `
+        return html.replace('<!-- rules.md -->', htmlText)
       }
     },
     handleHotUpdate(ctx) {
