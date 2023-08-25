@@ -9,7 +9,7 @@
     <script type="module" src="./src/rules.js"></script>
   </head>
   <body tabindex="-1">
-    <main class="docs w-full max-w-3xl mx-auto p-4 pt-10">
+    <main class="w-full mx-auto p-4 pt-10">
       <div style="display: none">
         <svg>
           <symbol id="autolink-icon" width="24" height="24" fill="currentColor">
@@ -19,7 +19,7 @@
           </symbol>
         </svg>
       </div>
-      <header class="absolute top-0 left-0 w-full z-10 px-4">
+      <header class="absolute xl:fixed top-0 left-0 w-full z-10 px-4">
         <nav class="bookmark-nav flex gap-4 justify-end max-w-3xl mx-auto">
           <a class="bookmark decoration-none" href="/" title="Go to main page">
             <img
@@ -43,10 +43,20 @@
           </a>
         </nav>
       </header>
-      <!-- rules.md -->
-      <footer class="my-16">
-        <a class="anchor-link" href="/"> ➥ Back to main page </a>
-      </footer>
+      <div class="flex justify-center">
+        <div class="docs max-w-3xl xl:ml-32">
+          <!-- rules.md -->
+          <footer class="my-16">
+            <a class="anchor-link" href="/"> ➥ Back to main page </a>
+          </footer>
+        </div>
+        <div class="relative hidden xl:block">
+          <aside class="rules-aside-toc pt-18 sticky top-10">
+            <p class="font-semibold mt-0 mb-2">On this page</p>
+            <!-- rules.md (aside) -->
+          </aside>
+        </div>
+      </div>
     </main>
   </body>
 </html>

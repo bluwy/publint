@@ -60,8 +60,11 @@ export function markdown() {
     async transformIndexHtml(html) {
       if (html.includes('<!-- rules.md -->')) {
         const markdown = await fs.readFile(rulesPath, 'utf-8')
-        const rules = (await markdownProcessor.process(markdown)).toString()
-        return html.replace('<!-- rules.md -->', rules)
+        const rulesHtml = (await markdownProcessor.process(markdown)).toString()
+        const tocHtml = getTocHtml(rulesHtml)
+        return html
+          .replace('<!-- rules.md -->', rulesHtml)
+          .replace('<!-- rules.md (aside) -->', tocHtml)
       }
     },
     handleHotUpdate(ctx) {
@@ -73,4 +76,21 @@ export function markdown() {
       }
     }
   }
+}
+
+/**
+ * @param {string} rulesHtml
+ */
+function getTocHtml(rulesHtml) {
+  const idMatch = /<h2\s*id="(.*?)">/g
+  /** @type {string[]} */
+  const links = []
+  let m
+  while ((m = idMatch.exec(rulesHtml))) {
+    links.push(m[1])
+  }
+  return `\
+<ul>
+  ${links.map((link) => `<li><a href="#${link}">${link}</a></li>`).join('\n')}
+</ul>`
 }

@@ -13,14 +13,16 @@ window.addEventListener('hashchange', (e) => {
  * @param {boolean} active
  */
 function setHashActive(hash, active) {
-  console.log('as')
   hash = hash.replace('#', '')
   if (!hash) return
   const heading = document.getElementById(hash)
-  if (!heading) return
+  const tocLink = document.querySelector(`.rules-aside-toc [href="#${hash}"]`)
+  if (!heading || !tocLink) return
   if (active) {
     heading.classList.add('active')
+    tocLink.classList.add('active')
   } else {
     heading.classList.remove('active')
+    tocLink.classList.remove('active')
   }
 }
