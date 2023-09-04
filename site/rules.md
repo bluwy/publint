@@ -83,6 +83,8 @@ This message may also provide helpful hints depending on the types format, which
 
 ## `EXPORT_TYPES_INVALID_FORMAT`
 
+Since TypeScript 5.0, it has emphasized that type files (`*.d.ts`) are also affected by its ESM and CJS context, and both contexts affect how the exported types is interpreted. This means that you can't share a single type file for both ESM and CJS exports of your library. You need to have two type files (albeit largely similar contents) when dual-publishing your library.
+
 When specifying the `"types"` conditions in the `"exports"` field, the types format is determined via its extension or its closest `package.json` `"type"` value, similar to the rule in [`IMPLICIT_INDEX_JS_INVALID_FORMAT`](#implicit_index_js_invalid_format). In short:
 
 - If the file ends with `.d.mts`, or if it's `.d.ts` and the closest `package.json` has `"type": "module"`, it's interpreted as ESM.
