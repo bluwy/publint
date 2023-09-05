@@ -21,7 +21,7 @@
 
   $: isValueArray = Array.isArray(value)
   $: isValueObject = value && typeof value === 'object'
-  $: keyText = key && isNaN(parseInt(key)) ? `"${key}": ` : ''
+  $: keyText = key && isNaN(parseInt(`${key}`)) ? `"${key}": ` : ''
 
   $: matchedMessages = messages.filter(
     (v) => v.path.length && isArrayEqual(paths, v.path)
