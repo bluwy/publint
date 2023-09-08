@@ -74,7 +74,12 @@
     />
     <div class="-mx-4">
       {#each shownMessages as msg}
-        <div class="{messageTypeToColor(msg.type)} {msg.type} border-4 px-4 py-2">
+        <div
+          class="
+            {messageTypeToColor(msg.type)}
+            message-type-{msg.type} border-4 px-4 py-2 scroll-mt-8
+          "
+        >
           {@html formatMessage(msg, pkg)}
         </div>
       {/each}
