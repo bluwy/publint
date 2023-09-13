@@ -492,12 +492,14 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
               // test if the expected extension and file path already exist. if so, skip warning as
               // this invalid format file is probably intentional for other use.
               // NOTE: only relax this for globbed files, as they're implicitly exported.
-              const expectFilePath = replaceLast(
-                filePath,
-                actualExtension,
-                expectExtension
-              )
-              if (await vfs.isPathExist(expectFilePath)) return
+              if (isGlob) {
+                const expectFilePath = replaceLast(
+                  filePath,
+                  actualExtension,
+                  expectExtension
+                )
+                if (await vfs.isPathExist(expectFilePath)) return
+              }
 
               messages.push({
                 code: isExplicitExtension(actualExtension)
