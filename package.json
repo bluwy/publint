@@ -15,9 +15,9 @@
     "node": ">=16"
   },
   "devDependencies": {
-    "@types/node": "^18.17.11",
+    "@types/node": "^18.17.15",
     "@types/pnpapi": "^0.0.2",
-    "prettier": "^3.0.2",
+    "prettier": "^3.0.3",
     "prettier-plugin-svelte": "^3.0.3",
     "svelte": "^4.2.0",
     "typescript": "^5.2.2"
