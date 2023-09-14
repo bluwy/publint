@@ -92,8 +92,8 @@ When specifying the `"types"` conditions in the `"exports"` field, the types for
 
 This rule is inspired from https://arethetypeswrong.github.io which has a more in-depth explanation. If you get a message of:
 
-1. `... types is in an invalid CJS format ...`: see [Masquerading as CJS](https://github.com/arethetypeswrong/arethetypeswrong.github.io/blob/main/docs/problems/FalseCJS.md).
-2. `... types is in an invalid ESM format ...`: see [Masquerading as ESM](https://github.com/arethetypeswrong/arethetypeswrong.github.io/blob/main/docs/problems/FalseESM.md).
+1. `... types is interpreted as CJS ...`: see [Masquerading as CJS](https://github.com/arethetypeswrong/arethetypeswrong.github.io/blob/main/docs/problems/FalseCJS.md).
+2. `... types is interpreted as ESM ...`: see [Masquerading as ESM](https://github.com/arethetypeswrong/arethetypeswrong.github.io/blob/main/docs/problems/FalseESM.md).
 
 An example of a correct configuration looks like this:
 
