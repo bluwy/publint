@@ -140,9 +140,7 @@
 </script>
 
 <svelte:head>
-  {#if npmPkgName && npmPkgVersion}
-    <title>{npmPkgName} - {npmPkgVersion} - publint</title>
-  {/if}
+  <title>{npmPkgName} - {npmPkgVersion ? npmPkgVersion + ' - ' : ''} publint</title>
 </svelte:head>
 
 <main class="flex flex-col items-center min-h-screen p-4">
