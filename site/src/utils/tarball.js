@@ -12,7 +12,12 @@ export function createTarballVfs(files) {
       path = path.endsWith('/') ? path : path + '/'
       return files.some((file) => file.name.startsWith(path))
     },
-    isPathExist: async (path) => files.some((file) => file.name === path),
+    isPathExist: async (path) => {
+      const pathDirVariant = path.endsWith('/') ? path : path + '/'
+      return files.some(
+        (file) => file.name === path || file.name.startsWith(pathDirVariant)
+      )
+    },
     pathJoin: (...parts) =>
       parts
         .map((v) => (v.startsWith('./') ? v.slice(2) : v))

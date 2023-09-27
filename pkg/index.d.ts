@@ -64,6 +64,7 @@ export type Message =
   | BaseMessage<'EXPORTS_VALUE_INVALID', { suggestValue: string }>
   | BaseMessage<'USE_EXPORTS_BROWSER'>
   | BaseMessage<'USE_EXPORTS_OR_IMPORTS_BROWSER'>
+  | BaseMessage<'USE_FILES'>
   | BaseMessage<
       'TYPES_NOT_EXPORTED',
       {

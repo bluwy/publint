@@ -80,6 +80,9 @@ export function formatMessage(m, pkg) {
     case 'USE_EXPORTS_OR_IMPORTS_BROWSER':
       // prettier-ignore
       return `${c.bold('pkg.browser')} with an object value can be refactored to use ${c.bold('pkg.exports')}/${c.bold('pkg.imports')} and the ${c.bold('"browser"')} condition to declare browser-specific exports. (This will be a breaking change)`
+    case 'USE_FILES':
+      // prettier-ignore
+      return `The package ${c.bold('publishes internal tests or config files')}. You can use ${c.bold('pkg.files')} to only publish certain files and save user bandwidth.`
     case 'TYPES_NOT_EXPORTED': {
       const typesFilePath = exportsRel(m.args.typesFilePath)
       if (m.args.actualExtension && m.args.expectExtension) {

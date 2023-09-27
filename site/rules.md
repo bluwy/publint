@@ -184,6 +184,16 @@ Depending on your setup, you can also use the `"exports"` field to directly expo
 }
 ```
 
+## `USE_FILES`
+
+Internal tests or config files are published, which are usually not needed and unused. You can use the [`"files"` field](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#files) to only publish certain files. For example:
+
+```json
+{
+  "files": ["src", "index.js", "index.d.ts"]
+}
+```
+
 ## `FIELD_INVALID_VALUE_TYPE`
 
 Some `package.json` fields has a set of allowed types, e.g. `string` or `object` only. If an invalid type is passed, this error message will be showed.

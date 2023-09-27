@@ -15,7 +15,8 @@ import {
   getDtsFilePathFormat,
   getDtsCodeFormatExtension,
   getPkgPathValue,
-  replaceLast
+  replaceLast,
+  commonInternalPaths
 } from './utils.js'
 
 /**
@@ -46,6 +47,24 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   const [main, mainPkgPath] = getPublishedField(rootPkg, 'main')
   const [module, modulePkgPath] = getPublishedField(rootPkg, 'module')
   const [exports, exportsPkgPath] = getPublishedField(rootPkg, 'exports')
+
+  // Check if package published internal tests or config files
+  if (rootPkg.files == null) {
+    promiseQueue.push(async () => {
+      for (const p of commonInternalPaths) {
+        const internalPath = vfs.pathJoin(pkgDir, p)
+        if (await vfs.isPathExist(internalPath)) {
+          messages.push({
+            code: 'USE_FILES',
+            args: {},
+            path: ['name'],
+            type: 'suggestion'
+          })
+          break
+        }
+      }
+    })
+  }
 
   // Relies on default node resolution
   // https://nodejs.org/api/modules.html#all-together

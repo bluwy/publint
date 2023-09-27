@@ -38,7 +38,11 @@ testFixture('exports-module', ['EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE'])
 
 testFixture('publish-config', ['FILE_DOES_NOT_EXIST', 'USE_EXPORTS_BROWSER'])
 
-testFixture('test-1', ['FILE_INVALID_FORMAT', 'TYPES_NOT_EXPORTED'])
+testFixture('test-1', [
+  'FILE_INVALID_FORMAT',
+  'TYPES_NOT_EXPORTED',
+  'USE_FILES'
+])
 
 testFixture('test-2', [
   'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
