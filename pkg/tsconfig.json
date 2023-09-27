@@ -9,5 +9,6 @@
     "strict": true,
     "noImplicitAny": false,
     "allowSyntheticDefaultImports": true
-  }
+  },
+  "include": ["./src/**/*.js", "./lib/**/*.js", "./tests/*.js", "./*.d.ts"]
 }

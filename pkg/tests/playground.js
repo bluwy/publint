@@ -115,6 +115,8 @@ testFixture('types-exports-resolution-dual-explicit', [
 
 testFixture('types-versions', [])
 
+testFixture('umd', ['FILE_INVALID_FORMAT', 'FILE_INVALID_FORMAT'])
+
 /**
  * @typedef {{
  *  level?: import('../index.d.ts').Options['level']
