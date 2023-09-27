@@ -65,6 +65,7 @@ export type Message =
   | BaseMessage<'USE_EXPORTS_BROWSER'>
   | BaseMessage<'USE_EXPORTS_OR_IMPORTS_BROWSER'>
   | BaseMessage<'USE_FILES'>
+  | BaseMessage<'AVOID_UMD_FOR_CJS_ONLY'>
   | BaseMessage<
       'TYPES_NOT_EXPORTED',
       {

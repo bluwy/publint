@@ -119,7 +119,11 @@ testFixture('types-exports-resolution-dual-explicit', [
 
 testFixture('types-versions', [])
 
-testFixture('umd', ['FILE_INVALID_FORMAT', 'FILE_INVALID_FORMAT'])
+testFixture('umd', [
+  'AVOID_UMD_FOR_CJS_ONLY',
+  'FILE_INVALID_FORMAT',
+  'FILE_INVALID_FORMAT'
+])
 
 /**
  * @typedef {{

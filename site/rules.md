@@ -194,6 +194,31 @@ Internal tests or config files are published, which are usually not needed and u
 }
 ```
 
+## `AVOID_UMD_FOR_CJS_ONLY`
+
+If a code is detected as [UMD (Universal Module Definition)](https://github.com/umdjs/umd) in a CJS-only package. Bundlers usually struggle to optimize optimize and interoperate with this code in ESM.
+
+A UMD code usually looks like this:
+
+```js
+;(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined'
+    ? factory(exports)
+    : typeof define === 'function' && define.amd
+    ? define(['exports'], factory)
+    : ((global = global || self), factory((global.umdPkgName = {})))
+})(this, function (exports) {
+  'use strict'
+
+  exports.foo = 'bar'
+  exports.default = 'default'
+
+  Object.defineProperty(exports, '__esModule', { value: true })
+})
+```
+
+// ...
+
 ## `FIELD_INVALID_VALUE_TYPE`
 
 Some `package.json` fields has a set of allowed types, e.g. `string` or `object` only. If an invalid type is passed, this error message will be showed.

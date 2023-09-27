@@ -16,7 +16,8 @@ import {
   getDtsCodeFormatExtension,
   getPkgPathValue,
   replaceLast,
-  commonInternalPaths
+  commonInternalPaths,
+  isCodeUmd
 } from './utils.js'
 
 /**
@@ -93,6 +94,14 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
             type: 'warning'
           })
         }
+        if (isCodeUmd(defaultContent)) {
+          messages.push({
+            code: 'AVOID_UMD_FOR_CJS_ONLY',
+            args: {},
+            path: mainPkgPath,
+            type: 'suggestion'
+          })
+        }
       }
     })
   }
@@ -136,6 +145,14 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
       if (actualFormat === 'ESM' && exports == null) {
         messages.push({
           code: 'HAS_ESM_MAIN_BUT_NO_EXPORTS',
+          args: {},
+          path: mainPkgPath,
+          type: 'suggestion'
+        })
+      }
+      if (isCodeUmd(mainContent) && module == null && exports == null) {
+        messages.push({
+          code: 'AVOID_UMD_FOR_CJS_ONLY',
           args: {},
           path: mainPkgPath,
           type: 'suggestion'

@@ -7,6 +7,7 @@ import {
   getCodeFormat,
   isCodeCjs,
   isCodeEsm,
+  isCodeUmd,
   isFileContentLintable,
   isFilePathLintable,
   stripComments
@@ -35,6 +36,23 @@ const esmCode = [
 ]
 
 const isoCode = [`console.log('hello')`, `document.title = 'bla`]
+
+const umdCode = [
+  `
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+  typeof define === 'function' && define.amd ? define(['exports'], factory) :
+  (global = global || self, factory(global.umdPkgName = {}));
+}(this, (function (exports) { 'use strict';
+
+exports.foo = 'bar'
+exports.default = 'default';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+})))`,
+  `!function(t,i){"object"==typeof exports&&"undefined"!=typeof module?i(exports):"function"==typeof define&&define.amd?define(["exports"],i):i((t=t||self).lil={})}(this,(function(t){"use strict";`
+]
 
 test('isCodeCjs', () => {
   for (const code of cjsCode) {
@@ -101,6 +119,12 @@ test('getCodeFormat', () => {
   }
   for (const code of isoCode) {
     equal(getCodeFormat(code), 'unknown', code)
+  }
+})
+
+test('isCodeUmd', () => {
+  for (const code of umdCode) {
+    equal(isCodeUmd(code), true, code)
   }
 })
 

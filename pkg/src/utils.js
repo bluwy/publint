@@ -83,6 +83,39 @@ export function getCodeFormat(code) {
 }
 
 /**
+ * @param {string} code
+ */
+export function isCodeUmd(code) {
+  // Regexes to identify UMD code
+  const UMD_1_RE = /function\s*\(global,\s*factory\)\s*\{/m
+  const UMD_2_RE =
+    /typeof\s+define\s*===\s*['"]function['"]\s*&&\s*define\s*\.\s*amd/m
+  const UMD_3_RE =
+    /typeof\s+exports\s*===\s*['"]object['"]\s*&&\s*typeof\s+module\s*!==\s*['"]undefined['"]/m
+
+  if (UMD_1_RE.test(code) && UMD_2_RE.test(code) && UMD_3_RE.test(code)) {
+    return true
+  }
+
+  // Regex to identify minified UMD code
+  const UMD_MIN_1_RE = /function\(\w,\w\)\{/
+  const UMD_MIN_2_RE =
+    /['"]function['"]\s*===?\s*typeof\s+define\s*&&\s*define\s*\.\s*amd/
+  const UMD_MIN_3_RE =
+    /['"]object['"]\s*===?\s*typeof\s+exports\s*&&\s*['"]undefined['"]\s*!==?\s*typeof\s+module/
+
+  if (
+    UMD_MIN_1_RE.test(code) &&
+    UMD_MIN_2_RE.test(code) &&
+    UMD_MIN_3_RE.test(code)
+  ) {
+    return true
+  }
+
+  return false
+}
+
+/**
  * Handle `exports` glob
  * @param {string} globStr An absolute glob string that must contain one `*`
  * @param {import('../index.d.ts').Vfs} vfs
