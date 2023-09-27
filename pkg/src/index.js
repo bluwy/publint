@@ -47,58 +47,6 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   const [module, modulePkgPath] = getPublishedField(rootPkg, 'module')
   const [exports, exportsPkgPath] = getPublishedField(rootPkg, 'exports')
 
-  /**
-   * @param {string} path file path to read
-   * @param {string[]} [pkgPath] current path that tries to read this file.
-   *   pass `undefined` to prevent error reporting if the file is missing.
-   * @param {string[]} tryExtensions list of extensions to try before giving up
-   * @returns {Promise<string | false>}
-   */
-  async function readFile(path, pkgPath = undefined, tryExtensions = []) {
-    try {
-      const content = await vfs.readFile(path)
-      if (pkgPath && _packedFiles && !_packedFiles.includes(path)) {
-        fileNotPublished(pkgPath)
-      }
-      return content
-    } catch {
-      for (let ext of tryExtensions) {
-        // remove duplicated slashes
-        if (ext[0] === '/' && path[path.length - 1] === '/') {
-          ext = ext.slice(1)
-        }
-        try {
-          const content = await vfs.readFile(path + ext)
-          if (pkgPath && _packedFiles && !_packedFiles.includes(path)) {
-            fileNotPublished(pkgPath)
-          }
-          return content
-        } catch {}
-      }
-      if (pkgPath) {
-        messages.push({
-          code: 'FILE_DOES_NOT_EXIST',
-          args: {},
-          path: pkgPath,
-          type: 'error'
-        })
-      }
-      return false
-    }
-  }
-
-  /**
-   * @param {string[]} pkgPath
-   */
-  function fileNotPublished(pkgPath) {
-    messages.push({
-      code: 'FILE_NOT_PUBLISHED',
-      args: {},
-      path: pkgPath,
-      type: 'error'
-    })
-  }
-
   // Relies on default node resolution
   // https://nodejs.org/api/modules.html#all-together
   // LOAD_INDEX(X)
@@ -346,6 +294,58 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   }
 
   return { messages }
+
+  /**
+   * @param {string} path file path to read
+   * @param {string[]} [pkgPath] current path that tries to read this file.
+   *   pass `undefined` to prevent error reporting if the file is missing.
+   * @param {string[]} tryExtensions list of extensions to try before giving up
+   * @returns {Promise<string | false>}
+   */
+  async function readFile(path, pkgPath = undefined, tryExtensions = []) {
+    try {
+      const content = await vfs.readFile(path)
+      if (pkgPath && _packedFiles && !_packedFiles.includes(path)) {
+        fileNotPublished(pkgPath)
+      }
+      return content
+    } catch {
+      for (let ext of tryExtensions) {
+        // remove duplicated slashes
+        if (ext[0] === '/' && path[path.length - 1] === '/') {
+          ext = ext.slice(1)
+        }
+        try {
+          const content = await vfs.readFile(path + ext)
+          if (pkgPath && _packedFiles && !_packedFiles.includes(path)) {
+            fileNotPublished(pkgPath)
+          }
+          return content
+        } catch {}
+      }
+      if (pkgPath) {
+        messages.push({
+          code: 'FILE_DOES_NOT_EXIST',
+          args: {},
+          path: pkgPath,
+          type: 'error'
+        })
+      }
+      return false
+    }
+  }
+
+  /**
+   * @param {string[]} pkgPath
+   */
+  function fileNotPublished(pkgPath) {
+    messages.push({
+      code: 'FILE_NOT_PUBLISHED',
+      args: {},
+      path: pkgPath,
+      type: 'error'
+    })
+  }
 
   /**
    * @param {string | Record<string, any>} fieldValue

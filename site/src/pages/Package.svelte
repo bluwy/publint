@@ -140,6 +140,7 @@
 </script>
 
 <svelte:head>
+  <!-- prettier-ignore -->
   <title>{npmPkgName} - {npmPkgVersion ? npmPkgVersion + ' - ' : ''} publint</title>
 </svelte:head>
 
