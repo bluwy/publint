@@ -1,0 +1,8 @@
+{
+  "name": "publint-invalid-field-types",
+  "version": "0.0.1",
+  "private": true,
+  "main": 0,
+  "module": true,
+  "jsnext:main": false
+}

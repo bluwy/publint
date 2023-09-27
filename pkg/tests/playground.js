@@ -20,6 +20,12 @@ testFixture('glob-deprecated', [
   'EXPORTS_GLOB_NO_MATCHED_FILES'
 ])
 
+testFixture('invalid-field-types', [
+  'FIELD_INVALID_VALUE_TYPE',
+  'FIELD_INVALID_VALUE_TYPE',
+  'FIELD_INVALID_VALUE_TYPE'
+])
+
 testFixture('missing-files', [
   ...Array(7).fill('FILE_DOES_NOT_EXIST'),
   'FILE_NOT_PUBLISHED',

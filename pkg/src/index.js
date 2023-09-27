@@ -50,7 +50,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   // Relies on default node resolution
   // https://nodejs.org/api/modules.html#all-together
   // LOAD_INDEX(X)
-  if (!main && !module && !exports) {
+  if (main == null && module == null && exports == null) {
     promiseQueue.push(async () => {
       // check index.js only, others aren't our problem
       const defaultPath = vfs.pathJoin(pkgDir, 'index.js')
@@ -83,8 +83,9 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
    * - It's mostly used for CJS
    * - It can be used for ESM, but if you're doing so, might as well use exports
    */
-  if (main) {
+  if (main != null) {
     promiseQueue.push(async () => {
+      if (!ensureTypeOfField(main, ['string'], mainPkgPath)) return
       const mainPath = vfs.pathJoin(pkgDir, main)
       const mainContent = await readFile(mainPath, mainPkgPath, [
         '.js',
@@ -130,8 +131,9 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
    * - Is not a way to support dual packages in NodeJS
    * - Should be MJS always!!
    */
-  if (module) {
+  if (module != null) {
     promiseQueue.push(async () => {
+      if (!ensureTypeOfField(module, ['string'], modulePkgPath)) return
       const modulePath = vfs.pathJoin(pkgDir, module)
       const moduleContent = await readFile(modulePath, modulePkgPath, [
         '.js',
@@ -176,7 +178,10 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   }
   for (const field of knownFields) {
     const [fieldValue, fieldPkgPath] = getPublishedField(rootPkg, field)
-    if (typeof fieldValue === 'string') {
+    if (
+      fieldValue != null &&
+      ensureTypeOfField(fieldValue, ['string'], fieldPkgPath)
+    ) {
       promiseQueue.push(async () => {
         const fieldPath = vfs.pathJoin(pkgDir, fieldValue)
         await readFile(fieldPath, fieldPkgPath, ['.js', '/index.js'])
@@ -345,6 +350,28 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
       path: pkgPath,
       type: 'error'
     })
+  }
+
+  /**
+   * @param {any} fieldValue
+   * @param {('string' | 'number' | 'boolean' | 'object')[]} expectTypes
+   * @param {string[]} pkgPath
+   */
+  function ensureTypeOfField(fieldValue, expectTypes, pkgPath) {
+    // @ts-expect-error typeof doesn't need to match `expectedTypes` type but TS panics
+    if (!expectTypes.includes(typeof fieldValue)) {
+      messages.push({
+        code: 'FIELD_INVALID_VALUE_TYPE',
+        args: {
+          actualType: typeof fieldValue,
+          expectTypes
+        },
+        path: pkgPath,
+        type: 'error'
+      })
+      return false
+    }
+    return true
   }
 
   /**

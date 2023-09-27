@@ -118,6 +118,18 @@ function messageToString(m, pkg) {
         + `Consider splitting out two ${bold('"types"')} conditions for ${bold('"import"')} and ${bold('"require"')}, and use the ${warn(m.args.expectExtension)} extension, `
         + `e.g. ${bold(fp(expectPath))}: "${bold(replaceLast(pv(m.path), m.args.actualExtension, m.args.expectExtension))}"`
     }
+    case 'FIELD_INVALID_VALUE_TYPE': {
+      let expectStr = m.args.expectTypes[0]
+      for (let i = 1; i < m.args.expectTypes.length; i++) {
+        if (i === m.args.expectTypes.length - 1) {
+          expectStr += ` or ${m.args.expectTypes[i]}`
+        } else {
+          expectStr += `, ${m.args.expectTypes[i]}`
+        }
+      }
+      // prettier-ignore
+      return `${bold(fp(m.path))} is ${bold(pv(m.path))} which is an invalid ${bold(m.args.actualType)} type. Expected a ${bold(expectStr)} type instead.`
+    }
     default:
       return
   }

@@ -83,6 +83,13 @@ export type Message =
         expectExtension: string
       }
     >
+  | BaseMessage<
+      'FIELD_INVALID_VALUE_TYPE',
+      {
+        actualType: string
+        expectTypes: string[]
+      }
+    >
 
 export interface Options {
   /**

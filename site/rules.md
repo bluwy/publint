@@ -183,3 +183,7 @@ Depending on your setup, you can also use the `"exports"` field to directly expo
   }
 }
 ```
+
+## `FIELD_INVALID_VALUE_TYPE`
+
+Some `package.json` fields has a set of allowed types, e.g. `string` or `object` only. If an invalid type is passed, this error message will be showed.

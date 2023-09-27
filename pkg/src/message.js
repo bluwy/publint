@@ -119,6 +119,18 @@ export function formatMessage(m, pkg) {
         + `Consider splitting out two ${c.bold('"types"')} conditions for ${c.bold('"import"')} and ${c.bold('"require"')}, and use the ${c.yellow(m.args.expectExtension)} extension, `
         + `e.g. ${c.bold(fp(expectPath))}: "${c.bold(replaceLast(pv(m.path), m.args.actualExtension, m.args.expectExtension))}"`
     }
+    case 'FIELD_INVALID_VALUE_TYPE': {
+      let expectStr = m.args.expectTypes[0]
+      for (let i = 1; i < m.args.expectTypes.length; i++) {
+        if (i === m.args.expectTypes.length - 1) {
+          expectStr += ` or ${m.args.expectTypes[i]}`
+        } else {
+          expectStr += `, ${m.args.expectTypes[i]}`
+        }
+      }
+      // prettier-ignore
+      return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} which is an invalid ${c.bold(m.args.actualType)} type. Expected a ${c.bold(expectStr)} type instead.`
+    }
     default:
       return
   }
