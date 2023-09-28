@@ -131,8 +131,11 @@ function messageToString(m, pkg) {
         }
       }
       // prettier-ignore
-      return `${bold(fp(m.path))} is ${bold(pv(m.path))} which is an invalid ${bold(m.args.actualType)} type. Expected a ${bold(expectStr)} type instead.`
+      return `The field value has an invalid ${bold(m.args.actualType)} type. Expected a ${bold(expectStr)} type instead.`
     }
+    case 'EXPORTS_VALUE_CONFLICTS_WITH_BROWSER':
+      // prettier-ignore
+      return `${bold(pv(m.path))} matches ${bold(fp(m.args.browserPath))}: "${bold(pv(m.args.browserPath))}", which overrides the path when building the library with the "${bold(m.args.browserishCondition)}" condition. This is usually unintentional and may cause build issues. Consider using a different file name for ${bold(pv(m.path))}.`
     default:
       return
   }

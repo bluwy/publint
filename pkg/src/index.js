@@ -1,3 +1,4 @@
+import { commonInternalPaths, knownBrowserishConditions } from './constants.js'
 import {
   exportsGlob,
   getCodeFormat,
@@ -15,8 +16,7 @@ import {
   getDtsFilePathFormat,
   getDtsCodeFormatExtension,
   getPkgPathValue,
-  replaceLast,
-  commonInternalPaths
+  replaceLast
 } from './utils.js'
 
 /**
@@ -488,6 +488,26 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
           }
           await pq.wait()
           return
+        }
+
+        // if the exports value matches a key in `pkg.browser` (meaning it'll be remapped
+        // if in a browser-ish environment), check if this is a browser-ish environment/condition.
+        // if so, warn about this conflict as it's often unexpected behaviour.
+        if (typeof browser === 'object' && exportsValue in browser) {
+          const browserishCondition = knownBrowserishConditions.find((c) =>
+            currentPath.includes(c)
+          )
+          if (browserishCondition) {
+            messages.push({
+              code: 'EXPORTS_VALUE_CONFLICTS_WITH_BROWSER',
+              args: {
+                browserPath: browserPkgPath.concat(exportsValue),
+                browserishCondition
+              },
+              path: currentPath,
+              type: 'warning'
+            })
+          }
         }
 
         const pq = createPromiseQueue()

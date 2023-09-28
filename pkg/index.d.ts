@@ -91,6 +91,17 @@ export type Message =
         expectTypes: string[]
       }
     >
+  | BaseMessage<
+      'EXPORTS_VALUE_CONFLICTS_WITH_BROWSER',
+      {
+        /**
+         * The path to the key inside the `"browser"` field that conflicts with
+         * the current path `"exports"` field
+         */
+        browserPath: string[]
+        browserishCondition: string
+      }
+    >
 
 export interface Options {
   /**

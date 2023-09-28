@@ -197,3 +197,28 @@ Internal tests or config files are published, which are usually not needed and u
 ## `FIELD_INVALID_VALUE_TYPE`
 
 Some `package.json` fields has a set of allowed types, e.g. `string` or `object` only. If an invalid type is passed, this error message will be showed.
+
+## `EXPORTS_VALUE_CONFLICTS_WITH_BROWSER`
+
+When an `"exports"` value resolved with a browser-ish condition matches a key in the `"browser"` field object, this means the `"exports"` value is overriden by that matching `"browser"` key. This may cause build issues as the intended `"exports"` value is no longer used. For example, given this setup:
+
+```json
+{
+  "browser": {
+    "./lib.server.js": "./lib.browser.js"
+  },
+  "exports": {
+    ".": {
+      "worker": "./lib.server.js",
+      "browser": "./lib.browser.js",
+      "default": "./lib.server.js"
+    }
+  }
+}
+```
+
+When matching the `"worker"` condition, it will resolve to `"./lib.server.js"` which is intended to work in a worker environment. However, the `"browser"` field also has a matching mapping for `"./lib.server.js"`, causing the final resolved path to be `"./lib.browser.js"`.
+
+This is usually not intended and causes the wrong file to be loaded. If it is intended, the `"worker"` condition should point to `"./lib.browser.js"` directly instead.
+
+To fix this, you can rename `"./lib.server.js"` to `"./lib.worker.js"` for example so it has its own specific file. Or check out the [USE_EXPORTS_OR_IMPORTS_BROWSER](#use_exports_or_imports_browser) rule to refactor away the `"browser"` field.

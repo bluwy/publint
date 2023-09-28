@@ -8,21 +8,6 @@
  * }} Pkg
  */
 
-// NOTE: this list is intentionally non-exhaustive and subjective as it's used for
-// loose detection purpose for `pkg.files` recommendation only. please dont submit
-// a PR to extend it.
-export const commonInternalPaths = [
-  // directories
-  'test/',
-  'tests/',
-  '__tests__/',
-  // files
-  '.prettierrc',
-  'prettier.config.js',
-  '.eslintrc',
-  '.eslintrc.js'
-]
-
 /**
  * @typedef {'ESM' | 'CJS' | 'mixed' | 'unknown'} CodeFormat
  */

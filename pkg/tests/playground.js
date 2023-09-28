@@ -5,6 +5,11 @@ import { equal } from 'uvu/assert'
 import { publint } from '../lib/node.js'
 import { formatMessage } from '../lib/utils-node.js'
 
+testFixture('exports-browser-conflict', [
+  'EXPORTS_VALUE_CONFLICTS_WITH_BROWSER',
+  'USE_EXPORTS_OR_IMPORTS_BROWSER'
+])
+
 testFixture('exports-styles', [
   'EXPORTS_VALUE_INVALID',
   'FILE_DOES_NOT_EXIST',

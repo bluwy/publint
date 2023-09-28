@@ -134,6 +134,9 @@ export function formatMessage(m, pkg) {
       // prettier-ignore
       return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} which is an invalid ${c.bold(m.args.actualType)} type. Expected a ${c.bold(expectStr)} type instead.`
     }
+    case 'EXPORTS_VALUE_CONFLICTS_WITH_BROWSER':
+      // prettier-ignore
+      return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} which also matches ${c.bold(fp(m.args.browserPath))}: "${c.bold(pv(m.args.browserPath))}", which overrides the path when building the library with the "${c.bold(m.args.browserishCondition)}" condition. This is usually unintentional and may cause build issues. Consider using a different file name for ${c.bold(pv(m.path))}.`
     default:
       return
   }
