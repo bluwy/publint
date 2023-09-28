@@ -25,6 +25,10 @@ If the file has an invalid format through explicit entrypoints, e.g. the `"main"
 
 Invalid format checks are the same as [above](#implicit_index_js_invalid_format), except scoped down for explicit extensions for better error messages.
 
+## `FILE_INVALID_JSX_EXTENSION`
+
+JSX extensions such as `.cjsx`, `.mjsx`, `.ctsx`, and `.mtsx` are invalid and are usually mistaken as ESM and CJS variants of JSX. Many tooling don't support these extensions by default. Instead they should be written in plain ESM using the `.jsx` extension.
+
 ## `FILE_DOES_NOT_EXIST`
 
 The specified file does not exist.
