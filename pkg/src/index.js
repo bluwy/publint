@@ -166,7 +166,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
       ])
       if (moduleContent === false) return
       if (hasInvalidJsxExtension(module, modulePkgPath)) return
-      if (!isFilePathLintable(main)) return
+      if (!isFilePathLintable(module)) return
       const actualFormat = getCodeFormat(moduleContent)
       if (actualFormat === 'CJS') {
         messages.push({

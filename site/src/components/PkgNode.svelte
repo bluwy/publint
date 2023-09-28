@@ -77,7 +77,7 @@
         <div
           class="
             {messageTypeToColor(msg.type)}
-            message-type-{msg.type} border-4 px-4 py-2 scroll-mt-8
+            message message-type-{msg.type} border-solid border-4 px-4 py-2 scroll-mt-8
           "
         >
           {@html formatMessage(msg, pkg)}
@@ -120,6 +120,10 @@
 
   .indentable {
     margin-left: var(--indent-ch);
+  }
+
+  .message ~ .message {
+    border-top: 0;
   }
 
   @media (prefers-color-scheme: dark) {
