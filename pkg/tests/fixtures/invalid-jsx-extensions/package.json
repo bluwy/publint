@@ -1,0 +1,7 @@
+{
+  "name": "publint-invalid-jsx-extensions",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./main.cjsx",
+  "module": "./main.mjsx"
+}

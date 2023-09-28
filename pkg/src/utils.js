@@ -1,3 +1,5 @@
+import { lintableFileExtensions } from './constants.js'
+
 /**
  * @typedef {{
  *   name: string,
@@ -213,11 +215,7 @@ export function isExplicitExtension(path) {
  * @param {string} filePath
  */
 export function isFilePathLintable(filePath) {
-  return (
-    filePath.endsWith('.js') ||
-    filePath.endsWith('.mjs') ||
-    filePath.endsWith('.cjs')
-  )
+  return lintableFileExtensions.some((ext) => filePath.endsWith(ext))
 }
 
 // support:

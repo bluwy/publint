@@ -44,6 +44,10 @@ export type Message =
         actualFilePath?: string
       }
     >
+  | BaseMessage<
+      'FILE_INVALID_JSX_EXTENSION',
+      { actualExtension: string; globbedFilePath?: string }
+    >
   | BaseMessage<'FILE_DOES_NOT_EXIST'>
   | BaseMessage<'FILE_NOT_PUBLISHED'>
   | BaseMessage<'MODULE_SHOULD_BE_ESM'>

@@ -1,4 +1,8 @@
-import { commonInternalPaths, knownBrowserishConditions } from './constants.js'
+import {
+  commonInternalPaths,
+  invalidJsxExtensions,
+  knownBrowserishConditions
+} from './constants.js'
 import {
   exportsGlob,
   getCodeFormat,
@@ -111,6 +115,8 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
         '/index.js'
       ])
       if (mainContent === false) return
+      if (hasInvalidJsxExtension(main, mainPkgPath)) return
+      if (!isFilePathLintable(main)) return
       const actualFormat = getCodeFormat(mainContent)
       const expectFormat = await getFilePathFormat(mainPath, vfs)
       if (
@@ -159,6 +165,8 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
         '/index.js'
       ])
       if (moduleContent === false) return
+      if (hasInvalidJsxExtension(module, modulePkgPath)) return
+      if (!isFilePathLintable(main)) return
       const actualFormat = getCodeFormat(moduleContent)
       if (actualFormat === 'CJS') {
         messages.push({
@@ -248,6 +256,14 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
       )
       const pq = createPromiseQueue()
       for (const filePath of files) {
+        if (
+          hasInvalidJsxExtension(
+            filePath,
+            ['name'],
+            '/' + vfs.pathRelative(pkgDir, filePath)
+          )
+        )
+          continue
         if (!isFilePathLintable(filePath)) continue
         pq.push(async () => {
           const fileContent = await readFile(filePath, [])
@@ -369,6 +385,28 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
       path: pkgPath,
       type: 'error'
     })
+  }
+
+  /**
+   * @param {string} filePath
+   * @param {string[]} currentPath
+   * @param {string} [globbedFilePath] only needed for globs
+   */
+  function hasInvalidJsxExtension(filePath, currentPath, globbedFilePath) {
+    const matched = invalidJsxExtensions.find((ext) => filePath.endsWith(ext))
+    if (matched) {
+      messages.push({
+        code: 'FILE_INVALID_JSX_EXTENSION',
+        args: {
+          actualExtension: matched,
+          globbedFilePath
+        },
+        path: currentPath,
+        type: 'error'
+      })
+      return true
+    }
+    return false
   }
 
   /**
@@ -514,6 +552,14 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
 
         // TODO: group glob warnings
         for (const filePath of exportsFiles) {
+          if (
+            hasInvalidJsxExtension(
+              filePath,
+              currentPath,
+              isGlob ? './' + vfs.pathRelative(pkgDir, filePath) : undefined
+            )
+          )
+            return
           // TODO: maybe check .ts in the future
           if (!isFilePathLintable(filePath)) continue
           pq.push(async () => {

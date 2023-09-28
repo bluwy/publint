@@ -1,3 +1,10 @@
+// extensions that publint is able to parse and lint. while there's partial support
+// for TypeScript, it's not completely safe to do so in a check yet
+export const lintableFileExtensions = ['.js', '.mjs', '.cjs']
+
+// common misconception that JSX is also affected by "m" and "c" semantics
+export const invalidJsxExtensions = ['.mjsx', '.cjsx', '.mtsx', '.cjsx']
+
 // Some exports condition are known to be similar to the browser condition but
 // runs slightly different. Specifically, the `pkg.browser` field will be applied
 // even after resolving with these export conditions, which can be confusing at times.

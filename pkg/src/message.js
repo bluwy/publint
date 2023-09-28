@@ -36,6 +36,16 @@ export function formatMessage(m, pkg) {
       // prettier-ignore
       return `${start} ends with the ${c.yellow(m.args.actualExtension)} extension, but the code is written in ${c.yellow(m.args.actualFormat)}. Consider using the ${c.yellow(m.args.expectExtension)} extension, e.g. ${c.bold(replaceLast(relativePath,m.args.actualExtension, m.args.expectExtension))}`
     }
+    case 'FILE_INVALID_JSX_EXTENSION': {
+      const is = m.args.globbedFilePath ? 'matches' : 'is'
+      const relativePath = m.args.globbedFilePath ?? pv(m.path)
+      const start =
+        m.path[0] === 'name'
+          ? c.bold(relativePath)
+          : `${c.bold(fp(m.path))} ${is} ${c.bold(relativePath)} which`
+      // prettier-ignore
+      return `${start} uses an invalid ${c.bold(m.args.actualExtension)} extension. You don't need to split ESM and CJS formats for JSX. You should write a single file in ESM with the ${c.bold('.jsx')} extension instead, e.g. ${c.bold(replaceLast(pv(m.path), m.args.actualExtension, '.jsx'))}`
+    }
     case 'FILE_DOES_NOT_EXIST':
       // prettier-ignore
       return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but the file does not exist.`

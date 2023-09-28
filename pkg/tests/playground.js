@@ -31,6 +31,10 @@ testFixture('invalid-field-types', [
   'FIELD_INVALID_VALUE_TYPE'
 ])
 
+testFixture('invalid-jsx-extensions', [
+  ...Array(4).fill('FILE_INVALID_JSX_EXTENSION')
+])
+
 testFixture('missing-files', [
   ...Array(7).fill('FILE_DOES_NOT_EXIST'),
   'FILE_NOT_PUBLISHED',

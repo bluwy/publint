@@ -37,6 +37,11 @@ function messageToString(m, pkg) {
       // prettier-ignore
       return `${bold(relativePath)} ends with the ${warn(m.args.actualExtension)} extension, but the code is written in ${warn(m.args.actualFormat)}. Consider using the ${warn(m.args.expectExtension)} extension, e.g. ${bold(replaceLast(relativePath, m.args.actualExtension, m.args.expectExtension))}`
     }
+    case 'FILE_INVALID_JSX_EXTENSION': {
+      const relativePath = m.args.globbedFilePath ?? pv(m.path)
+      // prettier-ignore
+      return `${bold(relativePath)} uses an invalid ${bold(m.args.actualExtension)} extension. You don't need to split ESM and CJS formats for JSX. You should write a single file in ESM with the ${bold('.jsx')} extension instead, e.g. ${bold(replaceLast(pv(m.path), m.args.actualExtension, '.jsx'))}`
+    }
     case 'FILE_DOES_NOT_EXIST':
       // prettier-ignore
       return `File does not exist`
