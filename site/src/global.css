@@ -55,6 +55,7 @@ button {
 .docs .shiki {
   border-radius: 0.25rem;
   padding: 0.5rem;
+  overflow-x: auto;
 }
 
 .docs h2.active > code {
@@ -112,6 +113,7 @@ code {
 
 h2 code {
   font-size: inherit;
+  word-break: break-all;
 }
 
 a {
@@ -208,11 +210,15 @@ button {
 
 .rules-aside-toc {
   padding-left: 2rem;
+  height: calc(100vh - 5.5rem);
+  overflow-y: hidden;
 }
 
 .rules-aside-toc ul {
   margin: 0;
   padding: 0;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .rules-aside-toc li {
@@ -290,7 +296,7 @@ button {
   }
 }
 
-@media (min-width: 456px) {
+@media (min-width: 52rem) {
   .docs a.anchor {
     position: absolute;
     top: calc(50% + 5px);
