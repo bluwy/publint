@@ -15,7 +15,7 @@
     "node": ">=16"
   },
   "devDependencies": {
-    "@types/node": "^18.17.15",
+    "@types/node": "^18.18.4",
     "@types/pnpapi": "^0.0.3",
     "prettier": "^3.0.3",
     "prettier-plugin-svelte": "^3.0.3",
