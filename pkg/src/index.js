@@ -57,6 +57,12 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
     promiseQueue.push(async () => {
       for (const p of commonInternalPaths) {
         const internalPath = vfs.pathJoin(pkgDir, p)
+        if (
+          _packedFiles &&
+          _packedFiles.every((f) => !f.startsWith(internalPath))
+        ) {
+          continue
+        }
         if (await vfs.isPathExist(internalPath)) {
           messages.push({
             code: 'USE_FILES',
