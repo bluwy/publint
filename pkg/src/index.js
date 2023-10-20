@@ -363,7 +363,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
         }
         try {
           const content = await vfs.readFile(path + ext)
-          if (pkgPath && _packedFiles && !_packedFiles.includes(path)) {
+          if (pkgPath && _packedFiles && !_packedFiles.includes(path + ext)) {
             fileNotPublished(pkgPath)
           }
           return content
