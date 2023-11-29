@@ -196,12 +196,18 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
 
   // check file existence for other known package fields
   const knownFields = [
-    'types',
-    'typings',
-    'jsnext:main',
-    'jsnext',
-    'unpkg',
-    'jsdelivr'
+    { name: 'types' },
+    { name: 'typings' },
+    {
+      name: 'jsnext:main',
+      deprecatedCode: /** @type {const} */ ('DEPRECATED_FIELD_JSNEXT')
+    },
+    {
+      name: 'jsnext',
+      deprecatedCode: /** @type {const} */ ('DEPRECATED_FIELD_JSNEXT')
+    },
+    { name: 'unpkg' },
+    { name: 'jsdelivr' }
   ]
   // if has typesVersions field, it complicates `types`/`typings` field resolution a lot.
   // for now skip it, but further improvements are tracked at
@@ -209,15 +215,25 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   if (getPublishedField(rootPkg, 'typesVersions')[0]) {
     knownFields.splice(0, 2)
   }
-  for (const field of knownFields) {
-    const [fieldValue, fieldPkgPath] = getPublishedField(rootPkg, field)
+  for (const { name: fieldName, deprecatedCode } of knownFields) {
+    const [fieldValue, fieldPkgPath] = getPublishedField(rootPkg, fieldName)
     if (
       fieldValue != null &&
       ensureTypeOfField(fieldValue, ['string'], fieldPkgPath)
     ) {
       promiseQueue.push(async () => {
         const fieldPath = vfs.pathJoin(pkgDir, fieldValue)
-        await readFile(fieldPath, fieldPkgPath, ['.js', '/index.js'])
+        const hasContent =
+          (await readFile(fieldPath, fieldPkgPath, ['.js', '/index.js'])) !==
+          false
+        if (hasContent && deprecatedCode) {
+          messages.push({
+            code: deprecatedCode,
+            args: {},
+            path: fieldPkgPath,
+            type: 'warning'
+          })
+        }
       })
     }
   }

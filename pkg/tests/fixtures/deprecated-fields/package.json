@@ -1,0 +1,8 @@
+{
+  "name": "publint-glob-deprecated",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./index.js",
+  "jsnext": "./index.js",
+  "jsnext:main": "./index.js"
+}

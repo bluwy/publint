@@ -106,6 +106,7 @@ export type Message =
         browserishCondition: string
       }
     >
+  | BaseMessage<'DEPRECATED_FIELD_JSNEXT'>
 
 export interface Options {
   /**
