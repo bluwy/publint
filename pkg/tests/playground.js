@@ -134,6 +134,11 @@ testFixture('types-versions', [])
 
 testFixture('umd', ['FILE_INVALID_FORMAT', 'FILE_INVALID_FORMAT'])
 
+testFixture('deprecated-fields', [
+  'DEPRECATED_FIELD_JSNEXT',
+  'DEPRECATED_FIELD_JSNEXT'
+])
+
 /**
  * @typedef {{
  *  level?: import('../index.d.ts').Options['level']

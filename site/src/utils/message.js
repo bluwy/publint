@@ -141,6 +141,9 @@ function messageToString(m, pkg) {
     case 'EXPORTS_VALUE_CONFLICTS_WITH_BROWSER':
       // prettier-ignore
       return `${bold(pv(m.path))} matches ${bold(fp(m.args.browserPath))}: "${bold(pv(m.args.browserPath))}", which overrides the path when building the library with the "${bold(m.args.browserishCondition)}" condition. This is usually unintentional and may cause build issues. Consider using a different file name for ${bold(pv(m.path))}.`
+    case 'DEPRECATED_FIELD_JSNEXT':
+      // prettier-ignore
+      return `${bold(fp(m.path))} is deprecated. ${bold('pkg.module')} should be used instead.`
     default:
       return
   }

@@ -226,3 +226,7 @@ When matching the `"worker"` condition, it will resolve to `"./lib.server.js"` w
 This is usually not intended and causes the wrong file to be loaded. If it is intended, the `"worker"` condition should point to `"./lib.browser.js"` directly instead.
 
 To fix this, you can rename `"./lib.server.js"` to `"./lib.worker.js"` for example so it has its own specific file. Or check out the [USE_EXPORTS_OR_IMPORTS_BROWSER](#use_exports_or_imports_browser) rule to refactor away the `"browser"` field.
+
+## `DEPRECATED_FIELD_JSNEXT`
+
+The `"jsnext:main"` and `"jsnext"` fields are deprecated. The `"module"` field should be used instead. See [this issue](https://github.com/jsforum/jsforum/issues/5) for more information.
