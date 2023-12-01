@@ -229,4 +229,4 @@ To fix this, you can rename `"./lib.server.js"` to `"./lib.worker.js"` for examp
 
 ## `DEPRECATED_FIELD_JSNEXT`
 
-`"jsnext:main"` field and `"jsnext"` field are deprecated. `"module"` field should be used instead.
+The `"jsnext:main"` and `"jsnext"` fields are deprecated. The `"module"` field should be used instead. See [this issue](https://github.com/jsforum/jsforum/issues/5) for more information.
