@@ -1,17 +1,13 @@
 import fss from 'node:fs'
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import _getNpmTarballUrl from 'get-npm-tarball-url'
+import getNpmTarballUrl from 'get-npm-tarball-url'
 import { npmHighImpact } from 'npm-high-impact'
 import { inflate } from 'pako'
 import { publint } from 'publint'
 import pLimit from 'p-limit'
 import { untar } from '../site/src/utils/untar.js'
 import { createTarballVfs } from '../site/src/utils/tarball.js'
-
-// incorrectly packaged
-/** @type {import('get-npm-tarball-url').default} */
-const getNpmTarballUrl = _getNpmTarballUrl.default
 
 /*
   Results enum (severity):
