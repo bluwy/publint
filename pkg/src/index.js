@@ -196,18 +196,12 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
 
   // check file existence for other known package fields
   const knownFields = [
-    { name: 'types' },
-    { name: 'typings' },
-    {
-      name: 'jsnext:main',
-      deprecatedCode: /** @type {const} */ ('DEPRECATED_FIELD_JSNEXT')
-    },
-    {
-      name: 'jsnext',
-      deprecatedCode: /** @type {const} */ ('DEPRECATED_FIELD_JSNEXT')
-    },
-    { name: 'unpkg' },
-    { name: 'jsdelivr' }
+    'types',
+    'typings',
+    'jsnext:main',
+    'jsnext',
+    'unpkg',
+    'jsdelivr'
   ]
   // if has typesVersions field, it complicates `types`/`typings` field resolution a lot.
   // for now skip it, but further improvements are tracked at
@@ -215,7 +209,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   if (getPublishedField(rootPkg, 'typesVersions')[0]) {
     knownFields.splice(0, 2)
   }
-  for (const { name: fieldName, deprecatedCode } of knownFields) {
+  for (const fieldName of knownFields) {
     const [fieldValue, fieldPkgPath] = getPublishedField(rootPkg, fieldName)
     if (
       fieldValue != null &&
@@ -226,12 +220,17 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
         const hasContent =
           (await readFile(fieldPath, fieldPkgPath, ['.js', '/index.js'])) !==
           false
-        if (hasContent && deprecatedCode) {
+        if (
+          hasContent &&
+          (fieldName === 'jsnext:main' || fieldName === 'jsnext')
+        ) {
           messages.push({
-            code: deprecatedCode,
+            code: 'DEPRECATED_FIELD_JSNEXT',
             args: {},
             path: fieldPkgPath,
-            type: 'warning'
+            // `module` should be used instead, but if it's already specified, downgrade as a suggestion
+            // as the jsnext fields are likely for compat only.
+            type: module ? 'suggestion' : 'warning'
           })
         }
       })
