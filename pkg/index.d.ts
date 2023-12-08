@@ -148,3 +148,10 @@ export interface Result {
 }
 
 export declare function publint(options?: Options): Promise<Result>
+
+export interface FormatOptions {
+  /**
+   * Generate raw message (without color or bold).
+   */
+  raw?: boolean
+}
