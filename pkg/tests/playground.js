@@ -59,6 +59,7 @@ testFixture('test-1', [
 
 testFixture('test-2', [
   'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
+  'EXPORTS_MISSING_ROOT_ENTRYPOINT',
   'EXPORTS_MODULE_SHOULD_BE_ESM',
   'EXPORTS_VALUE_INVALID',
   'FILE_DOES_NOT_EXIST',
@@ -70,6 +71,7 @@ testFixture('test-2', [
 testFixture(
   'test-2 (level: warning)',
   [
+    'EXPORTS_MISSING_ROOT_ENTRYPOINT',
     'EXPORTS_MODULE_SHOULD_BE_ESM',
     'EXPORTS_VALUE_INVALID',
     'FILE_DOES_NOT_EXIST',
@@ -92,6 +94,7 @@ testFixture(
 testFixture(
   'test-2 (strict: true)',
   [
+    'EXPORTS_MISSING_ROOT_ENTRYPOINT',
     'EXPORTS_MODULE_SHOULD_BE_ESM',
     'EXPORTS_VALUE_INVALID',
     'FILE_DOES_NOT_EXIST',
@@ -105,6 +108,7 @@ testFixture(
   'test-2 (strict: true)',
   [
     { code: 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING', type: 'suggestion' },
+    { code: 'EXPORTS_MISSING_ROOT_ENTRYPOINT', type: 'error' },
     { code: 'EXPORTS_MODULE_SHOULD_BE_ESM', type: 'error' },
     { code: 'EXPORTS_VALUE_INVALID', type: 'error' },
     { code: 'FILE_DOES_NOT_EXIST', type: 'error' },

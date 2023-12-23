@@ -130,6 +130,10 @@ The `"module"` condition should be ESM only. This condition is used to prevent t
 
 The `"exports"` field value should always start with a `./`. It does not support omitted relative paths like `"subpath/index.js"`.
 
+## `EXPORTS_MISSING_ROOT_ENTRYPOINT`
+
+When a library has the `"main"`, `"module"`, or similar root entrypoint fields, and it also defines the `"exports"` field, the `"exports"` value should also export the root entrypoint as when it's defined, it will always take the highest priority over the other fields, including `"main"` and `"module"`.
+
 ## `USE_EXPORTS_BROWSER`
 
 A `"browser"` field with a string value works similarly to the `"exports"` `"browser"` condition, to define the browser-specific exports of a package. Between the two, it's usually better to use the `"exports"` field instead as it's standardized, widely supported, and keeps one true way of defining your package entrypoints.

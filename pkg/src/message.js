@@ -83,6 +83,11 @@ export function formatMessage(m, pkg) {
     case 'EXPORTS_VALUE_INVALID':
       // prettier-ignore
       return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but is invalid as it does not start with "${c.bold('./')}". Use ${c.bold(m.args.suggestValue)} instead.`
+    case 'EXPORTS_MISSING_ROOT_ENTRYPOINT': {
+      const mainField = m.args.mainFields[0]
+      // prettier-ignore
+      return `${c.bold(fp(m.path))} is missing the root entrypoint export, which is defined in ${c.bold('pkg.' + mainField)}. Environments that support the ${c.bold('"exports"')} field will ignore ${c.bold('pkg.' + mainField)} as ${c.bold('"exports"')} takes the highest priority. Consider adding ${c.bold(fp(m.path.concat('.')))}: "${c.bold(pv([mainField]))}".`
+    }
     case 'USE_EXPORTS_BROWSER':
       // prettier-ignore
       return `${c.bold('pkg.browser')} with a string value can be refactored to use ${c.bold('pkg.exports')} and the ${c.bold('"browser"')} condition to declare browser-specific exports. ` +
