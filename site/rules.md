@@ -202,6 +202,10 @@ Internal tests or config files are published, which are usually not needed and u
 }
 ```
 
+## `USE_TYPE`
+
+Since [Node.js v20.10.0](https://nodejs.org/en/blog/release/v20.10.0), it introduces a new `--experimental-default-type` flag to flip the default module system from "CJS-as-default" to "ESM-as-default". If enabled, `package.json` without the `"type"` field will mean its descendant JS files to be interpreted as ESM instead of CJS, which may not work correctly. Hence, if you've not set the `"type"` field, it's recommended to set as `"type": "commonjs"` (default value) to be future-proof.
+
 ## `FIELD_INVALID_VALUE_TYPE`
 
 Some `package.json` fields has a set of allowed types, e.g. `string` or `object` only. If an invalid type is passed, this error message will be showed.

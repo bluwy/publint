@@ -92,6 +92,9 @@ function messageToString(m, pkg) {
     case 'USE_FILES':
       // prettier-ignore
       return `The package ${bold('publishes internal tests or config files')}. You can use ${bold('pkg.files')} to only publish certain files and save user bandwidth.`
+    case 'USE_TYPE':
+      // prettier-ignore
+      return `The package does not specify the ${bold('"type"')} field. Environments may incorrectly identify a CJS file as ESM in the future. Consider adding ${bold('"type"')}: "${bold('commonjs')}".`
     case 'TYPES_NOT_EXPORTED': {
       const typesFilePath = exportsRel(m.args.typesFilePath)
       if (m.args.actualExtension && m.args.expectExtension) {

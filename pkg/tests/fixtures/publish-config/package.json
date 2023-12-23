@@ -2,6 +2,7 @@
   "name": "publint-publish-config",
   "version": "0.0.1",
   "private": true,
+  "type": "commonjs",
   "main": "missing.js",
   "browser": "missing.js",
   "exports": {

@@ -140,7 +140,8 @@ testFixture('umd', ['FILE_INVALID_FORMAT', 'FILE_INVALID_FORMAT'])
 
 testFixture('deprecated-fields', [
   'DEPRECATED_FIELD_JSNEXT',
-  'DEPRECATED_FIELD_JSNEXT'
+  'DEPRECATED_FIELD_JSNEXT',
+  'USE_TYPE'
 ])
 
 /**

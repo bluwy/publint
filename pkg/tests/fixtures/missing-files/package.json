@@ -2,6 +2,7 @@
   "name": "publint-missing-files",
   "version": "0.0.1",
   "private": true,
+  "type": "commonjs",
   "main": "missing.js",
   "jsnext:main": "./missing.js",
   "jsnext": "./missing.js",

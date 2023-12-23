@@ -2,6 +2,7 @@
   "name": "publint-types-exports-resolution",
   "version": "0.0.1",
   "private": true,
+  "type": "commonjs",
   "types": "./main.d.ts",
   "exports": {
     ".": {

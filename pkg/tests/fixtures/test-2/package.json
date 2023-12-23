@@ -2,6 +2,7 @@
   "name": "publint-test-2",
   "version": "0.0.1",
   "private": true,
+  "type": "commonjs",
   "main": "./main.mjs",
   "browser": "./lib/bar.js",
   "typings": "./doesn't-exist.d.ts",

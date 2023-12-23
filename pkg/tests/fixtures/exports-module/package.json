@@ -2,6 +2,7 @@
   "name": "publint-exports-module",
   "version": "0.0.1",
   "private": true,
+  "type": "commonjs",
   "exports": {
     ".": {
       "import": "./main.mjs",

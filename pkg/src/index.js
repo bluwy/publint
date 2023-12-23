@@ -76,6 +76,17 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
     })
   }
 
+  // Check if "type" field is specified, help Node.js push towards an ESM default future:
+  // https://nodejs.org/en/blog/release/v20.10.0
+  if (rootPkg.type == null) {
+    messages.push({
+      code: 'USE_TYPE',
+      args: {},
+      path: ['name'],
+      type: 'suggestion'
+    })
+  }
+
   // Relies on default node resolution
   // https://nodejs.org/api/modules.html#all-together
   // LOAD_INDEX(X)
