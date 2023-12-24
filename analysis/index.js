@@ -19,6 +19,7 @@ import { createTarballVfs } from '../site/src/utils/tarball.js'
 
 const cachedResultsFileUrl = new URL('./cache/_results.json', import.meta.url)
 const usedCacheFileBaseNames = ['_results.json']
+const useCacheOnly = process.argv.includes('--cache')
 
 try {
   await fs.mkdir('./cache', { recursive: true })
@@ -49,7 +50,12 @@ async function mainCommand() {
     packages.map((pkg) =>
       limit(async () => {
         try {
-          const { files, version } = await fetchPkgData(pkg) // Handles tar (t)
+          const pkgData = await fetchPkgData(pkg) // Handles tar (t)
+          if (!pkgData) {
+            console.log('No data for', pkg)
+            return null
+          }
+          const { files, version } = pkgData
           const vfs = createTarballVfs(files)
 
           // // The tar file names have appended "package", except for `@types` packages very strangely
@@ -91,6 +97,10 @@ async function benchCommand() {
       limit(async () => {
         try {
           const data = await fetchPkgData(pkg)
+          if (!data) {
+            console.log('No data for', pkg)
+            return null
+          }
           return { ...data, pkg }
         } catch (e) {
           console.error(`Failed to fetch ${pkg}`, e)
@@ -126,7 +136,11 @@ async function benchCommand() {
  * @param {string} pkg
  */
 async function fetchPkgData(pkg) {
-  const version = await fetchPkgLatestVersion(pkg)
+  const version = useCacheOnly
+    ? await getPkgVersionFromCache(pkg)
+    : await fetchPkgLatestVersion(pkg)
+  if (!version) return null
+
   const cachedFileUrl = getCacheTarFileUrl(pkg, version)
   usedCacheFileBaseNames.push(path.basename(cachedFileUrl.href))
 
@@ -135,9 +149,11 @@ async function fetchPkgData(pkg) {
 
   if (fss.existsSync(cachedFileUrl)) {
     resultBuffer = (await fs.readFile(cachedFileUrl)).buffer
-  } else {
+  } else if (!useCacheOnly) {
     resultBuffer = await fetchPkg(pkg, version)
     await fs.writeFile(cachedFileUrl, Buffer.from(resultBuffer))
+  } else {
+    return null
   }
 
   const tarBuffer = inflate(resultBuffer).buffer // Handles gzip (gz)
@@ -188,6 +204,16 @@ async function fetchPkgLatestVersion(pkg) {
   )
     .then((v) => v.ok && v.json())
     .then((v) => v.version)
+}
+
+async function getPkgVersionFromCache(pkg) {
+  const cachedFiles = await fs.readdir('./cache')
+  const pkgName = pkg.replace('/', '__')
+  for (const file of cachedFiles) {
+    if (file.startsWith(pkgName)) {
+      return /-(\d.*)\.tgz/.exec(file)?.[1]
+    }
+  }
 }
 
 /**
