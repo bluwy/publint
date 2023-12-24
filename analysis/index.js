@@ -22,28 +22,11 @@ const usedCacheFileBaseNames = ['_results.json']
 
 try {
   await fs.mkdir('./cache', { recursive: true })
-
-  const packages = npmHighImpact.slice(0, 200)
-  const limit = pLimit(5)
-  const processed = await Promise.all(
-    packages.map((pkg) =>
-      limit(() =>
-        processPkg(pkg).catch((e) => {
-          console.error(`Failed to lint ${pkg}`, e)
-          return null
-        })
-      )
-    )
-  )
-
-  const result = {}
-  for (let i = 0; i < packages.length; i++) {
-    const p = processed[i]
-    if (p) {
-      result[`${packages[i]}@${p.version}`] = p.severity
-    }
+  if (process.argv.includes('--bench')) {
+    await benchCommand()
+  } else {
+    await mainCommand()
   }
-  await fs.writeFile(cachedResultsFileUrl, JSON.stringify(result, null, 2))
 } catch (e) {
   console.error(e)
   process.exitCode = 1
@@ -59,10 +42,90 @@ try {
   )
 }
 
+async function mainCommand() {
+  const packages = npmHighImpact.slice(0, 200)
+  const limit = pLimit(5)
+  const processed = await Promise.all(
+    packages.map((pkg) =>
+      limit(async () => {
+        try {
+          const { files, version } = await fetchPkgData(pkg) // Handles tar (t)
+          const vfs = createTarballVfs(files)
+
+          // // The tar file names have appended "package", except for `@types` packages very strangely
+          const pkgDir = files.length ? files[0].name.split('/')[0] : 'package'
+          const { messages } = await publint({ pkgDir, vfs })
+          const severity =
+            messages.length === 0
+              ? 0
+              : Math.max(...messages.map((m) => messageToSeverity(m)))
+
+          // Provide feedback
+          console.log(pkg, severity)
+
+          return { version, severity }
+        } catch (e) {
+          console.error(`Failed to lint ${pkg}`, e)
+          return null
+        }
+      })
+    )
+  )
+
+  const result = {}
+  for (let i = 0; i < packages.length; i++) {
+    const p = processed[i]
+    if (p) {
+      result[`${packages[i]}@${p.version}`] = p.severity
+    }
+  }
+  await fs.writeFile(cachedResultsFileUrl, JSON.stringify(result, null, 2))
+}
+
+async function benchCommand() {
+  console.log('Fetching packages...')
+  const packages = npmHighImpact.slice(0, 200)
+  const limit = pLimit(5)
+  const pkgData = await Promise.all(
+    packages.map((pkg) =>
+      limit(async () => {
+        try {
+          const data = await fetchPkgData(pkg)
+          return { ...data, pkg }
+        } catch (e) {
+          console.error(`Failed to fetch ${pkg}`, e)
+          return null
+        }
+      })
+    )
+  )
+
+  console.log('Linting packages...')
+  const start = performance.now()
+  await Promise.all(
+    pkgData.map((d) =>
+      limit(async () => {
+        if (!d) return
+        try {
+          const { files } = d
+          const pkgDir = files.length ? files[0].name.split('/')[0] : 'package'
+          await publint({ pkgDir, vfs: createTarballVfs(files) })
+        } catch (e) {
+          console.error(`Failed to lint ${d.pkg}`, e)
+          return null
+        }
+      })
+    )
+  )
+  const duration = performance.now() - start
+
+  console.log(`Linted ${packages.length} packages in ${duration.toFixed(2)}ms`)
+}
+
 /**
  * @param {string} pkg
  */
-async function processPkg(pkg) {
+async function fetchPkgData(pkg) {
   const version = await fetchPkgLatestVersion(pkg)
   const cachedFileUrl = getCacheTarFileUrl(pkg, version)
   usedCacheFileBaseNames.push(path.basename(cachedFileUrl.href))
@@ -80,20 +143,8 @@ async function processPkg(pkg) {
   const tarBuffer = inflate(resultBuffer).buffer // Handles gzip (gz)
   /** @type {import('../site/src/utils/tarball.js').TarballFile[]} */
   const files = untar(tarBuffer) // Handles tar (t)
-  const vfs = createTarballVfs(files)
 
-  // // The tar file names have appended "package", except for `@types` packages very strangely
-  const pkgDir = files.length ? files[0].name.split('/')[0] : 'package'
-  const { messages } = await publint({ pkgDir, vfs })
-  const severity =
-    messages.length === 0
-      ? 0
-      : Math.max(...messages.map((m) => messageToSeverity(m)))
-
-  // Provide feedback
-  console.log(pkg, severity)
-
-  return { version, severity }
+  return { files, version }
 }
 
 /**

@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
+    "bench": "node index.js --bench",
     "gist": "bash gist.sh"
   },
   "dependencies": {
