@@ -7,7 +7,7 @@ import rehypeSlug from 'rehype-slug'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeStringify from 'rehype-stringify'
 import { fileURLToPath } from 'node:url'
-import { rehypeShikiji } from './rehypeShikiji.js'
+import { rehypeShiki } from './rehypeShiki.js'
 
 /**
  *
@@ -19,7 +19,7 @@ export function markdown() {
     .use(remarkGfm)
     .use(remarkRehype)
     .use(rehypeSlug)
-    .use(rehypeShikiji)
+    .use(rehypeShiki)
     .use(rehypeAutolinkHeadings, {
       behavior: 'append',
       properties: {

@@ -1,10 +1,10 @@
 import { visit, SKIP } from 'unist-util-visit'
-import { codeToHast } from 'shikiji'
+import { codeToHast } from 'shiki'
 
 /**
  * @returns {import('unified').Transformer}
  */
-export function rehypeShikiji() {
+export function rehypeShiki() {
   return async (tree) => {
     /** @type {typeof tree[]} */
     const preNodes = []
