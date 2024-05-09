@@ -52,71 +52,71 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   const [module, modulePkgPath] = getPublishedField(rootPkg, 'module')
   const [exports, exportsPkgPath] = getPublishedField(rootPkg, 'exports')
 
-  // Check if package published internal tests or config files
-  if (rootPkg.files == null) {
-    promiseQueue.push(async () => {
-      for (const p of commonInternalPaths) {
-        const internalPath = vfs.pathJoin(pkgDir, p)
-        if (
-          _packedFiles &&
-          _packedFiles.every((f) => !f.startsWith(internalPath))
-        ) {
-          continue
-        }
-        if (await vfs.isPathExist(internalPath)) {
-          messages.push({
-            code: 'USE_FILES',
-            args: {},
-            path: ['name'],
-            type: 'suggestion'
-          })
-          break
-        }
-      }
-    })
-  }
+  // // Check if package published internal tests or config files
+  // if (rootPkg.files == null) {
+  //   promiseQueue.push(async () => {
+  //     for (const p of commonInternalPaths) {
+  //       const internalPath = vfs.pathJoin(pkgDir, p)
+  //       if (
+  //         _packedFiles &&
+  //         _packedFiles.every((f) => !f.startsWith(internalPath))
+  //       ) {
+  //         continue
+  //       }
+  //       if (await vfs.isPathExist(internalPath)) {
+  //         messages.push({
+  //           code: 'USE_FILES',
+  //           args: {},
+  //           path: ['name'],
+  //           type: 'suggestion'
+  //         })
+  //         break
+  //       }
+  //     }
+  //   })
+  // }
 
-  // Check if "type" field is specified, help Node.js push towards an ESM default future:
-  // https://nodejs.org/en/blog/release/v20.10.0
-  if (rootPkg.type == null) {
-    messages.push({
-      code: 'USE_TYPE',
-      args: {},
-      path: ['name'],
-      type: 'suggestion'
-    })
-  }
+  // // Check if "type" field is specified, help Node.js push towards an ESM default future:
+  // // https://nodejs.org/en/blog/release/v20.10.0
+  // if (rootPkg.type == null) {
+  //   messages.push({
+  //     code: 'USE_TYPE',
+  //     args: {},
+  //     path: ['name'],
+  //     type: 'suggestion'
+  //   })
+  // }
 
-  // Relies on default node resolution
-  // https://nodejs.org/api/modules.html#all-together
-  // LOAD_INDEX(X)
-  if (main == null && module == null && exports == null) {
-    promiseQueue.push(async () => {
-      // check index.js only, others aren't our problem
-      const defaultPath = vfs.pathJoin(pkgDir, 'index.js')
-      if (await vfs.isPathExist(defaultPath)) {
-        const defaultContent = await readFile(defaultPath, [])
-        if (defaultContent === false) return
-        const actualFormat = getCodeFormat(defaultContent)
-        const expectFormat = await getFilePathFormat(defaultPath, vfs)
-        if (
-          actualFormat !== expectFormat &&
-          actualFormat !== 'unknown' &&
-          actualFormat !== 'mixed'
-        ) {
-          messages.push({
-            code: 'IMPLICIT_INDEX_JS_INVALID_FORMAT',
-            args: {
-              actualFormat,
-              expectFormat
-            },
-            path: ['name'],
-            type: 'warning'
-          })
-        }
-      }
-    })
-  }
+  // // Relies on default node resolution
+  // // https://nodejs.org/api/modules.html#all-together
+  // // LOAD_INDEX(X)
+  // if (main == null && module == null && exports == null) {
+  //   promiseQueue.push(async () => {
+  //     // check index.js only, others aren't our problem
+  //     const defaultPath = vfs.pathJoin(pkgDir, 'index.js')
+  //     if (await vfs.isPathExist(defaultPath)) {
+  //       const defaultContent = await readFile(defaultPath, [])
+  //       if (defaultContent === false) return
+  //       const actualFormat = getCodeFormat(defaultContent)
+  //       const expectFormat = await getFilePathFormat(defaultPath, vfs)
+  //       if (
+  //         actualFormat !== expectFormat &&
+  //         actualFormat !== 'unknown' &&
+  //         actualFormat !== 'mixed'
+  //       ) {
+  //         messages.push({
+  //           code: 'IMPLICIT_INDEX_JS_INVALID_FORMAT',
+  //           args: {
+  //             actualFormat,
+  //             expectFormat
+  //           },
+  //           path: ['name'],
+  //           type: 'warning'
+  //         })
+  //       }
+  //     }
+  //   })
+  // }
 
   /**
    * Rules for main:
@@ -205,32 +205,32 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
     })
   }
 
-  // if main or module is exists, and exports exists, check if there's a root
-  // entrypoint in exports. it may be mistaken that exports can be used to define
-  // nested entrypoints only (missing the root entrypoint)
-  if ((main != null || module != null) && exports != null) {
-    let hasRootExports = true
-    if (typeof exports == 'object') {
-      const exportsKeys = Object.keys(exports)
-      // an exports object could contain conditions, or paths that maps to other objects.
-      // we can determine the type of the object by checking one of the keys ([0])
-      // if it's a path, which we can then proceed to check if it has the root path
-      if (exportsKeys[0]?.startsWith('.') && !exportsKeys.includes('.')) {
-        hasRootExports = false
-      }
-    }
-    if (!hasRootExports) {
-      const mainFields = []
-      if (main) mainFields.push('main')
-      if (module) mainFields.push('module')
-      messages.push({
-        code: 'EXPORTS_MISSING_ROOT_ENTRYPOINT',
-        args: { mainFields },
-        path: exportsPkgPath,
-        type: 'warning'
-      })
-    }
-  }
+  // // if main or module is exists, and exports exists, check if there's a root
+  // // entrypoint in exports. it may be mistaken that exports can be used to define
+  // // nested entrypoints only (missing the root entrypoint)
+  // if ((main != null || module != null) && exports != null) {
+  //   let hasRootExports = true
+  //   if (typeof exports == 'object') {
+  //     const exportsKeys = Object.keys(exports)
+  //     // an exports object could contain conditions, or paths that maps to other objects.
+  //     // we can determine the type of the object by checking one of the keys ([0])
+  //     // if it's a path, which we can then proceed to check if it has the root path
+  //     if (exportsKeys[0]?.startsWith('.') && !exportsKeys.includes('.')) {
+  //       hasRootExports = false
+  //     }
+  //   }
+  //   if (!hasRootExports) {
+  //     const mainFields = []
+  //     if (main) mainFields.push('main')
+  //     if (module) mainFields.push('module')
+  //     messages.push({
+  //       code: 'EXPORTS_MISSING_ROOT_ENTRYPOINT',
+  //       args: { mainFields },
+  //       path: exportsPkgPath,
+  //       type: 'warning'
+  //     })
+  //   }
+  // }
 
   // check file existence for other known package fields
   const knownFields = [

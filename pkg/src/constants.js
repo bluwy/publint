@@ -30,3 +30,15 @@ export const commonInternalPaths = [
   '.eslintrc',
   '.eslintrc.js'
 ]
+
+// List of known entry fields that only map to a string value
+export const knownSimpleEntryFields = [
+  'main',
+  'module',
+  'types',
+  'typings',
+  'jsnext:main',
+  'jsnext',
+  'unpkg',
+  'jsdelivr'
+]
