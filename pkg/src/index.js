@@ -20,7 +20,9 @@ import {
   getDtsFilePathFormat,
   getDtsCodeFormatExtension,
   getPkgPathValue,
-  replaceLast
+  replaceLast,
+  isRelativePath,
+  isAbsolutePath
 } from './utils.js'
 
 /**
@@ -511,7 +513,9 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
    * @param {string} exportsValue
    */
   async function getExportsFiles(exportsValue) {
-    const exportsPath = vfs.pathJoin(pkgDir, exportsValue)
+    const exportsPath = isRelativePath(exportsValue)
+      ? vfs.pathJoin(pkgDir, exportsValue)
+      : exportsValue
     const isGlob = exportsValue.includes('*')
     return isGlob
       ? await exportsGlob(exportsPath, vfs, _packedFiles)
@@ -577,16 +581,6 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
           return
         }
 
-        // types. check file existence only
-        if (currentPath.includes('types')) {
-          const pq = createPromiseQueue()
-          for (const filePath of exportsFiles) {
-            pq.push(async () => await readFile(filePath, currentPath))
-          }
-          await pq.wait()
-          return
-        }
-
         // if the exports value matches a key in `pkg.browser` (meaning it'll be remapped
         // if in a browser-ish environment), check if this is a browser-ish environment/condition.
         // if so, warn about this conflict as it's often unexpected behaviour.
@@ -618,9 +612,16 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
               isGlob ? './' + vfs.pathRelative(pkgDir, filePath) : undefined
             )
           )
-            return
-          // TODO: maybe check .ts in the future
-          if (!isFilePathLintable(filePath)) continue
+            continue
+          // TODO: maybe improve .ts checks in the future
+          if (!isFilePathLintable(filePath)) {
+            // if not lintable, simply check file existence. only if it's an absolute path,
+            // so we avoid linting strings like `std:lib`
+            if (isAbsolutePath(filePath)) {
+              pq.push(async () => await readFile(filePath, currentPath))
+            }
+            continue
+          }
           pq.push(async () => {
             // could fail if in !isGlob
             const fileContent = await readFile(filePath, currentPath)

@@ -235,6 +235,29 @@ export function isFileContentLintable(fileContent) {
 }
 
 /**
+ * Whether the `filePath` looks like a relative path, e.g.
+ * - ./foo
+ * - ../foo
+ * - foo/bar
+ * @param {string} filePath
+ */
+export function isRelativePath(filePath) {
+  if (filePath[0] === '.') return true
+  return filePath[0] !== '/' && !filePath.includes(':')
+}
+
+/**
+ * Whether the `filePath` looks like an absoluate path
+ * @param {string} filePath
+ */
+export function isAbsolutePath(filePath) {
+  return (
+    filePath[0] === '/' ||
+    (filePath[1] === ':' && filePath[0].match(/[a-zA-Z]/))
+  )
+}
+
+/**
  * @param {string} filePath
  * @param {import('../index.d.ts').Vfs} vfs
  * @returns {Promise<Pkg | undefined>}
