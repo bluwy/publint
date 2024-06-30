@@ -1,0 +1,37 @@
+import fs from 'node:fs'
+import fsp from 'node:fs/promises'
+import nodePath from 'node:path'
+import type { Vfs } from '../shared/types.js'
+
+export function createVfs(): Vfs {
+  return {
+    async readFile(path) {
+      return await fsp.readFile(path, 'utf8')
+    },
+    async readDir(path) {
+      return await fsp.readdir(path)
+    },
+    async isPathDir(path) {
+      try {
+        return (await fsp.stat(path)).isDirectory()
+      } catch {
+        return false
+      }
+    },
+    async isPathExist(path) {
+      return fs.existsSync(path)
+    },
+    pathJoin(...parts) {
+      return nodePath.join(...parts)
+    },
+    pathRelative(from, to) {
+      return nodePath.relative(from, to)
+    },
+    getDirName(path) {
+      return nodePath.dirname(path)
+    },
+    getExtName(path) {
+      return nodePath.extname(path)
+    }
+  }
+}

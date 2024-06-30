@@ -1,0 +1,55 @@
+{
+  "name": "publint-wip",
+  "version": "0.2.8",
+  "description": "Lint packaging errors",
+  "type": "module",
+  "author": "Bjorn Lu",
+  "license": "MIT",
+  "bin": "./dist/node/entry-cli.js",
+  "types": "./dist/browser/entry-main.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/browser/entry-main.d.ts",
+      "node": "./dist/node/entry-main.js",
+      "default": "./dist/browser/entry-main.js"
+    }
+  },
+  "scripts": {
+    "build": "pkgroll build",
+    "cli": "node ./dist/node/entry-cli.js",
+    "test": "uvu tests -i fixtures",
+    "prepublishOnly": "pnpm cli"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "lib",
+    "src",
+    "*.d.ts"
+  ],
+  "funding": "https://bjornlu.com/sponsor",
+  "homepage": "https://publint.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bluwy/publint.git",
+    "directory": "packages/publint"
+  },
+  "bugs": {
+    "url": "https://github.com/bluwy/publint/issues"
+  },
+  "keywords": [
+    "publish",
+    "lint"
+  ],
+  "dependencies": {
+    "pako": "^2.1.0",
+    "pathe": "^1.1.2",
+    "picocolors": "^1.0.1",
+    "sade": "^1.8.1"
+  },
+  "devDependencies": {
+    "pkgroll": "^2.1.1",
+    "uvu": "^0.5.6"
+  }
+}

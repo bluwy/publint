@@ -2,3 +2,4 @@ packages:
   - analysis
   - pkg
   - site
+  - 'packages/*'
