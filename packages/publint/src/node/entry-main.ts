@@ -11,6 +11,7 @@ import { createVfs } from './vfs.js'
 import { pack } from './pack.js'
 import { rewriteTarballFilePaths, unpack } from './unpack.js'
 import type { Options, Result } from '../shared/types.js'
+import { printResult } from './print.js'
 
 export type { Options, Result }
 
@@ -41,6 +42,7 @@ export async function publint(options: Options = {}): Promise<Result> {
 
   rewriteTarballFilePaths(tarballFiles, root)
 
+  const vfs = createVfs()
   const resolvedIssues = await engine({
     root,
     pkg,
@@ -52,5 +54,11 @@ export async function publint(options: Options = {}): Promise<Result> {
     plugins: resolvePlugins(options.plugins ?? [])
   })
 
-  return { issues: resolvedIssues }
+  const result: Result = { issues: resolvedIssues, vfs }
+
+  if (options.print) {
+    printResult(result)
+  }
+
+  return result
 }

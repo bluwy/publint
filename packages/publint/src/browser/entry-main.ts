@@ -28,14 +28,17 @@ export async function publint(options: Options = {}): Promise<Result> {
   const root = getTarballRoot(tarballFiles)
   const pkg = getTarballPkgJson(tarballFiles)
 
+  const vfs = createVfs(tarballFiles)
   const resolvedIssues = await engine({
     root,
     pkg,
     originalPkg: null,
     files: tarballFiles.map((f) => f.name),
-    vfs: createVfs(tarballFiles),
+    vfs,
     plugins: resolvePlugins(options.plugins ?? [])
   })
 
-  return { issues: resolvedIssues }
+  // NOTE: print option not supported in browsers (for now?)
+
+  return { issues: resolvedIssues, vfs }
 }

@@ -1,10 +1,17 @@
+export interface Position {
+  /** 1-based */
+  line: number
+  /** 0-based */
+  column: number
+}
+
 /** Path to the file only */
 type LocationPath = string
 /** Path to file with line and column */
 type LocationFileWithLineColumn = {
   path: string
-  start: number | { line: number; column: number }
-  end?: number | { line: number; column: number }
+  start: number | Position
+  end?: number | Position
 }
 /** Path to JSON file with specific keys */
 type LocationJsonWithKeys = { path: string; keys: string[] }

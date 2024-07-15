@@ -43,12 +43,14 @@
     "lint"
   ],
   "dependencies": {
+    "@babel/code-frame": "^7.24.7",
     "pako": "^2.1.0",
     "pathe": "^1.1.2",
     "picocolors": "^1.0.1",
     "sade": "^1.8.1"
   },
   "devDependencies": {
+    "@types/babel__code-frame": "^7.0.6",
     "pkgroll": "^2.1.1",
     "uvu": "^0.5.6"
   }

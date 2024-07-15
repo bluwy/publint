@@ -47,10 +47,19 @@ export interface Options {
    * Report warnings as errors.
    */
   strict?: boolean
+
+  /**
+   * Whether to print the result to the console automatically. If false,
+   * you can print the result manually by calling `printResult(result)`.
+   *
+   * @default true
+   */
+  print?: boolean
 }
 
 export interface Result {
   issues: ResolvedIssue[]
+  vfs: Vfs
 }
 
 export interface PackageJson {
