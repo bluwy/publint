@@ -204,11 +204,7 @@ Internal tests or config files are published, which are usually not needed and u
 
 ## `USE_TYPE`
 
-Since [Node.js v20.10.0](https://nodejs.org/en/blog/release/v20.10.0), it introduces a new `--experimental-default-type` flag to flip the default module system from "CJS-as-default" to "ESM-as-default". If enabled, `package.json` without the `"type"` field will mean its descendant JS files to be interpreted as ESM instead of CJS, which may not work correctly.
-
-While this only applies to files outside of `node_modules`, it's still recommended to set it up for future-proofing. And it also helps the `--experimental-detect-module` flag if enabled.
-
-Hence, if you've not set the `"type"` field, you can explictly set it as `"type": "commonjs"` (default value), or migrate to `"type": "module"` and write in ESM completely if possible.
+[Node.js v21.1.0](https://nodejs.org/en/blog/release/v21.1.0) adds a new `--experimental-detect-module`, which can be used to automatically run ES modules when ESM syntax can be detected. Node.js hopes to make detection enabled by default in the future. Detection increases startup time, so Node is encouraging everyone — especially package authors — to add a type field to `package.json`, even for the default `"type": "commonjs"`.
 
 ## `FIELD_INVALID_VALUE_TYPE`
 
