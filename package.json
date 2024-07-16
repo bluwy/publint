@@ -10,16 +10,16 @@
     "typecheck": "tsc -p pkg && tsc -p site && tsc -p analysis",
     "test": "pnpm --dir pkg test"
   },
-  "packageManager": "pnpm@9.4.0",
+  "packageManager": "pnpm@9.5.0",
   "engines": {
     "node": ">=16"
   },
   "devDependencies": {
-    "@types/node": "^20.14.6",
+    "@types/node": "^20.14.10",
     "@types/pnpapi": "^0.0.5",
-    "prettier": "^3.3.2",
-    "prettier-plugin-svelte": "^3.2.4",
+    "prettier": "^3.3.3",
+    "prettier-plugin-svelte": "^3.2.5",
     "svelte": "^4.2.18",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.3"
   }
 }

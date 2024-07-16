@@ -12,7 +12,7 @@
   "dependencies": {
     "get-npm-tarball-url": "^2.1.0",
     "npm-high-impact": "^1.7.0",
-    "p-limit": "^5.0.0",
+    "p-limit": "^6.1.0",
     "pako": "^2.1.0",
     "publint": "workspace:*"
   }
