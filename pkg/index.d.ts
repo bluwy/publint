@@ -109,6 +109,9 @@ export type Message =
       }
     >
   | BaseMessage<'DEPRECATED_FIELD_JSNEXT'>
+  | BaseMessage<'INVALID_REPOSITORY_VALUE', {
+    directory?: string;
+  }>;
 
 export interface Options {
   /**

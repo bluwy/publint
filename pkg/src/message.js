@@ -158,6 +158,18 @@ export function formatMessage(m, pkg) {
     case 'DEPRECATED_FIELD_JSNEXT':
       // prettier-ignore
       return `${c.bold(fp(m.path))} is deprecated. ${c.bold('pkg.module')} should be used instead.`
+    case 'INVALID_REPOSITORY_VALUE':
+      if (m.path.length === 1) {
+        return `${c.bold(fp(m.path))} must be a valid GitHub URL or an object that contains repository metadata.`;
+      }
+
+      if (m.path[m.path.length - 1] === 'url') {
+        return `${c.bold(fp(m.path))} must be a valid GitHub URL.`;
+      }
+
+      const dir = m.args.directory || '';
+
+      return `Cannot find package.json in ${c.bold(dir)}. Please ensure that package.json exist in the provided path.`
     default:
       return
   }

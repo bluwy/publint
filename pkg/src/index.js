@@ -22,7 +22,8 @@ import {
   getPkgPathValue,
   replaceLast,
   isRelativePath,
-  isAbsolutePath
+  isAbsolutePath,
+  isRepositoryUrl
 } from './utils.js'
 
 /**
@@ -234,6 +235,12 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
     }
   }
 
+  // if `repository` field exist, check if the value is valid
+  // `repository` might be a shorthand string of URL or an object
+  if ('repository' in rootPkg) {
+    promiseQueue.push(() => checkRepositoryField(rootPkg.repository));
+  }
+
   // check file existence for other known package fields
   const knownFields = [
     'types',
@@ -434,6 +441,58 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
       }
       return false
     }
+  }
+
+  /**
+   * @param {Record<string, string> | string} repositoryField
+   */
+  async function checkRepositoryField(repositoryField) {
+    if (typeof repositoryField === 'string') {
+      if (!isRepositoryUrl(repositoryField)) {
+        messages.push({
+          code: 'INVALID_REPOSITORY_VALUE',
+          args: {},
+          path: ['repository'],
+          type: 'warning',
+        });
+      }
+
+      return;
+    } else if (typeof repositoryField === 'object') {
+      if (repositoryField.url && !isRepositoryUrl(repositoryField.url)) {
+        messages.push({
+          code: 'INVALID_REPOSITORY_VALUE',
+          args: {},
+          path: ['repository', 'url'],
+          type: 'warning',
+        });
+      }
+
+      if (repositoryField.directory) {
+        const altRootPath = vfs.pathJoin(rootPkgPath, repositoryField.directory);
+        const isAltRootExist = await vfs.isPathExist(altRootPath);
+
+        if (!isAltRootExist) {
+          messages.push({
+            code: 'INVALID_REPOSITORY_VALUE',
+            args: {
+              directory: repositoryField.directory,
+            },
+            path: ['repository', 'directory'],
+            type: 'error',
+          });
+        }
+      }
+
+      return;
+    }
+
+    messages.push({
+      code: 'INVALID_REPOSITORY_VALUE',
+      args: {},
+      path: ['repository'],
+      type: 'warning',
+    })
   }
 
   /**

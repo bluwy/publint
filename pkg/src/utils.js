@@ -6,6 +6,7 @@ import { lintableFileExtensions } from './constants.js'
  *   main: string,
  *   module: string,
  *   exports: Record<string, string>,
+ *   repository: Record<string, string> | string,
  *   type: 'module' | 'commonjs'
  * }} Pkg
  */
@@ -43,6 +44,15 @@ export function stripComments(code) {
   return code
     .replace(MULTILINE_COMMENTS_RE, '')
     .replace(SINGLELINE_COMMENTS_RE, '')
+}
+
+// Reference: https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/src/rules/repository-shorthand.ts
+const REPOSITORY_URL = /^(?:git\+)?(?:ssh:\/\/git@|http?s:\/\/)?(?:www\.)?github\.com\//
+/**
+ * @param {string} url 
+ */
+export function isRepositoryUrl(url) {
+  return REPOSITORY_URL.test(url);
 }
 
 /**
