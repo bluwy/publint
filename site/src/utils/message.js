@@ -154,7 +154,7 @@ function messageToString(m, pkg) {
       return `${bold(fp(m.path))} is deprecated. ${bold('pkg.module')} should be used instead.`
     case 'INVALID_REPOSITORY_VALUE':
       if (m.path.length === 1) {
-        return `${bold(fp(m.path))} must be a valid GitHub URL or an object that contains repository metadata.`;
+        return `Consider using an object for to represent ${bold(fp(m.path))}.`;
       }
 
       if (m.path[m.path.length - 1] === 'url') {

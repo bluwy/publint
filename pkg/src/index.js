@@ -448,16 +448,12 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
    */
   async function checkRepositoryField(repositoryField) {
     if (typeof repositoryField === 'string') {
-      if (!isRepositoryUrl(repositoryField)) {
-        messages.push({
-          code: 'INVALID_REPOSITORY_VALUE',
-          args: {},
-          path: ['repository'],
-          type: 'warning',
-        });
-      }
-
-      return;
+      messages.push({
+        code: 'INVALID_REPOSITORY_VALUE',
+        args: {},
+        path: ['repository'],
+        type: 'suggestion',
+      });
     } else if (typeof repositoryField === 'object') {
       if (repositoryField.url && !isRepositoryUrl(repositoryField.url)) {
         messages.push({
@@ -469,7 +465,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
       }
 
       if (repositoryField.directory) {
-        const altRootPath = vfs.pathJoin(rootPkgPath, repositoryField.directory);
+        const altRootPath = vfs.pathJoin(pkgDir, repositoryField.directory);
         const isAltRootExist = await vfs.isPathExist(altRootPath);
 
         if (!isAltRootExist) {
