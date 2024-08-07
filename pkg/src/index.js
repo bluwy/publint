@@ -455,7 +455,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
         type: 'suggestion',
       });
     } else if (typeof repositoryField === 'object') {
-      if (repositoryField.url && !isRepositoryUrl(repositoryField.url)) {
+      if (repositoryField.url && repositoryField.type === 'git' && !isRepositoryUrl(repositoryField.url)) {
         messages.push({
           code: 'INVALID_REPOSITORY_VALUE',
           args: {},
