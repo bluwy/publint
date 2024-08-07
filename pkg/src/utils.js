@@ -46,8 +46,8 @@ export function stripComments(code) {
     .replace(SINGLELINE_COMMENTS_RE, '')
 }
 
-// Reference: https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/blob/main/src/rules/repository-shorthand.ts
-const REPOSITORY_URL = /^(?:git\+)?(?:ssh:\/\/git@|http?s:\/\/)?(?:www\.)?github\.com\//
+// Reference: https://www.debuggex.com/r/cleXSxwdY3n9BaMV
+const REPOSITORY_URL = /((git|ssh|http(s)?)|(git@[\w\.]+)|([\w\.]+@[\w\.]+))(:(\/\/)?|:)([\w\.@\:/\-~]+)(\.git)(\/)?/;
 /**
  * @param {string} url 
  */
