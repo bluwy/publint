@@ -22,7 +22,10 @@ import {
   getPkgPathValue,
   replaceLast,
   isRelativePath,
-  isAbsolutePath
+  isAbsolutePath,
+  isGitUrl,
+  isShorthandRepositoryUrl,
+  isNormalizedGitUrl
 } from './utils.js'
 
 /**
@@ -234,6 +237,12 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
     }
   }
 
+  // if `repository` field exist, check if the value is valid
+  // `repository` might be a shorthand string of URL or an object
+  if ('repository' in rootPkg) {
+    promiseQueue.push(() => checkRepositoryField(rootPkg.repository));
+  }
+
   // check file existence for other known package fields
   const knownFields = [
     'types',
@@ -433,6 +442,42 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
         })
       }
       return false
+    }
+  }
+
+  /**
+   * @param {Record<string, string> | string} repositoryField
+   */
+  async function checkRepositoryField(repositoryField) {
+    /**
+     * @param {boolean} valid 
+     * @param {boolean} normal 
+     * @param {'short' | 'long'} type 
+     * @param {string[]} path 
+     */
+    const addMessage = (valid, normal, type, path) => {
+      messages.push({
+        code: 'INVALID_REPOSITORY_VALUE',
+        args: { valid, normal, type },
+        path,
+        type: valid ? 'suggestion' : 'warning',
+      });
+    };
+  
+    if (typeof repositoryField === 'string') {
+      if (isShorthandRepositoryUrl(repositoryField)) {
+        addMessage(true, true, 'short', ['repository']);
+      } else {
+        addMessage(false, false, 'long', ['repository']);
+      }
+    } else if (typeof repositoryField === 'object' && repositoryField.url && repositoryField.type === 'git') {
+      if (!isGitUrl(repositoryField.url)) {
+        addMessage(false, false, 'long', ['repository', 'url']);
+      } else if (!isNormalizedGitUrl(repositoryField.url)) {
+        addMessage(true, false, 'long', ['repository', 'url']);
+      }
+    } else {
+      addMessage(false, false, 'long', ['repository']);
     }
   }
 

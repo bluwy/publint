@@ -152,6 +152,20 @@ function messageToString(m, pkg) {
     case 'DEPRECATED_FIELD_JSNEXT':
       // prettier-ignore
       return `${bold(fp(m.path))} is deprecated. ${bold('pkg.module')} should be used instead.`
+    case 'INVALID_REPOSITORY_VALUE':
+      if (!m.args.valid) {
+        if (m.path.length === 2) {
+          return `${bold(fp(m.path))} must be a valid URL.`
+        }
+
+        return `${bold(fp(m.path))} must be an object that references a repository.`
+      }
+
+      if (m.args.type === 'short') {
+        return `Consider using an object to represent ${bold(fp(m.path))}.`
+      }
+
+      return `${bold(fp(m.path))} should start with \`git+\` and ends with \`.git\``
     default:
       return
   }

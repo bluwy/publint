@@ -144,6 +144,8 @@ testFixture('deprecated-fields', [
   'USE_TYPE'
 ])
 
+testFixture('invalid-repository-value', ['INVALID_REPOSITORY_VALUE'])
+
 /**
  * @typedef {{
  *  level?: import('../index.d.ts').Options['level']
