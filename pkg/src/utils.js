@@ -46,13 +46,38 @@ export function stripComments(code) {
     .replace(SINGLELINE_COMMENTS_RE, '')
 }
 
-// Reference: https://www.debuggex.com/r/cleXSxwdY3n9BaMV
-const REPOSITORY_URL = /((git|ssh|http(s)?)|(git@[\w\.]+)|([\w\.]+@[\w\.]+))(:(\/\/)?|:)([\w\.@\:/\-~]+)(\.git)(\/)?/;
+// Reference: https://git-scm.com/docs/git-clone#_git_urls
+const GIT_URL = /^((?:git(?:\+(?:https?|file))?|https?|ftps?|file|ssh):\/\/)?(?:[\w._-]+@)?([\w.-]+)(?::(\d+))?\/([\w._/-]+(?:\.git)?)(?:\/|\?.*)?$/;
 /**
  * @param {string} url 
  */
-export function isRepositoryUrl(url) {
-  return REPOSITORY_URL.test(url);
+export function isGitUrl(url) {
+  return GIT_URL.test(url);
+}
+/**
+ * @param {string} url 
+ */
+export function isNormalizedGitUrl(url) {
+  const tokens = url.match(GIT_URL)
+  if (tokens) {
+    const host = tokens[1]
+    const path = tokens[3]
+
+    if (/(github|gitlab)/.test(host)) {
+      return url.startsWith('git+') && path.endsWith('.git')
+    }
+  }
+
+  return true
+}
+
+// Reference: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#repository
+const SHORTHAND_REPOSITORY_URL = /((github|gist|bitbucket|gitlab):)?[\w\-]+(\/[\w\-]+)?/
+/**
+ * @param {string} url 
+ */
+export function isShorthandRepositoryUrl(url) {
+  return SHORTHAND_REPOSITORY_URL.test(url)
 }
 
 /**

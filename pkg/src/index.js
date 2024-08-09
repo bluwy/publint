@@ -23,7 +23,9 @@ import {
   replaceLast,
   isRelativePath,
   isAbsolutePath,
-  isRepositoryUrl
+  isGitUrl,
+  isShorthandRepositoryUrl,
+  isNormalizedGitUrl
 } from './utils.js'
 
 /**
@@ -447,48 +449,36 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
    * @param {Record<string, string> | string} repositoryField
    */
   async function checkRepositoryField(repositoryField) {
-    if (typeof repositoryField === 'string') {
+    /**
+     * @param {boolean} valid 
+     * @param {boolean} normal 
+     * @param {'short' | 'long'} type 
+     * @param {string[]} path 
+     */
+    const addMessage = (valid, normal, type, path) => {
       messages.push({
         code: 'INVALID_REPOSITORY_VALUE',
-        args: {},
-        path: ['repository'],
-        type: 'suggestion',
+        args: { valid, normal, type },
+        path,
+        type: valid ? 'suggestion' : 'warning',
       });
-    } else if (typeof repositoryField === 'object') {
-      if (repositoryField.url && repositoryField.type === 'git' && !isRepositoryUrl(repositoryField.url)) {
-        messages.push({
-          code: 'INVALID_REPOSITORY_VALUE',
-          args: {},
-          path: ['repository', 'url'],
-          type: 'warning',
-        });
+    };
+  
+    if (typeof repositoryField === 'string') {
+      if (isShorthandRepositoryUrl(repositoryField)) {
+        addMessage(true, true, 'short', ['repository']);
+      } else {
+        addMessage(false, false, 'long', ['repository']);
       }
-
-      if (repositoryField.directory) {
-        const altRootPath = vfs.pathJoin(pkgDir, repositoryField.directory);
-        const isAltRootExist = await vfs.isPathExist(altRootPath);
-
-        if (!isAltRootExist) {
-          messages.push({
-            code: 'INVALID_REPOSITORY_VALUE',
-            args: {
-              directory: repositoryField.directory,
-            },
-            path: ['repository', 'directory'],
-            type: 'error',
-          });
-        }
+    } else if (typeof repositoryField === 'object' && repositoryField.url && repositoryField.type === 'git') {
+      if (!isGitUrl(repositoryField.url)) {
+        addMessage(false, false, 'long', ['repository', 'url']);
+      } else if (!isNormalizedGitUrl(repositoryField.url)) {
+        addMessage(true, false, 'long', ['repository', 'url']);
       }
-
-      return;
+    } else {
+      addMessage(false, false, 'long', ['repository']);
     }
-
-    messages.push({
-      code: 'INVALID_REPOSITORY_VALUE',
-      args: {},
-      path: ['repository'],
-      type: 'warning',
-    })
   }
 
   /**
