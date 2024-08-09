@@ -153,17 +153,19 @@ function messageToString(m, pkg) {
       // prettier-ignore
       return `${bold(fp(m.path))} is deprecated. ${bold('pkg.module')} should be used instead.`
     case 'INVALID_REPOSITORY_VALUE':
-      if (m.path.length === 1) {
-        return `Consider using an object for to represent ${bold(fp(m.path))}.`;
+      if (!m.args.valid) {
+        if (m.path.length === 2) {
+          return `${bold(fp(m.path))} must be a valid URL.`
+        }
+
+        return `${bold(fp(m.path))} must be an object that references a repository.`
       }
 
-      if (m.path[m.path.length - 1] === 'url') {
-        return `${bold(fp(m.path))} must be a valid GitHub URL.`;
+      if (m.args.type === 'short') {
+        return `Consider using an object to represent ${bold(fp(m.path))}.`
       }
 
-      const dir = m.args.directory || '';
-
-      return `Cannot find package.json in ${bold(dir)}. Please ensure that package.json exist in the provided path.`
+      return `${bold(fp(m.path))} should start with \`git+\` and ends with \`.git\``
     default:
       return
   }
