@@ -171,7 +171,11 @@ export function formatMessage(m, pkg) {
         return `Consider using an object to represent ${c.bold(fp(m.path))}.`
       }
 
-      return `${c.bold(fp(m.path))} should start with \`git+\` and ends with \`.git\``
+      if (m.args.deprecated) {
+        return `The git:// protocol in ${c.bold(fp(m.path))} is already deprecated by GitHub due to security concerns. Consider replacing the protocol with https://.`
+      }
+
+      return `${c.bold(fp(m.path))} should start with \`git+\` and ends with \`.git\`.`
     default:
       return
   }

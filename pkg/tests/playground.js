@@ -169,6 +169,11 @@ testFixture('invalid-repository-value-object-not-normalized', [{
   type: 'suggestion',
 }])
 
+testFixture('invalid-repository-value-object-deprecated', [{
+  code: 'INVALID_REPOSITORY_VALUE',
+  type: 'warning',
+}])
+
 /**
  * @typedef {{
  *  level?: import('../index.d.ts').Options['level']

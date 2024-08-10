@@ -25,7 +25,8 @@ import {
   isAbsolutePath,
   isGitUrl,
   isShorthandRepositoryUrl,
-  isNormalizedGitUrl
+  isNormalizedGitUrl,
+  isDeprecatedUrl
 } from './utils.js'
 
 /**
@@ -452,32 +453,35 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
     /**
      * @param {boolean} valid 
      * @param {boolean} normal 
+     * @param {boolean} deprecated
      * @param {'short' | 'long'} type 
      * @param {string[]} path 
      */
-    const addMessage = (valid, normal, type, path) => {
+    const addMessage = (valid, normal, deprecated, type, path) => {
       messages.push({
         code: 'INVALID_REPOSITORY_VALUE',
-        args: { valid, normal, type },
+        args: { valid, normal, deprecated, type },
         path,
-        type: valid ? 'suggestion' : 'warning',
-      });
-    };
+        type: valid && !deprecated ? 'suggestion' : 'warning',
+      })
+    }
   
     if (typeof repositoryField === 'string') {
       if (isShorthandRepositoryUrl(repositoryField)) {
-        addMessage(true, true, 'short', ['repository']);
+        addMessage(true, true, false, 'short', ['repository'])
       } else {
-        addMessage(false, false, 'long', ['repository']);
+        addMessage(false, false, false, 'long', ['repository'])
       }
     } else if (typeof repositoryField === 'object' && repositoryField.url && repositoryField.type === 'git') {
       if (!isGitUrl(repositoryField.url)) {
-        addMessage(false, false, 'long', ['repository', 'url']);
+        addMessage(false, false, false, 'long', ['repository', 'url'])
+      } else if (isDeprecatedUrl(repositoryField.url)) {
+        addMessage(true, true, true, 'long', ['repository', 'url'])
       } else if (!isNormalizedGitUrl(repositoryField.url)) {
-        addMessage(true, false, 'long', ['repository', 'url']);
-      }
+        addMessage(true, false, false, 'long', ['repository', 'url'])
+      } 
     } else {
-      addMessage(false, false, 'long', ['repository']);
+      addMessage(false, false, false, 'long', ['repository']);
     }
   }
 

@@ -100,8 +100,8 @@ function messageToString(m, pkg) {
       if (m.args.actualExtension && m.args.expectExtension) {
         // prettier-ignore
         return `The types is not exported. Consider adding ${bold(fp(m.path) + '.types')} to be compatible with TypeScript's ${bold('"moduleResolution": "bundler"')} compiler option. `
-            + `Note that you cannot use "${bold(typesFilePath)}" because it has a mismatching format. Instead, you can duplicate the file and use the ${bold(m.args.expectExtension)} extension, e.g. `
-            + `${bold(fp(m.path) + '.types')}: "${bold(replaceLast(typesFilePath,m.args.actualExtension, m.args.expectExtension))}"`
+          + `Note that you cannot use "${bold(typesFilePath)}" because it has a mismatching format. Instead, you can duplicate the file and use the ${bold(m.args.expectExtension)} extension, e.g. `
+          + `${bold(fp(m.path) + '.types')}: "${bold(replaceLast(typesFilePath, m.args.actualExtension, m.args.expectExtension))}"`
       } else {
         // prettier-ignore
         return `The types is not exported. Consider adding ${bold(fp(m.path) + '.types')}: "${bold(typesFilePath)}" to be compatible with TypeScript's ${bold('"moduleResolution": "bundler"')} compiler option.`
@@ -165,7 +165,11 @@ function messageToString(m, pkg) {
         return `Consider using an object to represent ${bold(fp(m.path))}.`
       }
 
-      return `${bold(fp(m.path))} should start with \`git+\` and ends with \`.git\``
+      if (m.args.deprecated) {
+        return `The git:// protocol in ${bold(fp(m.path))} is already deprecated by GitHub due to security concerns. Consider replacing the protocol with https://.`
+      }
+
+      return `${bold(fp(m.path))} should start with \`git+\` and ends with \`.git\`.`
     default:
       return
   }

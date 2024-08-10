@@ -70,6 +70,24 @@ export function isNormalizedGitUrl(url) {
 
   return true
 }
+/**
+ * Reference: https://github.blog/security/application-security/improving-git-protocol-security-github/
+ * 
+ * @param {string} url 
+ */
+export function isDeprecatedUrl(url) {
+  const tokens = url.match(GIT_URL)
+  if (tokens) {
+    const protocol = tokens[1]
+    const host = tokens[2]
+
+    if (/github/.test(host) && protocol === 'git://') {
+      return true
+    }
+  }
+
+  return false
+}
 
 // Reference: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#repository
 const SHORTHAND_REPOSITORY_URL = /((github|gist|bitbucket|gitlab):)?[\w\-]+(\/[\w\-]+)?/
