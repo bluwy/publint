@@ -1,0 +1,7 @@
+{
+    "name": "publint-invalid-repository-value-not-string",
+    "version": "0.0.1",
+    "type": "commonjs",
+    "main": "./index.js",
+    "repository": 123
+  }

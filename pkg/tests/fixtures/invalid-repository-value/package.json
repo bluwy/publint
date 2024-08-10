@@ -1,7 +1,0 @@
-{
-    "name": "publint-invalid-repository-value",
-    "version": "0.0.1",
-    "type": "commonjs",
-    "main": "./index.js",
-    "repository": "https://www.google.com"
-  }

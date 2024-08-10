@@ -144,7 +144,30 @@ testFixture('deprecated-fields', [
   'USE_TYPE'
 ])
 
-testFixture('invalid-repository-value', ['INVALID_REPOSITORY_VALUE'])
+testFixture('invalid-repository-value-not-string', [{
+  code: 'INVALID_REPOSITORY_VALUE',
+  type: 'warning',
+}])
+
+testFixture('invalid-repository-value-string-not-url', [{
+  code: 'INVALID_REPOSITORY_VALUE',
+  type: 'suggestion',
+}])
+
+testFixture('invalid-repository-value-shorthand', [{
+  code: 'INVALID_REPOSITORY_VALUE',
+  type: 'suggestion',
+}])
+
+testFixture('invalid-repository-value-object-not-git-url', [{
+  code: 'INVALID_REPOSITORY_VALUE',
+  type: 'warning',
+}])
+
+testFixture('invalid-repository-value-object-not-normalized', [{
+  code: 'INVALID_REPOSITORY_VALUE',
+  type: 'suggestion',
+}])
 
 /**
  * @typedef {{

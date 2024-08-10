@@ -60,8 +60,8 @@ export function isGitUrl(url) {
 export function isNormalizedGitUrl(url) {
   const tokens = url.match(GIT_URL)
   if (tokens) {
-    const host = tokens[1]
-    const path = tokens[3]
+    const host = tokens[2]
+    const path = tokens[4]
 
     if (/(github|gitlab)/.test(host)) {
       return url.startsWith('git+') && path.endsWith('.git')
