@@ -489,7 +489,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
           code: 'INVALID_REPOSITORY_VALUE',
           args: { type: 'shorthand-git-sites' },
           path: ['repository', 'url'],
-          type: 'suggestion'
+          type: 'warning'
         })
       }
     }
