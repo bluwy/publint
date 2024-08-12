@@ -112,10 +112,11 @@ export type Message =
   | BaseMessage<
       'INVALID_REPOSITORY_VALUE',
       {
-        type: 'short' | 'long'
-        normal: boolean
-        deprecated: boolean
-        valid: boolean
+        type:
+          | 'invalid-string-shorthand'
+          | 'invalid-git-url'
+          | 'deprecated-github-git-protocol'
+          | 'shorthand-git-sites'
       }
     >
 

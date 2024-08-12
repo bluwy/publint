@@ -47,37 +47,36 @@ export function stripComments(code) {
 }
 
 // Reference: https://git-scm.com/docs/git-clone#_git_urls
-const GIT_URL =
+const GIT_URL_RE =
   /^((?:git(?:\+(?:https?|file))?|https?|ftps?|file|ssh):\/\/)?(?:[\w._-]+@)?([\w.-]+)(?::(\d+))?\/([\w._/-]+(?:\.git)?)(?:\/|\?.*)?$/
 /**
  * @param {string} url
  */
 export function isGitUrl(url) {
-  return GIT_URL.test(url)
+  return GIT_URL_RE.test(url)
 }
 /**
  * @param {string} url
  */
-export function isNormalizedGitUrl(url) {
-  const tokens = url.match(GIT_URL)
+export function isShorthandGitHubOrGitLabUrl(url) {
+  const tokens = url.match(GIT_URL_RE)
   if (tokens) {
     const host = tokens[2]
     const path = tokens[4]
 
     if (/(github|gitlab)/.test(host)) {
-      return url.startsWith('git+') && path.endsWith('.git')
+      return !url.startsWith('git+') || !path.endsWith('.git')
     }
   }
 
-  return true
+  return false
 }
 /**
  * Reference: https://github.blog/security/application-security/improving-git-protocol-security-github/
- *
  * @param {string} url
  */
-export function isDeprecatedUrl(url) {
-  const tokens = url.match(GIT_URL)
+export function isDeprecatedGitHubGitUrl(url) {
+  const tokens = url.match(GIT_URL_RE)
   if (tokens) {
     const protocol = tokens[1]
     const host = tokens[2]
@@ -91,13 +90,13 @@ export function isDeprecatedUrl(url) {
 }
 
 // Reference: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#repository
-const SHORTHAND_REPOSITORY_URL =
-  /((github|gist|bitbucket|gitlab):)?[\w\-]+(\/[\w\-]+)?/
+const SHORTHAND_REPOSITORY_URL_RE =
+  /^(?:(?:github|bitbucket|gitlab):[\w\-]+\/[\w\-]+|gist:\w+|[\w\-]+\/[\w\-]+)$/
 /**
  * @param {string} url
  */
 export function isShorthandRepositoryUrl(url) {
-  return SHORTHAND_REPOSITORY_URL.test(url)
+  return SHORTHAND_REPOSITORY_URL_RE.test(url)
 }
 
 /**

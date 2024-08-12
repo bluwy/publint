@@ -1,5 +1,5 @@
 {
-    "name": "publint-invalid-repository-value-not-string",
+    "name": "publint-invalid-repository-value-string-not-url",
     "version": "0.0.1",
     "type": "commonjs",
     "repository": "not_an_url"

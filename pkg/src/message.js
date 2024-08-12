@@ -159,23 +159,28 @@ export function formatMessage(m, pkg) {
       // prettier-ignore
       return `${c.bold(fp(m.path))} is deprecated. ${c.bold('pkg.module')} should be used instead.`
     case 'INVALID_REPOSITORY_VALUE':
-      if (!m.args.valid) {
-        if (m.path.length === 2) {
-          return `${c.bold(fp(m.path))} must be a valid URL.`
+      switch (m.args.type) {
+        case 'invalid-string-shorthand':
+          // prettier-ignore
+          return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} which isn't a valid shorthand value supported by npm. Consider using an object that references a repository.`
+        case 'invalid-git-url':
+          // prettier-ignore
+          return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} which isn't a valid git URL. A valid git URL is usually in the form of "git+https://example.com/user/repo.git".`
+        case 'deprecated-github-git-protocol':
+          // prettier-ignore
+          return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} which uses the git:// protocol that is deprecated by GitHub due to security concerns. Consider replacing the protocol with https://.`
+        case 'shorthand-git-sites': {
+          let fullUrl = pv(m.path)
+          if (!fullUrl.startsWith('git+')) {
+            fullUrl = 'git+' + fullUrl
+          }
+          if (!fullUrl.endsWith('.git')) {
+            fullUrl += '.git'
+          }
+          // prettier-ignore
+          return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but could be a full git URL like "${c.bold(fullUrl)}".`
         }
-
-        return `${c.bold(fp(m.path))} must be an object that references a repository.`
       }
-
-      if (m.args.type === 'short') {
-        return `Consider using an object to represent ${c.bold(fp(m.path))}.`
-      }
-
-      if (m.args.deprecated) {
-        return `The git:// protocol in ${c.bold(fp(m.path))} is already deprecated by GitHub due to security concerns. Consider replacing the protocol with https://.`
-      }
-
-      return `${c.bold(fp(m.path))} should start with \`git+\` and ends with \`.git\`.`
     default:
       return
   }

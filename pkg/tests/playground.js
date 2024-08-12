@@ -146,24 +146,19 @@ testFixture('deprecated-fields', [
 
 testFixture('invalid-repository-value-not-string', [
   {
-    code: 'INVALID_REPOSITORY_VALUE',
-    type: 'warning'
+    code: 'FIELD_INVALID_VALUE_TYPE',
+    type: 'error'
   }
 ])
 
 testFixture('invalid-repository-value-string-not-url', [
   {
     code: 'INVALID_REPOSITORY_VALUE',
-    type: 'suggestion'
+    type: 'warning'
   }
 ])
 
-testFixture('invalid-repository-value-shorthand', [
-  {
-    code: 'INVALID_REPOSITORY_VALUE',
-    type: 'suggestion'
-  }
-])
+testFixture('invalid-repository-value-shorthand', [])
 
 testFixture('invalid-repository-value-object-not-git-url', [
   {
@@ -172,7 +167,7 @@ testFixture('invalid-repository-value-object-not-git-url', [
   }
 ])
 
-testFixture('invalid-repository-value-object-not-normalized', [
+testFixture('invalid-repository-value-object-shorthand-site', [
   {
     code: 'INVALID_REPOSITORY_VALUE',
     type: 'suggestion'

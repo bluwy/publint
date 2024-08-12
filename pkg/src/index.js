@@ -25,8 +25,8 @@ import {
   isAbsolutePath,
   isGitUrl,
   isShorthandRepositoryUrl,
-  isNormalizedGitUrl,
-  isDeprecatedUrl
+  isShorthandGitHubOrGitLabUrl,
+  isDeprecatedGitHubGitUrl
 } from './utils.js'
 
 /**
@@ -446,46 +446,52 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
     }
   }
 
+  // https://docs.npmjs.com/cli/v10/configuring-npm/package-json#repository
   /**
-   * @param {Record<string, string> | string} repositoryField
+   * @param {Record<string, string> | string} repository
    */
-  async function checkRepositoryField(repositoryField) {
-    /**
-     * @param {boolean} valid
-     * @param {boolean} normal
-     * @param {boolean} deprecated
-     * @param {'short' | 'long'} type
-     * @param {string[]} path
-     */
-    const addMessage = (valid, normal, deprecated, type, path) => {
-      messages.push({
-        code: 'INVALID_REPOSITORY_VALUE',
-        args: { valid, normal, deprecated, type },
-        path,
-        type: valid && !deprecated ? 'suggestion' : 'warning'
-      })
-    }
+  async function checkRepositoryField(repository) {
+    if (!ensureTypeOfField(repository, ['string', 'object'], ['repository']))
+      return
 
-    if (typeof repositoryField === 'string') {
-      if (isShorthandRepositoryUrl(repositoryField)) {
-        addMessage(true, true, false, 'short', ['repository'])
-      } else {
-        addMessage(false, false, false, 'long', ['repository'])
+    if (typeof repository === 'string') {
+      // the string field accepts shorthands only. if this doesn't look like a shorthand,
+      // and looks like a git URL, recommend using the object form.
+      if (!isShorthandRepositoryUrl(repository)) {
+        messages.push({
+          code: 'INVALID_REPOSITORY_VALUE',
+          args: { type: 'invalid-string-shorthand' },
+          path: ['repository'],
+          type: 'warning'
+        })
       }
     } else if (
-      typeof repositoryField === 'object' &&
-      repositoryField.url &&
-      repositoryField.type === 'git'
+      typeof repository === 'object' &&
+      repository.url &&
+      repository.type === 'git'
     ) {
-      if (!isGitUrl(repositoryField.url)) {
-        addMessage(false, false, false, 'long', ['repository', 'url'])
-      } else if (isDeprecatedUrl(repositoryField.url)) {
-        addMessage(true, true, true, 'long', ['repository', 'url'])
-      } else if (!isNormalizedGitUrl(repositoryField.url)) {
-        addMessage(true, false, false, 'long', ['repository', 'url'])
+      if (!isGitUrl(repository.url)) {
+        messages.push({
+          code: 'INVALID_REPOSITORY_VALUE',
+          args: { type: 'invalid-git-url' },
+          path: ['repository', 'url'],
+          type: 'warning'
+        })
+      } else if (isDeprecatedGitHubGitUrl(repository.url)) {
+        messages.push({
+          code: 'INVALID_REPOSITORY_VALUE',
+          args: { type: 'deprecated-github-git-protocol' },
+          path: ['repository', 'url'],
+          type: 'warning'
+        })
+      } else if (isShorthandGitHubOrGitLabUrl(repository.url)) {
+        messages.push({
+          code: 'INVALID_REPOSITORY_VALUE',
+          args: { type: 'shorthand-git-sites' },
+          path: ['repository', 'url'],
+          type: 'suggestion'
+        })
       }
-    } else {
-      addMessage(false, false, false, 'long', ['repository'])
     }
   }
 
