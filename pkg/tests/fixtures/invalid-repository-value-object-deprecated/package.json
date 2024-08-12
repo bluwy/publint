@@ -2,7 +2,6 @@
     "name": "publint-invalid-repository-value-object-not-normalized",
     "version": "0.0.1",
     "type": "commonjs",
-    "main": "./index.js",
     "repository": {
       "type": "git",
       "url": "git://www.github.com/bluwy/publint"
