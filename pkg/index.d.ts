@@ -109,12 +109,15 @@ export type Message =
       }
     >
   | BaseMessage<'DEPRECATED_FIELD_JSNEXT'>
-  | BaseMessage<'INVALID_REPOSITORY_VALUE', {
-    type: 'short' | 'long'
-    normal: boolean
-    deprecated: boolean
-    valid: boolean
-  }>;
+  | BaseMessage<
+      'INVALID_REPOSITORY_VALUE',
+      {
+        type: 'short' | 'long'
+        normal: boolean
+        deprecated: boolean
+        valid: boolean
+      }
+    >
 
 export interface Options {
   /**

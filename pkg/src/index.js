@@ -241,7 +241,7 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   // if `repository` field exist, check if the value is valid
   // `repository` might be a shorthand string of URL or an object
   if ('repository' in rootPkg) {
-    promiseQueue.push(() => checkRepositoryField(rootPkg.repository));
+    promiseQueue.push(() => checkRepositoryField(rootPkg.repository))
   }
 
   // check file existence for other known package fields
@@ -451,37 +451,41 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
    */
   async function checkRepositoryField(repositoryField) {
     /**
-     * @param {boolean} valid 
-     * @param {boolean} normal 
+     * @param {boolean} valid
+     * @param {boolean} normal
      * @param {boolean} deprecated
-     * @param {'short' | 'long'} type 
-     * @param {string[]} path 
+     * @param {'short' | 'long'} type
+     * @param {string[]} path
      */
     const addMessage = (valid, normal, deprecated, type, path) => {
       messages.push({
         code: 'INVALID_REPOSITORY_VALUE',
         args: { valid, normal, deprecated, type },
         path,
-        type: valid && !deprecated ? 'suggestion' : 'warning',
+        type: valid && !deprecated ? 'suggestion' : 'warning'
       })
     }
-  
+
     if (typeof repositoryField === 'string') {
       if (isShorthandRepositoryUrl(repositoryField)) {
         addMessage(true, true, false, 'short', ['repository'])
       } else {
         addMessage(false, false, false, 'long', ['repository'])
       }
-    } else if (typeof repositoryField === 'object' && repositoryField.url && repositoryField.type === 'git') {
+    } else if (
+      typeof repositoryField === 'object' &&
+      repositoryField.url &&
+      repositoryField.type === 'git'
+    ) {
       if (!isGitUrl(repositoryField.url)) {
         addMessage(false, false, false, 'long', ['repository', 'url'])
       } else if (isDeprecatedUrl(repositoryField.url)) {
         addMessage(true, true, true, 'long', ['repository', 'url'])
       } else if (!isNormalizedGitUrl(repositoryField.url)) {
         addMessage(true, false, false, 'long', ['repository', 'url'])
-      } 
+      }
     } else {
-      addMessage(false, false, false, 'long', ['repository']);
+      addMessage(false, false, false, 'long', ['repository'])
     }
   }
 
