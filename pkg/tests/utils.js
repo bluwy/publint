@@ -129,6 +129,9 @@ test('isGitUrl', () => {
   equal(isGitUrl('ssh://git@host.xz:user/project.git'), true)
   equal(isGitUrl('git+ssh://git@host.xz/user/project.git'), true)
   equal(isGitUrl('git+ssh://git@host.xz:user/project.git'), true)
+  // NOTE: this technically works, but it's quite an edge case and technically not a URL,
+  // so maybe better to skip this and encourage proper URL format instead
+  // equal(isGitUrl('git@github.com:react-component/tooltip.git'), true)
 
   equal(isGitUrl('file://host.xz/path/to/repo'), false)
   equal(isGitUrl('/User/foo/bar'), false)
