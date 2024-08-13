@@ -7,8 +7,12 @@ import {
   getCodeFormat,
   isCodeCjs,
   isCodeEsm,
+  isDeprecatedGitHubGitUrl,
   isFileContentLintable,
   isFilePathLintable,
+  isGitUrl,
+  isShorthandGitHubOrGitLabUrl,
+  isShorthandRepositoryUrl,
   stripComments
 } from '../src/utils.js'
 import { createNodeVfs } from '../src/vfs.js'
@@ -102,6 +106,66 @@ test('getCodeFormat', () => {
   for (const code of isoCode) {
     equal(getCodeFormat(code), 'unknown', code)
   }
+})
+
+test.skip('isGitUrl', () => {
+  equal(isGitUrl('git@github.com:user/project.git'), true)
+  equal(isGitUrl('https://github.com/user/project.git'), true)
+  equal(isGitUrl('http://github.com/user/project.git'), true)
+  equal(isGitUrl('git@192.168.101.127:user/project.git'), true)
+  equal(isGitUrl('https://192.168.101.127/user/project.git'), true)
+  equal(isGitUrl('http://192.168.101.127/user/project.git'), true)
+  equal(isGitUrl('ssh://user@host.xz:port/path/to/repo.git/'), true)
+  equal(isGitUrl('ssh://user@host.xz/path/to/repo.git/'), true)
+  equal(isGitUrl('ssh://host.xz:1234/path/to/repo.git/'), true)
+  equal(isGitUrl('ssh://host.xz/path/to/repo.git/'), true)
+  equal(isGitUrl('ssh://user@host.xz/path/to/repo.git/'), true)
+  equal(isGitUrl('ssh://host.xz/path/to/repo.git/'), true)
+  equal(isGitUrl('ssh://user@host.xz/~user/path/to/repo.git/'), true)
+  equal(isGitUrl('ssh://host.xz/~user/path/to/repo.git/'), true)
+  equal(isGitUrl('ssh://user@host.xz/~/path/to/repo.git'), true)
+  equal(isGitUrl('ssh://host.xz/~/path/to/repo.git'), true)
+  equal(isGitUrl('git://host.xz/path/to/repo.git/'), true)
+  equal(isGitUrl('git://host.xz/~user/path/to/repo.git/'), true)
+  equal(isGitUrl('http://host.xz/path/to/repo.git/'), true)
+  equal(isGitUrl('https://host.xz/path/to/repo.git/'), true)
+  equal(isGitUrl('git+https://github.com/user/repo.git'), true)
+  equal(isGitUrl('user@server:project.git'), true)
+  equal(isGitUrl('/path/to/repo.git/'), true)
+  equal(isGitUrl('path/to/repo.git/'), true)
+  equal(isGitUrl('~/path/to/repo.git'), true)
+  equal(isGitUrl('file:///path/to/repo.git/'), true)
+  equal(isGitUrl('file://~/path/to/repo.git/'), true)
+  equal(isGitUrl('host.xz:/path/to/repo.git/'), true)
+})
+
+test('isDeprecatedGitHubGitUrl', () => {
+  equal(isDeprecatedGitHubGitUrl('git://github.com/user/project.git'), true)
+  equal(isDeprecatedGitHubGitUrl('https://github.com/user/project'), false)
+})
+
+test('isShorthandGitHubOrGitLabUrl', () => {
+  const f = isShorthandGitHubOrGitLabUrl // shorten to please prettier
+  equal(f('https://github.com/user/project'), true)
+  equal(f('git+https://github.com/user/project'), true)
+  equal(f('https://github.com/user/project.git'), true)
+  equal(f('https://gitlab.com/user/project'), true)
+  equal(f('git+https://gitlab.com/user/project'), true)
+  equal(f('https://gitlab.com/user/project.git'), true)
+
+  equal(f('https://bitbucket.com/user/project'), false)
+  equal(f('https://example.com'), false)
+})
+
+test('isShortHandRepositoryUrl', () => {
+  equal(isShorthandRepositoryUrl('user/project'), true)
+  equal(isShorthandRepositoryUrl('github:user/project'), true)
+  equal(isShorthandRepositoryUrl('gist:11081aaa281'), true)
+  equal(isShorthandRepositoryUrl('bitbucket:user/project'), true)
+  equal(isShorthandRepositoryUrl('gitlab:user/project'), true)
+
+  equal(isShorthandRepositoryUrl('foobar'), false)
+  equal(isShorthandRepositoryUrl('https://github.com/user/project'), false)
 })
 
 test('stripComments', () => {
