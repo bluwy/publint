@@ -46,9 +46,9 @@ export function stripComments(code) {
     .replace(SINGLELINE_COMMENTS_RE, '')
 }
 
-// Reference: https://git-scm.com/docs/git-clone#_git_urls
+// Reference: https://git-scm.com/docs/git-clone#_git_urls and https://github.com/npm/hosted-git-info
 const GIT_URL_RE =
-  /^((?:git(?:\+(?:https?|file))?|https?|ftps?|file|ssh):\/\/)?(?:[\w._-]+@)?([\w.-]+)(?::(\d+))?\/([\w._/-]+(?:\.git)?)(?:\/|\?.*)?$/
+  /^(git\+https?|git\+ssh|https?|ssh|git):\/\/(?:[\w._-]+@)?([\w.-]+)(?::([\w\d-]+))?(\/[\w._/-]+)\/?$/
 /**
  * @param {string} url
  */
@@ -81,7 +81,7 @@ export function isDeprecatedGitHubGitUrl(url) {
     const protocol = tokens[1]
     const host = tokens[2]
 
-    if (/github/.test(host) && protocol === 'git://') {
+    if (/github/.test(host) && protocol === 'git') {
       return true
     }
   }
