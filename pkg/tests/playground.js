@@ -164,14 +164,14 @@ testFixture('invalid-repository-value-object-not-git-url', [
 testFixture('invalid-repository-value-object-shorthand-site', [
   {
     code: 'INVALID_REPOSITORY_VALUE',
-    type: 'warning'
+    type: 'suggestion'
   }
 ])
 
 testFixture('invalid-repository-value-object-deprecated', [
   {
     code: 'INVALID_REPOSITORY_VALUE',
-    type: 'warning'
+    type: 'suggestion'
   }
 ])
 
