@@ -217,19 +217,25 @@ button {
 .rules-aside-toc ul {
   margin: 0;
   padding: 0;
-  height: 100%;
+  height: calc(100% - 2rem);
+  overflow-x: hidden;
   overflow-y: auto;
 }
 
 .rules-aside-toc li {
   list-style: none;
   line-height: 1.5;
-  margin-bottom: 0.2rem;
   opacity: 0.8;
 }
 
 .rules-aside-toc a {
   text-decoration: none;
+  display: block;
+  padding: 0.1rem 0;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   transition: color cubic-bezier(0.4, 0, 0.2, 1) 150ms;
 }
 
