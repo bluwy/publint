@@ -5,5 +5,6 @@
   "type": "commonjs",
   "main": 0,
   "module": true,
-  "jsnext:main": false
+  "jsnext:main": false,
+  "repository": 123
 }

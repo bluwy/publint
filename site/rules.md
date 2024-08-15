@@ -238,3 +238,23 @@ To fix this, you can rename `"./lib.server.js"` to `"./lib.worker.js"` for examp
 ## `DEPRECATED_FIELD_JSNEXT`
 
 The `"jsnext:main"` and `"jsnext"` fields are deprecated. The `"module"` field should be used instead. See [this issue](https://github.com/jsforum/jsforum/issues/5) for more information.
+
+## `INVALID_REPOSITORY_VALUE`
+
+`publint` is able to detect some cases where the `"repository"` field is not a valid and may not properly display on https://npmjs.com. The sub-rules below are mostly based on the [`"repository"` field docs](https://docs.npmjs.com/cli/v10/configuring-npm/package-json#repository).
+
+- If `"repository"` is a string, it must be one of the supported shorthand strings from the docs.
+- If `"repository"` is an object with `"type": "git"`, the `"url"` must be a valid [git URL](https://git-scm.com/docs/git-clone#_git_urls) and can be [parsed by npm](https://github.com/npm/hosted-git-info).
+- The `git://` protocol for GitHub repos should not be used due [security concerns](https://github.blog/security/application-security/improving-git-protocol-security-github/).
+- GitHub or GitLab links should be prefixed with `git+` and postfixed with `.git`. (This is also warned by npm when publishing a package).
+
+An example config that meets these criterias may look like this:
+
+```json
+{
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bluwy/publint.git"
+  }
+}
+```

@@ -109,6 +109,16 @@ export type Message =
       }
     >
   | BaseMessage<'DEPRECATED_FIELD_JSNEXT'>
+  | BaseMessage<
+      'INVALID_REPOSITORY_VALUE',
+      {
+        type:
+          | 'invalid-string-shorthand'
+          | 'invalid-git-url'
+          | 'deprecated-github-git-protocol'
+          | 'shorthand-git-sites'
+      }
+    >
 
 export interface Options {
   /**

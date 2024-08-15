@@ -22,7 +22,11 @@ import {
   getPkgPathValue,
   replaceLast,
   isRelativePath,
-  isAbsolutePath
+  isAbsolutePath,
+  isGitUrl,
+  isShorthandRepositoryUrl,
+  isShorthandGitHubOrGitLabUrl,
+  isDeprecatedGitHubGitUrl
 } from './utils.js'
 
 /**
@@ -234,6 +238,12 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
     }
   }
 
+  // if `repository` field exist, check if the value is valid
+  // `repository` might be a shorthand string of URL or an object
+  if ('repository' in rootPkg) {
+    promiseQueue.push(() => checkRepositoryField(rootPkg.repository))
+  }
+
   // check file existence for other known package fields
   const knownFields = [
     'types',
@@ -433,6 +443,55 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
         })
       }
       return false
+    }
+  }
+
+  // https://docs.npmjs.com/cli/v10/configuring-npm/package-json#repository
+  /**
+   * @param {Record<string, string> | string} repository
+   */
+  async function checkRepositoryField(repository) {
+    if (!ensureTypeOfField(repository, ['string', 'object'], ['repository']))
+      return
+
+    if (typeof repository === 'string') {
+      // the string field accepts shorthands only. if this doesn't look like a shorthand,
+      // and looks like a git URL, recommend using the object form.
+      if (!isShorthandRepositoryUrl(repository)) {
+        messages.push({
+          code: 'INVALID_REPOSITORY_VALUE',
+          args: { type: 'invalid-string-shorthand' },
+          path: ['repository'],
+          type: 'warning'
+        })
+      }
+    } else if (
+      typeof repository === 'object' &&
+      repository.url &&
+      repository.type === 'git'
+    ) {
+      if (!isGitUrl(repository.url)) {
+        messages.push({
+          code: 'INVALID_REPOSITORY_VALUE',
+          args: { type: 'invalid-git-url' },
+          path: ['repository', 'url'],
+          type: 'warning'
+        })
+      } else if (isDeprecatedGitHubGitUrl(repository.url)) {
+        messages.push({
+          code: 'INVALID_REPOSITORY_VALUE',
+          args: { type: 'deprecated-github-git-protocol' },
+          path: ['repository', 'url'],
+          type: 'suggestion'
+        })
+      } else if (isShorthandGitHubOrGitLabUrl(repository.url)) {
+        messages.push({
+          code: 'INVALID_REPOSITORY_VALUE',
+          args: { type: 'shorthand-git-sites' },
+          path: ['repository', 'url'],
+          type: 'suggestion'
+        })
+      }
     }
   }
 

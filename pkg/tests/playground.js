@@ -28,6 +28,7 @@ testFixture('glob-deprecated', [
 testFixture('invalid-field-types', [
   'FIELD_INVALID_VALUE_TYPE',
   'FIELD_INVALID_VALUE_TYPE',
+  'FIELD_INVALID_VALUE_TYPE',
   'FIELD_INVALID_VALUE_TYPE'
 ])
 
@@ -142,6 +143,36 @@ testFixture('deprecated-fields', [
   'DEPRECATED_FIELD_JSNEXT',
   'DEPRECATED_FIELD_JSNEXT',
   'USE_TYPE'
+])
+
+testFixture('invalid-repository-value-string-not-url', [
+  {
+    code: 'INVALID_REPOSITORY_VALUE',
+    type: 'warning'
+  }
+])
+
+testFixture('invalid-repository-value-shorthand', [])
+
+testFixture('invalid-repository-value-object-not-git-url', [
+  {
+    code: 'INVALID_REPOSITORY_VALUE',
+    type: 'warning'
+  }
+])
+
+testFixture('invalid-repository-value-object-shorthand-site', [
+  {
+    code: 'INVALID_REPOSITORY_VALUE',
+    type: 'suggestion'
+  }
+])
+
+testFixture('invalid-repository-value-object-deprecated', [
+  {
+    code: 'INVALID_REPOSITORY_VALUE',
+    type: 'suggestion'
+  }
 ])
 
 /**

@@ -6,6 +6,7 @@ import { lintableFileExtensions } from './constants.js'
  *   main: string,
  *   module: string,
  *   exports: Record<string, string>,
+ *   repository: Record<string, string> | string,
  *   type: 'module' | 'commonjs'
  * }} Pkg
  */
@@ -43,6 +44,59 @@ export function stripComments(code) {
   return code
     .replace(MULTILINE_COMMENTS_RE, '')
     .replace(SINGLELINE_COMMENTS_RE, '')
+}
+
+// Reference: https://git-scm.com/docs/git-clone#_git_urls and https://github.com/npm/hosted-git-info
+const GIT_URL_RE =
+  /^(git\+https?|git\+ssh|https?|ssh|git):\/\/(?:[\w._-]+@)?([\w.-]+)(?::([\w\d-]+))?(\/[\w._/-]+)\/?$/
+/**
+ * @param {string} url
+ */
+export function isGitUrl(url) {
+  return GIT_URL_RE.test(url)
+}
+/**
+ * @param {string} url
+ */
+export function isShorthandGitHubOrGitLabUrl(url) {
+  const tokens = url.match(GIT_URL_RE)
+  if (tokens) {
+    const host = tokens[2]
+    const path = tokens[4]
+
+    if (/(github|gitlab)/.test(host)) {
+      return !url.startsWith('git+') || !path.endsWith('.git')
+    }
+  }
+
+  return false
+}
+/**
+ * Reference: https://github.blog/security/application-security/improving-git-protocol-security-github/
+ * @param {string} url
+ */
+export function isDeprecatedGitHubGitUrl(url) {
+  const tokens = url.match(GIT_URL_RE)
+  if (tokens) {
+    const protocol = tokens[1]
+    const host = tokens[2]
+
+    if (/github/.test(host) && protocol === 'git') {
+      return true
+    }
+  }
+
+  return false
+}
+
+// Reference: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#repository
+const SHORTHAND_REPOSITORY_URL_RE =
+  /^(?:(?:github|bitbucket|gitlab):[\w\-]+\/[\w\-]+|gist:\w+|[\w\-]+\/[\w\-]+)$/
+/**
+ * @param {string} url
+ */
+export function isShorthandRepositoryUrl(url) {
+  return SHORTHAND_REPOSITORY_URL_RE.test(url)
 }
 
 /**

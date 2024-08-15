@@ -100,8 +100,8 @@ function messageToString(m, pkg) {
       if (m.args.actualExtension && m.args.expectExtension) {
         // prettier-ignore
         return `The types is not exported. Consider adding ${bold(fp(m.path) + '.types')} to be compatible with TypeScript's ${bold('"moduleResolution": "bundler"')} compiler option. `
-            + `Note that you cannot use "${bold(typesFilePath)}" because it has a mismatching format. Instead, you can duplicate the file and use the ${bold(m.args.expectExtension)} extension, e.g. `
-            + `${bold(fp(m.path) + '.types')}: "${bold(replaceLast(typesFilePath,m.args.actualExtension, m.args.expectExtension))}"`
+          + `Note that you cannot use "${bold(typesFilePath)}" because it has a mismatching format. Instead, you can duplicate the file and use the ${bold(m.args.expectExtension)} extension, e.g. `
+          + `${bold(fp(m.path) + '.types')}: "${bold(replaceLast(typesFilePath, m.args.actualExtension, m.args.expectExtension))}"`
       } else {
         // prettier-ignore
         return `The types is not exported. Consider adding ${bold(fp(m.path) + '.types')}: "${bold(typesFilePath)}" to be compatible with TypeScript's ${bold('"moduleResolution": "bundler"')} compiler option.`
@@ -152,6 +152,32 @@ function messageToString(m, pkg) {
     case 'DEPRECATED_FIELD_JSNEXT':
       // prettier-ignore
       return `${bold(fp(m.path))} is deprecated. ${bold('pkg.module')} should be used instead.`
+    case 'INVALID_REPOSITORY_VALUE':
+      switch (m.args.type) {
+        case 'invalid-string-shorthand':
+          // prettier-ignore
+          return `The field value isn't a valid shorthand value supported by npm. Consider using an object that references a repository.`
+        case 'invalid-git-url':
+          // prettier-ignore
+          return `The field value isn't a valid git URL. A valid git URL is usually in the form of "${bold('git+https://example.com/user/repo.git')}".`
+        case 'deprecated-github-git-protocol':
+          // prettier-ignore
+          return `The field value uses the git:// protocol that is deprecated by GitHub due to security concerns. Consider replacing the protocol with https://.`
+        case 'shorthand-git-sites': {
+          let fullUrl = pv(m.path)
+          if (fullUrl[fullUrl.length - 1] === '/') {
+            fullUrl = fullUrl.slice(0, -1)
+          }
+          if (!fullUrl.startsWith('git+')) {
+            fullUrl = 'git+' + fullUrl
+          }
+          if (!fullUrl.endsWith('.git')) {
+            fullUrl += '.git'
+          }
+          // prettier-ignore
+          return `The field value could be a full git URL like "${bold(fullUrl)}".`
+        }
+      }
     default:
       return
   }

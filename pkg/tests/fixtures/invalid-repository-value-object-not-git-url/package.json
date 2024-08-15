@@ -1,0 +1,9 @@
+{
+    "name": "publint-invalid-repository-value-object-not-git-url",
+    "version": "0.0.1",
+    "type": "commonjs",
+    "repository": {
+      "type": "git",
+      "url": "imap://fake.com/"
+    }
+  }
