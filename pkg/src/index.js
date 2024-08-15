@@ -482,14 +482,14 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
           code: 'INVALID_REPOSITORY_VALUE',
           args: { type: 'deprecated-github-git-protocol' },
           path: ['repository', 'url'],
-          type: 'warning'
+          type: 'suggestion'
         })
       } else if (isShorthandGitHubOrGitLabUrl(repository.url)) {
         messages.push({
           code: 'INVALID_REPOSITORY_VALUE',
           args: { type: 'shorthand-git-sites' },
           path: ['repository', 'url'],
-          type: 'warning'
+          type: 'suggestion'
         })
       }
     }

@@ -247,3 +247,14 @@ The `"jsnext:main"` and `"jsnext"` fields are deprecated. The `"module"` field s
 - If `"repository"` is an object with `"type": "git"`, the `"url"` must be a valid [git URL](https://git-scm.com/docs/git-clone#_git_urls) and can be [parsed by npm](https://github.com/npm/hosted-git-info).
 - The `git://` protocol for GitHub repos should not be used due [security concerns](https://github.blog/security/application-security/improving-git-protocol-security-github/).
 - GitHub or GitLab links should be prefixed with `git+` and postfixed with `.git`. (This is also warned by npm when publishing a package).
+
+An example config that meets these criterias may look like this:
+
+```json
+{
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bluwy/publint.git"
+  }
+}
+```

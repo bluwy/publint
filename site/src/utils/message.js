@@ -159,12 +159,15 @@ function messageToString(m, pkg) {
           return `The field value isn't a valid shorthand value supported by npm. Consider using an object that references a repository.`
         case 'invalid-git-url':
           // prettier-ignore
-          return `The field value isn't a valid git URL. A valid git URL is usually in the form of "git+https://example.com/user/repo.git".`
+          return `The field value isn't a valid git URL. A valid git URL is usually in the form of "${bold('git+https://example.com/user/repo.git')}".`
         case 'deprecated-github-git-protocol':
           // prettier-ignore
           return `The field value uses the git:// protocol that is deprecated by GitHub due to security concerns. Consider replacing the protocol with https://.`
         case 'shorthand-git-sites': {
           let fullUrl = pv(m.path)
+          if (fullUrl[fullUrl.length - 1] === '/') {
+            fullUrl = fullUrl.slice(0, -1)
+          }
           if (!fullUrl.startsWith('git+')) {
             fullUrl = 'git+' + fullUrl
           }

@@ -165,12 +165,15 @@ export function formatMessage(m, pkg) {
           return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} which isn't a valid shorthand value supported by npm. Consider using an object that references a repository.`
         case 'invalid-git-url':
           // prettier-ignore
-          return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} which isn't a valid git URL. A valid git URL is usually in the form of "git+https://example.com/user/repo.git".`
+          return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} which isn't a valid git URL. A valid git URL is usually in the form of "${c.bold('git+https://example.com/user/repo.git')}".`
         case 'deprecated-github-git-protocol':
           // prettier-ignore
           return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} which uses the git:// protocol that is deprecated by GitHub due to security concerns. Consider replacing the protocol with https://.`
         case 'shorthand-git-sites': {
           let fullUrl = pv(m.path)
+          if (fullUrl[fullUrl.length - 1] === '/') {
+            fullUrl = fullUrl.slice(0, -1)
+          }
           if (!fullUrl.startsWith('git+')) {
             fullUrl = 'git+' + fullUrl
           }
