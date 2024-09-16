@@ -5,21 +5,23 @@ import {
   replaceLast
 } from './utils.js'
 
-const picoHasColors = picocolors.createColors(true)
-const picoNoColors = picocolors.createColors(false)
+/** @type { import('picocolors/types.js').Colors | undefined } */
+let _picocolorsHasColors
+/** @type { import('picocolors/types.js').Colors | undefined } */
+let _picocolorsNoColors
 
 /**
  * @param {import('../index.d.ts').Message} m
  * @param {import('./utils.js').Pkg} pkg
- * @param {import('../utils.d.ts').FormatMessageOpt} opt
+ * @param {import('../utils.d.ts').FormatMessageOptions} opts
  */
-export function formatMessage(m, pkg, opt = {}) {
-  /** @type { import("picocolors/types.js").Colors } */
+export function formatMessage(m, pkg, opts = {}) {
+  /** @type { import('picocolors/types.js').Colors } */
   let c = picocolors
-  if (opt.color === true) {
-    c = picoHasColors
-  } else if (opt.color === false) {
-    c = picoNoColors
+  if (opts.color === true) {
+    c = _picocolorsHasColors ??= picocolors.createColors(true)
+  } else if (opts.color === false) {
+    c = _picocolorsNoColors ??= picocolors.createColors(false)
   }
 
   /** @param {string[]} path */

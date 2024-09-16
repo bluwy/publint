@@ -2,12 +2,12 @@ import type { Message } from './index.js'
 
 type Pkg = Record<string, any>
 
-export interface FormatMessageOpt {
+export interface FormatMessageOptions {
   /**
-   * Used to determine if the returned string contains color.
-   * - true: Force has color.
-   * - false: Force no color.
-   * - undefined: Default to whether the environment supports color (already handled by picocolors by default).
+   * Whether the returned string should contain color.
+   * - `true`: Force has color.
+   * - `false`: Force no color.
+   * - `undefined`: Default to whether the environment supports color.
    */
   color?: boolean | undefined
 }
@@ -17,5 +17,5 @@ export declare function getPkgPathValue(pkg: Pkg, path: string[]): any
 export declare function formatMessage(
   msg: Message,
   pkg: Pkg,
-  opt?: FormatMessageOpt
+  opt?: FormatMessageOptions
 ): string | undefined
