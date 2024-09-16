@@ -1,15 +1,29 @@
-import c from 'picocolors'
+import picocolors from 'picocolors'
 import {
   formatMessagePath as fp,
   getPkgPathValue,
   replaceLast
 } from './utils.js'
 
+/** @type { import('picocolors/types.js').Colors | undefined } */
+let _picocolorsHasColors
+/** @type { import('picocolors/types.js').Colors | undefined } */
+let _picocolorsNoColors
+
 /**
  * @param {import('../index.d.ts').Message} m
  * @param {import('./utils.js').Pkg} pkg
+ * @param {import('../utils.d.ts').FormatMessageOptions} opts
  */
-export function formatMessage(m, pkg) {
+export function formatMessage(m, pkg, opts = {}) {
+  /** @type { import('picocolors/types.js').Colors } */
+  let c = picocolors
+  if (opts.color === true) {
+    c = _picocolorsHasColors ??= picocolors.createColors(true)
+  } else if (opts.color === false) {
+    c = _picocolorsNoColors ??= picocolors.createColors(false)
+  }
+
   /** @param {string[]} path */
   const pv = (path) => getPkgPathValue(pkg, path)
 
