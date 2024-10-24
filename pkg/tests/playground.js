@@ -5,6 +5,8 @@ import { equal } from 'uvu/assert'
 import { publint } from '../lib/node.js'
 import { formatMessage } from '../lib/utils-node.js'
 
+// TODO: migrate these to fs-fixture
+
 testFixture('exports-browser-conflict', [
   'EXPORTS_VALUE_CONFLICTS_WITH_BROWSER',
   'USE_EXPORTS_OR_IMPORTS_BROWSER'
@@ -153,6 +155,8 @@ testFixture('invalid-repository-value-string-not-url', [
 ])
 
 testFixture('invalid-repository-value-shorthand', [])
+
+testFixture('invalid-repository-value-shorthand-nested', [])
 
 testFixture('invalid-repository-value-object-not-git-url', [
   {
