@@ -11,13 +11,10 @@ export default defineConfig({
     // TODO: Fix this in Vite
     entries: ['**/*.html', './src/utils/worker.js']
   },
-  plugins: [
-    spaFallbackWithDot(),
-    serveAnalysisJson(),
-    unocss(),
-    svelte(),
-    markdown()
-  ],
+  plugins: [serveAnalysisJson(), unocss(), svelte(), markdown()],
+  esbuild: {
+    legalComments: 'none'
+  },
   build: {
     rollupOptions: {
       input: {
@@ -27,27 +24,6 @@ export default defineConfig({
     }
   }
 })
-
-/**
- * Vite doesn't handle fallback html with dot (.), see https://github.com/vitejs/vite/issues/2415
- * TODO: Review the PR in Vite
- * @returns {import('vite').Plugin}
- */
-function spaFallbackWithDot() {
-  return {
-    name: 'spa-fallback-with-dot',
-    configureServer(server) {
-      return () => {
-        server.middlewares.use((req, res, next) => {
-          if (req.url.includes('.') && !req.url.endsWith('.html')) {
-            req.url = '/index.html'
-          }
-          next()
-        })
-      }
-    }
-  }
-}
 
 const analysisJsonUrl = new URL(
   '../analysis/cache/_results.json',

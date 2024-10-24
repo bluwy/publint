@@ -1,4 +1,5 @@
 <script>
+  import { onDestroy } from 'svelte'
   import githubLogo from '../assets/github.svg'
   import gitlabLogo from '../assets/gitlab.svg'
   import gitLogo from '../assets/git.svg'
@@ -25,6 +26,12 @@
   let result = $state()
   let error = $state('')
   let status = $state('')
+
+  onDestroy(() => {
+    if (worker) {
+      worker.terminate()
+    }
+  })
 
   function createWorker() {
     const worker = new Worker(new URL('../utils/worker.js', import.meta.url), {
