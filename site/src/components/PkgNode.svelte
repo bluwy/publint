@@ -1,37 +1,52 @@
-<script context="module">
+<script module>
   const KEY = {}
 </script>
 
 <script>
+  import PkgNode from './PkgNode.svelte'
   import { getContext, setContext } from 'svelte'
   import { messageTypeToColor } from '../utils/colors'
   import { isArrayEqual } from '../utils/common'
   import { formatMessage } from '../utils/message'
 
-  /** @type {string | number} */
-  export let key = ''
-  export let value = undefined
-  export let comma = false
-  export let indent = 0
-  export let messages
-  export let pkg
+  /**
+   * @typedef {Object} Props
+   * @property {string | number} [key]
+   * @property {any} [value]
+   * @property {boolean} [comma]
+   * @property {number} [indent]
+   * @property {any} messages
+   * @property {any} pkg
+   */
+
+  /** @type {Props} */
+  let {
+    key = '',
+    value = undefined,
+    comma = false,
+    indent = 0,
+    messages,
+    pkg
+  } = $props()
 
   const paths = key ? getContext(KEY).concat(key) : []
   setContext(KEY, paths)
 
-  $: isValueArray = Array.isArray(value)
-  $: isValueObject = value && typeof value === 'object'
-  $: keyText = key && isNaN(parseInt(`${key}`)) ? `"${key}": ` : ''
+  let isValueArray = $derived(Array.isArray(value))
+  let isValueObject = $derived(value && typeof value === 'object')
+  let keyText = $derived(key && isNaN(parseInt(`${key}`)) ? `"${key}": ` : '')
 
-  $: matchedMessages = messages.filter(
-    (v) => v.path.length && isArrayEqual(paths, v.path)
+  let matchedMessages = $derived(
+    messages.filter((v) => v.path.length && isArrayEqual(paths, v.path))
   )
 
   const maxShownMessages = 5
-  let showAllMessages = false
-  $: shownMessages = showAllMessages
-    ? matchedMessages
-    : matchedMessages.slice(0, maxShownMessages)
+  let showAllMessages = $state(false)
+  let shownMessages = $derived(
+    showAllMessages
+      ? matchedMessages
+      : matchedMessages.slice(0, maxShownMessages)
+  )
 </script>
 
 <li
@@ -46,7 +61,7 @@
     </span>
     <ul class="m-0 p-0 list-none">
       {#each Object.entries(value) as [k, v], i}
-        <svelte:self
+        <PkgNode
           key={k}
           value={v}
           comma={i + 1 < Object.keys(value).length}
@@ -71,7 +86,7 @@
   {#if shownMessages.length}
     <div
       class="absolute flex items-start justify-end left-0 right-0 top-0 h-full bg-gray-300 @dark:bg-gray-700 pt-1 px-1 -z-1 -mx-4"
-    />
+    ></div>
     <div class="-mx-4">
       {#each shownMessages as msg}
         <div
@@ -86,7 +101,7 @@
       {#if shownMessages.length < matchedMessages.length && !showAllMessages}
         <button
           class="w-full px-4 py-2 text-xs bg-gray-400 @dark:bg-gray-600 hover:bg-gray-500 focus:bg-gray-500 focus:outline-none border-0"
-          on:click={() => (showAllMessages = true)}
+          onclick={() => (showAllMessages = true)}
         >
           Show {matchedMessages.length - shownMessages.length} more
         </button>

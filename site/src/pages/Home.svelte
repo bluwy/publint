@@ -4,7 +4,7 @@
   import NpmSearchInput from '../components/NpmSearchInput.svelte'
 
   /** @type {Record<string, number> | undefined} */
-  let analysis
+  let analysis = $state()
 
   fetch('/analysis.json')
     .then(async (res) => {

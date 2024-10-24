@@ -13,86 +13,24 @@
   import { isLocalPkg } from '../utils/common'
   import { url } from '../utils/url'
 
-  let npmPkgName, npmPkgVersion
-  $: {
-    // $url.pathname possible values:
-    // /foo
-    // /foo@1.0.0
-    // /@foo/bar@1.0.0
-    const parts = $url.pathname.slice(1).split('@')
-    if (parts[0] === '') {
-      parts.shift()
-      parts[0] = '@' + parts[0]
-    }
-    npmPkgName = parts[0]
-    npmPkgVersion = isLocalPkg(npmPkgName) ? '0.0.1' : parts[1]
-
-    // when pkg updates, reset results
-    versionFetched = false
-    result = undefined
-    status = ''
-  }
+  let npmPkgName = $state()
+  let npmPkgVersion = $state()
 
   // Fetch latest version if not specified
-  let versionFetched = false
-  $: if (npmPkgVersion) {
-    versionFetched = true
-  } else {
-    fetch(
-      // prettier-ignore
-      `${import.meta.env.VITE_NPM_REGISTRY}/${encodeURIComponent(npmPkgName)}/latest`
-    )
-      .then(async (res) => {
-        const result = await res.json()
-        if (typeof result === 'string') {
-          error = result
-          return
-        }
-        if (result?.version) {
-          url.replace(`/${npmPkgName}@${result.version}`)
-        }
-      })
-      .finally(() => {
-        versionFetched = true
-      })
-  }
+  let versionFetched = $state(false)
 
   /** @type {Worker} */
   let worker
-  let result
-  let error = ''
-  let status = ''
-  $: if (npmPkgName && npmPkgVersion) {
-    if (!worker) worker = createWorker()
-    error = ''
-    status = ''
-    worker.postMessage({
-      npmPkgName,
-      npmPkgVersion
-    })
-  }
 
-  $: suggestionCount = result?.messages.filter(
-    (v) => v.type === 'suggestion'
-  ).length
-  $: warningCount = result?.messages.filter((v) => v.type === 'warning').length
-  $: errorCount = result?.messages.filter((v) => v.type === 'error').length
-
-  // Add debug logs for future self
-  $: if (result?.messages) {
-    console.debug('publint messages:', result.messages)
-  }
-
-  $: repo = result?.pkgJson?.repository
-    ? extractRepoUrl(result?.pkgJson?.repository)
-    : undefined
-  $: npmUrl = `https://www.npmjs.com/package/${npmPkgName}`
-  $: jsdelivrUrl = `https://www.jsdelivr.com/package/npm/${npmPkgName}`
+  let result = $state()
+  let error = $state('')
+  let status = $state('')
 
   function createWorker() {
     const worker = new Worker(new URL('../utils/worker.js', import.meta.url), {
       type: 'module'
     })
+
     worker.addEventListener('message', (e) => {
       const message = e.data
       if (message.type === 'status') {
@@ -146,6 +84,88 @@
       return { logo: gitLogo, url }
     }
   }
+
+  $effect(() => {
+    // $url.pathname possible values:
+    // /foo
+    // /foo@1.0.0
+    // /@foo/bar@1.0.0
+    const parts = $url.pathname.slice(1).split('@')
+    if (parts[0] === '') {
+      parts.shift()
+      parts[0] = '@' + parts[0]
+    }
+    npmPkgName = parts[0]
+    npmPkgVersion = isLocalPkg(npmPkgName) ? '0.0.1' : parts[1]
+
+    // when pkg updates, reset results
+    versionFetched = false
+    result = undefined
+    status = ''
+  })
+
+  $effect(() => {
+    if (npmPkgVersion) {
+      versionFetched = true
+    } else {
+      fetch(
+        // prettier-ignore
+        `${import.meta.env.VITE_NPM_REGISTRY}/${encodeURIComponent(npmPkgName)}/latest`
+      )
+        .then(async (res) => {
+          const result = await res.json()
+          if (typeof result === 'string') {
+            error = result
+            return
+          }
+          if (result?.version) {
+            url.replace(`/${npmPkgName}@${result.version}`)
+          }
+        })
+        .finally(() => {
+          versionFetched = true
+        })
+    }
+  })
+
+  $effect(() => {
+    if (npmPkgName && npmPkgVersion) {
+      if (!worker) worker = createWorker()
+      error = ''
+      status = ''
+      worker.postMessage({
+        npmPkgName,
+        npmPkgVersion
+      })
+    }
+  })
+
+  let suggestionCount = $derived(
+    result?.messages.filter((v) => v.type === 'suggestion').length
+  )
+  let warningCount = $derived(
+    result?.messages.filter((v) => v.type === 'warning').length
+  )
+  let errorCount = $derived(
+    result?.messages.filter((v) => v.type === 'error').length
+  )
+
+  // Add debug logs for future self
+  $effect(() => {
+    if (result?.messages) {
+      console.debug('publint messages:', $state.snapshot(result).messages)
+    }
+  })
+
+  let repo = $derived(
+    result?.pkgJson?.repository
+      ? extractRepoUrl(result?.pkgJson?.repository)
+      : undefined
+  )
+  let npmUrl = $derived(`https://www.npmjs.com/package/${npmPkgName}`)
+  let jsdelivrUrl = $derived(
+    `https://www.jsdelivr.com/package/npm/${npmPkgName}`
+  )
 </script>
 
 <svelte:head>

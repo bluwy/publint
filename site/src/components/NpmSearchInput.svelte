@@ -2,30 +2,37 @@
   import { debounce } from '../utils/common'
   import { url } from '../utils/url'
 
-  export let npmPkgName = ''
-  export let autofocus = false
+  /**
+   * @typedef {Object} Props
+   * @property {string} [npmPkgName]
+   * @property {boolean} [autofocus]
+   */
+
+  /** @type {Props} */
+  let { npmPkgName = $bindable(''), autofocus = false } = $props()
 
   /**
    * Input element used to set the value
    * @type {HTMLInputElement | undefined}
    */
-  let inputEl
+  let inputEl = $state()
   /**
    * @type {{ value: string, description?: string, version: string }[]}
    */
-  let options = []
+  let options = $state([])
   /**
    * The index of the showed choices when selecting via up/down arrows
    */
-  let arrowSelectIndex = -1
+  let arrowSelectIndex = $state(-1)
 
-  $: hintText =
+  let hintText = $derived(
     arrowSelectIndex < 0 &&
-    npmPkgName &&
-    options[0] &&
-    options[0].value.toLowerCase().startsWith(npmPkgName.toLowerCase())
+      npmPkgName &&
+      options[0] &&
+      options[0].value.toLowerCase().startsWith(npmPkgName.toLowerCase())
       ? npmPkgName + options[0].value.slice(npmPkgName.length)
       : ''
+  )
 
   function handleKeyDown(e) {
     if (e.key === 'Tab' && hintText && options[0]) {
@@ -103,7 +110,11 @@
     search()
   }
 
-  function handleSubmit() {
+  /**
+   * @param {SubmitEvent} e
+   */
+  function handleSubmit(e) {
+    e.preventDefault()
     if (!npmPkgName) return
     const npmPkgVersion = options.find((o) => o.value === npmPkgName)?.version
     if (npmPkgVersion) {
@@ -128,7 +139,7 @@
 
 <form
   class="relative isolate w-full max-w-xl group z-50"
-  on:submit|preventDefault={handleSubmit}
+  onsubmit={handleSubmit}
 >
   <div
     class="group-focus-within:block hidden border-rounded-2 w-full overflow-hidden border-none shadow-lg bg-white text-black absolute top-0 -z-1 transition-shadow"
@@ -160,7 +171,7 @@
           >
             <button
               class="bg-transparent flex justify-between m-0 border-none text-base w-full block text-left p-4"
-              on:click={() => (npmPkgName = opt.value)}
+              onclick={() => (npmPkgName = opt.value)}
             >
               <span class="text-black"
                 >{@html highlightText(opt.value, npmPkgName)}</span
@@ -172,7 +183,7 @@
       </ul>
     {/if}
   </div>
-  <!-- svelte-ignore a11y-autofocus -->
+  <!-- svelte-ignore a11y_autofocus -->
   <input
     bind:this={inputEl}
     bind:value={npmPkgName}
@@ -183,9 +194,9 @@
     autocapitalize="off"
     autocorrect="off"
     {autofocus}
-    on:input={handleInput}
-    on:keydown={handleKeyDown}
-    on:keyup={handleKeyUp}
+    oninput={handleInput}
+    onkeydown={handleKeyDown}
+    onkeyup={handleKeyUp}
   />
   <button
     class="absolute flex flex justify-center items-center top-0 right-0 h-full bg-transparent text-black border-none px-4"

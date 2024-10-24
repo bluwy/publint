@@ -1,5 +1,11 @@
 <script>
-  export let size = 80
+  /**
+   * @typedef {Object} Props
+   * @property {number} [size]
+   */
+
+  /** @type {Props} */
+  let { size = 80 } = $props()
 </script>
 
 <!-- Credits: https://loading.io/css/ -->
@@ -8,7 +14,7 @@
   class="lds-dual-ring text-gray-900 @dark:text-gray-100"
   style:--size={size + 'px'}
   style:--border={Math.max(size * 0.075, 1) + 'px'}
-/>
+></div>
 
 <style>
   .lds-dual-ring {

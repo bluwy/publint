@@ -4,10 +4,15 @@
   import severityWarning from '../assets/severity-warning.svg'
   import severityError from '../assets/severity-error.svg'
 
-  /** @type {Record<string, number>} */
-  export let results
+  /**
+   * @typedef {Object} Props
+   * @property {Record<string, number>} results
+   */
 
-  let open = false
+  /** @type {Props} */
+  let { results } = $props()
+
+  let open = $state(false)
 
   /**
    * @param {number} num
@@ -106,7 +111,7 @@
     >
       <button
         class="action-button pointer-events-initial"
-        on:click={() => (open = true)}
+        onclick={() => (open = true)}
       >
         View all {Object.keys(results).length} packages
       </button>

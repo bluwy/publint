@@ -5,25 +5,32 @@
   import { url } from '../utils/url'
 
   // maybe be undefined if visit page without version yet
-  /** @type {string | undefined} */
-  export let version
-  /** @type {string} */
-  export let pkgName
+
+  /**
+   * @typedef {Object} Props
+   * @property {string | undefined} version
+   * @property {string} pkgName
+   */
+
+  /** @type {Props} */
+  let { version, pkgName } = $props()
 
   /** @type {string[]} */
-  let versions = []
+  let versions = $state([])
   /** @type {Record<string, string>} */
   let tags = {}
-  let versionsLoading = false
-  let versionsLoaded = false
+  let versionsLoading = $state(false)
+  let versionsLoaded = $state(false)
 
   // reset fetched version when changing packages
-  $: if ($url) {
-    versionsLoading = false
-    versionsLoaded = false
-  }
+  $effect(() => {
+    if ($url) {
+      versionsLoading = false
+      versionsLoaded = false
+    }
+  })
 
-  let open = false
+  let open = $state(false)
 
   function getTagForVersion(version) {
     return Object.entries(tags).find(([, v]) => v === version)?.[0]
@@ -57,15 +64,15 @@
   }
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
 <span
   class="relative z-100"
   use:clickOutside
-  on:clickoutside={() => {
+  onclickoutside={() => {
     if (versionsLoading) return
     open = false
   }}
-  on:keydown={(e) => {
+  onkeydown={(e) => {
     if (e.key === 'Escape') open = false
   }}
 >
@@ -73,7 +80,7 @@
 
   <button
     class="inline-flex justify-center items-center active:bg-white p-0 m-0 w-4 h-4 border-0 rounded bg-gray-400 @dark:bg-gray-600 hover:bg-gray-500 focus:bg-gray-500 active:bg-gray-500 transition-colors"
-    on:click={handleClick}
+    onclick={handleClick}
   >
     {#if !versionsLoading}
       <img
@@ -105,7 +112,7 @@
           <a
             class="bg-transparent m-0 pl-2 pr-4.5 py-0.5 border-none whitespace-nowrap decoration-none text-sm w-full block text-left font-normal"
             href={`/${pkgName}@${v}`}
-            on:click={() => (open = false)}
+            onclick={() => (open = false)}
           >
             <span>{v}</span>
             {#if tag}
