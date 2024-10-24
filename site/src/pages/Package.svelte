@@ -1,6 +1,7 @@
 <script>
   import githubLogo from '../assets/github.svg'
   import gitlabLogo from '../assets/gitlab.svg'
+  import gitLogo from '../assets/git.svg'
   import npmLogo from '../assets/npm.svg'
   import jsdelivrLogo from '../assets/jsdelivr.svg'
   import Header from '../components/Header.svelte'
@@ -133,8 +134,16 @@
       return { logo: githubLogo, url }
     } else if (url.includes('gitlab.com')) {
       return { logo: gitlabLogo, url }
+    } else if (url.startsWith('github:')) {
+      return { logo: githubLogo, url: `https://github.com/${url.slice(7)}` }
+    } else if (url.startsWith('gitlab:')) {
+      return { logo: gitlabLogo, url: `https://gitlab.com/${url.slice(7)}` }
+    } else if (url.startsWith('bitbucket:')) {
+      return { logo: gitLogo, url: `https://bitbucket.org/${url.slice(10)}` }
     } else if (url.split('/').length === 2) {
       return { logo: githubLogo, url: `https://github.com/${url}` }
+    } else if (url) {
+      return { logo: gitLogo, url }
     }
   }
 </script>
@@ -153,11 +162,13 @@
         <PackageVersion version={npmPkgVersion} pkgName={npmPkgName} />
       {/if}
     </h1>
-    <p class="flex flex-row justify-center items-center gap-4 mb-10">
+    <p class="flex flex-row justify-center items-end gap-4 mb-10">
       {#if repo}
         <a class="inline-block rounded @light:filter-invert" href={repo.url}>
           <img class="block" src={repo.logo} alt="repo logo" height="20" />
         </a>
+      {:else}
+        <span class="w-5 h-5"></span>
       {/if}
       <a class="inline-block rounded" href={npmUrl}>
         <img class="block" src={npmLogo} alt="npm logo" height="18" />
