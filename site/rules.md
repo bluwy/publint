@@ -206,6 +206,10 @@ Internal tests or config files are published, which are usually not needed and u
 
 [Node.js v21.1.0](https://nodejs.org/en/blog/release/v21.1.0) adds a new `--experimental-detect-module`, which can be used to automatically run ES modules when ESM syntax can be detected. Node.js hopes to make detection enabled by default in the future. Detection increases startup time, so Node is encouraging everyone — especially package authors — to add a type field to `package.json`, even for the default `"type": "commonjs"`.
 
+## `USE_LICENSE`
+
+A license file is published but the `"license"` field is not set in `package.json`. Consider adding a `"license"` field so that it's correctly displayed on npm and allows other tooling to parse the package license.
+
 ## `FIELD_INVALID_VALUE_TYPE`
 
 Some `package.json` fields has a set of allowed types, e.g. `string` or `object` only. If an invalid type is passed, this error message will be showed.

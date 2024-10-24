@@ -71,6 +71,7 @@ export type Message =
   | BaseMessage<'USE_EXPORTS_OR_IMPORTS_BROWSER'>
   | BaseMessage<'USE_FILES'>
   | BaseMessage<'USE_TYPE'>
+  | BaseMessage<'USE_LICENSE', { licenseFilePath: string }>
   | BaseMessage<
       'TYPES_NOT_EXPORTED',
       {

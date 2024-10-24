@@ -95,6 +95,9 @@ function messageToString(m, pkg) {
     case 'USE_TYPE':
       // prettier-ignore
       return `The package does not specify the ${bold('"type"')} field. NodeJS may attempt to detect the package type causing a small performance hit. Consider adding ${bold('"type"')}: "${bold('commonjs')}".`
+    case 'USE_LICENSE':
+      // prettier-ignore
+      return `The package does not specify the ${bold('"license"')} field but a license file was detected at ${bold(m.args.licenseFilePath)}. Consider adding a ${bold('"license"')} field so it's displayed on npm.`
     case 'TYPES_NOT_EXPORTED': {
       const typesFilePath = exportsRel(m.args.typesFilePath)
       if (m.args.actualExtension && m.args.expectExtension) {

@@ -44,6 +44,8 @@ testFixture('missing-files', [
   'USE_EXPORTS_OR_IMPORTS_BROWSER'
 ])
 
+testFixture('missing-license', ['USE_LICENSE'])
+
 testFixture('no-exports-module', [])
 
 testFixture('not-missing-files', [])

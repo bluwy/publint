@@ -1,7 +1,8 @@
 import {
   commonInternalPaths,
   invalidJsxExtensions,
-  knownBrowserishConditions
+  knownBrowserishConditions,
+  licenseFiles
 } from './constants.js'
 import {
   exportsGlob,
@@ -78,6 +79,30 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
           })
           break
         }
+      }
+    })
+  }
+
+  // Check if has license file but no license field
+  if (rootPkg.license == null) {
+    promiseQueue.push(async () => {
+      const topFiles = await vfs.readDir(pkgDir)
+      /** @type {string | undefined} */
+      let matchedLicenseFilePath
+      for (const f of topFiles) {
+        if (await vfs.isPathDir(vfs.pathJoin(pkgDir, f))) continue
+        if (licenseFiles.some((r) => r.test(f))) {
+          matchedLicenseFilePath = '/' + f
+          break
+        }
+      }
+      if (matchedLicenseFilePath) {
+        messages.push({
+          code: 'USE_LICENSE',
+          args: { licenseFilePath: matchedLicenseFilePath },
+          path: ['name'],
+          type: 'suggestion'
+        })
       }
     })
   }
