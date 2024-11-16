@@ -10,10 +10,11 @@
    * @typedef {Object} Props
    * @property {string | undefined} version
    * @property {string} pkgName
+   * @property {boolean} isPkgPrNew
    */
 
   /** @type {Props} */
-  let { version, pkgName } = $props()
+  let { version, pkgName, isPkgPrNew } = $props()
 
   /** @type {string[]} */
   let versions = $state([])
@@ -78,21 +79,23 @@
 >
   <span class="opacity-80 font-400 text-lg">{version || ''}</span>
 
-  <button
-    class="inline-flex justify-center items-center active:bg-white p-0 m-0 w-4 h-4 border-0 rounded bg-gray-400 @dark:bg-gray-600 hover:bg-gray-500 focus:bg-gray-500 active:bg-gray-500 transition-colors"
-    onclick={handleClick}
-  >
-    {#if !versionsLoading}
-      <img
-        class="block p-0 m-0 @dark:filter-invert"
-        src={selectIcon}
-        alt="select icon"
-        height="16"
-      />
-    {:else}
-      <Loading size={14} />
-    {/if}
-  </button>
+  {#if !isPkgPrNew}
+    <button
+      class="inline-flex justify-center items-center active:bg-white p-0 m-0 w-4 h-4 border-0 rounded bg-gray-400 @dark:bg-gray-600 hover:bg-gray-500 focus:bg-gray-500 active:bg-gray-500 transition-colors"
+      onclick={handleClick}
+    >
+      {#if !versionsLoading}
+        <img
+          class="block p-0 m-0 @dark:filter-invert"
+          src={selectIcon}
+          alt="select icon"
+          height="16"
+        />
+      {:else}
+        <Loading size={14} />
+      {/if}
+    </button>
+  {/if}
 
   {#if versionsLoaded && versions.length && open}
     <!--

@@ -1,6 +1,6 @@
 <script>
   import { debounce } from '../utils/common'
-  import { url } from '../utils/url'
+  import { isPkgPrNewUrl, url } from '../utils/url'
 
   /**
    * @typedef {Object} Props
@@ -33,6 +33,10 @@
       ? npmPkgName + options[0].value.slice(npmPkgName.length)
       : ''
   )
+
+  let isPkgPrNew = $derived(isPkgPrNewUrl(npmPkgName))
+
+  $effect(() => console.log(isPkgPrNew))
 
   function handleKeyDown(e) {
     if (e.key === 'Tab' && hintText && options[0]) {
@@ -119,8 +123,11 @@
     const npmPkgVersion = options.find((o) => o.value === npmPkgName)?.version
     if (npmPkgVersion) {
       url.push(`/${npmPkgName}@${npmPkgVersion}`)
-    } else {
+    } else if (!isPkgPrNew) {
       url.push(`/${npmPkgName}`)
+    } else if (isPkgPrNew) {
+      const link = new URL(npmPkgName)
+      url.push(`/pkg.pr.new${link.pathname}`)
     }
     document.body.focus()
     getSelection()?.removeAllRanges()

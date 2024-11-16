@@ -6,17 +6,20 @@ import { untar } from './untar'
 import { createTarballVfs } from './tarball'
 
 self.addEventListener('message', async (e) => {
-  const { npmPkgName, npmPkgVersion } = e.data
+  const { npmPkgName, npmPkgVersion, isPkgPrNew } = e.data
+  console.log('worker', e.data)
 
   let tarballUrl
   if (isLocalPkg(npmPkgName)) {
     // prettier-ignore
     tarballUrl = new URL(`/temp/${npmPkgName}-${npmPkgVersion}.tgz`, self.location.href).href
-  } else {
+  } else if (!isPkgPrNew) {
     // prettier-ignore
     tarballUrl = getNpmTarballUrl(npmPkgName, npmPkgVersion, {
       registry: import.meta.env.VITE_NPM_REGISTRY
     })
+  } else {
+    tarballUrl = `https://pkg.pr.new/${npmPkgName}@${npmPkgVersion}`
   }
 
   // Unpack flow credit: https://stackoverflow.com/a/65448758
