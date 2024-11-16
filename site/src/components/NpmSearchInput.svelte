@@ -36,8 +36,6 @@
 
   let isPkgPrNew = $derived(isPkgPrNewUrl(npmPkgName))
 
-  $effect(() => console.log(isPkgPrNew))
-
   function handleKeyDown(e) {
     if (e.key === 'Tab' && hintText && options[0]) {
       npmPkgName = options[0].value

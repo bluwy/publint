@@ -7,7 +7,6 @@ import { createTarballVfs } from './tarball'
 
 self.addEventListener('message', async (e) => {
   const { npmPkgName, npmPkgVersion, isPkgPrNew } = e.data
-  console.log('worker', e.data)
 
   let tarballUrl
   if (isLocalPkg(npmPkgName)) {
