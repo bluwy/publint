@@ -1,6 +1,7 @@
 <script>
   import { debounce } from '../utils/common'
-  import { isPkgPrNewUrl, url } from '../utils/url'
+  import { isPkgPrNewUrl } from '../utils/registry'
+  import { url } from '../utils/url'
 
   /**
    * @typedef {Object} Props

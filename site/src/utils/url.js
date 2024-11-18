@@ -26,12 +26,3 @@ export const url = {
   push: (url) => history.pushState(null, '', url),
   replace: (url) => history.replaceState(null, '', url)
 }
-
-export function isPkgPrNewUrl(link) {
-  try {
-    const url = new URL(link)
-    return url.hostname === 'pkg.pr.new'
-  } catch {
-    return false
-  }
-}
