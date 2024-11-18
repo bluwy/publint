@@ -10,7 +10,7 @@
     "typecheck": "tsc -p pkg && tsc -p site && tsc -p analysis",
     "test": "pnpm --dir pkg test"
   },
-  "packageManager": "pnpm@9.12.2",
+  "packageManager": "pnpm@9.13.2",
   "engines": {
     "node": ">=16"
   },
@@ -18,8 +18,8 @@
     "@types/node": "^22.9.0",
     "@types/pnpapi": "^0.0.5",
     "prettier": "^3.3.3",
-    "prettier-plugin-svelte": "^3.2.7",
-    "svelte": "^5.1.12",
+    "prettier-plugin-svelte": "^3.2.8",
+    "svelte": "^5.2.2",
     "typescript": "^5.6.3"
   },
   "pnpm": {
