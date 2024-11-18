@@ -23,7 +23,7 @@
         <section class="md:w-1/2 mb-2">
           <h2>What is publint</h2>
           <p>
-            <code>publint</code> lints npm packages to ensure widest
+            <code>publint</code> lints npm packages to ensure the widest
             compatibility across environments, such as Vite, Webpack, Rollup,
             Node.js, etc.
           </p>
@@ -35,10 +35,15 @@
         <section class="md:w-1/2 mb-2">
           <h2>How it works</h2>
           <p>
-            When linting an npm package, the site downloads the tarball from the
-            npm registry, and runs <code>publint</code> against it in a web
-            worker. For larger packages, it may take a while to download and
-            lint.
+            Given an npm package, the site downloads the tarball from the npm
+            registry, and runs <code>publint</code> against it in a web worker.
+            For larger packages, it may take a while to download and lint.
+          </p>
+          <p>
+            You can also directly paste
+            <a href="https://www.npmjs.com">www.npmjs.com</a> or
+            <a href="https://pkg.pr.new">pkg.pr.new</a>
+            links in the search input to easily lint them!
           </p>
         </section>
       </div>
@@ -72,6 +77,14 @@
                 href="https://github.com/frehner/modern-guide-to-packaging-js-library"
               >
                 Modern Guide to Packaging JS Library
+              </a>
+            </li>
+            <li>
+              <a
+                class="anchor-link"
+                href="https://hirok.io/posts/package-json-exports"
+              >
+                Guide to the package.json exports field
               </a>
             </li>
           </ul>

@@ -1,6 +1,6 @@
 <script>
   import { debounce } from '../utils/common'
-  import { isPkgPrNewUrl } from '../utils/registry'
+  import { isNpmUrl, isPkgPrNewUrl } from '../utils/registry'
   import { url } from '../utils/url'
 
   /**
@@ -117,15 +117,27 @@
   function handleSubmit(e) {
     e.preventDefault()
     if (!npmPkgName) return
-    const npmPkgVersion = options.find((o) => o.value === npmPkgName)?.version
-    if (npmPkgVersion) {
-      url.push(`/${npmPkgName}@${npmPkgVersion}`)
-    } else if (isPkgPrNewUrl(npmPkgName)) {
+
+    // Support raw npm links
+    if (isNpmUrl(npmPkgName)) {
+      const link = new URL(npmPkgName)
+      url.push(link.pathname.slice('/package'.length))
+    }
+    // Support pkg.pr.new links
+    else if (isPkgPrNewUrl(npmPkgName)) {
       const link = new URL(npmPkgName)
       url.push(`/pkg.pr.new${link.pathname}`)
-    } else {
-      url.push(`/${npmPkgName}`)
     }
+    // Fallback navigate
+    else {
+      const npmPkgVersion = options.find((o) => o.value === npmPkgName)?.version
+      if (npmPkgVersion) {
+        url.push(`/${npmPkgName}@${npmPkgVersion}`)
+      } else {
+        url.push(`/${npmPkgName}`)
+      }
+    }
+
     document.body.focus()
     getSelection()?.removeAllRanges()
     // Clear options so it looks natural that an action has taken place
