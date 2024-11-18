@@ -12,13 +12,13 @@ self.addEventListener('message', async (e) => {
   if (isLocalPkg(npmPkgName)) {
     // prettier-ignore
     tarballUrl = new URL(`/temp/${npmPkgName}-${npmPkgVersion}.tgz`, self.location.href).href
-  } else if (!isPkgPrNew) {
+  } else if (isPkgPrNew) {
+    tarballUrl = `https://pkg.pr.new/${npmPkgName}@${npmPkgVersion}`
+  } else {
     // prettier-ignore
     tarballUrl = getNpmTarballUrl(npmPkgName, npmPkgVersion, {
       registry: import.meta.env.VITE_NPM_REGISTRY
     })
-  } else {
-    tarballUrl = `https://pkg.pr.new/${npmPkgName}@${npmPkgVersion}`
   }
 
   // Unpack flow credit: https://stackoverflow.com/a/65448758

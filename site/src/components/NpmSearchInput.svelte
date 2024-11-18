@@ -35,8 +35,6 @@
       : ''
   )
 
-  let isPkgPrNew = $derived(isPkgPrNewUrl(npmPkgName))
-
   function handleKeyDown(e) {
     if (e.key === 'Tab' && hintText && options[0]) {
       npmPkgName = options[0].value
@@ -122,11 +120,11 @@
     const npmPkgVersion = options.find((o) => o.value === npmPkgName)?.version
     if (npmPkgVersion) {
       url.push(`/${npmPkgName}@${npmPkgVersion}`)
-    } else if (!isPkgPrNew) {
-      url.push(`/${npmPkgName}`)
-    } else if (isPkgPrNew) {
+    } else if (isPkgPrNewUrl(npmPkgName)) {
       const link = new URL(npmPkgName)
       url.push(`/pkg.pr.new${link.pathname}`)
+    } else {
+      url.push(`/${npmPkgName}`)
     }
     document.body.focus()
     getSelection()?.removeAllRanges()

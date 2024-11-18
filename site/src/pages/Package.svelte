@@ -96,12 +96,6 @@
   let isPkgPrNew = $state(false)
 
   $effect(() => {
-    if ($url) {
-      isPkgPrNew = false
-    }
-  })
-
-  $effect(() => {
     // $url.pathname possible values:
     // /foo
     // /foo@1.0.0
@@ -112,8 +106,10 @@
       parts[0] = '@' + parts[0]
     }
     if (parts[0].startsWith('pkg.pr.new')) {
-      parts[0] = parts[0].slice('/pkg.pr.new'.length)
+      parts[0] = parts[0].slice('pkg.pr.new/'.length)
       isPkgPrNew = true
+    } else {
+      isPkgPrNew = false
     }
     npmPkgName = parts[0]
     npmPkgVersion = isLocalPkg(npmPkgName) ? '0.0.1' : parts[1]
@@ -127,6 +123,8 @@
   $effect(() => {
     if (npmPkgVersion) {
       versionFetched = true
+    } else if (isPkgPrNew) {
+      error = 'pkg.pr.new links require a version explicitly set in the url'
     } else {
       fetch(
         // prettier-ignore
