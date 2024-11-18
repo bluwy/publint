@@ -97,7 +97,7 @@
 
   $effect(() => {
     if ($url) {
-     isPkgPrNew = false 
+      isPkgPrNew = false
     }
   })
 
@@ -200,10 +200,14 @@
     <h1 class="mt-10 mb-0 font-600">
       {npmPkgName}
       {#if !error}
-        <PackageVersion version={npmPkgVersion} pkgName={npmPkgName} isPkgPrNew={isPkgPrNew} />
+        <PackageVersion
+          version={npmPkgVersion}
+          pkgName={npmPkgName}
+          {isPkgPrNew}
+        />
       {/if}
     </h1>
-    
+
     <p class="flex flex-row justify-center items-end gap-4 mb-10">
       {#if repo}
         <a class="inline-block rounded @light:filter-invert" href={repo.url}>
@@ -212,22 +216,35 @@
       {:else}
         <span class="w-5 h-5"></span>
       {/if}
-      
+
       {#if !isPkgPrNew}
         <a class="inline-block rounded" href={npmUrl}>
           <img class="block" src={npmLogo} alt="npm logo" height="18" />
         </a>
-      
+
         <a class="inline-block rounded bg-gray" href={jsdelivrUrl}>
-          <img class="block" src={jsdelivrLogo} alt="jsdelivr logo" height="20" />
+          <img
+            class="block"
+            src={jsdelivrLogo}
+            alt="jsdelivr logo"
+            height="20"
+          />
         </a>
       {:else}
-        <a class="inline-block rounded" href={`https://pkg.pr.new/${npmPkgName}@${npmPkgVersion}`}>
-          <img class="block" src={pkgPrNewLogo} alt="pkg.pr.new logo" height="18" />
+        <a
+          class="inline-block rounded"
+          href={`https://pkg.pr.new/${npmPkgName}@${npmPkgVersion}`}
+        >
+          <img
+            class="block"
+            src={pkgPrNewLogo}
+            alt="pkg.pr.new logo"
+            height="18"
+          />
         </a>
       {/if}
     </p>
-    
+
     <NpmSearchInput {npmPkgName} />
     {#if result}
       <section class="mt-4 flex justify-center items-center gap-4">
