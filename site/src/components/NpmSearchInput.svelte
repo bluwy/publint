@@ -1,5 +1,6 @@
 <script>
   import { debounce } from '../utils/common'
+  import { isPkgPrNewUrl } from '../utils/registry'
   import { url } from '../utils/url'
 
   /**
@@ -119,6 +120,9 @@
     const npmPkgVersion = options.find((o) => o.value === npmPkgName)?.version
     if (npmPkgVersion) {
       url.push(`/${npmPkgName}@${npmPkgVersion}`)
+    } else if (isPkgPrNewUrl(npmPkgName)) {
+      const link = new URL(npmPkgName)
+      url.push(`/pkg.pr.new${link.pathname}`)
     } else {
       url.push(`/${npmPkgName}`)
     }

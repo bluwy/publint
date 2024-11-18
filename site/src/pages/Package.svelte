@@ -4,6 +4,7 @@
   import gitlabLogo from '../assets/gitlab.svg'
   import gitLogo from '../assets/git.svg'
   import npmLogo from '../assets/npm.svg'
+  import pkgPrNewLogo from '../assets/stackblitz.svg'
   import jsdelivrLogo from '../assets/jsdelivr.svg'
   import Header from '../components/Header.svelte'
   import Label from '../components/Label.svelte'
@@ -92,6 +93,8 @@
     }
   }
 
+  let isPkgPrNew = $state(false)
+
   $effect(() => {
     // $url.pathname possible values:
     // /foo
@@ -101,6 +104,12 @@
     if (parts[0] === '') {
       parts.shift()
       parts[0] = '@' + parts[0]
+    }
+    if (parts[0].startsWith('pkg.pr.new')) {
+      parts[0] = parts[0].slice('pkg.pr.new/'.length)
+      isPkgPrNew = true
+    } else {
+      isPkgPrNew = false
     }
     npmPkgName = parts[0]
     npmPkgVersion = isLocalPkg(npmPkgName) ? '0.0.1' : parts[1]
@@ -114,6 +123,8 @@
   $effect(() => {
     if (npmPkgVersion) {
       versionFetched = true
+    } else if (isPkgPrNew) {
+      error = 'pkg.pr.new links require a version explicitly set in the url'
     } else {
       fetch(
         // prettier-ignore
@@ -142,7 +153,8 @@
       status = ''
       worker.postMessage({
         npmPkgName,
-        npmPkgVersion
+        npmPkgVersion,
+        isPkgPrNew
       })
     }
   })
@@ -186,9 +198,14 @@
     <h1 class="mt-10 mb-0 font-600">
       {npmPkgName}
       {#if !error}
-        <PackageVersion version={npmPkgVersion} pkgName={npmPkgName} />
+        <PackageVersion
+          version={npmPkgVersion}
+          pkgName={npmPkgName}
+          {isPkgPrNew}
+        />
       {/if}
     </h1>
+
     <p class="flex flex-row justify-center items-end gap-4 mb-10">
       {#if repo}
         <a class="inline-block rounded @light:filter-invert" href={repo.url}>
@@ -197,13 +214,35 @@
       {:else}
         <span class="w-5 h-5"></span>
       {/if}
-      <a class="inline-block rounded" href={npmUrl}>
-        <img class="block" src={npmLogo} alt="npm logo" height="18" />
-      </a>
-      <a class="inline-block rounded bg-gray" href={jsdelivrUrl}>
-        <img class="block" src={jsdelivrLogo} alt="jsdelivr logo" height="20" />
-      </a>
+
+      {#if !isPkgPrNew}
+        <a class="inline-block rounded" href={npmUrl}>
+          <img class="block" src={npmLogo} alt="npm logo" height="18" />
+        </a>
+
+        <a class="inline-block rounded bg-gray" href={jsdelivrUrl}>
+          <img
+            class="block"
+            src={jsdelivrLogo}
+            alt="jsdelivr logo"
+            height="20"
+          />
+        </a>
+      {:else}
+        <a
+          class="inline-block rounded"
+          href={`https://pkg.pr.new/${npmPkgName}@${npmPkgVersion}`}
+        >
+          <img
+            class="block"
+            src={pkgPrNewLogo}
+            alt="pkg.pr.new logo"
+            height="18"
+          />
+        </a>
+      {/if}
     </p>
+
     <NpmSearchInput {npmPkgName} />
     {#if result}
       <section class="mt-4 flex justify-center items-center gap-4">

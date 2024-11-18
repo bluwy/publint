@@ -6,12 +6,14 @@ import { untar } from './untar'
 import { createTarballVfs } from './tarball'
 
 self.addEventListener('message', async (e) => {
-  const { npmPkgName, npmPkgVersion } = e.data
+  const { npmPkgName, npmPkgVersion, isPkgPrNew } = e.data
 
   let tarballUrl
   if (isLocalPkg(npmPkgName)) {
     // prettier-ignore
     tarballUrl = new URL(`/temp/${npmPkgName}-${npmPkgVersion}.tgz`, self.location.href).href
+  } else if (isPkgPrNew) {
+    tarballUrl = `https://pkg.pr.new/${npmPkgName}@${npmPkgVersion}`
   } else {
     // prettier-ignore
     tarballUrl = getNpmTarballUrl(npmPkgName, npmPkgVersion, {
