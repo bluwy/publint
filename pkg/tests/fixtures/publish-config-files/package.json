@@ -5,7 +5,7 @@
   "type": "commonjs",
   "main": "missing.js",
   "browser": "missing.js",
-  "files": ["./missing.js"]
+  "files": ["./missing.js"],
   "exports": {
     ".": {
       "import": "./missing.js"
@@ -13,7 +13,7 @@
   },
   "publishConfig": {
     "browser": "index.js",
-    "files": ["indexx.js"],
+    "files": ["index.js"],
     "exports": {
       ".": {
         "import": "./index.js",

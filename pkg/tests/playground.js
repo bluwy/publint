@@ -53,6 +53,10 @@ testFixture('not-missing-files', [])
 testFixture('exports-module', ['EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE'])
 
 testFixture('publish-config', ['FILE_DOES_NOT_EXIST', 'USE_EXPORTS_BROWSER'])
+testFixture('publish-config-files', [
+  'FILE_NOT_PUBLISHED',
+  'USE_EXPORTS_BROWSER'
+])
 
 testFixture('npmignore', [])
 
