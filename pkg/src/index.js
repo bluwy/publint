@@ -55,12 +55,13 @@ export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
   const rootPkgContent = await readFile(rootPkgPath, [])
   if (rootPkgContent === false) return { messages }
   const rootPkg = JSON.parse(rootPkgContent)
+  const [files] = getPublishedField(rootPkg, 'main')
   const [main, mainPkgPath] = getPublishedField(rootPkg, 'main')
   const [module, modulePkgPath] = getPublishedField(rootPkg, 'module')
   const [exports, exportsPkgPath] = getPublishedField(rootPkg, 'exports')
 
   // Check if package published internal tests or config files
-  if (rootPkg.files == null) {
+  if (files == null) {
     promiseQueue.push(async () => {
       for (const p of commonInternalPaths) {
         const internalPath = vfs.pathJoin(pkgDir, p)
