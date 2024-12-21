@@ -15,6 +15,8 @@
     "node": ">=16"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.27.11",
+    "@svitejs/changesets-changelog-github-compact": "^1.2.0",
     "@types/node": "^22.10.2",
     "@types/pnpapi": "^0.0.5",
     "prettier": "^3.4.2",
@@ -24,6 +26,7 @@
   },
   "pnpm": {
     "overrides": {
+      "prettier": "$prettier",
       "unconfig": "npm:@bluwy/unconfig@^0.6.1"
     }
   }

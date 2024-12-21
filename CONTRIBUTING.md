@@ -49,3 +49,5 @@ Pull request titles should preferably use the format of `<Verb> <something>`. Fi
 Don't worry if it's not perfect! I'll tweak it before merging.
 
 For commit messages, feel free to use your own convention and commit as much as you want. The pull request will be squashed merged into a single commit based on the pull request title.
+
+If a change should result in a new release of a package (e.g. `packages/publint`), you can run `pnpm changeset` at the root of the project to create a changeset. See [.changeset/README.md](./.changeset/README.md) for more information. Changeset description should also follow the same format as pull request titles and can be more descriptive if needed.
