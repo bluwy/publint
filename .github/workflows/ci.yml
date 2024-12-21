@@ -8,11 +8,13 @@ on:
     paths:
       - 'packages/**'
       - '.github/workflows/ci.yml'
+      - 'pnpm-lock.yaml'
       - '!**.md'
   pull_request:
     paths:
       - 'packages/**'
       - '.github/workflows/ci.yml'
+      - 'pnpm-lock.yaml'
       - '!**.md'
 
 concurrency:

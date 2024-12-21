@@ -1,9 +1,14 @@
 name: Release
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
+    paths:
+      - '.changeset/**'
+      - '.github/workflows/release.yml'
+      - 'pnpm-lock.yaml'
 
 jobs:
   release:
