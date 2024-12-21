@@ -33,7 +33,7 @@ $ npx publint ./node_modules/some-lib
 $ npx publint deps
 ```
 
-Or try it online at https://publint.dev. For JavaScript usage, see [pkg/README.md](./pkg/README.md).
+Or try it online at https://publint.dev. For JavaScript usage, see [packages/publint/README.md](./packages/publint/README.md).
 
 ## Development
 
@@ -41,7 +41,7 @@ Use `pnpm install` to install all project dependencies.
 
 There are 3 parts to this repo:
 
-- [pkg](./pkg) - The `publint` npm package
+- [packages/publint](./packages/publint) - The `publint` npm package
 - [site](./site) - The website
 - [analysis](./analysis) - The analysis automation that lints popular npm packages for displaying their results on the website
 

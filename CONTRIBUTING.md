@@ -6,17 +6,17 @@ The project requires [`pnpm 8`](https://pnpm.io) and [`Node.js 16`](https://node
 
 There are 3 parts to this repo:
 
-- [pkg](./pkg) - The `publint` npm package
+- [packages/publint](./packages/publint) - The `publint` npm package
 - [site](./site) - The website
 - [analysis](./analysis) - The analysis automation that lints popular npm packages for displaying their results on the website
 
 ## Development
 
-### pkg
+### packages/publint
 
-The `pkg` workspace has the `lib`, `src`, and `tests` directories.
+The `packages/publint` workspace has the `lib`, `src`, and `tests` directories.
 
-`src` contains most of `publint`'s source code, and `lib` contains entrypoints that uses APIs from `src` (to provide default environment-specific information). You can check the `exports` field of `pkg/package.json` to see how they're linked.
+`src` contains most of `publint`'s source code, and `lib` contains entrypoints that uses APIs from `src` (to provide default environment-specific information). You can check the `exports` field of `packages/publint/package.json` to see how they're linked.
 
 `tests` contains unit tests that runs the test projects under `tests/fixtures`.
 
@@ -24,7 +24,7 @@ The `pkg` workspace has the `lib`, `src`, and `tests` directories.
 
 The `site` workspace is a Vite & Svelte multiple page application. It powers https://publint.dev.
 
-It has a `packfix` command (`pnpm packfix`) which packages up fixtures from [pkg/tests/fixtures](./pkg/tests/fixtures). Once packed, when running the dev server, you can search for the fixture name, e.g. `publint-test-1`, and it'll load the package locally. This can be used for quick testing.
+It has a `packfix` command (`pnpm packfix`) which packages up fixtures from [packages/publint/tests/fixtures](./packages/publint/tests/fixtures). Once packed, when running the dev server, you can search for the fixture name, e.g. `publint-test-1`, and it'll load the package locally. This can be used for quick testing.
 
 ### analysis
 
@@ -36,7 +36,7 @@ There's also an additional `pnpm bench` command that solely benchmarks the time 
 
 ## Testing
 
-You can run the unit tests with `pnpm test` in the root or `pkg` directory.
+You can run the unit tests with `pnpm test` in the root or `packages/publint` directory.
 
 ## Pull requests
 

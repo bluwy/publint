@@ -6,12 +6,12 @@ on:
     branches:
       - master
     paths:
-      - 'pkg/**'
+      - 'packages/**'
       - '.github/workflows/ci.yml'
       - '!**.md'
   pull_request:
     paths:
-      - 'pkg/**'
+      - 'packages/**'
       - '.github/workflows/ci.yml'
       - '!**.md'
 

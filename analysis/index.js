@@ -144,7 +144,7 @@ async function fetchPkgData(pkg) {
   const cachedFileUrl = getCacheTarFileUrl(pkg, version)
   usedCacheFileBaseNames.push(path.basename(cachedFileUrl.href))
 
-  /** @type {ArrayBuffer} */
+  /** @type {ArrayBuffer | SharedArrayBuffer} */
   let resultBuffer
 
   if (fss.existsSync(cachedFileUrl)) {

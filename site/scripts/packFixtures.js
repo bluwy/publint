@@ -1,9 +1,8 @@
 import cp from 'child_process'
 import fs from 'node:fs/promises'
-import fss from 'node:fs'
 import path from 'node:path'
 
-const fixtureDir = path.resolve('../pkg/tests/fixtures')
+const fixtureDir = path.resolve('../packages/publint/tests/fixtures')
 const fixtures = (await fs.readdir(fixtureDir, { withFileTypes: true }))
   .filter((dirent) => dirent.isDirectory())
   .map((dirent) => dirent.name)
