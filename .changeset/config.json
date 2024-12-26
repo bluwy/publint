@@ -5,6 +5,7 @@
 		{ "repo": "bluwy/publint" }
 	],
   "commit": false,
+  "access": "public",
   "fixed": [],
   "linked": [],
   "baseBranch": "master",
