@@ -1,5 +1,5 @@
 import path from 'node:path'
-import packlist from 'npm-packlist'
+import packlist from '@publint/packlist'
 import { publint as _publint } from '../src/index.js'
 import { createNodeVfs } from '../src/vfs.js'
 
@@ -13,7 +13,7 @@ export async function publint(options) {
   let packedFiles
   // only search for packed files if the consumer is not running on a virtual filesystem
   if (options?.vfs == null) {
-    packedFiles = (await packlist({ path: pkgDir })).map((file) =>
+    packedFiles = (await packlist(pkgDir)).map((file) =>
       path.join(pkgDir, file)
     )
   }
