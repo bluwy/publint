@@ -1,4 +1,4 @@
-import utils from 'node:util'
+import util from 'node:util'
 import cp from 'node:child_process'
 
 /**
@@ -9,7 +9,7 @@ import cp from 'node:child_process'
 export async function packlistWithJson(dir, packageManager) {
   const command = `${packageManager} pack --json`
 
-  const { stdout } = await utils.promisify(cp.exec)(command, { cwd: dir })
+  const { stdout } = await util.promisify(cp.exec)(command, { cwd: dir })
 
   // yarn outputs invalid json for some reason
   const stdoutJson =

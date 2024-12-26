@@ -1,13 +1,9 @@
-import { guessPackageManager } from './package-manager.js'
 import { packlistWithJson } from './packlist-with-json.js'
 import { packlistWithPack } from './packlist-with-pack.js'
 
 /** @type {import('../index').packlist} */
 export async function packlist(dir, opts) {
-  const packageManager =
-    opts?.packageManager == null || opts.packageManager === 'auto'
-      ? guessPackageManager(dir)
-      : opts.packageManager
+  const packageManager = opts?.packageManager ?? 'npm'
 
   switch (opts?.strategy) {
     case 'json':

@@ -1,6 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import utils from 'node:util'
+import util from 'node:util'
 import os from 'node:os'
 import cp from 'node:child_process'
 import zlib from 'node:zlib'
@@ -22,7 +22,7 @@ export async function packlistWithPack(dir, packageManager) {
     command += ` --pack-destination ${packDestination}`
   }
 
-  const output = await utils.promisify(cp.exec)(command, { cwd: dir })
+  const output = await util.promisify(cp.exec)(command, { cwd: dir })
 
   // Get first file that ends with `.tgz` in the pack destination
   const tarballFile = await fs.readdir(packDestination).then((files) => {
@@ -39,7 +39,7 @@ export async function packlistWithPack(dir, packageManager) {
 
 async function unpack(tarballFile) {
   const tarball = await fs.readFile(tarballFile)
-  const content = await utils.promisify(zlib.gunzip)(tarball)
+  const content = await util.promisify(zlib.gunzip)(tarball)
 
   /** @type {string[]} */
   const fileNames = []
