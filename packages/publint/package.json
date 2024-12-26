@@ -49,6 +49,7 @@
   ],
   "dependencies": {
     "@publint/packlist": "workspace:^",
+    "package-manager-detector": "^0.2.8",
     "picocolors": "^1.1.1",
     "sade": "^1.8.1"
   },
