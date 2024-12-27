@@ -1,5 +1,7 @@
+import fs from 'node:fs/promises'
 import util from 'node:util'
 import cp from 'node:child_process'
+import { getTempPackDir } from './temp.js'
 
 /**
  * @param {string} dir
@@ -7,20 +9,38 @@ import cp from 'node:child_process'
  * @returns {Promise<string[]>}
  */
 export async function packlistWithJson(dir, packageManager) {
-  const command = `${packageManager} pack --json`
+  let command = `${packageManager} pack --json`
+
+  const supportsDryRun = packageManager === 'npm' || packageManager === 'yarn'
+  /** @type {string | undefined} */
+  let packDestination
+  if (supportsDryRun) {
+    command += ' --dry-run'
+  } else {
+    packDestination = await getTempPackDir()
+    command += ` --pack-destination ${packDestination}`
+  }
 
   const { stdout } = await util.promisify(cp.exec)(command, { cwd: dir })
 
-  const stdoutJson =
-    packageManager === 'yarn' ? jsonParseYarnStdout(stdout) : JSON.parse(stdout)
+  try {
+    const stdoutJson =
+      packageManager === 'yarn'
+        ? jsonParseYarnStdout(stdout)
+        : JSON.parse(stdout)
 
-  switch (packageManager) {
-    case 'npm':
-      return parseNpmPackJson(stdoutJson)
-    case 'yarn':
-      return parseYarnPackJson(stdoutJson)
-    case 'pnpm':
-      return parsePnpmPackJson(stdoutJson)
+    switch (packageManager) {
+      case 'npm':
+        return parseNpmPackJson(stdoutJson)
+      case 'yarn':
+        return parseYarnPackJson(stdoutJson)
+      case 'pnpm':
+        return parsePnpmPackJson(stdoutJson)
+    }
+  } finally {
+    if (!supportsDryRun && packDestination) {
+      await fs.rm(packDestination, { recursive: true })
+    }
   }
 }
 

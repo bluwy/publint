@@ -1,9 +1,9 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import util from 'node:util'
-import os from 'node:os'
 import cp from 'node:child_process'
 import zlib from 'node:zlib'
+import { getTempPackDir } from './temp.js'
 
 /**
  * @param {string} dir
@@ -13,13 +13,12 @@ import zlib from 'node:zlib'
 export async function packlistWithPack(dir, packageManager) {
   let command = `${packageManager} pack`
 
-  // TODO: handle space in directory
   const packDestination = await getTempPackDir()
 
   if (packageManager === 'yarn') {
-    command += ` --out ${path.join(packDestination, 'package.tgz')}`
+    command += ` --out \"${path.join(packDestination, 'package.tgz')}\"`
   } else {
-    command += ` --pack-destination ${packDestination}`
+    command += ` --pack-destination \"${packDestination}\"`
   }
 
   const output = await util.promisify(cp.exec)(command, { cwd: dir })
@@ -78,10 +77,4 @@ async function unpack(tarballFile) {
   }
 
   return fileNames
-}
-
-async function getTempPackDir() {
-  const tempDir = os.tmpdir() + path.sep
-  const tempPackDir = await fs.mkdtemp(tempDir + 'publint-pack-')
-  return await fs.realpath(tempPackDir)
 }
