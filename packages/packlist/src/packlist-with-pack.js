@@ -34,7 +34,14 @@ export async function packlistWithPack(dir, packageManager) {
     )
   }
 
-  return await unpack(tarballFile)
+  try {
+    const files = await unpack(path.join(packDestination, tarballFile))
+    // The tar file names have appended "package", except for `@types` packages very strangely
+    const pkgDir = files.length ? files[0].split('/')[0] : 'package'
+    return files.map((file) => file.slice(pkgDir.length + 1))
+  } finally {
+    await fs.rm(packDestination, { recursive: true })
+  }
 }
 
 async function unpack(tarballFile) {

@@ -5,6 +5,7 @@ import { equal } from 'uvu/assert'
 import { packlist } from '../src/index.js'
 import { createFixture } from 'fs-fixture'
 
+const exec = util.promisify(cp.exec)
 const defaultPackageJsonData = {
   name: 'test-package',
   version: '1.0.0',
@@ -17,15 +18,20 @@ const defaultPackageJsonData = {
  */
 async function packlistWithFixture(fixture, opts) {
   const pkgJson = await fixture.readFile('package.json', 'utf8')
-  const packageManager = JSON.parse(pkgJson).packageManager?.split('@')[0]
+  const packageManager = JSON.parse(pkgJson).packageManager
 
   try {
     if (packageManager) {
-      await util.promisify(cp.exec)('corepack enable', { cwd: fixture.path })
+      const [name, version] = packageManager.split('@')
+      await exec(`corepack enable ${name}`, { cwd: fixture.path })
+      const { stdout } = await exec(`${name} --version`, {
+        cwd: fixture.path
+      })
+      equal(stdout.trim(), version)
     }
 
     return await packlist(fixture.path, {
-      packageManager,
+      packageManager: packageManager?.split('@')[0],
       ...opts
     })
   } finally {
@@ -33,64 +39,85 @@ async function packlistWithFixture(fixture, opts) {
   }
 }
 
+// NOTE: only test recent package manager releases
 for (const pm of [
   'empty',
+  'npm@9.9.4',
   'npm@10.7.0',
-  'yarn@1.22.22',
+  'npm@11.0.0',
+  'yarn@3.8.7',
   'yarn@4.5.3',
+  'pnpm@8.15.9',
   'pnpm@9.15.1'
 ]) {
-  test(`packlist - ${pm} / no-files`, async () => {
-    const fixture = await createFixture({
-      'package.json': JSON.stringify(defaultPackageJsonData),
-      'a.js': ''
+  const packageManagerValue = pm === 'empty' ? {} : { packageManager: pm }
+
+  for (const strategy of ['json', 'pack', 'json-and-pack']) {
+    if (pm === 'pnpm@8.15.9' && strategy === 'json') {
+      // Skip this test because `pnpm pack` is not supported in pnpm v8
+      continue
+    }
+
+    const packlistOpts = { strategy }
+
+    test(`packlist - ${pm} / ${strategy} / no-files`, async () => {
+      const fixture = await createFixture({
+        'package.json': JSON.stringify({
+          ...defaultPackageJsonData,
+          ...packageManagerValue
+        }),
+        'a.js': ''
+      })
+
+      const list = await packlistWithFixture(fixture, packlistOpts)
+      equal(list, ['a.js', 'package.json'])
     })
 
-    const list = await packlistWithFixture(fixture)
-    equal(list, ['a.js', 'package.json'])
-  })
+    test(`packlist - ${pm} / ${strategy} / with-files`, async () => {
+      const fixture = await createFixture({
+        'package.json': JSON.stringify({
+          ...defaultPackageJsonData,
+          ...packageManagerValue,
+          files: ['a.js']
+        }),
+        'a.js': '',
+        'b.js': ''
+      })
 
-  test(`packlist - ${pm} / with-files`, async () => {
-    const fixture = await createFixture({
-      'package.json': JSON.stringify({
-        ...defaultPackageJsonData,
-        files: ['a.js']
-      }),
-      'a.js': '',
-      'b.js': ''
+      const list = await packlistWithFixture(fixture, packlistOpts)
+      equal(list, ['a.js', 'package.json'])
     })
 
-    const list = await packlistWithFixture(fixture)
-    equal(list, ['a.js', 'package.json'])
-  })
+    test(`packlist - ${pm} / ${strategy} / with-files`, async () => {
+      const fixture = await createFixture({
+        'package.json': JSON.stringify({
+          ...defaultPackageJsonData,
+          ...packageManagerValue,
+          files: ['a.js']
+        }),
+        'a.js': '',
+        'b.js': ''
+      })
 
-  test(`packlist - ${pm} / with-files`, async () => {
-    const fixture = await createFixture({
-      'package.json': JSON.stringify({
-        ...defaultPackageJsonData,
-        files: ['a.js']
-      }),
-      'a.js': '',
-      'b.js': ''
+      const list = await packlistWithFixture(fixture, packlistOpts)
+      equal(list, ['a.js', 'package.json'])
     })
 
-    const list = await packlistWithFixture(fixture)
-    equal(list, ['a.js', 'package.json'])
-  })
+    test(`packlist - ${pm} / ${strategy} / with-files / glob`, async () => {
+      const fixture = await createFixture({
+        'package.json': JSON.stringify({
+          ...defaultPackageJsonData,
+          ...packageManagerValue,
+          files: ['dir', '!dir/b.js']
+        }),
+        'dir/a.js': '',
+        'dir/b.js': ''
+      })
 
-  test(`packlist - ${pm} / with-files / glob`, async () => {
-    const fixture = await createFixture({
-      'package.json': JSON.stringify({
-        ...defaultPackageJsonData,
-        files: ['dir', '!dir/b.js']
-      }),
-      'dir/a.js': '',
-      'dir/b.js': ''
+      const list = await packlistWithFixture(fixture, packlistOpts)
+      equal(list, ['dir/a.js', 'package.json'])
     })
-
-    const list = await packlistWithFixture(fixture)
-    equal(list, ['dir/a.js', 'package.json'])
-  })
+  }
 }
 
 test.run()

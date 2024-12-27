@@ -11,11 +11,8 @@ export async function packlistWithJson(dir, packageManager) {
 
   const { stdout } = await util.promisify(cp.exec)(command, { cwd: dir })
 
-  // yarn outputs invalid json for some reason
   const stdoutJson =
-    packageManager === 'yarn'
-      ? stdout.split('\n').map((line) => JSON.parse(line))
-      : JSON.parse(stdout)
+    packageManager === 'yarn' ? jsonParseYarnStdout(stdout) : JSON.parse(stdout)
 
   switch (packageManager) {
     case 'npm':
@@ -27,13 +24,23 @@ export async function packlistWithJson(dir, packageManager) {
   }
 }
 
+// yarn outputs invalid json for some reason
+function jsonParseYarnStdout(stdout) {
+  const lines = stdout.split('\n')
+  const result = []
+  for (const line of lines) {
+    if (line) result.push(JSON.parse(line))
+  }
+  return result
+}
+
 function parseNpmPackJson(stdoutJson) {
   return stdoutJson[0].files.map((file) => file.path)
 }
 
 function parseYarnPackJson(stdoutJson) {
   const files = []
-  for (const value in stdoutJson) {
+  for (const value of stdoutJson) {
     if (value.location) files.push(value.location)
   }
   return files
