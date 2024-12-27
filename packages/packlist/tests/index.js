@@ -1,6 +1,6 @@
 import cp from 'node:child_process'
 import util from 'node:util'
-import { test } from 'uvu'
+import { suite } from 'uvu'
 import { equal } from 'uvu/assert'
 import { packlist } from '../src/index.js'
 import { createFixture } from 'fs-fixture'
@@ -60,6 +60,8 @@ for (const pm of [
 
     const packlistOpts = { strategy }
 
+    const test = suite(`${pm} / ${strategy}`)
+
     test(`packlist - ${pm} / ${strategy} / no-files`, async () => {
       const fixture = await createFixture({
         'package.json': JSON.stringify({
@@ -117,7 +119,7 @@ for (const pm of [
       const list = await packlistWithFixture(fixture, packlistOpts)
       equal(list, ['dir/a.js', 'package.json'])
     })
+
+    test.run()
   }
 }
-
-test.run()
