@@ -7,7 +7,7 @@ import { getTempPackDir } from './temp.js'
 
 /**
  * @param {string} dir
- * @param {'npm' | 'yarn' | 'pnpm' | 'bun'} packageManager
+ * @param {NonNullable<import('../index.d.ts').Options['packageManager']>} packageManager
  * @returns {Promise<string[]>}
  */
 export async function packlistWithPack(dir, packageManager) {

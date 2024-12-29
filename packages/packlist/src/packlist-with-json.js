@@ -5,10 +5,14 @@ import { getTempPackDir } from './temp.js'
 
 /**
  * @param {string} dir
- * @param {'npm' | 'yarn' | 'pnpm' | 'bun'} packageManager
+ * @param {NonNullable<import('../index.d.ts').Options['packageManager']>} packageManager
  * @returns {Promise<string[]>}
  */
 export async function packlistWithJson(dir, packageManager) {
+  if (packageManager === 'bun') {
+    throw new Error('`packlistWithJson` is not supported for `bun`')
+  }
+
   let command = `${packageManager} pack --json`
 
   const supportsDryRun = packageManager === 'npm' || packageManager === 'yarn'
