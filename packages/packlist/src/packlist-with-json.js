@@ -5,7 +5,7 @@ import { getTempPackDir } from './temp.js'
 
 /**
  * @param {string} dir
- * @param {'npm' | 'yarn' | 'pnpm'} packageManager
+ * @param {'npm' | 'yarn' | 'pnpm' | 'bun'} packageManager
  * @returns {Promise<string[]>}
  */
 export async function packlistWithJson(dir, packageManager) {

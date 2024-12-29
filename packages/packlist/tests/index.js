@@ -48,13 +48,15 @@ for (const pm of [
   'yarn@3.8.7',
   'yarn@4.5.3',
   'pnpm@8.15.9',
-  'pnpm@9.15.1'
+  'pnpm@9.15.1',
+  'bun'
 ]) {
-  const packageManagerValue = pm === 'empty' ? {} : { packageManager: pm }
+  const packageManagerValue =
+    pm === 'empty' || pm === 'bun' ? {} : { packageManager: pm }
 
   for (const strategy of ['json', 'pack', 'json-and-pack']) {
-    if (pm === 'pnpm@8.15.9' && strategy === 'json') {
-      // Skip this test because `pnpm pack` is not supported in pnpm v8
+    if (strategy === 'json' && (pm === 'pnpm@8.15.9' || pm === 'bun')) {
+      // Skip this test because `pack --json` is not supported in pnpm v8
       continue
     }
 

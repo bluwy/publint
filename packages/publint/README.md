@@ -68,7 +68,7 @@ const { messages } = await publint({
    * entrypoints but not published.
    * - `'auto'`: Automatically detects the package manager using
    *             [`package-manager-detector`](https://github.com/antfu-collective/package-manager-detector).
-   * - `'npm'`/`'yarn'`/`'pnpm'`: Uses the respective package manager to pack.
+   * - `'npm'`/`'yarn'`/`'pnpm'`/`'bun'`: Uses the respective package manager to pack.
    * - `false`: Skips packing the package. This should only be used if all the files
    *            in `pkgDir` are assumed to be published, e.g. in `node_modules`.
    *

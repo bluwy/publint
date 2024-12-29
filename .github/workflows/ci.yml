@@ -40,6 +40,8 @@ jobs:
         with:
           node-version: 18
           cache: pnpm
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v2
       - name: Install dependencies
         run: pnpm install
       - if: ${{ matrix.os == 'ubuntu-latest' }}

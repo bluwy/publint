@@ -7,7 +7,7 @@ import { getTempPackDir } from './temp.js'
 
 /**
  * @param {string} dir
- * @param {'npm' | 'yarn' | 'pnpm'} packageManager
+ * @param {'npm' | 'yarn' | 'pnpm' | 'bun'} packageManager
  * @returns {Promise<string[]>}
  */
 export async function packlistWithPack(dir, packageManager) {
@@ -17,6 +17,9 @@ export async function packlistWithPack(dir, packageManager) {
 
   if (packageManager === 'yarn') {
     command += ` --out \"${path.join(packDestination, 'package.tgz')}\"`
+  } else if (packageManager === 'bun') {
+    command = command.replace('bun', 'bun pm')
+    command += ` --destination \"${packDestination}\"`
   } else {
     command += ` --pack-destination \"${packDestination}\"`
   }

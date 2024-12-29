@@ -20,7 +20,7 @@ const cli = sade('publint', false)
   )
   .option(
     '--pack',
-    `Package manager to use for packing ('auto' | 'npm' | 'yarn' | 'pnpm' | false)`,
+    `Package manager to use for packing ('auto' | 'npm' | 'yarn' | 'pnpm' | 'bun' | false)`,
     'auto'
   )
   .option('--strict', `Report warnings as errors`, false)

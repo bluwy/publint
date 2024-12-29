@@ -24,7 +24,7 @@ console.log(files)
 
 #### `packageManager`
 
-- Type: `'npm' | 'yarn' | 'pnpm'`
+- Type: `'npm' | 'yarn' | 'pnpm' | 'bun'`
 - Default: `'npm'`
 
 The package manager to use for packing. An external package can be used to detect the preferred package manager if needed, e.g. [`package-manager-detector`](https://github.com/antfu-collective/package-manager-detector).

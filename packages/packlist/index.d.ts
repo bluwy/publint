@@ -4,11 +4,11 @@ export interface Options {
    *
    * @default 'npm'
    */
-  packageManager?: 'npm' | 'yarn' | 'pnpm'
+  packageManager?: 'npm' | 'yarn' | 'pnpm' | 'bun'
   /**
    * How to pack the given directory to figure out the list of files:
-   * - `'json'`: Uses `pack --json` to get the list of files (faster, but only recently supported by pnpm).
-   * - `'pack'`: Uses `pack --pack-destination` to get the list of files (slower, but works with all package managers).
+   * - `'json'`: Uses `pack --json` to get the list of files (works with all package manager except pnpm <9.14.1 and bun).
+   * - `'pack'`: Uses `pack --pack-destination` to get the list of files (works with all package managers).
    * - `'json-and-pack'`: Tries to use `'json'` first, and if it fails, falls back to `'pack'`.
    *
    * @default 'json-and-pack'
