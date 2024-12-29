@@ -34,7 +34,7 @@ import {
  * Includes internal _include that used to filter paths that is packed.
  * Mainly for node.js local usage only. So that we lint files that are packed only.
  * Currently only used if pkg has no `exports`
- * @typedef {Required<import('../index.d.ts').Options> & {
+ * @typedef {Omit<Required<import('../index.d.ts').Options>, 'pack'> & {
  *   _packedFiles?: string[]
  * }} Options
  */

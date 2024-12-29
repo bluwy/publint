@@ -13,10 +13,7 @@ export async function publint(options) {
   /** @type {string[] | undefined} */
   let packedFiles
   // only search for packed files if the consumer is not running on a virtual filesystem
-  if (
-    options?.vfs == null &&
-    !pkgDir.includes(`${path.sep}node_modules${path.sep}`)
-  ) {
+  if (options?.pack !== false && options?.vfs == null) {
     // TODO: support bun/deno in packlist
     let packageManager = (await detect({ cwd: pkgDir }))?.name
     if (packageManager === 'bun' || packageManager === 'deno') {

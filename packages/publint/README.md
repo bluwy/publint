@@ -63,6 +63,22 @@ const { messages } = await publint({
    */
   level: 'warning',
   /**
+   * The package manager to use for packing the `pkgDir`. The list of
+   * packed files is used in certain linting rules, e.g. files marked as
+   * entrypoints but not published.
+   * - `'auto'`: Automatically detects the package manager using
+   *             [`package-manager-detector`](https://github.com/antfu-collective/package-manager-detector).
+   * - `'npm'`/`'yarn'`/`'pnpm'`: Uses the respective package manager to pack.
+   * - `false`: Skips packing the package. This should only be used if all the files
+   *            in `pkgDir` are assumed to be published, e.g. in `node_modules`.
+   *
+   * If `vfs` is set, this option is ignored and will always be `false`, as
+   * the `vfs` itself should point to a packed tarball.
+   *
+   * @default 'auto'
+   */
+  pack: 'pnpm',
+  /**
    * Report warnings as errors.
    */
   strict: true

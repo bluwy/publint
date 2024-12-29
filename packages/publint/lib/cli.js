@@ -18,6 +18,11 @@ const cli = sade('publint', false)
     `Level of messages to log ('suggestion' | 'warning' | 'error')`,
     'suggestion'
   )
+  .option(
+    '--pack',
+    `Package manager to use for packing ('auto' | 'npm' | 'yarn' | 'pnpm' | false)`,
+    'auto'
+  )
   .option('--strict', `Report warnings as errors`, false)
 
 cli
@@ -25,6 +30,8 @@ cli
     default: true
   })
   .action(async (dir, opts) => {
+    opts = normalizeOpts(opts)
+
     const pkgDir = dir ? path.resolve(dir) : process.cwd()
     const logs = await lintDir(pkgDir, opts.level, opts.strict)
     logs.forEach((l) => console.log(l))
@@ -35,6 +42,8 @@ cli
   .option('-P, --prod', 'Only check dependencies')
   .option('-D, --dev', 'Only check devDependencies')
   .action(async (dir, opts) => {
+    opts = normalizeOpts(opts)
+
     const pkgDir = dir ? path.resolve(dir) : process.cwd()
     const rootPkgContent = await fs
       .readFile(path.join(pkgDir, 'package.json'), 'utf8')
@@ -192,4 +201,9 @@ async function findDepPath(dep, parent) {
       return undefined
     }
   }
+}
+
+function normalizeOpts(opts) {
+  if (opts.pack === 'false') opts.pack = false
+  return opts
 }
