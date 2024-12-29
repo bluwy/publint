@@ -53,11 +53,12 @@ async function unpack(tarballFile) {
   let offset = 0
   while (offset < content.length) {
     // Skip empty blocks at end
-    if (content.slice(offset, offset + 512).every((byte) => byte === 0)) break
+    if (content.subarray(offset, offset + 512).every((byte) => byte === 0))
+      break
 
     // Read filename from header (100 bytes max)
     const name = content
-      .slice(offset, offset + 100)
+      .subarray(offset, offset + 100)
       .toString('ascii')
       .split('\0')[0]
 
@@ -66,7 +67,7 @@ async function unpack(tarballFile) {
     // Get file size from header (12 bytes octal at offset 124)
     const size = parseInt(
       content
-        .slice(offset + 124, offset + 136)
+        .subarray(offset + 124, offset + 136)
         .toString()
         .trim(),
       8
