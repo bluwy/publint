@@ -27,7 +27,7 @@ async function packlistWithFixture(fixture, opts, expect) {
     if (packageManager) {
       const [name, version] = packageManager.split('@')
       console.log('start', packageManager)
-      const r = await exec(`corepack use ${packageManager}`, {
+      const r = await exec(`which ${name}`, {
         cwd: fixture.path
       })
       console.log('a', r)
