@@ -29,15 +29,17 @@ async function packlistWithFixture(fixture, opts, expect) {
       const [name, version] = packageManager.split('@')
       console.log('calling ' + name + ' --version')
       try {
-        const r = await x(name, ['--version'], {
-          throwOnError: true,
-          nodeOptions: {
-            cwd: fixture.path
-          }
+        const proc = cp.spawn(name, ['--version'], {
+          cwd: fixture.path
         })
-        console.log('r', r)
+        proc.stdout.on('data', (data) => {
+          console.log(`stdout: ${data}`)
+        })
+        proc.stderr.on('data', (data) => {
+          console.error(`stderr: ${data}`)
+        })
       } catch (e) {
-        console.log('error', e.output)
+        console.log('error', e)
       }
       // Should be using corepack with the correct version. Double check here.
       const { stdout } = await exec(`${name} --version`, { cwd: fixture.path })
