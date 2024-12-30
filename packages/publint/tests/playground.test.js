@@ -182,15 +182,15 @@ testFixture('invalid-repository-value-object-deprecated', [
 
 /**
  * @typedef {{
- *  level?: import('../index.js').Options['level']
- *  strict?: import('../index.js').Options['strict']
+ *  level?: import('../index.d.ts').Options['level']
+ *  strict?: import('../index.d.ts').Options['strict']
  *  debug?: boolean
  * }} TestOptions
  */
 
 /**
  * @param {string} name
- * @param {import('../index.js').Message['code'][] | Pick<import('../index.js').Message, 'code' | 'type'>[]} expectCodes
+ * @param {import('../index.d.ts').Message['code'][] | Pick<import('../index.d.ts').Message, 'code' | 'type'>[]} expectCodes
  * @param {TestOptions} [options]
  */
 function testFixture(name, expectCodes, options) {

@@ -78,7 +78,7 @@ for (const pm of [
     if (pm === 'bun') packlistOpts.packageManager = 'bun'
 
     // prettier-ignore
-    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / no-files`, { concurrent: false }, async ({ expect }) => {
+    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / no-files`, { concurrent: true }, async ({ expect }) => {
       const fixture = await createFixture({
         'package.json': JSON.stringify({
           ...defaultPackageJsonData,
