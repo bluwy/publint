@@ -60,6 +60,9 @@ importers:
       fs-fixture:
         specifier: ^2.6.0
         version: 2.6.0
+      tinyexec:
+        specifier: ^0.3.2
+        version: 0.3.2
       vitest:
         specifier: ^3.0.0-beta.3
         version: 3.0.0-beta.3(@types/node@22.10.2)
