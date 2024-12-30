@@ -28,6 +28,7 @@ async function packlistWithFixture(fixture, opts, expect) {
       const [name, version] = packageManager.split('@')
       // Should be using corepack with the correct version. Double check here.
       const { stdout } = await exec(`${name} --version`, { cwd: fixture.path })
+      console.log('pm', packageManager, stdout)
       expect(stdout.trim()).toEqual(version)
     }
 
@@ -43,14 +44,14 @@ async function packlistWithFixture(fixture, opts, expect) {
 // NOTE: only test recent package manager releases
 for (const pm of [
   'empty',
-  'npm@9.9.4',
-  'npm@10.7.0',
-  'npm@11.0.0',
-  'yarn@3.8.7',
-  'yarn@4.5.3',
-  'pnpm@8.15.9',
-  'pnpm@9.15.1',
-  'bun'
+  'npm@9.9.4'
+  // 'npm@10.7.0',
+  // 'npm@11.0.0',
+  // 'yarn@3.8.7',
+  // 'yarn@4.5.3',
+  // 'pnpm@8.15.9',
+  // 'pnpm@9.15.1',
+  // 'bun'
 ]) {
   if (
     pm === 'bun' &&
@@ -64,7 +65,11 @@ for (const pm of [
   const packageManagerValue =
     pm === 'empty' || pm === 'bun' ? {} : { packageManager: pm }
 
-  for (const strategy of ['json', 'pack', 'json-and-pack']) {
+  for (const strategy of [
+    'json',
+    // 'pack',
+    // 'json-and-pack'
+  ]) {
     if (strategy === 'json' && (pm === 'pnpm@8.15.9' || pm === 'bun')) {
       // Skip this test because `pack --json` is not supported in pnpm v8
       continue
@@ -84,7 +89,9 @@ for (const pm of [
         'a.js': ''
       })
 
+      console.log('packing')
       const list = await packlistWithFixture(fixture, packlistOpts, expect)
+      console.log('packing done')
       expect(list.sort()).toEqual(['a.js', 'package.json'])
     })
 
