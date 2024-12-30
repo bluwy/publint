@@ -52,7 +52,11 @@ for (const pm of [
   'pnpm@9.15.1',
   'bun'
 ]) {
-  if (pm === 'bun' && !(await isBunInstalled())) {
+  if (
+    pm === 'bun' &&
+    process.env.CI == undefined &&
+    !(await isBunInstalled())
+  ) {
     console.info('Skipping bun tests because bun is not installed.')
     continue
   }
@@ -66,7 +70,7 @@ for (const pm of [
       continue
     }
 
-    /** @type {import('../index').Options} */
+    /** @type {import('../index.d.ts').Options} */
     const packlistOpts = { strategy }
     if (pm === 'bun') packlistOpts.packageManager = 'bun'
 
