@@ -29,7 +29,7 @@ if (process.env.CI) {
   beforeAll(async () => {
     const pms = packageManagers.filter((pm) => pm.includes('@')).join(' ')
     console.log(`Installing ${pms}...`)
-    await exec(`corepack install ${pms}`)
+    await exec(`corepack install -g ${pms}`)
   })
 }
 
