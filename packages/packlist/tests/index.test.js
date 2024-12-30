@@ -4,10 +4,10 @@ import { test } from 'vitest'
 import { packlist } from '../src/index.js'
 import { createFixture } from 'fs-fixture'
 import { isBunInstalled, setupCorepackAndTestHooks } from './utils.js'
-import { fileURLToPath } from 'node:url'
 
-const otherDir = fileURLToPath(new URL('../../../../fixtures/', import.meta.url))
-
+// For some very weird reason, package manager binaries with corepack do not work
+// on Windows, except yarn. All `exec()` calls just hang. Gave up after 4 hours.
+const isWindowsCI = process.platform === 'win32' && process.env.CI !== undefined
 const exec = util.promisify(cp.exec)
 const defaultPackageJsonData = {
   name: 'test-package',
@@ -45,15 +45,15 @@ async function packlistWithFixture(fixture, opts, expect) {
 
 // NOTE: only test recent package manager releases
 for (const pm of [
-  // 'empty',
+  'empty',
   'npm@9.9.4',
-  // 'npm@10.7.0',
-  // 'npm@11.0.0',
-  // 'yarn@3.8.7'
+  'npm@10.7.0',
+  'npm@11.0.0',
+  'yarn@3.8.7',
   'yarn@4.5.3',
-  // 'pnpm@8.15.9'
-  'pnpm@9.15.1'
-  // 'bun'
+  'pnpm@8.15.9',
+  'pnpm@9.15.1',
+  'bun'
 ]) {
   if (
     pm === 'bun' &&
@@ -67,10 +67,7 @@ for (const pm of [
   const packageManagerValue =
     pm === 'empty' || pm === 'bun' ? {} : { packageManager: pm }
 
-  for (const strategy of [
-    'json'
-    // 'pack', 'json-and-pack'
-  ]) {
+  for (const strategy of ['json', 'pack', 'json-and-pack']) {
     if (strategy === 'json' && (pm === 'pnpm@8.15.9' || pm === 'bun')) {
       // Skip this test because `pack --json` is not supported in pnpm v8
       continue
@@ -81,21 +78,21 @@ for (const pm of [
     if (pm === 'bun') packlistOpts.packageManager = 'bun'
 
     // prettier-ignore
-    test(`packlist - ${pm} / ${strategy} / no-files`, { concurrent: false }, async ({ expect }) => {
+    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / no-files`, { concurrent: false }, async ({ expect }) => {
       const fixture = await createFixture({
         'package.json': JSON.stringify({
           ...defaultPackageJsonData,
           ...packageManagerValue
         }),
         'a.js': ''
-      }, {tempDir: otherDir})
+      })
 
       const list = await packlistWithFixture(fixture, packlistOpts, expect)
       expect(list.sort()).toEqual(['a.js', 'package.json'])
     })
 
     // prettier-ignore
-    test(`packlist - ${pm} / ${strategy} / with-files`, { concurrent: true }, async ({ expect }) => {
+    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / with-files`, { concurrent: true }, async ({ expect }) => {
       const fixture = await createFixture({
         'package.json': JSON.stringify({
           ...defaultPackageJsonData,
@@ -104,14 +101,14 @@ for (const pm of [
         }),
         'a.js': '',
         'b.js': ''
-      }, {tempDir: otherDir})
+      })
 
       const list = await packlistWithFixture(fixture, packlistOpts, expect)
       expect(list.sort()).toEqual(['a.js', 'package.json'])
     })
 
     // prettier-ignore
-    test(`packlist - ${pm} / ${strategy} / with-files-and-glob`, { concurrent: true }, async ({ expect }) => {
+    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / with-files-and-glob`, { concurrent: true }, async ({ expect }) => {
       // Bun packs this wrongly
       if (pm === 'bun') return
 
@@ -123,7 +120,7 @@ for (const pm of [
         }),
         'dir/a.js': '',
         'dir/b.js': ''
-      }, {tempDir: otherDir})
+      })
 
       const list = await packlistWithFixture(fixture, packlistOpts, expect)
       expect(list.sort()).toEqual(['dir/a.js', 'package.json'])
