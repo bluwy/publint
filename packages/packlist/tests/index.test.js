@@ -26,8 +26,11 @@ async function packlistWithFixture(fixture, opts, expect) {
   try {
     if (packageManager) {
       const [name, version] = packageManager.split('@')
+      console.log('calling ' + name + ' --version')
+      cp.spawn(name, ['--version'], { cwd: fixture.path, stdio: 'inherit' })
+  
       // Should be using corepack with the correct version. Double check here.
-      const { stdout } = await exec(`${name} --version`, { cwd: fixture.path })
+      const { stdout } = await exec(`${name} --version`, { cwd: fixture.path,  })
       expect(stdout.trim()).toEqual(version)
     }
 
