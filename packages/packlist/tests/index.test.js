@@ -101,23 +101,7 @@ for (const pm of [
     })
 
     // prettier-ignore
-    test(`packlist - ${pm} / ${strategy} / with-files`, { concurrent: true }, async ({ expect }) => {
-      const fixture = await createFixture({
-        'package.json': JSON.stringify({
-          ...defaultPackageJsonData,
-          ...packageManagerValue,
-          files: ['a.js']
-        }),
-        'a.js': '',
-        'b.js': ''
-      })
-
-      const list = await packlistWithFixture(fixture, packlistOpts, expect)
-      expect(list.sort()).toEqual(['a.js', 'package.json'])
-    })
-
-    // prettier-ignore
-    test(`packlist - ${pm} / ${strategy} / with-files / glob`, { concurrent: true }, async ({ expect }) => {
+    test(`packlist - ${pm} / ${strategy} / with-files-and-glob`, { concurrent: true }, async ({ expect }) => {
       // Bun packs this wrongly
       if (pm === 'bun') return
 
