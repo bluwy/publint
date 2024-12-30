@@ -4,6 +4,7 @@ export default defineConfig({
   test: {
     include: ['tests/*.test.js'],
     fileParallelism: false,
-    isolate: false
+    isolate: false,
+    pool: 'threads'
   }
 })
