@@ -4,8 +4,10 @@ import { test } from 'vitest'
 import { packlist } from '../src/index.js'
 import { createFixture } from 'fs-fixture'
 import { isBunInstalled, setupCorepackAndTestHooks } from './utils.js'
+import { readFileSync } from 'node:fs'
 
 const exec = util.promisify(cp.exec)
+const execFile = util.promisify(cp.execFile)
 const defaultPackageJsonData = {
   name: 'test-package',
   version: '1.0.0',
@@ -30,10 +32,10 @@ async function packlistWithFixture(fixture, opts, expect) {
       const r = await exec(`which ${name}`, {
         cwd: fixture.path
       })
-      console.log('a', r)
+      console.log('asd', readFileSync(r.stdout.trim(), 'utf8'))
 
       // Should be using corepack with the correct version. Double check here.
-      const { stdout } = await exec(`${name} --version`, { cwd: fixture.path })
+      const { stdout } = await execFile(`${name}`, [`--version`], { cwd: fixture.path })
       expect(stdout.trim()).toEqual(version)
     }
 
