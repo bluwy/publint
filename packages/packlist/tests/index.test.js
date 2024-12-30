@@ -12,6 +12,10 @@ const defaultPackageJsonData = {
   private: true
 }
 
+console.log(await exec('yarn -v'))
+console.log(await exec('npm -v'))
+console.log(await exec('pnpm -v'))
+
 await setupCorepackAndTestHooks()
 
 /**
@@ -26,9 +30,6 @@ async function packlistWithFixture(fixture, opts, expect) {
   try {
     if (packageManager) {
       const [name, version] = packageManager.split('@')
-      console.log(`Using ${name} ${version}`)
-      await exec(`corepack enable`, { cwd: fixture.path })
-      console.log('enable corepack')
       // Should be using corepack with the correct version. Double check here.
       const { stdout } = await exec(`${name} --version`, { cwd: fixture.path })
       expect(stdout.trim()).toEqual(version)
