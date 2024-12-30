@@ -4,6 +4,9 @@ import { test } from 'vitest'
 import { packlist } from '../src/index.js'
 import { createFixture } from 'fs-fixture'
 import { isBunInstalled, setupCorepackAndTestHooks } from './utils.js'
+import { fileURLToPath } from 'node:url'
+
+const otherDir = fileURLToPath(new URL('../../../../fixtures/', import.meta.url))
 
 const exec = util.promisify(cp.exec)
 const defaultPackageJsonData = {
@@ -26,15 +29,6 @@ async function packlistWithFixture(fixture, opts, expect) {
   try {
     if (packageManager) {
       const [name, version] = packageManager.split('@')
-      console.log(
-        `Testing with ${name + (process.platform === 'win32' ? '.cmd' : '')} --version ----- ${process.env.SHELL}`
-      )
-      console.log(
-        await exec(
-          `${name + (process.platform === 'win32' ? '.cmd' : '')} --version`,
-          { cwd: fixture.path }
-        )
-      )
       // Should be using corepack with the correct version. Double check here.
       const { stdout } = await exec(`${name} --version`, { cwd: fixture.path })
       expect(stdout.trim()).toEqual(version)
@@ -94,7 +88,7 @@ for (const pm of [
           ...packageManagerValue
         }),
         'a.js': ''
-      })
+      }, {tempDir: otherDir})
 
       const list = await packlistWithFixture(fixture, packlistOpts, expect)
       expect(list.sort()).toEqual(['a.js', 'package.json'])
@@ -110,7 +104,7 @@ for (const pm of [
         }),
         'a.js': '',
         'b.js': ''
-      })
+      }, {tempDir: otherDir})
 
       const list = await packlistWithFixture(fixture, packlistOpts, expect)
       expect(list.sort()).toEqual(['a.js', 'package.json'])
@@ -129,7 +123,7 @@ for (const pm of [
         }),
         'dir/a.js': '',
         'dir/b.js': ''
-      })
+      }, {tempDir: otherDir})
 
       const list = await packlistWithFixture(fixture, packlistOpts, expect)
       expect(list.sort()).toEqual(['dir/a.js', 'package.json'])
