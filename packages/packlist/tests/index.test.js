@@ -1,7 +1,6 @@
 import cp from 'node:child_process'
 import util from 'node:util'
-import { suite } from 'uvu'
-import { equal } from 'uvu/assert'
+import { suite, test } from 'vitest'
 import { packlist } from '../src/index.js'
 import { createFixture } from 'fs-fixture'
 
@@ -14,9 +13,10 @@ const defaultPackageJsonData = {
 
 /**
  * @param {import('fs-fixture').FsFixture} fixture
- * @param {import('../index.d.ts').Options} [opts]
+ * @param {import('../index').Options} [opts]
+ * @param {import('vitest').ExpectStatic} expect
  */
-async function packlistWithFixture(fixture, opts) {
+async function packlistWithFixture(fixture, opts, expect) {
   const pkgJson = await fixture.readFile('package.json', 'utf8')
   const packageManager = JSON.parse(pkgJson).packageManager
 
@@ -27,7 +27,7 @@ async function packlistWithFixture(fixture, opts) {
       const { stdout } = await exec(`${name} --version`, {
         cwd: fixture.path
       })
-      equal(stdout.trim(), version)
+      expect(stdout.trim()).toEqual(version)
     }
 
     return await packlist(fixture.path, {
@@ -60,13 +60,12 @@ for (const pm of [
       continue
     }
 
-    /** @type {import('../index.d.ts').Options} */
+    /** @type {import('../index').Options} */
     const packlistOpts = { strategy }
     if (pm === 'bun') packlistOpts.packageManager = 'bun'
 
-    const test = suite(`${pm} / ${strategy}`)
-
-    test(`packlist - ${pm} / ${strategy} / no-files`, async () => {
+    // prettier-ignore
+    test(`packlist - ${pm} / ${strategy} / no-files`, { concurrent: true }, async ({ expect }) => {
       const fixture = await createFixture({
         'package.json': JSON.stringify({
           ...defaultPackageJsonData,
@@ -75,11 +74,12 @@ for (const pm of [
         'a.js': ''
       })
 
-      const list = await packlistWithFixture(fixture, packlistOpts)
-      equal(list.sort(), ['a.js', 'package.json'])
+      const list = await packlistWithFixture(fixture, packlistOpts, expect)
+      expect(list.sort()).toEqual(['a.js', 'package.json'])
     })
 
-    test(`packlist - ${pm} / ${strategy} / with-files`, async () => {
+    // prettier-ignore
+    test(`packlist - ${pm} / ${strategy} / with-files`, { concurrent: true }, async ({ expect }) => {
       const fixture = await createFixture({
         'package.json': JSON.stringify({
           ...defaultPackageJsonData,
@@ -90,11 +90,12 @@ for (const pm of [
         'b.js': ''
       })
 
-      const list = await packlistWithFixture(fixture, packlistOpts)
-      equal(list.sort(), ['a.js', 'package.json'])
+      const list = await packlistWithFixture(fixture, packlistOpts, expect)
+      expect(list.sort()).toEqual(['a.js', 'package.json'])
     })
 
-    test(`packlist - ${pm} / ${strategy} / with-files`, async () => {
+    // prettier-ignore
+    test(`packlist - ${pm} / ${strategy} / with-files`, { concurrent: true }, async ({ expect }) => {
       const fixture = await createFixture({
         'package.json': JSON.stringify({
           ...defaultPackageJsonData,
@@ -105,11 +106,12 @@ for (const pm of [
         'b.js': ''
       })
 
-      const list = await packlistWithFixture(fixture, packlistOpts)
-      equal(list.sort(), ['a.js', 'package.json'])
+      const list = await packlistWithFixture(fixture, packlistOpts, expect)
+      expect(list.sort()).toEqual(['a.js', 'package.json'])
     })
 
-    test(`packlist - ${pm} / ${strategy} / with-files / glob`, async () => {
+    // prettier-ignore
+    test(`packlist - ${pm} / ${strategy} / with-files / glob`, { concurrent: true }, async ({ expect }) => {
       // Bun packs this wrongly
       if (pm === 'bun') return
 
@@ -123,10 +125,8 @@ for (const pm of [
         'dir/b.js': ''
       })
 
-      const list = await packlistWithFixture(fixture, packlistOpts)
-      equal(list.sort(), ['dir/a.js', 'package.json'])
+      const list = await packlistWithFixture(fixture, packlistOpts, expect)
+      expect(list.sort()).toEqual(['dir/a.js', 'package.json'])
     })
-
-    test.run()
   }
 }

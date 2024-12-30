@@ -1,7 +1,6 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
-import { test } from 'uvu'
-import { equal } from 'uvu/assert'
+import { test } from 'vitest'
 import { publint } from '../lib/node.js'
 import { formatMessage } from '../lib/utils-node.js'
 
@@ -183,19 +182,19 @@ testFixture('invalid-repository-value-object-deprecated', [
 
 /**
  * @typedef {{
- *  level?: import('../index.d.ts').Options['level']
- *  strict?: import('../index.d.ts').Options['strict']
+ *  level?: import('../index.js').Options['level']
+ *  strict?: import('../index.js').Options['strict']
  *  debug?: boolean
  * }} TestOptions
  */
 
 /**
  * @param {string} name
- * @param {import('../index.d.ts').Message['code'][] | Pick<import('../index.d.ts').Message, 'code' | 'type'>[]} expectCodes
+ * @param {import('../index.js').Message['code'][] | Pick<import('../index.js').Message, 'code' | 'type'>[]} expectCodes
  * @param {TestOptions} [options]
  */
 function testFixture(name, expectCodes, options) {
-  test(name, async () => {
+  test(name, { concurrent: true }, async ({ expect }) => {
     const fixtureName = name.replace(/\(.*$/, '').trim()
     const pkgDir = path.resolve(process.cwd(), 'tests/fixtures', fixtureName)
     const { messages } = await publint({
@@ -221,12 +220,10 @@ function testFixture(name, expectCodes, options) {
     // you can test an array of objects
     if (typeof expectCodes[0] === 'object') {
       const codes = messages.map((v) => ({ code: v.code, type: v.type }))
-      equal(codes, expectCodes, codes.join(', '))
+      expect(codes).toEqual(expectCodes)
     } else {
       const codes = messages.map((v) => v.code)
-      equal(codes, expectCodes, codes.join(', '))
+      expect(codes).toEqual(expectCodes)
     }
   })
 }
-
-test.run()
