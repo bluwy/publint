@@ -4,7 +4,7 @@ import { test } from 'vitest'
 import { packlist } from '../src/index.js'
 import { createFixture } from 'fs-fixture'
 import { isBunInstalled, setupCorepackAndTestHooks } from './utils.js'
-import { x } from 'tinyexec'
+
 const exec = util.promisify(cp.exec)
 const defaultPackageJsonData = {
   name: 'test-package',
@@ -24,23 +24,11 @@ async function packlistWithFixture(fixture, opts, expect) {
   const packageManager = JSON.parse(pkgJson).packageManager
 
   try {
-    console.log('pm', packageManager)
     if (packageManager) {
       const [name, version] = packageManager.split('@')
-      console.log('calling ' + name + ' --version')
-      try {
-        const proc = cp.spawn(name, ['--version'], {
-          cwd: fixture.path
-        })
-        proc.stdout.on('data', (data) => {
-          console.log(`stdout: ${data}`)
-        })
-        proc.stderr.on('data', (data) => {
-          console.error(`stderr: ${data}`)
-        })
-      } catch (e) {
-        console.log('error', e)
-      }
+      console.log(`Using ${name} ${version}`)
+      await exec(`corepack enable`, { cwd: fixture.path })
+      console.log('enable corepack')
       // Should be using corepack with the correct version. Double check here.
       const { stdout } = await exec(`${name} --version`, { cwd: fixture.path })
       expect(stdout.trim()).toEqual(version)
