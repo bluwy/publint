@@ -1,6 +1,6 @@
 import cp from 'node:child_process'
 import util from 'node:util'
-import { beforeAll, test } from 'vitest'
+import { test } from 'vitest'
 import { packlist } from '../src/index.js'
 import { createFixture } from 'fs-fixture'
 import { isBunInstalled, setupCorepackAndTestHooks } from './utils.js'
@@ -11,27 +11,8 @@ const defaultPackageJsonData = {
   version: '1.0.0',
   private: true
 }
-const packageManagers = [
-  // 'empty',
-  'npm@9.9.4'
-  // 'npm@10.7.0',
-  // 'npm@11.0.0',
-  // 'yarn@3.8.7',
-  // 'yarn@4.5.3',
-  // 'pnpm@8.15.9',
-  // 'pnpm@9.15.1',
-  // 'bun'
-]
 
 await setupCorepackAndTestHooks()
-
-if (process.env.CI) {
-  beforeAll(async () => {
-    const pms = packageManagers.filter((pm) => pm.includes('@')).join(' ')
-    console.log(`Installing ${pms}...`)
-    await exec(`corepack install -g ${pms}`)
-  })
-}
 
 /**
  * @param {import('fs-fixture').FsFixture} fixture
@@ -60,7 +41,17 @@ async function packlistWithFixture(fixture, opts, expect) {
 }
 
 // NOTE: only test recent package manager releases
-for (const pm of packageManagers) {
+for (const pm of [
+  // 'empty',
+  'npm@9.9.4'
+  // 'npm@10.7.0',
+  // 'npm@11.0.0',
+  // 'yarn@3.8.7',
+  // 'yarn@4.5.3',
+  // 'pnpm@8.15.9',
+  // 'pnpm@9.15.1',
+  // 'bun'
+]) {
   if (
     pm === 'bun' &&
     process.env.CI === undefined &&
