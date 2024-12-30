@@ -1,10 +1,13 @@
 import cp from 'node:child_process'
 import util from 'node:util'
-import { suite } from 'uvu'
-import { equal } from 'uvu/assert'
+import { test } from 'vitest'
 import { packlist } from '../src/index.js'
 import { createFixture } from 'fs-fixture'
+import { isBunInstalled, setupCorepackAndTestHooks } from './utils.js'
 
+// For some very weird reason, package manager binaries with corepack do not work
+// on Windows, except yarn. All `exec()` calls just hang. Gave up after 4 hours.
+const isWindowsCI = process.platform === 'win32' && process.env.CI !== undefined
 const exec = util.promisify(cp.exec)
 const defaultPackageJsonData = {
   name: 'test-package',
@@ -12,22 +15,23 @@ const defaultPackageJsonData = {
   private: true
 }
 
+await setupCorepackAndTestHooks()
+
 /**
  * @param {import('fs-fixture').FsFixture} fixture
  * @param {import('../index.d.ts').Options} [opts]
+ * @param {import('vitest').ExpectStatic} expect
  */
-async function packlistWithFixture(fixture, opts) {
+async function packlistWithFixture(fixture, opts, expect) {
   const pkgJson = await fixture.readFile('package.json', 'utf8')
   const packageManager = JSON.parse(pkgJson).packageManager
 
   try {
     if (packageManager) {
       const [name, version] = packageManager.split('@')
-      await exec(`corepack enable ${name}`, { cwd: fixture.path })
-      const { stdout } = await exec(`${name} --version`, {
-        cwd: fixture.path
-      })
-      equal(stdout.trim(), version)
+      // Should be using corepack with the correct version. Double check here.
+      const { stdout } = await exec(`${name} --version`, { cwd: fixture.path })
+      expect(stdout.trim()).toEqual(version)
     }
 
     return await packlist(fixture.path, {
@@ -51,6 +55,15 @@ for (const pm of [
   'pnpm@9.15.1',
   'bun'
 ]) {
+  if (
+    pm === 'bun' &&
+    process.env.CI === undefined &&
+    !(await isBunInstalled())
+  ) {
+    console.info('Skipping bun tests because bun is not installed.')
+    continue
+  }
+
   const packageManagerValue =
     pm === 'empty' || pm === 'bun' ? {} : { packageManager: pm }
 
@@ -64,9 +77,8 @@ for (const pm of [
     const packlistOpts = { strategy }
     if (pm === 'bun') packlistOpts.packageManager = 'bun'
 
-    const test = suite(`${pm} / ${strategy}`)
-
-    test(`packlist - ${pm} / ${strategy} / no-files`, async () => {
+    // prettier-ignore
+    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / no-files`, { concurrent: true }, async ({ expect }) => {
       const fixture = await createFixture({
         'package.json': JSON.stringify({
           ...defaultPackageJsonData,
@@ -75,11 +87,12 @@ for (const pm of [
         'a.js': ''
       })
 
-      const list = await packlistWithFixture(fixture, packlistOpts)
-      equal(list.sort(), ['a.js', 'package.json'])
+      const list = await packlistWithFixture(fixture, packlistOpts, expect)
+      expect(list.sort()).toEqual(['a.js', 'package.json'])
     })
 
-    test(`packlist - ${pm} / ${strategy} / with-files`, async () => {
+    // prettier-ignore
+    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / with-files`, { concurrent: true }, async ({ expect }) => {
       const fixture = await createFixture({
         'package.json': JSON.stringify({
           ...defaultPackageJsonData,
@@ -90,26 +103,12 @@ for (const pm of [
         'b.js': ''
       })
 
-      const list = await packlistWithFixture(fixture, packlistOpts)
-      equal(list.sort(), ['a.js', 'package.json'])
+      const list = await packlistWithFixture(fixture, packlistOpts, expect)
+      expect(list.sort()).toEqual(['a.js', 'package.json'])
     })
 
-    test(`packlist - ${pm} / ${strategy} / with-files`, async () => {
-      const fixture = await createFixture({
-        'package.json': JSON.stringify({
-          ...defaultPackageJsonData,
-          ...packageManagerValue,
-          files: ['a.js']
-        }),
-        'a.js': '',
-        'b.js': ''
-      })
-
-      const list = await packlistWithFixture(fixture, packlistOpts)
-      equal(list.sort(), ['a.js', 'package.json'])
-    })
-
-    test(`packlist - ${pm} / ${strategy} / with-files / glob`, async () => {
+    // prettier-ignore
+    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / with-files-and-glob`, { concurrent: true }, async ({ expect }) => {
       // Bun packs this wrongly
       if (pm === 'bun') return
 
@@ -123,10 +122,8 @@ for (const pm of [
         'dir/b.js': ''
       })
 
-      const list = await packlistWithFixture(fixture, packlistOpts)
-      equal(list.sort(), ['dir/a.js', 'package.json'])
+      const list = await packlistWithFixture(fixture, packlistOpts, expect)
+      expect(list.sort()).toEqual(['dir/a.js', 'package.json'])
     })
-
-    test.run()
   }
 }

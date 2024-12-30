@@ -11,7 +11,8 @@
     "default": "./src/index.js"
   },
   "scripts": {
-    "test": "uvu tests",
+    "test": "vitest run",
+    "test-dev": "vitest",
     "prepublishOnly": "node ../publint/lib/cli.js"
   },
   "engines": {
@@ -36,6 +37,6 @@
   ],
   "devDependencies": {
     "fs-fixture": "^2.6.0",
-    "uvu": "^0.5.6"
+    "vitest": "^3.0.0-beta.3"
   }
 }

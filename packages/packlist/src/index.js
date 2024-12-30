@@ -1,7 +1,7 @@
 import { packlistWithJson } from './packlist-with-json.js'
 import { packlistWithPack } from './packlist-with-pack.js'
 
-/** @type {import('../index').packlist} */
+/** @type {import('../index.d.ts').packlist} */
 export async function packlist(dir, opts) {
   const packageManager = opts?.packageManager ?? 'npm'
 
