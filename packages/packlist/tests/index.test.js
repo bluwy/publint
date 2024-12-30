@@ -24,13 +24,15 @@ async function packlistWithFixture(fixture, opts, expect) {
   const packageManager = JSON.parse(pkgJson).packageManager
 
   try {
+    console.log('pm', packageManager)
     if (packageManager) {
       const [name, version] = packageManager.split('@')
       // Should be using corepack with the correct version. Double check here.
       const { stdout } = await exec(`${name} --version`, { cwd: fixture.path })
-      console.log('pm', packageManager, stdout)
+      console.log('pmv', packageManager, stdout)
       expect(stdout.trim()).toEqual(version)
     }
+    console.log('packing right now')
 
     return await packlist(fixture.path, {
       packageManager: packageManager?.split('@')[0],
@@ -66,7 +68,7 @@ for (const pm of [
     pm === 'empty' || pm === 'bun' ? {} : { packageManager: pm }
 
   for (const strategy of [
-    'json',
+    'json'
     // 'pack',
     // 'json-and-pack'
   ]) {
@@ -80,7 +82,7 @@ for (const pm of [
     if (pm === 'bun') packlistOpts.packageManager = 'bun'
 
     // prettier-ignore
-    test(`packlist - ${pm} / ${strategy} / no-files`, { concurrent: true }, async ({ expect }) => {
+    test(`packlist - ${pm} / ${strategy} / no-files`, { concurrent: false }, async ({ expect }) => {
       const fixture = await createFixture({
         'package.json': JSON.stringify({
           ...defaultPackageJsonData,
