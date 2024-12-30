@@ -12,7 +12,7 @@ const defaultPackageJsonData = {
   private: true
 }
 
-// await setupCorepackAndTestHooks()
+await setupCorepackAndTestHooks()
 
 /**
  * @param {import('fs-fixture').FsFixture} fixture
@@ -24,15 +24,12 @@ async function packlistWithFixture(fixture, opts, expect) {
   const packageManager = JSON.parse(pkgJson).packageManager
 
   try {
-    console.log('pm', packageManager)
     if (packageManager) {
       const [name, version] = packageManager.split('@')
       // Should be using corepack with the correct version. Double check here.
       const { stdout } = await exec(`${name} --version`, { cwd: fixture.path })
-      console.log('pmv', packageManager, stdout)
       expect(stdout.trim()).toEqual(version)
     }
-    console.log('packing right now')
 
     return await packlist(fixture.path, {
       packageManager: packageManager?.split('@')[0],
@@ -91,9 +88,7 @@ for (const pm of [
         'a.js': ''
       })
 
-      console.log('packing')
       const list = await packlistWithFixture(fixture, packlistOpts, expect)
-      console.log('packing done')
       expect(list.sort()).toEqual(['a.js', 'package.json'])
     })
 

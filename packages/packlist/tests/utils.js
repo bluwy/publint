@@ -15,6 +15,11 @@ export async function isBunInstalled() {
 }
 
 export async function setupCorepackAndTestHooks() {
+  // Directly download the package manager. Don't ask.
+  // NOTE: This is usually not needed, but on Vitest + CI + Windows, it seems
+  // to still prompt: https://github.com/nodejs/corepack/blob/256cf8aaa4c56df8b3ec8a230ee683ce6f691d21/sources/httpUtils.ts#L71
+  process.env.COREPACK_ENABLE_DOWNLOAD_PROMPT = '0'
+
   const isCorepackEnabled = process.env.COREPACK_ROOT !== undefined
   const isCorepackNpmEnabled =
     isCorepackEnabled && (await checkCorepackNpmEnabled())
