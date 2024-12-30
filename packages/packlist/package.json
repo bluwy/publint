@@ -1,0 +1,41 @@
+{
+  "name": "@publint/packlist",
+  "version": "0.0.1",
+  "description": "List files included in a package",
+  "type": "module",
+  "author": "Bjorn Lu",
+  "license": "MIT",
+  "types": "./index.d.ts",
+  "exports": {
+    "types": "./index.d.ts",
+    "default": "./src/index.js"
+  },
+  "scripts": {
+    "test": "uvu tests",
+    "prepublishOnly": "node ../publint/lib/cli.js"
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "files": [
+    "src",
+    "*.d.ts"
+  ],
+  "funding": "https://bjornlu.com/sponsor",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bluwy/publint.git",
+    "directory": "packages/packlist"
+  },
+  "bugs": {
+    "url": "https://github.com/bluwy/publint/issues"
+  },
+  "keywords": [
+    "pack",
+    "list"
+  ],
+  "devDependencies": {
+    "fs-fixture": "^2.6.0",
+    "uvu": "^0.5.6"
+  }
+}
