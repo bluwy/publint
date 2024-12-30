@@ -29,7 +29,12 @@ async function packlistWithFixture(fixture, opts, expect) {
       const [name, version] = packageManager.split('@')
       console.log('calling ' + name + ' --version')
       try {
-        const r = await x(name, ['--version'], { throwOnError: true })
+        const r = await x(name, ['--version'], {
+          throwOnError: true,
+          nodeOptions: {
+            cwd: fixture.path
+          }
+        })
         console.log('r', r)
       } catch (e) {
         console.log('error', e.output)
