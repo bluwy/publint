@@ -12,7 +12,7 @@ const defaultPackageJsonData = {
   private: true
 }
 
-await setupCorepackAndTestHooks()
+// await setupCorepackAndTestHooks()
 
 /**
  * @param {import('fs-fixture').FsFixture} fixture
