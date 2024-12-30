@@ -27,11 +27,11 @@ async function packlistWithFixture(fixture, opts, expect) {
     if (packageManager) {
       const [name, version] = packageManager.split('@')
       console.log(
-        `Testing with ${name + process.platform === 'win32' ? '.cmd' : ''} --version`
+        `Testing with ${name + (process.platform === 'win32' ? '.cmd' : '')} --version ----- ${process.env.SHELL}`
       )
       console.log(
         await exec(
-          `${name + process.platform === 'win32' ? '.cmd' : ''} --version`,
+          `${name + (process.platform === 'win32' ? '.cmd' : '')} --version`,
           { cwd: fixture.path }
         )
       )
