@@ -50,5 +50,8 @@ jobs:
       - if: ${{ matrix.os == 'ubuntu-latest' }}
         name: Typecheck
         run: pnpm typecheck
+      - run: |
+          corepack enable
+          corepack enable npm
       - name: Run tests
         run: pnpm test
