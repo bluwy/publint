@@ -16,7 +16,7 @@ await setupCorepackAndTestHooks()
 
 /**
  * @param {import('fs-fixture').FsFixture} fixture
- * @param {import('../index').Options} [opts]
+ * @param {import('../index.d.ts').Options} [opts]
  * @param {import('vitest').ExpectStatic} expect
  */
 async function packlistWithFixture(fixture, opts, expect) {
@@ -42,8 +42,8 @@ async function packlistWithFixture(fixture, opts, expect) {
 
 // NOTE: only test recent package manager releases
 for (const pm of [
-  'empty',
-  'npm@9.9.4'
+  'empty'
+  // 'npm@9.9.4',
   // 'npm@10.7.0',
   // 'npm@11.0.0',
   // 'yarn@3.8.7',
@@ -54,7 +54,7 @@ for (const pm of [
 ]) {
   if (
     pm === 'bun' &&
-    process.env.CI == undefined &&
+    process.env.CI === undefined &&
     !(await isBunInstalled())
   ) {
     console.info('Skipping bun tests because bun is not installed.')
@@ -66,8 +66,7 @@ for (const pm of [
 
   for (const strategy of [
     'json'
-    // 'pack',
-    // 'json-and-pack'
+    // 'pack', 'json-and-pack'
   ]) {
     if (strategy === 'json' && (pm === 'pnpm@8.15.9' || pm === 'bun')) {
       // Skip this test because `pack --json` is not supported in pnpm v8

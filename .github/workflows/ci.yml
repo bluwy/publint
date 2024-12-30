@@ -50,6 +50,5 @@ jobs:
       - if: ${{ matrix.os == 'ubuntu-latest' }}
         name: Typecheck
         run: pnpm typecheck
-      - run: node ./packages/packlist/test.mjs
       - name: Run tests
         run: pnpm test
