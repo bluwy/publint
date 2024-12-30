@@ -27,10 +27,10 @@ async function packlistWithFixture(fixture, opts, expect) {
     if (packageManager) {
       const [name, version] = packageManager.split('@')
       console.log('start', packageManager)
-      const r = await exec(`corepack ${packageManager} --version`, {
+      const r = await exec(`corepack use ${packageManager}`, {
         cwd: fixture.path
       })
-      console.log(r)
+      console.log('a', r)
 
       // Should be using corepack with the correct version. Double check here.
       const { stdout } = await exec(`${name} --version`, { cwd: fixture.path })
@@ -52,9 +52,9 @@ for (const pm of [
   'npm@9.9.4',
   // 'npm@10.7.0',
   // 'npm@11.0.0',
-  'yarn@3.8.7'
+  // 'yarn@3.8.7'
   // 'yarn@4.5.3',
-  // 'pnpm@8.15.9',
+  'pnpm@8.15.9'
   // 'pnpm@9.15.1',
   // 'bun'
 ]) {
