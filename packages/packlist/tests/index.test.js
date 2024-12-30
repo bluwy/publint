@@ -1,8 +1,9 @@
 import cp from 'node:child_process'
 import util from 'node:util'
-import { suite, test } from 'vitest'
+import { test } from 'vitest'
 import { packlist } from '../src/index.js'
 import { createFixture } from 'fs-fixture'
+import { isBunInstalled, setupCorepackAndTestHooks } from './utils.js'
 
 const exec = util.promisify(cp.exec)
 const defaultPackageJsonData = {
@@ -10,6 +11,8 @@ const defaultPackageJsonData = {
   version: '1.0.0',
   private: true
 }
+
+await setupCorepackAndTestHooks()
 
 /**
  * @param {import('fs-fixture').FsFixture} fixture
@@ -23,10 +26,8 @@ async function packlistWithFixture(fixture, opts, expect) {
   try {
     if (packageManager) {
       const [name, version] = packageManager.split('@')
-      await exec(`corepack enable ${name}`, { cwd: fixture.path })
-      const { stdout } = await exec(`${name} --version`, {
-        cwd: fixture.path
-      })
+      // Should be using corepack with the correct version. Double check here.
+      const { stdout } = await exec(`${name} --version`, { cwd: fixture.path })
       expect(stdout.trim()).toEqual(version)
     }
 
@@ -51,6 +52,11 @@ for (const pm of [
   'pnpm@9.15.1',
   'bun'
 ]) {
+  if (pm === 'bun' && !(await isBunInstalled())) {
+    console.info('Skipping bun tests because bun is not installed.')
+    continue
+  }
+
   const packageManagerValue =
     pm === 'empty' || pm === 'bun' ? {} : { packageManager: pm }
 

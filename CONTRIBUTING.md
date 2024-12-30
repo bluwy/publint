@@ -2,7 +2,7 @@
 
 ## Setup
 
-The project requires [`pnpm 8`](https://pnpm.io) and [`Node.js 16`](https://nodejs.org/en/) (or above). Run `pnpm install` to install dependencies of all workspace packages.
+The project requires [`pnpm 9`](https://pnpm.io) and [`Node.js 16`](https://nodejs.org/en/) (or above). Run `pnpm install` to install dependencies of all workspace packages.
 
 There are 3 parts to this repo:
 
@@ -36,7 +36,9 @@ There's also an additional `pnpm bench` command that solely benchmarks the time 
 
 ## Testing
 
-You can run the unit tests with `pnpm test` in the root or `packages/publint` directory.
+You can run the unit tests with `pnpm test` in the root to run all packages' tests.
+
+NOTE: For `packages/packlist`, it has a test setup that uses `corepack` and `bun` to test certain packing behaviors. `corepack` is installed by default but may not be enabled, its tests will temporarily enable it if not and disable again after its test is done. (In rare cases where `corepack` is not properly teared down, you may need to manually run `corepack disable` and `corepack disable npm` if you prefer to not use it). You may also optionally install `bun` (>=1.1.42) to run its bun-specific tests (automatically skipped if `bun` is not installed).
 
 ## Pull requests
 
