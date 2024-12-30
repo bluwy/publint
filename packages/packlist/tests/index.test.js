@@ -24,13 +24,19 @@ async function packlistWithFixture(fixture, opts, expect) {
   const packageManager = JSON.parse(pkgJson).packageManager
 
   try {
+    console.log('pm', packageManager)
     if (packageManager) {
       const [name, version] = packageManager.split('@')
       console.log('calling ' + name + ' --version')
-      cp.spawn(name, ['--version'], { cwd: fixture.path, stdio: 'inherit' })
-  
+
+      cp.spawn(name, ['--version'], {
+        cwd: fixture.path,
+        stdio: 'inherit',
+        env
+      })
+
       // Should be using corepack with the correct version. Double check here.
-      const { stdout } = await exec(`${name} --version`, { cwd: fixture.path,  })
+      const { stdout } = await exec(`${name} --version`, { cwd: fixture.path })
       expect(stdout.trim()).toEqual(version)
     }
 
@@ -42,6 +48,13 @@ async function packlistWithFixture(fixture, opts, expect) {
     await fixture.rm()
   }
 }
+
+// log all process.env key-values that starts with COREPACK_
+Object.keys(process.env).forEach((key) => {
+  if (key.startsWith('COREPACK_')) {
+    console.log(key + '=' + process.env[key])
+  }
+})
 
 // NOTE: only test recent package manager releases
 for (const pm of [
