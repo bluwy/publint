@@ -4,11 +4,8 @@ import { test } from 'vitest'
 import { packlist } from '../src/index.js'
 import { createFixture } from 'fs-fixture'
 import { isBunInstalled, setupCorepackAndTestHooks } from './utils.js'
-import { readdirSync, readFileSync } from 'node:fs'
-import path from 'node:path'
 
 const exec = util.promisify(cp.exec)
-const execFile = util.promisify(cp.execFile)
 const defaultPackageJsonData = {
   name: 'test-package',
   version: '1.0.0',
@@ -29,23 +26,11 @@ async function packlistWithFixture(fixture, opts, expect) {
   try {
     if (packageManager) {
       const [name, version] = packageManager.split('@')
-      console.log('start', packageManager)
-      const r = await exec(`which ${name}`, {
-        cwd: fixture.path
-      })
-      console.log(readdirSync(path.dirname(r.stdout.trim())))
-      console.log(
-        'asd',
-        readFileSync(
-          r.stdout.trim() + process.platform === 'win32' ? '.cmd' : '',
-          'utf8'
-        )
-      )
-
+      console.log(`Testing with ${name}@${version}`)
+      console.log(await exec(`which corepack`, { wd: fixture.path }))
+      console.log(await exec(`which ${name}`, { wd: fixture.path }))
       // Should be using corepack with the correct version. Double check here.
-      const { stdout } = await execFile(`${name}`, [`--version`], {
-        cwd: fixture.path
-      })
+      const { stdout } = await exec(`${name} --version`, { cwd: fixture.path })
       expect(stdout.trim()).toEqual(version)
     }
 
@@ -65,9 +50,9 @@ for (const pm of [
   // 'npm@10.7.0',
   // 'npm@11.0.0',
   // 'yarn@3.8.7'
-  'yarn@4.5.3'
+  'yarn@4.5.3',
   // 'pnpm@8.15.9'
-  // 'pnpm@9.15.1',
+  'pnpm@9.15.1'
   // 'bun'
 ]) {
   if (

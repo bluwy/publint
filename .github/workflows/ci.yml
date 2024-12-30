@@ -51,9 +51,4 @@ jobs:
         name: Typecheck
         run: pnpm typecheck
       - name: Run tests
-        run: |
-          alias npm="corepack npm"
-          alias yarn="corepack yarn"
-          alias pnpm="corepack pnpm"
-          pnpm test
-        shell: bash
+        run: pnpm test
