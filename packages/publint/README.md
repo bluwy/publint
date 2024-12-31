@@ -51,11 +51,6 @@ const { messages } = await publint({
    */
   pkgDir: './path/to/package',
   /**
-   * A virtual file-system object that handles fs/path operations.
-   * This field is required if you're using in the browser.
-   */
-  vfs: createCustomVfsObj(),
-  /**
    * The level of messages to log (default: `'suggestion'`).
    * - `suggestion`: logs all messages
    * - `warning`: logs only `warning` and `error` messages

@@ -121,17 +121,17 @@ export type Message =
       }
     >
 
+export interface PackFile {
+  name: string
+  data: string | ArrayBuffer | Uint8Array
+}
+
 export interface Options {
   /**
    * Path to your package that contains a package.json file.
    * Defaults to `process.cwd()` in node, `/` in browser.
    */
   pkgDir?: string
-  /**
-   * A virtual file-system object that handles fs/path operations.
-   * This field is required if you're using in the browser.
-   */
-  vfs?: Vfs
   /**
    * The level of messages to log (default: `'suggestion'`).
    * - `suggestion`: logs all messages
@@ -154,22 +154,19 @@ export interface Options {
    *
    * @default 'auto'
    */
-  pack?: 'auto' | 'npm' | 'yarn' | 'pnpm' | 'bun' | false
+  pack?:
+    | 'auto'
+    | 'npm'
+    | 'yarn'
+    | 'pnpm'
+    | 'bun'
+    | { tarball: ArrayBuffer }
+    | { files: PackFile[] }
+    | false
   /**
    * Report warnings as errors.
    */
   strict?: boolean
-}
-
-export interface Vfs {
-  readFile: (path: string) => Promise<string>
-  readDir: (path: string) => Promise<string[]>
-  isPathDir: (path: string) => Promise<boolean>
-  isPathExist: (path: string) => Promise<boolean>
-  pathJoin: (...paths: string[]) => string
-  pathRelative: (from: string, to: string) => string
-  getDirName: (path: string) => string
-  getExtName: (path: string) => string
 }
 
 export interface Result {

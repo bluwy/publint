@@ -1,10 +1,11 @@
-/** @typedef {{ name: string, buffer: ArrayBuffer }} TarballFile */
-
 /**
- * @param {TarballFile[]} files
- * @return {import('publint').Vfs}
+ * @param {import("../index.d.ts").PackFile[]} files
+ * @return {import("./index.d.ts").Vfs}
  * */
 export function createTarballVfs(files) {
+  /** @type {TextDecoder | undefined} */
+  let decoder
+
   return {
     getDirName: (path) => path.replace(/\/[^/]*$/, ''),
     getExtName: (path) => path.replace(/^.*\./, '.'),
@@ -33,10 +34,12 @@ export function createTarballVfs(files) {
     },
     readFile: async (path) => {
       const file = files.find((file) => file.name === path)
-      if (file) {
-        return new TextDecoder('utf-8').decode(file.buffer)
+      if (!file) throw new Error(`Unable to read file at path: ${path}`)
+      if (typeof file.data === 'string') {
+        return file.data
       } else {
-        throw new Error(`Unable to read file at path: ${path}`)
+        decoder ??= new TextDecoder()
+        return decoder.decode(file.data)
       }
     }
   }
