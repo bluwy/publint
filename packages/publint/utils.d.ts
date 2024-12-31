@@ -25,6 +25,27 @@ export interface TarballFile {
   data: Uint8Array
 }
 
+export interface UnpackTarballResult {
+  /**
+   * The packed files. Usually with names like "package/src/index.js".
+   */
+  files: TarballFile[]
+  /**
+   * The root/shared directory among all packed files, e.g. "package".
+   *
+   * Usually npm-packed tarball uses "package" as the root directory,
+   * however some publishes, like from `@types/*` have different root
+   * directories instead. This field helps to identify it.
+   */
+  rootDir: string
+}
+
+/**
+ * Unpacks an npm-packed tarball (or by similar js package managers).
+ *
+ * NOTE: This is not a generall `.tgz` file unpack API. It's internal logic
+ * are written with the assumption for npm-packed tarballs only.
+ */
 export declare function unpackTarball(
-  tarball: ArrayBuffer | ReadableStream<Uint8Array>
-): Promise<TarballFile[]>
+  tarball: ArrayBuffer
+): Promise<UnpackTarballResult>
