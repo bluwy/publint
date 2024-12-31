@@ -126,7 +126,7 @@ export function getCodeFormat(code) {
 /**
  * Handle `exports` glob
  * @param {string} globStr An absolute glob string that must contain one `*`
- * @param {import('../index.d.ts').Vfs} vfs
+ * @param {import('./index.js').Vfs} vfs
  * @param {string[]} [packedFiles]
  * @returns {Promise<string[]>} Matched file paths
  */
@@ -201,7 +201,7 @@ function slash(str) {
 
 /**
  * @param {string} filePath
- * @param {import('../index.d.ts').Vfs} vfs
+ * @param {import('./index.js').Vfs} vfs
  * @returns {Promise<Exclude<CodeFormat, 'mixed' | 'unknown'>>}
  */
 export async function getFilePathFormat(filePath, vfs) {
@@ -219,7 +219,7 @@ export async function getFilePathFormat(filePath, vfs) {
 
 /**
  * @param {string} filePath
- * @param {import('../index.d.ts').Vfs} vfs
+ * @param {import('./index.js').Vfs} vfs
  * @returns {Promise<Exclude<CodeFormat, 'mixed' | 'unknown'>>}
  */
 export async function getDtsFilePathFormat(filePath, vfs) {
@@ -313,7 +313,7 @@ export function isAbsolutePath(filePath) {
 
 /**
  * @param {string} filePath
- * @param {import('../index.d.ts').Vfs} vfs
+ * @param {import('./index.js').Vfs} vfs
  * @returns {Promise<Pkg | undefined>}
  */
 export async function getNearestPkg(filePath, vfs) {
