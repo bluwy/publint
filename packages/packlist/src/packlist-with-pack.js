@@ -46,6 +46,9 @@ export async function packlistWithPack(dir, packageManager) {
   }
 }
 
+/**
+ * @param {string} tarballFile
+ */
 async function unpack(tarballFile) {
   const tarball = await fs.readFile(tarballFile)
   const content = await util.promisify(zlib.gunzip)(tarball)
@@ -55,24 +58,27 @@ async function unpack(tarballFile) {
 
   let offset = 0
   while (offset < content.length) {
+    // Get file type from header (from offset 156, 1 byte)
+    const type = content.subarray(offset + 156, offset + 157).toString()
+
     // Skip empty blocks at end
-    if (content.subarray(offset, offset + 512).every((byte) => byte === 0))
-      break
+    if (type === '\0') break
 
-    // Read filename from header (100 bytes max)
-    const name = content
-      .subarray(offset, offset + 100)
-      .toString('ascii')
-      .split('\0')[0]
-
-    if (name) fileNames.push(name)
-
-    // Get file size from header (12 bytes octal at offset 124)
-    const size = parseInt(
-      content
-        .subarray(offset + 124, offset + 136)
+    // Only handle files (0). Packed packages often only contain files and no directories.
+    // It may contain PAX headers (x) and global PAX headers (g), but we don't need to handle those.
+    if (type === '0') {
+      // Get file name from header (from offset 0, 100 bytes)
+      const name = content
+        .subarray(offset, offset + 100)
         .toString()
-        .trim(),
+        .split('\0', 1)[0]
+
+      fileNames.push(name)
+    }
+
+    // Get file size from header (from offset 124, 12 bytes)
+    const size = parseInt(
+      content.subarray(offset + 124, offset + 136).toString(),
       8
     )
 

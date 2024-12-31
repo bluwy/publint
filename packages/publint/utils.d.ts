@@ -19,3 +19,12 @@ export declare function formatMessage(
   pkg: Pkg,
   opts?: FormatMessageOptions
 ): string | undefined
+
+export interface TarballFile {
+  name: string
+  data: Uint8Array
+}
+
+export declare function unpackTarball(
+  tarball: ArrayBuffer | ReadableStream<Uint8Array>
+): Promise<TarballFile[]>
