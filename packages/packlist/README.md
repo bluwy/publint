@@ -5,6 +5,7 @@ Get a list of files packed by a package manager. Supports:
 - npm (v8, v9, v10)
 - yarn (v3, v4)
 - pnpm (v8, v9)
+- bun
 
 ## Usage
 

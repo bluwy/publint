@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "get-npm-tarball-url": "^2.1.0",
-    "pako": "^2.1.0",
     "publint": "workspace:*"
   },
   "devDependencies": {

@@ -1,9 +1,7 @@
-import { inflate } from 'pako'
 import { publint } from 'publint'
+import { unpackTarball } from 'publint/utils'
 import getNpmTarballUrl from 'get-npm-tarball-url'
 import { isLocalPkg } from './common'
-import { untar } from './untar'
-import { createTarballVfs } from './tarball'
 
 self.addEventListener('message', async (e) => {
   const { npmPkgName, npmPkgVersion, isPkgPrNew } = e.data
@@ -24,35 +22,55 @@ self.addEventListener('message', async (e) => {
   // Unpack flow credit: https://stackoverflow.com/a/65448758
 
   postMessage({ type: 'status', data: 'Fetching package...' })
-  /** @type {ArrayBuffer} */
-  let resultBuffer
+  /** @type {Response} */
+  let response
   try {
-    const result = await fetch(tarballUrl)
-    resultBuffer = await result.arrayBuffer()
+    response = await fetch(tarballUrl)
   } catch (e) {
     postMessage({ type: 'error', data: 'Package not found' })
     console.error(e)
     return
   }
 
+  if (response.body == null) {
+    postMessage({ type: 'error', data: 'Package response has no body' })
+    return
+  }
+
   postMessage({ type: 'status', data: 'Unpacking package...' })
-  /** @type {import('./tarball').TarballFile[]} */
+  /** @type {import('publint/utils').TarballFile[]} */
   let files
+  /** @type {string} */
+  let pkgDir
   try {
-    const tarBuffer = inflate(resultBuffer).buffer // Handles gzip (gz)
-    files = untar(tarBuffer) // Handles tar (t)
+    const buffer = await new Response(
+      response.body.pipeThrough(new DecompressionStream('gzip'))
+    ).arrayBuffer()
+    const result = await unpackTarball(buffer)
+    files = result.files
+    pkgDir = result.rootDir
   } catch (e) {
     postMessage({ type: 'error', data: 'Failed to unpack package' })
     console.error(e)
     return
   }
-  const vfs = createTarballVfs(files)
 
   postMessage({ type: 'status', data: 'Linting package...' })
-  // The tar file names have appended "package", except for `@types` packages very strangely
-  const pkgDir = files.length ? files[0].name.split('/')[0] : 'package'
-  const { messages } = await publint({ pkgDir, vfs })
-  const pkgJson = JSON.parse(await vfs.readFile(pkgDir + '/package.json'))
+  /** @type {import('publint').Message[]} */
+  let messages
+  /** @type {Record<string, any>} */
+  let pkgJson
+  try {
+    const result = await publint({ pkgDir, pack: { files } })
+    messages = result.messages
+
+    const pkgJsonFile = files.find((f) => f.name === pkgDir + '/package.json')
+    pkgJson = JSON.parse(new TextDecoder().decode(pkgJsonFile?.data))
+  } catch (e) {
+    postMessage({ type: 'error', data: 'Failed to lint package' })
+    console.error(e)
+    return
+  }
 
   postMessage({
     type: 'result',
