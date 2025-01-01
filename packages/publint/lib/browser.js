@@ -1,16 +1,33 @@
 import { publint as _publint } from '../src/index.js'
+import { unpackTarball } from '../src/utils-tar.js'
+import { createTarballVfs } from '../src/vfs-tarball.js'
 
 /**
  * @type {import('../index.d.ts').publint}
  */
-export function publint(options) {
-  if (!options?.vfs) {
-    throw new Error('The vfs option is required in the browser')
+export async function publint(options) {
+  const pack = options?.pack
+  if (!pack || typeof pack !== 'object') {
+    throw new Error(
+      '[publint] The `pack` option must be set to an object with `tarball` or `files` to work in the browser'
+    )
   }
 
-  return _publint({
-    pkgDir: options.pkgDir ?? '/',
-    vfs: options.vfs,
+  /** @type {import('../src/index.js').Vfs} */
+  let vfs
+  /** @type {string | undefined} */
+  let overridePkgDir
+  if ('tarball' in pack) {
+    const result = await unpackTarball(pack.tarball)
+    vfs = createTarballVfs(result.files)
+    overridePkgDir = result.rootDir
+  } else {
+    vfs = createTarballVfs(pack.files)
+  }
+
+  return await _publint({
+    pkgDir: options.pkgDir ?? overridePkgDir ?? '/',
+    vfs,
     level: options.level ?? 'suggestion',
     strict: options?.strict ?? false
   })

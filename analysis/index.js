@@ -3,11 +3,8 @@ import fs from 'node:fs/promises'
 import path from 'node:path'
 import getNpmTarballUrl from 'get-npm-tarball-url'
 import { npmHighImpact } from 'npm-high-impact'
-import { inflate } from 'pako'
 import { publint } from 'publint'
 import pLimit from 'p-limit'
-import { untar } from '../site/src/utils/untar.js'
-import { createTarballVfs } from '../site/src/utils/tarball.js'
 
 /*
   Results enum (severity):
@@ -50,17 +47,13 @@ async function mainCommand() {
     packages.map((pkg) =>
       limit(async () => {
         try {
-          const pkgData = await fetchPkgData(pkg) // Handles tar (t)
+          const pkgData = await fetchPkgData(pkg)
           if (!pkgData) {
             console.log('No data for', pkg)
             return null
           }
-          const { files, version } = pkgData
-          const vfs = createTarballVfs(files)
-
-          // // The tar file names have appended "package", except for `@types` packages very strangely
-          const pkgDir = files.length ? files[0].name.split('/')[0] : 'package'
-          const { messages } = await publint({ pkgDir, vfs })
+          const { tarball, version } = pkgData
+          const { messages } = await publint({ pack: { tarball } })
           const severity =
             messages.length === 0
               ? 0
@@ -117,9 +110,8 @@ async function benchCommand() {
       limit(async () => {
         if (!d) return
         try {
-          const { files } = d
-          const pkgDir = files.length ? files[0].name.split('/')[0] : 'package'
-          await publint({ pkgDir, vfs: createTarballVfs(files) })
+          const { tarball } = d
+          await publint({ pack: { tarball } })
         } catch (e) {
           console.error(`Failed to lint ${d.pkg}`, e)
           return null
@@ -144,23 +136,50 @@ async function fetchPkgData(pkg) {
   const cachedFileUrl = getCacheTarFileUrl(pkg, version)
   usedCacheFileBaseNames.push(path.basename(cachedFileUrl.href))
 
-  /** @type {ArrayBuffer | SharedArrayBuffer} */
-  let resultBuffer
+  /** @type {ArrayBuffer} */
+  let tarball
 
   if (fss.existsSync(cachedFileUrl)) {
-    resultBuffer = (await fs.readFile(cachedFileUrl)).buffer
+    const buffer = (await fs.readFile(cachedFileUrl)).buffer
+    if (buffer instanceof ArrayBuffer) {
+      tarball = buffer
+    } else {
+      throw new Error(`Unexpected SharedArrayBuffer type for ${cachedFileUrl}`)
+    }
   } else if (!useCacheOnly) {
-    resultBuffer = await fetchPkg(pkg, version)
-    await fs.writeFile(cachedFileUrl, Buffer.from(resultBuffer))
+    tarball = await fetchPkg(pkg, version)
+    await fs.writeFile(cachedFileUrl, Buffer.from(tarball))
   } else {
     return null
   }
 
-  const tarBuffer = inflate(resultBuffer).buffer // Handles gzip (gz)
-  /** @type {import('../site/src/utils/tarball.js').TarballFile[]} */
-  const files = untar(tarBuffer) // Handles tar (t)
+  const tarballStream = arrayBufferToReadableStream(tarball)
+  tarball = await readableStreamToArrayBuffer(
+    tarballStream.pipeThrough(new DecompressionStream('gzip'))
+  )
 
-  return { files, version }
+  return { tarball, version }
+}
+
+/**
+ * @param {ArrayBuffer} arrayBuffer
+ * @returns {ReadableStream<Uint8Array>}
+ */
+function arrayBufferToReadableStream(arrayBuffer) {
+  return new ReadableStream({
+    start(controller) {
+      controller.enqueue(new Uint8Array(arrayBuffer))
+      controller.close()
+    }
+  })
+}
+
+/**
+ * @param {ReadableStream<Uint8Array>} readableStream
+ * @returns {Promise<ArrayBuffer>}
+ */
+async function readableStreamToArrayBuffer(readableStream) {
+  return await new Response(readableStream).arrayBuffer()
 }
 
 /**

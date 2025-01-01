@@ -48,9 +48,6 @@ importers:
       p-limit:
         specifier: ^6.2.0
         version: 6.2.0
-      pako:
-        specifier: ^2.1.0
-        version: 2.1.0
       publint:
         specifier: workspace:*
         version: link:../packages/publint
@@ -86,9 +83,6 @@ importers:
   site:
     dependencies:
       get-npm-tarball-url:
-        specifier: ^2.1.0
-        version: 2.1.0
-      pako:
         specifier: ^2.1.0
         version: 2.1.0
       publint:
@@ -1238,9 +1232,6 @@ packages:
 
   package-manager-detector@0.2.8:
     resolution: {integrity: sha512-ts9KSdroZisdvKMWVAVCXiKqnqNfXz4+IbrBG8/BWx/TR5le+jfenvoBuIZ6UWM9nz47W7AbD9qYfAwfWMIwzA==}
-
-  pako@2.1.0:
-    resolution: {integrity: sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==}
 
   path-exists@4.0.0:
     resolution: {integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==}
@@ -2935,8 +2926,6 @@ snapshots:
   p-try@2.2.0: {}
 
   package-manager-detector@0.2.8: {}
-
-  pako@2.1.0: {}
 
   path-exists@4.0.0: {}
 

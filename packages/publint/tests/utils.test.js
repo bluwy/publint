@@ -14,7 +14,7 @@ import {
   isShorthandRepositoryUrl,
   stripComments
 } from '../src/utils.js'
-import { createNodeVfs } from '../src/vfs.js'
+import { createNodeVfs } from '../src/vfs-node.js'
 
 const cjsCode = [
   `require('bla')`,

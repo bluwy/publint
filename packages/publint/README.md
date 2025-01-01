@@ -47,14 +47,14 @@ import { publint } from 'publint'
 const { messages } = await publint({
   /**
    * Path to your package that contains a package.json file.
-   * Defaults to `process.cwd()` in node, `/` in browser.
+   *
+   * **Environment notes:**
+   * - **Node.js**: Defualts to `process.cwd()`.
+   * - **Browser**: Automatically inferred from `{ tarball: ArrayBuffer }`. If `{ files: PackFile[] }` is used,
+   *                this must be the shared directory of all files in `files`. e.g. if `name` has `"package/src/index.js",
+   *                the `pkgDir` should be `"package"`.
    */
   pkgDir: './path/to/package',
-  /**
-   * A virtual file-system object that handles fs/path operations.
-   * This field is required if you're using in the browser.
-   */
-  vfs: createCustomVfsObj(),
   /**
    * The level of messages to log (default: `'suggestion'`).
    * - `suggestion`: logs all messages
@@ -69,13 +69,15 @@ const { messages } = await publint({
    * - `'auto'`: Automatically detects the package manager using
    *             [`package-manager-detector`](https://github.com/antfu-collective/package-manager-detector).
    * - `'npm'`/`'yarn'`/`'pnpm'`/`'bun'`: Uses the respective package manager to pack.
+   * - `{ tarball: ArrayBuffer }`: Packs the package from the specified tarball represented as an ArrayBuffer.
+   * - `{ files: PackFile[] }`: Packs the package using the specified files.
    * - `false`: Skips packing the package. This should only be used if all the files
    *            in `pkgDir` are assumed to be published, e.g. in `node_modules`.
    *
-   * If `vfs` is set, this option is ignored and will always be `false`, as
-   * the `vfs` itself should point to a packed tarball.
-   *
-   * @default 'auto'
+   * **Environment notes:**
+   * - **Node.js**: Defaults to `'auto'`. All options above are supported.
+   * - **Browser**: Only `{ tarball: ArrayBuffer }` and `{ files: PackFile[] }` are supported and either **must
+   *                be passed** to work, as the browser does not have access to the file system.
    */
   pack: 'pnpm',
   /**
@@ -102,6 +104,50 @@ for (const message of messages) {
   // Useful for re-implementing the CLI in a programmatic way.
   console.log(formatMessage(message, pkg))
 }
+```
+
+### Examples
+
+```js
+// Node.js: basic usage
+import { publint } from 'publint'
+
+const result = await publint({ pkgDir: './packages/mylib' })
+```
+
+```js
+// Node.js / browser: lint a tarball
+import { publint } from 'publint'
+
+// Fetch tarball
+const result = await fetch('https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz')
+if (!result.body) throw new Error('Failed to fetch tarball')
+
+// Decompress the tarball
+const stream = result.body.pipeThrough(new DecompressionStream('gzip'))
+const buffer = await new Response(stream).arrayBuffer()
+
+const result = await publint({ pack: { tarball: buffer } })
+```
+
+```js
+// Node.js / browser: manually unpack and pass as files
+import { publint } from 'publint'
+import { unpackTarball } from 'publint/utils'
+
+// Fetch tarball
+const result = await fetch('https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz')
+if (!result.body) throw new Error('Failed to fetch tarball')
+
+// Decompress the tarball
+const stream = result.body.pipeThrough(new DecompressionStream('gzip'))
+const buffer = await new Response(stream).arrayBuffer()
+
+const { rootDir, files } = await unpackTarball(buffer)
+
+// Do something with `files` if needed
+
+const result = await publint({ pkgDir: rootDir, pack: { files } })
 ```
 
 ## License

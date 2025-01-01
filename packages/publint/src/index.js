@@ -31,10 +31,23 @@ import {
 } from './utils.js'
 
 /**
+ * @typedef Vfs
+ * @property {(path: string) => Promise<string>} readFile
+ * @property {(path: string) => Promise<string[]>} readDir
+ * @property {(path: string) => Promise<boolean>} isPathDir
+ * @property {(path: string) => Promise<boolean>} isPathExist
+ * @property {(...paths: string[]) => string} pathJoin
+ * @property {(from: string, to: string) => string} pathRelative
+ * @property {(path: string) => string} getDirName
+ * @property {(path: string) => string} getExtName
+ */
+
+/**
  * Includes internal _include that used to filter paths that is packed.
  * Mainly for node.js local usage only. So that we lint files that are packed only.
  * Currently only used if pkg has no `exports`
  * @typedef {Omit<Required<import('../index.d.ts').Options>, 'pack'> & {
+ *   vfs: Vfs,
  *   _packedFiles?: string[]
  * }} Options
  */
