@@ -7,8 +7,9 @@
   "license": "MIT",
   "types": "./index.d.ts",
   "exports": {
-    "types": "./index.d.ts",
-    "default": "./src/index.js"
+    "types": "./src/index.d.ts",
+    "browser": "./src/index-browser.js",
+    "default": "./src/index-node.js"
   },
   "scripts": {
     "test": "vitest run",
@@ -19,8 +20,7 @@
     "node": ">=16"
   },
   "files": [
-    "src",
-    "*.d.ts"
+    "src"
   ],
   "funding": "https://bjornlu.com/sponsor",
   "repository": {

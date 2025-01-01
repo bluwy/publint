@@ -1,6 +1,6 @@
 import path from 'node:path'
 import { detect } from 'package-manager-detector/detect'
-import { packlist } from '@publint/pack'
+import { packAsList } from '@publint/pack'
 import { publint as _publint } from '../src/index.js'
 import { unpackTarball } from '../src/utils-tarball.js'
 import { createNodeVfs } from '../src/vfs-node.js'
@@ -41,7 +41,7 @@ export async function publint(options) {
         packageManager = 'npm'
       }
 
-      packedFiles = (await packlist(pkgDir, { packageManager })).map((file) =>
+      packedFiles = (await packAsList(pkgDir, { packageManager })).map((file) =>
         path.join(pkgDir, file)
       )
     }
