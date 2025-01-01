@@ -38,6 +38,9 @@ export async function packAsJson(dir, opts) {
 }
 
 // yarn outputs invalid json for some reason
+/**
+ * @param {string} stdout
+ */
 function fixYarnStdout(stdout) {
   const lines = stdout.split('\n')
   // Combine lines as arrays
@@ -50,5 +53,5 @@ function fixYarnStdout(stdout) {
     fixedStdout = fixedStdout.slice(0, -1)
   }
   fixedStdout += ']'
-  return result
+  return fixedStdout
 }

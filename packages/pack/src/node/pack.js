@@ -12,8 +12,8 @@ export async function pack(dir, opts) {
     command = command.replace('bun', 'bun pm')
   }
 
-  const packDestination = opts?.destination
-  if (packDestination) {
+  const packDestination = opts?.destination ?? dir
+  if (opts?.destination) {
     switch (packageManager) {
       case 'yarn':
         command += ` --out \"${path.join(packDestination, 'package.tgz')}\"`

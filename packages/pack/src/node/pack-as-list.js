@@ -1,3 +1,4 @@
+import fs from 'node:fs/promises'
 import { pack } from './pack.js'
 import { packAsJson } from './pack-as-json.js'
 import { unpack } from './unpack.js'
@@ -31,7 +32,8 @@ export async function packAsListWithJson(dir, packageManager) {
       return parseYarnPackJson(stdoutJson)
     case 'pnpm':
       return parsePnpmPackJson(stdoutJson)
-    // Bun does not support `--json` so no need to handle it here
+    default:
+      return []
   }
 }
 
@@ -47,15 +49,18 @@ export async function packAsListWithPack(dir, packageManager) {
   const tarballPath = await pack(dir, { packageManager, destination })
 
   try {
-    const { files, rootDir } = await unpack(tarballPath)
-    return files.map((file) => file.slice(rootDir.length + 1))
+    const buffer = /** @type {ArrayBuffer} */ (
+      (await fs.readFile(tarballPath)).buffer
+    )
+    const { files, rootDir } = await unpack(buffer)
+    return files.map((file) => file.name.slice(rootDir.length + 1))
   } finally {
     await fs.rm(destination, { recursive: true })
   }
 }
 
 /**
- * @param {string} stdoutJson
+ * @param {any} stdoutJson
  * @returns {string[]}
  */
 function parseNpmPackJson(stdoutJson) {
@@ -63,7 +68,7 @@ function parseNpmPackJson(stdoutJson) {
 }
 
 /**
- * @param {string} stdoutJson
+ * @param {any} stdoutJson
  * @returns {string[]}
  */
 function parseYarnPackJson(stdoutJson) {
@@ -75,7 +80,7 @@ function parseYarnPackJson(stdoutJson) {
 }
 
 /**
- * @param {string} stdoutJson
+ * @param {any} stdoutJson
  * @returns {string[]}
  */
 function parsePnpmPackJson(stdoutJson) {

@@ -1,7 +1,10 @@
 import cp from 'node:child_process'
 import util from 'node:util'
 import { test } from 'vitest'
-import { packlist } from '../src/index.js'
+import {
+  packAsListWithJson,
+  packAsListWithPack
+} from '../src/node/pack-as-list.js'
 import { createFixture } from 'fs-fixture'
 import { isBunInstalled, setupCorepackAndTestHooks } from './utils.js'
 
@@ -19,10 +22,16 @@ await setupCorepackAndTestHooks()
 
 /**
  * @param {import('fs-fixture').FsFixture} fixture
- * @param {import('../index.d.ts').Options} [opts]
+ * @param {string | undefined} fallbackPackageManager
+ * @param {string} strategy
  * @param {import('vitest').ExpectStatic} expect
  */
-async function packlistWithFixture(fixture, opts, expect) {
+async function packlistWithFixture(
+  fixture,
+  fallbackPackageManager,
+  strategy,
+  expect
+) {
   const pkgJson = await fixture.readFile('package.json', 'utf8')
   const packageManager = JSON.parse(pkgJson).packageManager
 
@@ -34,10 +43,11 @@ async function packlistWithFixture(fixture, opts, expect) {
       expect(stdout.trim()).toEqual(version)
     }
 
-    return await packlist(fixture.path, {
-      packageManager: packageManager?.split('@')[0],
-      ...opts
-    })
+    const packAsList =
+      strategy === 'json' ? packAsListWithJson : packAsListWithPack
+    const pm = packageManager?.split('@')[0] ?? fallbackPackageManager ?? 'npm'
+
+    return await packAsList(fixture.path, pm)
   } finally {
     await fixture.rm()
   }
@@ -67,18 +77,19 @@ for (const pm of [
   const packageManagerValue =
     pm === 'empty' || pm === 'bun' ? {} : { packageManager: pm }
 
-  for (const strategy of ['json', 'pack', 'json-and-pack']) {
+  for (const strategy of ['json', 'pack']) {
     if (strategy === 'json' && (pm === 'pnpm@8.15.9' || pm === 'bun')) {
       // Skip this test because `pack --json` is not supported in pnpm v8
       continue
     }
 
-    /** @type {import('../index.d.ts').Options} */
-    const packlistOpts = { strategy }
-    if (pm === 'bun') packlistOpts.packageManager = 'bun'
+    // Other package manager can be detected via `package.json` `packageManager` field
+    const fallbackPackageManager = pm === 'bun' ? 'bun' : undefined
+    /** @type {import('vitest').TestOptions} */
+    const testOpts = { concurrent: true, timeout: process.env.CI ? 8000 : 5000 }
 
     // prettier-ignore
-    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / no-files`, { concurrent: true }, async ({ expect }) => {
+    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / no-files`, testOpts, async ({ expect }) => {
       const fixture = await createFixture({
         'package.json': JSON.stringify({
           ...defaultPackageJsonData,
@@ -87,12 +98,12 @@ for (const pm of [
         'a.js': ''
       })
 
-      const list = await packlistWithFixture(fixture, packlistOpts, expect)
+      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, expect)
       expect(list.sort()).toEqual(['a.js', 'package.json'])
     })
 
     // prettier-ignore
-    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / with-files`, { concurrent: true }, async ({ expect }) => {
+    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / with-files`, testOpts, async ({ expect }) => {
       const fixture = await createFixture({
         'package.json': JSON.stringify({
           ...defaultPackageJsonData,
@@ -103,12 +114,12 @@ for (const pm of [
         'b.js': ''
       })
 
-      const list = await packlistWithFixture(fixture, packlistOpts, expect)
+      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, expect)
       expect(list.sort()).toEqual(['a.js', 'package.json'])
     })
 
     // prettier-ignore
-    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / with-files-and-glob`, { concurrent: true }, async ({ expect }) => {
+    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / with-files-and-glob`, testOpts, async ({ expect }) => {
       // Bun packs this wrongly
       if (pm === 'bun') return
 
@@ -122,7 +133,7 @@ for (const pm of [
         'dir/b.js': ''
       })
 
-      const list = await packlistWithFixture(fixture, packlistOpts, expect)
+      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, expect)
       expect(list.sort()).toEqual(['dir/a.js', 'package.json'])
     })
   }

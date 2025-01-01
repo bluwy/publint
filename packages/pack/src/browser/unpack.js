@@ -5,12 +5,12 @@ import {
 import { getFilesRootDir, parseTar } from '../shared/parse-tar.js'
 
 /** @type {import('../index.d.ts').unpack} */
-export function unpack(tarball) {
+export async function unpack(tarball) {
   const stream =
     tarball instanceof ReadableStream
       ? tarball
       : arrayBufferToReadableStream(tarball)
-  const buffer = readableStreamToArrayBuffer(
+  const buffer = await readableStreamToArrayBuffer(
     stream.pipeThrough(new DecompressionStream('gzip'))
   )
   const files = parseTar(buffer)
