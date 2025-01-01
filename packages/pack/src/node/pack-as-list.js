@@ -8,7 +8,7 @@ import { getTempPackDir } from './utils.js'
 export async function packAsList(dir, opts) {
   const packageManager = opts?.packageManager ?? 'npm'
 
-  // TODO: Maybe fast path to `packlistWithPack` for package managers that do not support `--json`
+  // TODO: Maybe fast path to `packAsListWithPack` for package managers that do not support `--json`
   try {
     return await packAsListWithJson(dir, packageManager)
   } catch {
