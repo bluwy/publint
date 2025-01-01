@@ -1,5 +1,5 @@
 import { publint as _publint } from '../src/index.js'
-import { unpackTarball } from '../src/utils-tar.js'
+import { unpackTarball } from '../src/utils-tarball.js'
 import { createTarballVfs } from '../src/vfs-tarball.js'
 
 /**

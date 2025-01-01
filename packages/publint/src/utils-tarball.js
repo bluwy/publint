@@ -1,5 +1,16 @@
 /** @type {import('../utils.d.ts').unpackTarball} */
 export async function unpackTarball(tarball) {
+  const files = parseTar(tarball)
+  const rootDir = files.length ? files[0].name.split('/')[0] : 'package'
+
+  return { files, rootDir }
+}
+
+/**
+ * @param {ArrayBuffer} tarball
+ * @returns {import('../utils.d.ts').TarballFile[]}
+ */
+function parseTar(tarball) {
   const decoder = new TextDecoder()
   /** @type {import('../utils.d.ts').TarballFile[]} */
   const files = []
@@ -31,9 +42,7 @@ export async function unpackTarball(tarball) {
     offset += 512 + Math.ceil(size / 512) * 512
   }
 
-  const rootDir = files.length ? files[0].name.split('/')[0] : 'package'
-
-  return { files, rootDir }
+  return files
 }
 
 /**

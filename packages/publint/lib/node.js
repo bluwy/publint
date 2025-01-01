@@ -2,7 +2,7 @@ import path from 'node:path'
 import { detect } from 'package-manager-detector/detect'
 import { packlist } from '@publint/packlist'
 import { publint as _publint } from '../src/index.js'
-import { unpackTarball } from '../src/utils-tar.js'
+import { unpackTarball } from '../src/utils-tarball.js'
 import { createNodeVfs } from '../src/vfs-node.js'
 import { createTarballVfs } from '../src/vfs-tarball.js'
 
