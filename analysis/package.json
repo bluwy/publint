@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node index.js",
     "bench": "node index.js --bench",
-    "gist": "bash gist.sh"
+    "gist": "bash gist.sh",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "get-npm-tarball-url": "^2.1.0",

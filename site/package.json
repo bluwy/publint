@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "vite build && rm -rf dist/temp",
     "preview": "vite preview",
+    "typecheck": "tsc",
     "packfix": "node ./scripts/packFixtures.js"
   },
   "dependencies": {

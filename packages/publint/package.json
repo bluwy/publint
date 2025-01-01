@@ -24,6 +24,7 @@
     "cli": "node ./lib/cli.js",
     "test": "vitest run",
     "test-dev": "vitest",
+    "typecheck": "tsc",
     "prepublishOnly": "pnpm cli"
   },
   "engines": {
