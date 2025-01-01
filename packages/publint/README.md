@@ -106,6 +106,50 @@ for (const message of messages) {
 }
 ```
 
+### Examples
+
+```js
+// Node.js: basic usage
+import { publint } from 'publint'
+
+const result = await publint({ pkgDir: './packages/mylib' })
+```
+
+```js
+// Node.js / browser: lint a tarball
+import { publint } from 'publint'
+
+// Fetch tarball
+const result = await fetch('https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz')
+if (!result.body) throw new Error('Failed to fetch tarball')
+
+// Decompress the tarball
+const stream = result.body.pipeThrough(new DecompressionStream('gzip'))
+const buffer = await new Response(stream).arrayBuffer()
+
+const result = await publint({ pack: { tarball: buffer } })
+```
+
+```js
+// Node.js / browser: manually unpack and pass as files
+import { publint } from 'publint'
+import { unpackTarball } from 'publint/utils'
+
+// Fetch tarball
+const result = await fetch('https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz')
+if (!result.body) throw new Error('Failed to fetch tarball')
+
+// Decompress the tarball
+const stream = result.body.pipeThrough(new DecompressionStream('gzip'))
+const buffer = await new Response(stream).arrayBuffer()
+
+const { rootDir, files } = await unpackTarball(buffer)
+
+// Do something with `files` if needed
+
+const result = await publint({ pkgDir: rootDir, pack: { files } })
+```
+
 ## License
 
 MIT
