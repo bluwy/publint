@@ -151,8 +151,8 @@ export interface Options {
    * - `'auto'`: Automatically detects the package manager using
    *             [`package-manager-detector`](https://github.com/antfu-collective/package-manager-detector).
    * - `'npm'`/`'yarn'`/`'pnpm'`/`'bun'`: Uses the respective package manager to pack.
-   * - `{ tarball: ArrayBuffer }`: Packs the package from the specified tarball represented as an ArrayBuffer.
-   * - `{ files: PackFile[] }`: Packs the package using the specified files.
+   * - `{ tarball }`: Packs the package from the specified tarball represented as an ArrayBuffer.
+   * - `{ files }`: Packs the package using the specified files.
    * - `false`: Skips packing the package. This should only be used if all the files
    *            in `pkgDir` are assumed to be published, e.g. in `node_modules`.
    *
@@ -167,7 +167,7 @@ export interface Options {
     | 'yarn'
     | 'pnpm'
     | 'bun'
-    | { tarball: ArrayBuffer }
+    | { tarball: ArrayBuffer | ReadableStream<Uint8Array> }
     | { files: PackFile[] }
     | false
   /**

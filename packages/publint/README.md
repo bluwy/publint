@@ -69,8 +69,8 @@ const { messages } = await publint({
    * - `'auto'`: Automatically detects the package manager using
    *             [`package-manager-detector`](https://github.com/antfu-collective/package-manager-detector).
    * - `'npm'`/`'yarn'`/`'pnpm'`/`'bun'`: Uses the respective package manager to pack.
-   * - `{ tarball: ArrayBuffer }`: Packs the package from the specified tarball represented as an ArrayBuffer.
-   * - `{ files: PackFile[] }`: Packs the package using the specified files.
+   * - `{ tarball }`: Packs the package from the specified tarball represented as an ArrayBuffer.
+   * - `{ files }`: Packs the package using the specified files.
    * - `false`: Skips packing the package. This should only be used if all the files
    *            in `pkgDir` are assumed to be published, e.g. in `node_modules`.
    *
@@ -123,28 +123,19 @@ import { publint } from 'publint'
 const result = await fetch('https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz')
 if (!result.body) throw new Error('Failed to fetch tarball')
 
-// Decompress the tarball
-const stream = result.body.pipeThrough(new DecompressionStream('gzip'))
-const buffer = await new Response(stream).arrayBuffer()
-
-const result = await publint({ pack: { tarball: buffer } })
+const result = await publint({ pack: { tarball: response.body } })
 ```
 
 ```js
 // Node.js / browser: manually unpack and pass as files
 import { publint } from 'publint'
-import { unpackTarball } from 'publint/utils'
+import { unpack } from '@publint/pack'
 
 // Fetch tarball
 const result = await fetch('https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz')
 if (!result.body) throw new Error('Failed to fetch tarball')
 
-// Decompress the tarball
-const stream = result.body.pipeThrough(new DecompressionStream('gzip'))
-const buffer = await new Response(stream).arrayBuffer()
-
-const { rootDir, files } = await unpackTarball(buffer)
-
+const { rootDir, files } = await unpack(response.body)
 // Do something with `files` if needed
 
 const result = await publint({ pkgDir: rootDir, pack: { files } })

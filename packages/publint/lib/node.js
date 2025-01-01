@@ -1,8 +1,7 @@
 import path from 'node:path'
 import { detect } from 'package-manager-detector/detect'
-import { packAsList } from '@publint/pack'
+import { packAsList, unpack } from '@publint/pack'
 import { publint as _publint } from '../src/index.js'
-import { unpackTarball } from '../src/utils-tarball.js'
 import { createNodeVfs } from '../src/vfs-node.js'
 import { createTarballVfs } from '../src/vfs-tarball.js'
 
@@ -22,7 +21,7 @@ export async function publint(options) {
   // file system, e.g. for cases where they have the tarball file in hand or prefers
   if (typeof pack === 'object') {
     if ('tarball' in pack) {
-      const result = await unpackTarball(pack.tarball)
+      const result = await unpack(pack.tarball)
       vfs = createTarballVfs(result.files)
       overridePkgDir = result.rootDir
     } else {

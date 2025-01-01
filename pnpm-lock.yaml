@@ -82,6 +82,9 @@ importers:
 
   site:
     dependencies:
+      '@publint/pack':
+        specifier: workspace:*
+        version: link:../packages/pack
       get-npm-tarball-url:
         specifier: ^2.1.0
         version: 2.1.0

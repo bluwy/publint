@@ -14,9 +14,7 @@ import { packlist } from '@publint/pack'
 
 const packageDir = process.cwd()
 
-const files = await packlist(packageDir, {
-  // options...
-})
+const files = await packlist(packageDir, { packageManager: 'pnpm' })
 console.log(files)
 // => ['src/index.js', 'package.json']
 ```
@@ -29,19 +27,6 @@ console.log(files)
 - Default: `'npm'`
 
 The package manager to use for packing. An external package can be used to detect the preferred package manager if needed, e.g. [`package-manager-detector`](https://github.com/antfu-collective/package-manager-detector).
-
-#### `strategy`
-
-- Type: `'json' | 'pack' | 'json-and-pack'`
-- Default: `'json-and-pack'`
-
-How to pack the given directory to get the list of files:
-
-- `'json'`: Uses `<pm> pack --json` (works with all package manager except pnpm <9.14.1 and bun).
-- `'pack'`: Uses `<pm> pack --pack-destination` (works with all package managers).
-- `'json-and-pack'`: Tries to use `'json'` first, and if it fails, falls back to `'pack'`.
-
-NOTE: Theoretically, `'json'` should be faster than `'pack'`, but all package managers seem to only support it as an alternate stdout format and there's no significant speed difference in practice. However, `'json'` performs less fs operations internally so should still be slightly faster.
 
 ## Comparison
 
