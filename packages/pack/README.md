@@ -1,4 +1,4 @@
-# @publint/packlist
+# @publint/pack
 
 Get a list of files packed by a package manager. Supports:
 
@@ -10,7 +10,7 @@ Get a list of files packed by a package manager. Supports:
 ## Usage
 
 ```js
-import { packlist } from '@publint/packlist'
+import { packlist } from '@publint/pack'
 
 const packageDir = process.cwd()
 

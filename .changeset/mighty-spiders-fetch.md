@@ -1,5 +1,5 @@
 ---
-'@publint/packlist': minor
+'@publint/pack': minor
 ---
 
 Initial release

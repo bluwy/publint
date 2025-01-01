@@ -1,5 +1,5 @@
 {
-  "name": "@publint/packlist",
+  "name": "@publint/pack",
   "version": "0.0.1",
   "description": "List files included in a package",
   "type": "module",
@@ -26,7 +26,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bluwy/publint.git",
-    "directory": "packages/packlist"
+    "directory": "packages/pack"
   },
   "bugs": {
     "url": "https://github.com/bluwy/publint/issues"

@@ -23,14 +23,12 @@ export async function setupCorepackAndTestHooks() {
   // disable it after all tests have run.
   if (!isCorepackEnabled) {
     beforeAll(async () => {
-      console.info(
-        'Corepack not enabled for `@publint/packlist` tests. Enabling.'
-      )
+      console.info('Corepack not enabled for `@publint/pack` tests. Enabling.')
       await exec('corepack enable', { cwd })
       await exec('corepack enable npm', { cwd })
     })
     afterAll(async () => {
-      console.info('Disabling corepack for `@publint/packlist` tests.')
+      console.info('Disabling corepack for `@publint/pack` tests.')
       await exec('corepack disable', { cwd })
       await exec('corepack disable npm', { cwd })
     })
@@ -40,14 +38,12 @@ export async function setupCorepackAndTestHooks() {
   else if (!isCorepackNpmEnabled) {
     beforeAll(async () => {
       console.info(
-        'Corepack npm support not enabled for `@publint/packlist` tests. Enabling.'
+        'Corepack npm support not enabled for `@publint/pack` tests. Enabling.'
       )
       await exec('corepack enable npm', { cwd })
     })
     afterAll(async () => {
-      console.info(
-        'Disabling corepack npm support for `@publint/packlist` tests.'
-      )
+      console.info('Disabling corepack npm support for `@publint/pack` tests.')
       await exec('corepack disable npm', { cwd })
     })
   }

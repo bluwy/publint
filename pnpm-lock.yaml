@@ -52,7 +52,7 @@ importers:
         specifier: workspace:*
         version: link:../packages/publint
 
-  packages/packlist:
+  packages/pack:
     devDependencies:
       fs-fixture:
         specifier: ^2.6.0
@@ -63,9 +63,9 @@ importers:
 
   packages/publint:
     dependencies:
-      '@publint/packlist':
+      '@publint/pack':
         specifier: workspace:^
-        version: link:../packlist
+        version: link:../pack
       package-manager-detector:
         specifier: ^0.2.8
         version: 0.2.8

@@ -1,6 +1,6 @@
 import path from 'node:path'
 import { detect } from 'package-manager-detector/detect'
-import { packlist } from '@publint/packlist'
+import { packlist } from '@publint/pack'
 import { publint as _publint } from '../src/index.js'
 import { unpackTarball } from '../src/utils-tarball.js'
 import { createNodeVfs } from '../src/vfs-node.js'
@@ -36,7 +36,7 @@ export async function publint(options) {
       const pkgDir = options?.pkgDir ?? process.cwd()
 
       let packageManager = (await detect({ cwd: pkgDir }))?.name
-      // Deno is not supported in `@publint/packlist` (doesn't have a pack command)
+      // Deno is not supported in `@publint/pack` (doesn't have a pack command)
       if (packageManager === 'deno') {
         packageManager = 'npm'
       }
