@@ -18,8 +18,8 @@ Packs the given directory and returns the packed tarball path. Pass `opts.packag
 ```js
 import { pack } from '@publint/pack'
 
-const outputPath = await pack(process.cwd())
-console.log(outputPath)
+const tarballPath = await pack(process.cwd())
+console.log(tarballPath)
 // => '/Users/bluwy/project/project-1.0.0.tgz'
 ```
 
@@ -66,6 +66,19 @@ console.log(json)
 Unpacks the given tarball buffer (gzip-decompress + untar). It accepts either an `ArrayBuffer` or a `ReadableStream`. In Node.js, `ArrayBuffer` is faster, while in browsers, `ReadableStream` is faster. For example when using `fetch()`, you can decide between both types with its returned response: `response.arrayBuffer()` or `response.body`.
 
 It returns an object with `files`, which is the list of unpacked files, and `rootDir`, which is the shared root directory among all files. (See JSDoc for examples)
+
+```js
+import { unpack } from '@publint/pack'
+
+const response = await fetch(
+  'https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz'
+)
+if (!response.body) throw new Error('Failed to fetch tarball')
+
+const result = await unpack(response.body)
+console.log(result)
+// => { files: [...], rootDir: 'package' }
+```
 
 ## License
 
