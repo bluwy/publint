@@ -47,7 +47,12 @@ import { publint } from 'publint'
 const { messages } = await publint({
   /**
    * Path to your package that contains a package.json file.
-   * Defaults to `process.cwd()` in node, `/` in browser.
+   *
+   * **Environment notes:**
+   * - **Node.js**: Defualts to `process.cwd()`.
+   * - **Browser**: Automatically inferred from `{ tarball: ArrayBuffer }`. If `{ files: PackFile[] }` is used,
+   *                this must be the shared directory of all files in `files`. e.g. if `name` has `"package/src/index.js",
+   *                the `pkgDir` should be `"package"`.
    */
   pkgDir: './path/to/package',
   /**
@@ -64,13 +69,15 @@ const { messages } = await publint({
    * - `'auto'`: Automatically detects the package manager using
    *             [`package-manager-detector`](https://github.com/antfu-collective/package-manager-detector).
    * - `'npm'`/`'yarn'`/`'pnpm'`/`'bun'`: Uses the respective package manager to pack.
+   * - `{ tarball: ArrayBuffer }`: Packs the package from the specified tarball represented as an ArrayBuffer.
+   * - `{ files: PackFile[] }`: Packs the package using the specified files.
    * - `false`: Skips packing the package. This should only be used if all the files
    *            in `pkgDir` are assumed to be published, e.g. in `node_modules`.
    *
-   * If `vfs` is set, this option is ignored and will always be `false`, as
-   * the `vfs` itself should point to a packed tarball.
-   *
-   * @default 'auto'
+   * **Environment notes:**
+   * - **Node.js**: Defaults to `'auto'`. All options above are supported.
+   * - **Browser**: Only `{ tarball: ArrayBuffer }` and `{ files: PackFile[] }` are supported and either **must
+   *                be passed** to work, as the browser does not have access to the file system.
    */
   pack: 'pnpm',
   /**
