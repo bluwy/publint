@@ -1,5 +1,5 @@
 import { pack } from './pack.js'
-import { packAsJson } from './packAsJson.js'
+import { packAsJson } from './pack-as-json.js'
 import { unpack } from './unpack.js'
 import { getTempPackDir } from './utils.js'
 
@@ -9,9 +9,9 @@ export async function packAsList(dir, opts) {
 
   // TODO: Maybe fast path to `packlistWithPack` for package managers that do not support `--json`
   try {
-    return await packlistWithJson(dir, packageManager)
+    return await packAsListWithJson(dir, packageManager)
   } catch {
-    return await packlistWithPack(dir, packageManager)
+    return await packAsListWithPack(dir, packageManager)
   }
 }
 
