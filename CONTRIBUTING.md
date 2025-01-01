@@ -38,9 +38,9 @@ There's also an additional `pnpm bench` command that solely benchmarks the time 
 
 You can run the unit tests with `pnpm test` in the root to run all packages' tests.
 
-NOTE 1: For `packages/packlist`, it has a test setup that uses `corepack` and `bun` to test certain packing behaviors. `corepack` is installed by default but may not be enabled, its tests will temporarily enable it if not and disable again after its test is done. (In rare cases where `corepack` is not properly teared down, you may need to manually run `corepack disable` and `corepack disable npm` if you prefer to not use it). You may also optionally install `bun` (>=1.1.42) to run its bun-specific tests (automatically skipped if `bun` is not installed).
+NOTE 1: For `packages/pack`, it has a test setup that uses `corepack` and `bun` to test certain packing behaviors. `corepack` is installed by default but may not be enabled, its tests will temporarily enable it if not and disable again after its test is done. (In rare cases where `corepack` is not properly teared down, you may need to manually run `corepack disable` and `corepack disable npm` if you prefer to not use it). You may also optionally install `bun` (>=1.1.42) to run its bun-specific tests (automatically skipped if `bun` is not installed).
 
-NOTE 2: As `packages/packlist` uses `corepack`, it also requires a network connection to install the package manager binaries. If you've run the tests at least once, the binaries are cached and you can run the tests offline later.
+NOTE 2: As `packages/pack` uses `corepack`, it also requires a network connection to install the package manager binaries. If you've run the tests at least once, the binaries are cached and you can run the tests offline later.
 
 ## Pull requests
 

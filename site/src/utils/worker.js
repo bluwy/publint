@@ -1,5 +1,5 @@
 import { publint } from 'publint'
-import { unpackTarball } from 'publint/utils'
+import { unpack } from '@publint/pack'
 import getNpmTarballUrl from 'get-npm-tarball-url'
 import { isLocalPkg } from './common'
 
@@ -38,15 +38,12 @@ self.addEventListener('message', async (e) => {
   }
 
   postMessage({ type: 'status', data: 'Unpacking package...' })
-  /** @type {import('publint/utils').TarballFile[]} */
+  /** @type {import('@publint/pack').TarballFile[]} */
   let files
   /** @type {string} */
   let pkgDir
   try {
-    const buffer = await new Response(
-      response.body.pipeThrough(new DecompressionStream('gzip'))
-    ).arrayBuffer()
-    const result = await unpackTarball(buffer)
+    const result = await unpack(response.body)
     files = result.files
     pkgDir = result.rootDir
   } catch (e) {

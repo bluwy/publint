@@ -1,5 +1,5 @@
+import { unpack } from '@publint/pack'
 import { publint as _publint } from '../src/index.js'
-import { unpackTarball } from '../src/utils-tar.js'
 import { createTarballVfs } from '../src/vfs-tarball.js'
 
 /**
@@ -18,7 +18,7 @@ export async function publint(options) {
   /** @type {string | undefined} */
   let overridePkgDir
   if ('tarball' in pack) {
-    const result = await unpackTarball(pack.tarball)
+    const result = await unpack(pack.tarball)
     vfs = createTarballVfs(result.files)
     overridePkgDir = result.rootDir
   } else {

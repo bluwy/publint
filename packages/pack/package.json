@@ -1,14 +1,15 @@
 {
-  "name": "@publint/packlist",
+  "name": "@publint/pack",
   "version": "0.0.1",
-  "description": "List files included in a package",
+  "description": "Utilities for packing and unpacking npm packages",
   "type": "module",
   "author": "Bjorn Lu",
   "license": "MIT",
   "types": "./index.d.ts",
   "exports": {
-    "types": "./index.d.ts",
-    "default": "./src/index.js"
+    "types": "./src/index.d.ts",
+    "browser": "./src/index-browser.js",
+    "default": "./src/index-node.js"
   },
   "scripts": {
     "test": "vitest run",
@@ -19,21 +20,22 @@
     "node": ">=16"
   },
   "files": [
-    "src",
-    "*.d.ts"
+    "src"
   ],
   "funding": "https://bjornlu.com/sponsor",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bluwy/publint.git",
-    "directory": "packages/packlist"
+    "directory": "packages/pack"
   },
   "bugs": {
     "url": "https://github.com/bluwy/publint/issues"
   },
   "keywords": [
+    "utilities",
     "pack",
-    "list"
+    "unpack",
+    "npm"
   ],
   "devDependencies": {
     "fs-fixture": "^2.6.0",

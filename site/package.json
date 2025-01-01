@@ -11,6 +11,7 @@
     "packfix": "node ./scripts/packFixtures.js"
   },
   "dependencies": {
+    "@publint/pack": "workspace:*",
     "get-npm-tarball-url": "^2.1.0",
     "publint": "workspace:*"
   },
