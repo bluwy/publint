@@ -1,7 +1,7 @@
 {
   "name": "@publint/pack",
   "version": "0.0.1",
-  "description": "List files included in a package",
+  "description": "Utilities for packing and unpacking npm packages",
   "type": "module",
   "author": "Bjorn Lu",
   "license": "MIT",
@@ -32,8 +32,10 @@
     "url": "https://github.com/bluwy/publint/issues"
   },
   "keywords": [
+    "utilities",
     "pack",
-    "list"
+    "unpack",
+    "npm"
   ],
   "devDependencies": {
     "fs-fixture": "^2.6.0",

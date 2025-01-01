@@ -14,7 +14,7 @@ export interface PackOptions extends SharedPackOptions {
   destination?: string
 }
 /**
- * Packs the given directory and returns the packed tarball path
+ * Packs the given directory and returns the packed tarball path.
  */
 export function pack(dir: string, opts?: PackOptions): Promise<string>
 
@@ -30,6 +30,7 @@ export function packAsList(
 export interface PackAsJsonOptions extends SharedPackOptions {}
 /**
  * Packs the given directory with the `--json` flag and returns its stdout as JSON.
+ * You can run the `<pm> pack --json` command manually to inspect the output shape.
  *
  * NOTE: Does not work in pnpm <9.14.1 and bun as they don't support the `--json` flag.
  */
