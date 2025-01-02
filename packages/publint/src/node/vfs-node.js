@@ -4,7 +4,7 @@ import nodePath from 'node:path'
 
 /**
  * Creates a node-compatible Vfs object
- * @returns {import('./index.js').Vfs}
+ * @returns {import('../shared/core.js').Vfs}
  */
 export function createNodeVfs() {
   return {

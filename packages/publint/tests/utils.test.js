@@ -13,8 +13,8 @@ import {
   isShorthandGitHubOrGitLabUrl,
   isShorthandRepositoryUrl,
   stripComments
-} from '../src/utils.js'
-import { createNodeVfs } from '../src/vfs-node.js'
+} from '../src/shared/utils.js'
+import { createNodeVfs } from '../src/node/vfs-node.js'
 
 const cjsCode = [
   `require('bla')`,

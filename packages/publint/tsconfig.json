@@ -12,5 +12,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["./src/**/*.js", "./lib/**/*.js", "./tests/*.js", "./*.d.ts"]
+  "include": ["./src/**/*.js", "./tests/*.js"]
 }

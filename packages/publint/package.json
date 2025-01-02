@@ -5,23 +5,21 @@
   "type": "module",
   "author": "Bjorn Lu",
   "license": "MIT",
-  "bin": "./lib/cli.js",
-  "types": "./index.d.ts",
+  "bin": "./src/cli.js",
   "exports": {
     ".": {
-      "types": "./index.d.ts",
-      "browser": "./lib/browser.js",
-      "node": "./lib/node.js",
-      "default": "./src/index.js"
+      "types": "./src/index.d.ts",
+      "browser": "./src/index-browser.js",
+      "default": "./src/index-node.js"
     },
     "./utils": {
-      "types": "./utils.d.ts",
-      "node": "./lib/utils-node.js",
-      "default": "./lib/utils.js"
+      "types": "./src/utils.d.ts",
+      "browser": "./src/utils-browser.js",
+      "default": "./src/utils-node.js"
     }
   },
   "scripts": {
-    "cli": "node ./lib/cli.js",
+    "cli": "node ./src/cli.js",
     "test": "vitest run",
     "test-dev": "vitest",
     "typecheck": "tsc",
@@ -31,9 +29,7 @@
     "node": ">=18"
   },
   "files": [
-    "lib",
-    "src",
-    "*.d.ts"
+    "src"
   ],
   "funding": "https://bjornlu.com/sponsor",
   "homepage": "https://publint.dev",

@@ -56,7 +56,7 @@ import {
  * @param {Options} options
  * @returns {Promise<import('../index.d.ts').Result>}
  */
-export async function publint({ pkgDir, vfs, level, strict, _packedFiles }) {
+export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   /** @type {import('../index.d.ts').Message[]} */
   const messages = []
   /**

@@ -3,7 +3,7 @@ import {
   formatMessagePath as fp,
   getPkgPathValue,
   replaceLast
-} from './utils.js'
+} from '../shared/utils.js'
 
 /** @type { import('picocolors/types.js').Colors | undefined } */
 let _picocolorsHasColors
@@ -12,7 +12,7 @@ let _picocolorsNoColors
 
 /**
  * @param {import('../index.d.ts').Message} m
- * @param {import('./utils.js').Pkg} pkg
+ * @param {import('../shared/utils.js').Pkg} pkg
  * @param {import('../utils.d.ts').FormatMessageOptions} opts
  */
 export function formatMessage(m, pkg, opts = {}) {

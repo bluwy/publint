@@ -1,17 +1,17 @@
 import path from 'node:path'
 import { detect } from 'package-manager-detector/detect'
 import { packAsList, unpack } from '@publint/pack'
-import { publint as _publint } from '../src/index.js'
-import { createNodeVfs } from '../src/vfs-node.js'
-import { createTarballVfs } from '../src/vfs-tarball.js'
+import { createNodeVfs } from './node/vfs-node.js'
+import { core } from './shared/core.js'
+import { createTarballVfs } from './shared/vfs-tarball.js'
 
 /**
- * @type {import('../index.d.ts').publint}
+ * @type {import('./index.d.ts').publint}
  */
 export async function publint(options) {
   const pack = options?.pack ?? 'auto'
 
-  /** @type {import('../src/index.js').Vfs} */
+  /** @type {import('./shared/core.js').Vfs} */
   let vfs
   /** @type {string | undefined} */
   let overridePkgDir
@@ -47,7 +47,7 @@ export async function publint(options) {
     vfs = createNodeVfs()
   }
 
-  return _publint({
+  return core({
     pkgDir: options?.pkgDir ?? overridePkgDir ?? process.cwd(),
     vfs,
     level: options?.level ?? 'suggestion',

@@ -1,9 +1,9 @@
 import { unpack } from '@publint/pack'
-import { publint as _publint } from '../src/index.js'
-import { createTarballVfs } from '../src/vfs-tarball.js'
+import { core } from './shared/core.js'
+import { createTarballVfs } from './shared/vfs-tarball.js'
 
 /**
- * @type {import('../index.d.ts').publint}
+ * @type {import('./index.d.ts').publint}
  */
 export async function publint(options) {
   const pack = options?.pack
@@ -13,7 +13,7 @@ export async function publint(options) {
     )
   }
 
-  /** @type {import('../src/index.js').Vfs} */
+  /** @type {import('./shared/core.js').Vfs} */
   let vfs
   /** @type {string | undefined} */
   let overridePkgDir
@@ -25,7 +25,7 @@ export async function publint(options) {
     vfs = createTarballVfs(pack.files)
   }
 
-  return await _publint({
+  return await core({
     pkgDir: options.pkgDir ?? overridePkgDir ?? '/',
     vfs,
     level: options.level ?? 'suggestion',

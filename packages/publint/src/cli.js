@@ -6,9 +6,9 @@ import path from 'node:path'
 import { createRequire } from 'node:module'
 import sade from 'sade'
 import c from 'picocolors'
-import { publint } from './node.js'
-import { formatMessage } from '../src/message.js'
-import { createPromiseQueue } from '../src/utils.js'
+import { publint } from './index-node.js'
+import { formatMessage } from './node/message.js'
+import { createPromiseQueue } from './shared/utils.js'
 
 const version = createRequire(import.meta.url)('../package.json').version
 const cli = sade('publint', false)
@@ -115,8 +115,8 @@ cli.parse(process.argv)
 
 /**
  * @param {string} pkgDir
- * @param {import('../index.js').Options['level']} level
- * @param {import('../index.js').Options['strict']} strict
+ * @param {import('./index.js').Options['level']} level
+ * @param {import('./index.js').Options['strict']} strict
  * @param {boolean} [compact]
  */
 async function lintDir(pkgDir, level, strict, compact = false) {

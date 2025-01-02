@@ -1,6 +1,6 @@
 /**
  * @param {import("../index.d.ts").PackFile[]} files
- * @return {import("./index.d.ts").Vfs}
+ * @return {import("./core.js").Vfs}
  * */
 export function createTarballVfs(files) {
   /** @type {TextDecoder | undefined} */

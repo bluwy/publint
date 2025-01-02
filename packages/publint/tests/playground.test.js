@@ -1,8 +1,8 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { test } from 'vitest'
-import { publint } from '../lib/node.js'
-import { formatMessage } from '../lib/utils-node.js'
+import { publint } from '../src/index-node.js'
+import { formatMessage } from '../src/utils-node.js'
 
 // TODO: migrate these to fs-fixture
 
@@ -186,15 +186,15 @@ testFixture('invalid-repository-value-object-deprecated', [
 
 /**
  * @typedef {{
- *  level?: import('../index.d.ts').Options['level']
- *  strict?: import('../index.d.ts').Options['strict']
+ *  level?: import('../src/index.d.ts').Options['level']
+ *  strict?: import('../src/index.d.ts').Options['strict']
  *  debug?: boolean
  * }} TestOptions
  */
 
 /**
  * @param {string} name
- * @param {import('../index.d.ts').Message['code'][] | Pick<import('../index.d.ts').Message, 'code' | 'type'>[]} expectCodes
+ * @param {import('../src/index.d.ts').Message['code'][] | Pick<import('../src/index.d.ts').Message, 'code' | 'type'>[]} expectCodes
  * @param {TestOptions} [options]
  */
 function testFixture(name, expectCodes, options) {
