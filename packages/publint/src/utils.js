@@ -416,7 +416,7 @@ const DTS_RE = /\.d\.[mc]?ts$/
  * @param {string} filePath
  */
 export function isDtsFile(filePath) {
-  return filePath.endsWith('.d.ts')
+  return DTS_RE.test(filePath)
 }
 
 /**

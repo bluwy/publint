@@ -129,6 +129,10 @@ testFixture('types-exports-resolution', [])
 
 testFixture('types-exports-resolution-cjs', [])
 
+testFixture('types-exports-resolution-cjs-explicit', [
+  'EXPORT_TYPES_INVALID_FORMAT'
+])
+
 testFixture('types-exports-resolution-dual', [
   'TYPES_NOT_EXPORTED',
   'TYPES_NOT_EXPORTED'
