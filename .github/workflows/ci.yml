@@ -28,7 +28,11 @@ jobs:
     timeout-minutes: 5
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest]
+        node: [18, 20, 22]
+        include:
+          - os: windows-latest
+            node: 22
       fail-fast: false
     steps:
       - name: Checkout repo
@@ -38,7 +42,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: ${{ matrix.node }}
           cache: pnpm
       - name: Setup bun
         uses: oven-sh/setup-bun@v2

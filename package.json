@@ -12,7 +12,7 @@
   },
   "packageManager": "pnpm@9.15.1",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.11",
