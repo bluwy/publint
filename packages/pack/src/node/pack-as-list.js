@@ -64,7 +64,7 @@ export async function packAsListWithPack(dir, packageManager) {
  * @returns {string[]}
  */
 function parseNpmPackJson(stdoutJson) {
-  return stdoutJson[0].files.map((file) => file.path)
+  return stdoutJson[0].files.map((/** @type {any} */ file) => file.path)
 }
 
 /**
@@ -84,5 +84,5 @@ function parseYarnPackJson(stdoutJson) {
  * @returns {string[]}
  */
 function parsePnpmPackJson(stdoutJson) {
-  return stdoutJson.files.map((file) => file.path)
+  return stdoutJson.files.map((/** @type {any} */ file) => file.path)
 }

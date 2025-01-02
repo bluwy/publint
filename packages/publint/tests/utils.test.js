@@ -186,7 +186,8 @@ test('stripComments', () => {
 })
 
 test('exportsGlob', async () => {
-  const r = (s) => path.resolve(process.cwd(), 'tests/fixtures/glob', s)
+  const r = (/** @type {string} */ s) =>
+    path.resolve(process.cwd(), 'tests/fixtures/glob', s)
   const v = createNodeVfs()
   // prettier-ignore
   expect(await exportsGlob(r('./*.js'), v)).toEqual([r('alpha.js'), r('dual-extension/index.js')])

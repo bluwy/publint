@@ -7,8 +7,10 @@
     "moduleResolution": "Bundler",
     "noEmit": true,
     "strict": true,
-    "noImplicitAny": false,
-    "allowSyntheticDefaultImports": true
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
   },
   "include": ["src/**/*"]
 }

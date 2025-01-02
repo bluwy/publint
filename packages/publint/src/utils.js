@@ -359,7 +359,7 @@ export function formatMessagePath(path) {
  * @returns {any}
  */
 export function getPkgPathValue(pkg, path) {
-  let v = pkg
+  let v = /** @type {any} */ (pkg)
   for (const p of path) {
     v = v[p]
   }
@@ -367,9 +367,10 @@ export function getPkgPathValue(pkg, path) {
 }
 
 export function createPromiseQueue() {
+  /** @type {Promise<void>[]} */
   const promises = []
   return {
-    push: (fn) => promises.push(fn()),
+    push: (/** @type {Function} */ fn) => promises.push(fn()),
     wait: () => Promise.all(promises)
   }
 }

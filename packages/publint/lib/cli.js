@@ -66,7 +66,11 @@ cli
 
     const pq = createPromiseQueue()
     let waitingDepIndex = 0
+    /** @type {Function[]} */
     const waitingDepIndexListeners = []
+    /**
+     * @param {Function} cb
+     */
     const listenWaitingDepIndex = (cb) => {
       waitingDepIndexListeners.push(cb)
       // unlisten
@@ -203,6 +207,9 @@ async function findDepPath(dep, parent) {
   }
 }
 
+/**
+ * @param {any} opts
+ */
 function normalizeOpts(opts) {
   if (opts.pack === 'false') opts.pack = false
   return opts

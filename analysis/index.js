@@ -71,6 +71,7 @@ async function mainCommand() {
     )
   )
 
+  /** @type {Record<string, number>} */
   const result = {}
   for (let i = 0; i < packages.length; i++) {
     const p = processed[i]
@@ -199,6 +200,9 @@ async function fetchPkgLatestVersion(pkg) {
     .then((v) => v.version)
 }
 
+/**
+ * @param {string} pkg
+ */
 async function getPkgVersionFromCache(pkg) {
   const cachedFiles = await fs.readdir('./cache')
   const pkgName = pkg.replace('/', '__')
