@@ -1,6 +1,6 @@
 # @publint/pack
 
-Utilities for packing and unpacking npm packages. Supports:
+Zero-dependencies utilities for packing and unpacking npm packages. Supports:
 
 - npm (v8, v9, v10)
 - yarn (v3, v4)
