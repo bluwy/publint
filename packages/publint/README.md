@@ -50,7 +50,7 @@ const { messages } = await publint({
    *
    * **Environment notes:**
    * - **Node.js**: Defualts to `process.cwd()`.
-   * - **Browser**: Automatically inferred from `{ tarball: ArrayBuffer }`. If `{ files: PackFile[] }` is used,
+   * - **Browser**: Automatically inferred from `{ tarball: ArrayBuffer | ReadableStream }`. If `{ files: PackFile[] }` is used,
    *                this must be the shared directory of all files in `files`. e.g. if `name` has `"package/src/index.js",
    *                the `pkgDir` should be `"package"`.
    */
@@ -106,6 +106,8 @@ for (const message of messages) {
 }
 ```
 
+> NOTE: The API for formatting and printing the message isn't the best right now, but this should be addressed in the next breaking release.
+
 ### Examples
 
 ```js
@@ -126,6 +128,16 @@ const response = await fetch(
 if (!response.body) throw new Error('Failed to fetch tarball')
 
 const result = await publint({ pack: { tarball: response.body } })
+```
+
+```js
+// Node.js: lint a tarball locally
+import fs from 'node:fs/promises'
+import { publint } from 'publint'
+import { unpack } from '@publint/pack'
+
+const tarballBuffer = await fs.readFile('./mylib-1.0.0.tgz')
+const result = await publint({ pack: { tarball: tarballBuffer.buffer } })
 ```
 
 ```js
