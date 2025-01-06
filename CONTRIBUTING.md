@@ -2,23 +2,25 @@
 
 ## Setup
 
-The project requires [`pnpm 9`](https://pnpm.io) and [`Node.js 16`](https://nodejs.org/en/) (or above). Run `pnpm install` to install dependencies of all workspace packages.
+The project requires [`pnpm 9`](https://pnpm.io) and [`Node.js 18`](https://nodejs.org/en/) (or above). Run `pnpm install` to install dependencies of all workspace packages.
 
 There are 3 parts to this repo:
 
-- [packages/publint](./packages/publint) - The `publint` npm package
-- [site](./site) - The website
-- [analysis](./analysis) - The analysis automation that lints popular npm packages for displaying their results on the website
+- [packages/\*](./packages) - The published npm packages, including `publint`
+- [site](./site) - The website for https://publint.dev
+- [analysis](./analysis) - The automation script that lints popular npm packages for displaying their results on the website
 
 ## Development
 
-### packages/publint
+### packages/\*
 
-The `packages/publint` workspace has the `lib`, `src`, and `tests` directories.
+All npm packages here follow a similar directory format. `src` contains the source code, and `tests` contains the unit tests.
 
-`src` contains most of `publint`'s source code, and `lib` contains entrypoints that uses APIs from `src` (to provide default environment-specific information). You can check the `exports` field of `packages/publint/package.json` to see how they're linked.
+The root files of `src` are the entrypoints and types for the package. Within `src`, there are `browser`, `node`, and `shared` directories used to split code for different environments.
 
-`tests` contains unit tests that runs the test projects under `tests/fixtures`.
+- `browser` - Code that only works in the browser or only used by the browser entrypoint.
+- `node` - Code that only works in Node.js or only used by the Node.js entrypoint.
+- `shared` - Code that works in both environments and used by the `browser` and `node` directory files.
 
 ### site
 
@@ -30,7 +32,7 @@ It has a `packfix` command (`pnpm packfix`) which packages up fixtures from [pac
 
 The `analysis` workspace contains a simple `index.js` script that runs `publint` on popular npm packages. Run `pnpm start` to run the script to compute the results. The downloaded package tarballs and results are cached in the `cache` directory, so subsequent runs are faster. Even so, the script will fetch npm to check the latest package versions, if you want to bypass this on subsequent runs as well, use the `--cache` flag. The final results are written to `cache/_results.json` and also loaded by the site locally.
 
-The `pnpm gist` command uploads and stores the results to a [GitHub gist](https://gist.github.com/bluwy/64b0c283d8f0f3f8a8f4eea03c75a3b8). It is then proxied and served by https://publint.dev/analysis.json. This is automated to run on CI and by me ([@bluwy](https://github.com/bluwy)) only.
+The `pnpm gist` command uploads and stores the results to a [GitHub gist](https://gist.github.com/bluwy/64b0c283d8f0f3f8a8f4eea03c75a3b8). It is then proxied and served by https://publint.dev/analysis.json. This is automated to run on CI and by ([@bluwy](https://github.com/bluwy)) only.
 
 There's also an additional `pnpm bench` command that solely benchmarks the time it takes to lint the poplar packages. This can be used to test performance improvements. The caching mechanism is the same as `pnpm start`, and also supports the `--cache` flag.
 
@@ -50,8 +52,8 @@ Pull request titles should preferably use the format of `<Verb> <something>`. Fi
 - Support JSX
 - Update core options
 
-Don't worry if it's not perfect! I'll tweak it before merging.
+The repo also uses [Changesets](https://github.com/changesets/changesets) to automate releases, where you can run `pnpm changeset` at the root of the repo to create a changeset for a npm package, which will ultimately be part of the `CHANGELOG.md`. Changeset description should also follow the same format as pull request titles and can be more descriptive if needed. See [.changeset/README.md](./.changeset/README.md) for more information.
 
-For commit messages, feel free to use your own convention and commit as much as you want. The pull request will be squashed merged into a single commit based on the pull request title.
+**Perfect PR titles and changesets are optional!** You're free to ignore the conventions, but before merging, the maintainers may update them for you.
 
-If a change should result in a new release of a package (e.g. `packages/publint`), you can run `pnpm changeset` at the root of the project to create a changeset. See [.changeset/README.md](./.changeset/README.md) for more information. Changeset description should also follow the same format as pull request titles and can be more descriptive if needed.
+For commit messages, feel free to use your own convention and commit as many as needed. The pull request will be squashed merged into a single commit based on the pull request title.
