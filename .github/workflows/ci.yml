@@ -48,13 +48,13 @@ jobs:
         uses: oven-sh/setup-bun@v2
       - name: Install dependencies
         run: pnpm install
-      - if: ${{ matrix.os == 'ubuntu-latest' }}
+      - if: ${{ matrix.os == 'ubuntu-latest' && matrix.node == 22 }}
         name: Lint
         run: pnpm lint
-      - if: ${{ matrix.os == 'ubuntu-latest' }}
+      - if: ${{ matrix.os == 'ubuntu-latest' && matrix.node == 22 }}
         name: Typecheck
         run: pnpm typecheck
-      - if: ${{ matrix.os == 'ubuntu-latest' }}
+      - if: ${{ matrix.os == 'ubuntu-latest' && matrix.node == 22 }}
         name: Lint with publint
         run: pnpm lint-publint
       - name: Run tests
