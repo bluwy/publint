@@ -7,7 +7,8 @@
   "scripts": {
     "lint": "prettier \"**/*.{js,ts,css,md,svelte,html}\" --check",
     "format": "prettier \"**/*.{js,ts,css,md,svelte,html}\" --write",
-    "typecheck": "pnpm --parallel run typecheck",
+    "lint-publint": "pnpm --filter \"./packages/*\" --no-bail run lint-publint",
+    "typecheck": "pnpm --parallel --no-bail run typecheck",
     "test": "pnpm --filter \"./packages/*\" run test"
   },
   "packageManager": "pnpm@9.15.1",

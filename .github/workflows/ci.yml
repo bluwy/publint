@@ -54,5 +54,8 @@ jobs:
       - if: ${{ matrix.os == 'ubuntu-latest' }}
         name: Typecheck
         run: pnpm typecheck
+      - if: ${{ matrix.os == 'ubuntu-latest' }}
+        name: Lint with publint
+        run: pnpm lint-publint
       - name: Run tests
         run: pnpm test

@@ -13,8 +13,8 @@
   "scripts": {
     "test": "vitest run",
     "test-dev": "vitest",
-    "typecheck": "tsc",
-    "prepublishOnly": "node ../publint/src/cli.js"
+    "lint-publint": "node ../publint/src/cli.js",
+    "typecheck": "tsc"
   },
   "engines": {
     "node": ">=18"

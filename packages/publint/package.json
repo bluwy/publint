@@ -22,8 +22,8 @@
     "cli": "node ./src/cli.js",
     "test": "vitest run",
     "test-dev": "vitest",
-    "typecheck": "tsc",
-    "prepublishOnly": "pnpm cli"
+    "lint-publint": "node ./src/cli.js",
+    "typecheck": "tsc"
   },
   "engines": {
     "node": ">=18"
