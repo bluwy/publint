@@ -120,6 +120,24 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     })
   }
 
+  // Check dependencies should not link to local files
+  if (rootPkg.dependencies) {
+    promiseQueue.push(async () => {
+      for (const depName in rootPkg.dependencies) {
+        /** @type {string} */
+        const depVersion = rootPkg.dependencies[depName]
+        if (depVersion.startsWith('file:') || depVersion.startsWith('link:')) {
+          messages.push({
+            code: 'LOCAL_DEPENDENCY',
+            args: {},
+            path: ['dependencies', depName],
+            type: 'error'
+          })
+        }
+      }
+    })
+  }
+
   // Check if "type" field is specified, help Node.js push towards an ESM default future:
   // https://nodejs.org/en/blog/release/v20.10.0
   if (rootPkg.type == null) {

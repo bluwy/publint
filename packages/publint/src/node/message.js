@@ -201,6 +201,9 @@ export function formatMessage(m, pkg, opts = {}) {
           return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but could be a full git URL like "${c.bold(fullUrl)}".`
         }
       }
+    case 'LOCAL_DEPENDENCY':
+      // prettier-ignore
+      return `The "${c.bold(m.path[m.path.length - 1])}" dependency references "${c.bold(pv(m.path))}" that will likely not work when installed by end-users.`
     default:
       return
   }

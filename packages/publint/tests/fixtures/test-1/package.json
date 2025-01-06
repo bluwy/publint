@@ -3,5 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "type": "commonjs",
-  "exports": "./main.js"
+  "exports": "./main.js",
+  "dependencies": {
+    "@test/file-reference": "file:../test-2",
+    "@test/link-reference": "file:../test-2"
+  }
 }

@@ -262,3 +262,7 @@ An example config that meets these criterias may look like this:
   }
 }
 ```
+
+## `LOCAL_DEPENDENCY`
+
+When a dependency with the `file:` or `link:` protocol is used, e.g. `file:../path/to/local/package`, this error is shown as it's likely to not work when installed by end-users. This helps prevent accidentally publishing a package that references local dependencies that were used for testing or debugging.

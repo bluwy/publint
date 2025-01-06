@@ -181,6 +181,9 @@ function messageToString(m, pkg) {
           return `The field value could be a full git URL like "${bold(fullUrl)}".`
         }
       }
+    case 'LOCAL_DEPENDENCY':
+      // prettier-ignore
+      return `This dependency references a local package that will likely not work when installed by end-users.`
     default:
       return
   }

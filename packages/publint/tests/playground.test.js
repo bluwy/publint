@@ -57,6 +57,8 @@ testFixture('npmignore', [])
 
 testFixture('test-1', [
   'FILE_INVALID_FORMAT',
+  'LOCAL_DEPENDENCY',
+  'LOCAL_DEPENDENCY',
   'TYPES_NOT_EXPORTED',
   'USE_FILES'
 ])

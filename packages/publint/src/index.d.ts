@@ -120,6 +120,7 @@ export type Message =
           | 'shorthand-git-sites'
       }
     >
+  | BaseMessage<'LOCAL_DEPENDENCY'>
 
 export interface PackFile {
   name: string
