@@ -151,7 +151,7 @@ export interface Options {
    * entrypoints but not published.
    * - `'auto'`: Automatically detects the package manager using
    *             [`package-manager-detector`](https://github.com/antfu-collective/package-manager-detector).
-   * - `'npm'`/`'yarn'`/`'pnpm'`/`'bun'`: Uses the respective package manager to pack.
+   * - `'npm'`/`'yarn'`/`'pnpm'`/`'deno'`/`'bun'`: Uses the respective package manager to pack.
    * - `{ tarball }`: Packs the package from the specified tarball represented as an ArrayBuffer or ReadableStream.
    * - `{ files }`: Packs the package using the specified files.
    * - `false`: Skips packing the package. This should only be used if all the files
@@ -167,6 +167,7 @@ export interface Options {
     | 'npm'
     | 'yarn'
     | 'pnpm'
+    | 'deno'
     | 'bun'
     | { tarball: ArrayBuffer | ReadableStream<Uint8Array> }
     | { files: PackFile[] }

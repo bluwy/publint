@@ -33,7 +33,7 @@ cli
     opts = normalizeOpts(opts)
 
     const pkgDir = dir ? path.resolve(dir) : process.cwd()
-    const logs = await lintDir(pkgDir, opts.level, opts.strict)
+    const logs = await lintDir(pkgDir, opts.level, opts.strict, opts.pack)
     logs.forEach((l) => console.log(l))
   })
 
@@ -85,7 +85,7 @@ cli
       pq.push(async () => {
         const depDir = await findDepPath(deps[i], pkgDir)
         const logs = depDir
-          ? await lintDir(depDir, opts.level, opts.strict, true)
+          ? await lintDir(depDir, opts.level, opts.strict, opts.pack, true)
           : []
         // log this lint result
         const log = () => {
@@ -117,9 +117,10 @@ cli.parse(process.argv)
  * @param {string} pkgDir
  * @param {import('./index.js').Options['level']} level
  * @param {import('./index.js').Options['strict']} strict
+ * @param {import('./index.js').Options['pack']} pack
  * @param {boolean} [compact]
  */
-async function lintDir(pkgDir, level, strict, compact = false) {
+async function lintDir(pkgDir, level, strict, pack, compact = false) {
   /** @type {string[]} */
   const logs = []
 
@@ -132,7 +133,7 @@ async function lintDir(pkgDir, level, strict, compact = false) {
   if (!rootPkgContent) return logs
   const rootPkg = JSON.parse(rootPkgContent)
   const pkgName = rootPkg.name || path.basename(pkgDir)
-  const { messages } = await publint({ pkgDir, level, strict })
+  const { messages } = await publint({ pkgDir, level, pack, strict })
 
   if (messages.length) {
     const suggestions = messages.filter((v) => v.type === 'suggestion')

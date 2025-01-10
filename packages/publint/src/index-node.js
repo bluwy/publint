@@ -34,7 +34,12 @@ export async function publint(options) {
     if (pack !== false) {
       const pkgDir = options?.pkgDir ?? process.cwd()
 
-      let packageManager = (await detect({ cwd: pkgDir }))?.name
+      let packageManager = pack
+
+      if (packageManager === 'auto') {
+        packageManager = (await detect({ cwd: pkgDir }))?.name ?? 'npm'
+      }
+
       // Deno is not supported in `@publint/pack` (doesn't have a pack command)
       if (packageManager === 'deno') {
         packageManager = 'npm'
