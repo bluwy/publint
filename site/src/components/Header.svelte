@@ -11,7 +11,7 @@
     </a>
     <a
       class="bookmark decoration-none"
-      href="https://github.com/bluwy/publint"
+      href="https://github.com/publint/publint"
       title="Go to GitHub repo"
     >
       <img src={githubIcon} alt="github logo" width="20" height="20" />

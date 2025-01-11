@@ -5,6 +5,6 @@
     "type": "commonjs",
     "repository": {
       "type": "git",
-      "url": "git://www.github.com/bluwy/publint"
+      "url": "git://www.github.com/publint/publint"
     }
   }

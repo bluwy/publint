@@ -29,7 +29,8 @@
       <strong class="inline-block mx-1">·</strong>
       <a class="anchor-link" href="/rules.html">Lint rules</a>
       <strong class="inline-block mx-1">·</strong>
-      <a class="anchor-link" href="https://github.com/bluwy/publint">GitHub</a>
+      <a class="anchor-link" href="https://github.com/publint/publint">GitHub</a
+      >
     </p>
   </section>
   {#if analysis}

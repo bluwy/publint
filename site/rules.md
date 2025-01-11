@@ -258,7 +258,7 @@ An example config that meets these criterias may look like this:
 {
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bluwy/publint.git"
+    "url": "git+https://github.com/org/repo.git"
   }
 }
 ```

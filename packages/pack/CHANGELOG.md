@@ -4,4 +4,4 @@
 
 ### Minor Changes
 
-- Initial release ([#120](https://github.com/bluwy/publint/pull/120))
+- Initial release ([#120](https://github.com/publint/publint/pull/120))

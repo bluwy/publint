@@ -13,7 +13,7 @@ on:
 jobs:
   release:
     # prevents this action from running on forks
-    if: github.repository == 'bluwy/publint'
+    if: github.repository == 'publint/publint'
     name: Release
     permissions:
       pull-requests: write # to create pull request (changesets/action)

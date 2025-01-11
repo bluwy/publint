@@ -41,6 +41,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Sponsors
 
+[@bluwy](https://github.com/bluwy)'s sponsors:
+
 <p align="center">
   <a href="https://bjornlu.com/sponsor">
     <img src="https://bjornlu.com/sponsors.svg" alt="Sponsors" />

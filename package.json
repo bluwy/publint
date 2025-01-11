@@ -2,7 +2,6 @@
   "name": "publint-monorepo",
   "private": true,
   "type": "module",
-  "author": "Bjorn Lu",
   "license": "MIT",
   "scripts": {
     "lint": "prettier \"**/*.{js,ts,css,md,svelte,html}\" --check",

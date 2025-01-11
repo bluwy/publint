@@ -32,7 +32,7 @@ It has a `packfix` command (`pnpm packfix`) which packages up fixtures from [pac
 
 The `analysis` workspace contains a simple `index.js` script that runs `publint` on popular npm packages. Run `pnpm start` to run the script to compute the results. The downloaded package tarballs and results are cached in the `cache` directory, so subsequent runs are faster. Even so, the script will fetch npm to check the latest package versions, if you want to bypass this on subsequent runs as well, use the `--cache` flag. The final results are written to `cache/_results.json` and also loaded by the site locally.
 
-The `pnpm gist` command uploads and stores the results to a [GitHub gist](https://gist.github.com/bluwy/64b0c283d8f0f3f8a8f4eea03c75a3b8). It is then proxied and served by https://publint.dev/analysis.json. This is automated to run on CI and by ([@bluwy](https://github.com/bluwy)) only.
+The `pnpm gist` command uploads and stores the results to a [GitHub gist](https://gist.github.com/bluwy/64b0c283d8f0f3f8a8f4eea03c75a3b8). It is then proxied and served by https://publint.dev/analysis.json. This is automated to run on CI and manually by ([@bluwy](https://github.com/bluwy)) at the moment.
 
 There's also an additional `pnpm bench` command that solely benchmarks the time it takes to lint the poplar packages. This can be used to test performance improvements. The caching mechanism is the same as `pnpm start`, and also supports the `--cache` flag.
 

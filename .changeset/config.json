@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/@changesets/config@3.0.5/schema.json",
   "changelog": [
 		"@svitejs/changesets-changelog-github-compact",
-		{ "repo": "bluwy/publint" }
+		{ "repo": "publint/publint" }
 	],
   "commit": false,
   "access": "public",

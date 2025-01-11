@@ -311,7 +311,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   ]
   // if has typesVersions field, it complicates `types`/`typings` field resolution a lot.
   // for now skip it, but further improvements are tracked at
-  // https://github.com/bluwy/publint/issues/42
+  // https://github.com/publint/publint/issues/42
   if (getPublishedField(rootPkg, 'typesVersions')[0]) {
     knownFields.splice(0, 2)
   }

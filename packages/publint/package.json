@@ -35,11 +35,11 @@
   "homepage": "https://publint.dev",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bluwy/publint.git",
+    "url": "git+https://github.com/publint/publint.git",
     "directory": "packages/publint"
   },
   "bugs": {
-    "url": "https://github.com/bluwy/publint/issues"
+    "url": "https://github.com/publint/publint/issues"
   },
   "keywords": [
     "publish",
