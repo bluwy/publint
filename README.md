@@ -37,15 +37,7 @@ Or try it online at https://publint.dev. For JavaScript usage, see [packages/pub
 
 ## Development
 
-Use `pnpm install` to install all project dependencies.
-
-There are 3 parts to this repo:
-
-- [packages/publint](./packages/publint) - The `publint` npm package
-- [site](./site) - The website
-- [analysis](./analysis) - The analysis automation that lints popular npm packages for displaying their results on the website
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for more information.
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## Sponsors
 
