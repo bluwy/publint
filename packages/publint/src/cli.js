@@ -85,7 +85,16 @@ cli
       pq.push(async () => {
         const depDir = await findDepPath(deps[i], pkgDir)
         const logs = depDir
-          ? await lintDir(depDir, opts.level, opts.strict, opts.pack, true)
+          ? await lintDir(
+              depDir,
+              opts.level,
+              opts.strict,
+              // Linting dependencies in node_modules also means that the dependency
+              // is already packed, so we don't need to pack it again by passing `false`.
+              // Otherwise if it's a local-linked dependency, we use the pack option.
+              depDir.includes('node_modules') ? false : opts.pack,
+              true
+            )
           : []
         // log this lint result
         const log = () => {
