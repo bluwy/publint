@@ -34,10 +34,14 @@ export async function publint(options) {
     if (pack !== false) {
       const pkgDir = options?.pkgDir ?? process.cwd()
 
-      let packageManager = (await detect({ cwd: pkgDir }))?.name
-      // Deno is not supported in `@publint/pack` (doesn't have a pack command)
-      if (packageManager === 'deno') {
-        packageManager = 'npm'
+      let packageManager = pack
+      if (packageManager === 'auto') {
+        let detected = (await detect({ cwd: pkgDir }))?.name ?? 'npm'
+        // Deno is not supported in `@publint/pack` (doesn't have a pack command)
+        if (detected === 'deno') {
+          detected = 'npm'
+        }
+        packageManager = detected
       }
 
       packedFiles = (await packAsList(pkgDir, { packageManager })).map((file) =>
