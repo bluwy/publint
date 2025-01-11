@@ -1,5 +1,11 @@
 # publint
 
+## 0.3.1
+
+### Patch Changes
+
+- Correctly process the `pack` option ([#124](https://github.com/bluwy/publint/pull/124))
+
 ## 0.3.0
 
 ### Minor Changes
