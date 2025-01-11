@@ -2,6 +2,7 @@ import cp from 'node:child_process'
 import util from 'node:util'
 import { afterAll, beforeAll } from 'vitest'
 
+const isCI = process.env.CI !== undefined
 const exec = util.promisify(cp.exec)
 const cwd = new URL('./', import.meta.url)
 
@@ -19,23 +20,26 @@ export async function setupCorepackAndTestHooks() {
   const isCorepackNpmEnabled =
     isCorepackEnabled && (await checkCorepackNpmEnabled())
 
+  // NOTE: `corepack enable/disable npm` commands are only run on CI as corepack
+  // npm support can delete your local npm installation. https://github.com/nodejs/corepack/issues/112
+
   // If corepack is disabled globally, we temporarily enable it + npm, and then
   // disable it after all tests have run.
   if (!isCorepackEnabled) {
     beforeAll(async () => {
       console.info('Corepack not enabled for `@publint/pack` tests. Enabling.')
       await exec('corepack enable', { cwd })
-      await exec('corepack enable npm', { cwd })
+      isCI && (await exec('corepack enable npm', { cwd }))
     })
     afterAll(async () => {
       console.info('Disabling corepack for `@publint/pack` tests.')
       await exec('corepack disable', { cwd })
-      await exec('corepack disable npm', { cwd })
+      isCI && (await exec('corepack disable npm', { cwd }))
     })
   }
   // If corepack is enabled, but its npm support is not, we temporarily enable it,
   // and then disable it after all tests have run.
-  else if (!isCorepackNpmEnabled) {
+  else if (isCI && !isCorepackNpmEnabled) {
     beforeAll(async () => {
       console.info(
         'Corepack npm support not enabled for `@publint/pack` tests. Enabling.'

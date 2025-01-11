@@ -8,15 +8,32 @@ import {
 import { createFixture } from 'fs-fixture'
 import { isBunInstalled, setupCorepackAndTestHooks } from './utils.js'
 
+const isCI = process.env.CI !== undefined
 // For some very weird reason, package manager binaries with corepack do not work
 // on Windows, except yarn. All `exec()` calls just hang. Gave up after 4 hours.
-const isWindowsCI = process.platform === 'win32' && process.env.CI !== undefined
+const isWindowsCI = isCI && process.platform === 'win32'
 const exec = util.promisify(cp.exec)
 const defaultPackageJsonData = {
   name: 'test-package',
   version: '1.0.0',
   private: true
 }
+
+// NOTE: npm tests are only run in CI because corepack npm support can delete your
+// local npm installation. https://github.com/nodejs/corepack/issues/112
+const packageManagers = /** @type {string[]} */ (
+  [
+    'empty',
+    isCI && 'npm@9.9.4',
+    isCI && 'npm@10.7.0',
+    isCI && 'npm@11.0.0',
+    'yarn@3.8.7',
+    'yarn@4.5.3',
+    'pnpm@8.15.9',
+    'pnpm@9.15.1',
+    'bun'
+  ].filter(Boolean)
+)
 
 await setupCorepackAndTestHooks()
 
@@ -54,17 +71,7 @@ async function packlistWithFixture(
 }
 
 // NOTE: only test recent package manager releases
-for (const pm of [
-  'empty',
-  'npm@9.9.4',
-  'npm@10.7.0',
-  'npm@11.0.0',
-  'yarn@3.8.7',
-  'yarn@4.5.3',
-  'pnpm@8.15.9',
-  'pnpm@9.15.1',
-  'bun'
-]) {
+for (const pm of packageManagers) {
   if (
     pm === 'bun' &&
     process.env.CI === undefined &&
