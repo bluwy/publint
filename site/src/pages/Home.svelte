@@ -2,6 +2,7 @@
   import Analysis from '../components/Analysis.svelte'
   import Logo from '../components/Logo.svelte'
   import NpmSearchInput from '../components/NpmSearchInput.svelte'
+  import HomeBackground from '../components/HomeBackground.svelte'
 
   /** @type {Record<string, number> | undefined} */
   let analysis = $state()
@@ -21,6 +22,7 @@
 </svelte:head>
 
 <main class="flex flex-col items-center {analysis ? '' : 'min-h-screen'}">
+  <HomeBackground />
   <section class="main-section flex flex-col items-center w-full px-4 mb-10">
     <Logo />
     <NpmSearchInput autofocus />
