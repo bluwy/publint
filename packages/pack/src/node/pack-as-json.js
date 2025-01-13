@@ -65,7 +65,7 @@ function fixPnpmStdout(stdout) {
   if (stdout.startsWith('{')) return stdout
 
   // Otherwise try to find its usual output format, `{\n  "name": ...`
-  const usualStartIndex = /\{\s"name"/.exec(stdout)?.index
+  const usualStartIndex = /\{\s*"name"/.exec(stdout)?.index
   if (usualStartIndex != null) return stdout.slice(usualStartIndex)
 
   // Otherwise, simply try to find the first `{` character
