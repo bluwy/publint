@@ -1,6 +1,6 @@
 {
   "name": "@publint/pack",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Utilities for packing and unpacking npm packages",
   "type": "module",
   "author": "Bjorn Lu",

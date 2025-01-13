@@ -1,5 +1,18 @@
 # publint
 
+## 0.3.2
+
+### Patch Changes
+
+- (Potentially breaking) Disable running lifecycle scripts, such as `prepare`, `prepack`, and `postpack`, when running the pack command internally. This returns to the behavior in v0.2. (Note that this change does not apply to yarn as it does not support ignoring lifecycle scripts for local projects) ([#128](https://github.com/publint/publint/pull/128))
+
+  This change is made as running lifecycle scripts was an unintentional behavior during the v0.3 breaking change, which could cause the linting process to take longer than expected, or even cause infinite loops if `publint` is used in a lifecycle script.
+
+- Update repository and bugs URLs to point to the new `publint` organization ([`1eda033`](https://github.com/publint/publint/commit/1eda0334e9f3647867dcc39d85fe04690ca9e543))
+
+- Updated dependencies [[`1eda033`](https://github.com/publint/publint/commit/1eda0334e9f3647867dcc39d85fe04690ca9e543), [`10e3891`](https://github.com/publint/publint/commit/10e3891ba7f3d438c5c3c394423bdbc2078cf7e6)]:
+  - @publint/pack@0.1.1
+
 ## 0.3.1
 
 ### Patch Changes
