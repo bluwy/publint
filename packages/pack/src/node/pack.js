@@ -12,6 +12,7 @@ export async function pack(dir, opts) {
     command = command.replace('bun', 'bun pm')
   }
 
+  // Handle tarball output
   const packDestination = opts?.destination ?? dir
   if (opts?.destination) {
     switch (packageManager) {
@@ -23,6 +24,21 @@ export async function pack(dir, opts) {
         break
       default:
         command += ` --pack-destination \"${packDestination}\"`
+        break
+    }
+  }
+
+  // Handle ignore-scripts
+  if (opts?.ignoreScripts) {
+    switch (packageManager) {
+      case 'pnpm':
+        command += ' --config.ignore-scripts=true'
+        break
+      case 'yarn':
+        // yarn does not support ignoring scripts
+        break
+      default:
+        command += ' --ignore-scripts'
         break
     }
   }

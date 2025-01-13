@@ -9,11 +9,13 @@ Zero-dependencies utilities for packing and unpacking npm packages. Supports:
 
 ## API
 
+NOTE: All `pack*` APIs support passing `opts.packageManager` to specify the package manager to use for packing, and `opts.ignoreScripts` to skip running lifecycle scripts.
+
 ### `pack()`
 
 - **Type**: `(dir: string, opts?: PackOptions): Promise<string>`
 
-Packs the given directory and returns the packed tarball path. Pass `opts.packageManager` to specify the package manager to use for packing.
+Packs the given directory and returns the packed tarball path. Pass `opts.destination` to change the output directory of the tarball.
 
 ```js
 import { pack } from '@publint/pack'
@@ -27,7 +29,7 @@ console.log(tarballPath)
 
 - **Type**: `(dir: string, opts?: PackAsListOptions): Promise<string>`
 
-Packs the given directory and returns a list of relative file paths that were packed. Pass `opts.packageManager` to specify the package manager to use for packing.
+Packs the given directory and returns a list of relative file paths that were packed.
 
 > [!NOTE]
 > Compared to [`npm-packlist`](https://github.com/npm/npm-packlist), this API works at a higher level by invoking the package manager `pack` command to retrieve the list of files packed. While `npm-packlist` is abstracted away from `npm` to expose a more direct API, unfortunately not all package managers pack files the same way, e.g. the patterns in `"files"` may be interpreted differently. Plus, since `npm-packlist` v7, it requires `@npmcli/arborist` to be used together, which is a much larger dependency to include altogether.
@@ -46,7 +48,7 @@ console.log(files)
 
 - **Type**: `(dir: string, opts?: PackAsJsonOptions): Promise<string>`
 
-Packs the given directory with the `--json` flag and returns its stdout as JSON. You can run the `<pm> pack --json` command manually to inspect the output shape. Pass `opts.packageManager` to specify the package manager to use for packing.
+Packs the given directory with the `--json` flag and returns its stdout as JSON. You can run the `<pm> pack --json` command manually to inspect the output shape.
 
 > [!NOTE]
 > Does not work in pnpm <9.14.1 and bun as they don't support the `--json` flag.

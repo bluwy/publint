@@ -5,6 +5,13 @@ interface SharedPackOptions {
    * @default 'npm'
    */
   packageManager?: 'npm' | 'yarn' | 'pnpm' | 'bun'
+  /**
+   * Whether to ignore lifecycle scripts during packing, i.e. `prepare`, `prepack`,
+   * and `postpack`. (Does not work with yarn as it does not support ignoring scripts)
+   *
+   * @default false
+   */
+  ignoreScripts?: boolean
 }
 
 export interface PackOptions extends SharedPackOptions {

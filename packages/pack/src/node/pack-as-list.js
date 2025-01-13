@@ -10,9 +10,9 @@ export async function packAsList(dir, opts) {
 
   // TODO: Maybe fast path to `packAsListWithPack` for package managers that do not support `--json`
   try {
-    return await packAsListWithJson(dir, packageManager)
+    return await packAsListWithJson(dir, packageManager, opts?.ignoreScripts)
   } catch {
-    return await packAsListWithPack(dir, packageManager)
+    return await packAsListWithPack(dir, packageManager, opts?.ignoreScripts)
   }
 }
 
@@ -21,10 +21,11 @@ export async function packAsList(dir, opts) {
  * @internal
  * @param {string} dir
  * @param {NonNullable<import('../index.d.ts').PackAsListOptions['packageManager']>} packageManager
+ * @param {import('../index.d.ts').PackAsListOptions['ignoreScripts']} ignoreScripts
  * @returns {Promise<string[]>}
  */
-export async function packAsListWithJson(dir, packageManager) {
-  const stdoutJson = await packAsJson(dir, { packageManager })
+export async function packAsListWithJson(dir, packageManager, ignoreScripts) {
+  const stdoutJson = await packAsJson(dir, { packageManager, ignoreScripts })
   switch (packageManager) {
     case 'npm':
       return parseNpmPackJson(stdoutJson)
@@ -42,11 +43,16 @@ export async function packAsListWithJson(dir, packageManager) {
  * @internal
  * @param {string} dir
  * @param {NonNullable<import('../index.d.ts').PackAsListOptions['packageManager']>} packageManager
+ * @param {import('../index.d.ts').PackAsListOptions['ignoreScripts']} ignoreScripts
  * @returns {Promise<string[]>}
  */
-export async function packAsListWithPack(dir, packageManager) {
+export async function packAsListWithPack(dir, packageManager, ignoreScripts) {
   const destination = await getTempPackDir()
-  const tarballPath = await pack(dir, { packageManager, destination })
+  const tarballPath = await pack(dir, {
+    packageManager,
+    ignoreScripts,
+    destination
+  })
 
   try {
     const buffer = /** @type {ArrayBuffer} */ (
