@@ -1,7 +1,6 @@
 import path from 'node:path'
 import { detect } from 'package-manager-detector/detect'
 import { packAsList, unpack } from '@publint/pack'
-import c from 'picocolors'
 import { createNodeVfs } from './node/vfs-node.js'
 import { core } from './shared/core.js'
 import { createTarballVfs } from './shared/vfs-tarball.js'
@@ -79,12 +78,10 @@ async function detectAndPack(pkgDir, pack) {
     packageManager === 'yarn' &&
     ['prepack', 'postpack'].includes(process.env.npm_lifecycle_event ?? '')
   ) {
-    console.log(
-      c.yellow(
-        `[publint] publint requires running \`yarn pack\` to lint the package, however, ` +
-          `it is also being executed in the "${process.env.npm_lifecycle_event}" lifecycle event, ` +
-          `which can possibly cause an infinite loop. Try to run publint outside of the lifecycle event instead.`
-      )
+    throw new Error(
+      `[publint] publint requires running \`yarn pack\` to lint the package, however, ` +
+        `it is also being executed in the "${process.env.npm_lifecycle_event}" lifecycle event, ` +
+        `which causes an infinite loop. Try to run publint outside of the lifecycle event instead.`
     )
   }
 
