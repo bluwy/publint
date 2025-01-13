@@ -17,12 +17,12 @@
   "devDependencies": {
     "@changesets/cli": "^2.27.11",
     "@svitejs/changesets-changelog-github-compact": "^1.2.0",
-    "@types/node": "^22.10.3",
+    "@types/node": "^22.10.5",
     "@types/pnpapi": "^0.0.5",
     "prettier": "^3.4.2",
-    "prettier-plugin-svelte": "^3.3.2",
-    "svelte": "^5.16.0",
-    "typescript": "^5.7.2"
+    "prettier-plugin-svelte": "^3.3.3",
+    "svelte": "^5.17.3",
+    "typescript": "^5.7.3"
   },
   "pnpm": {
     "overrides": {
