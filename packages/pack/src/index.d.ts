@@ -6,7 +6,8 @@ interface SharedPackOptions {
    */
   packageManager?: 'npm' | 'yarn' | 'pnpm' | 'bun'
   /**
-   * Whether to ignore lifecycle scripts during packing, i.e. `prepare`, `prepack`, and `postpack`.
+   * Whether to ignore lifecycle scripts during packing, i.e. `prepare`, `prepack`,
+   * and `postpack`. (Does not work with yarn as it does not support ignoring scripts)
    *
    * @default false
    */
