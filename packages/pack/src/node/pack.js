@@ -29,14 +29,13 @@ export async function pack(dir, opts) {
   }
 
   // Handle ignore-scripts
-  let env = process.env
   if (opts?.ignoreScripts) {
     switch (packageManager) {
       case 'pnpm':
         command += ' --config.ignore-scripts=true'
         break
       case 'yarn':
-        env = { ...env, YARN_ENABLE_SCRIPTS: 'false' }
+        // yarn does not support ignoring scripts
         break
       default:
         command += ' --ignore-scripts'
@@ -44,7 +43,7 @@ export async function pack(dir, opts) {
     }
   }
 
-  const output = await util.promisify(cp.exec)(command, { cwd: dir, env })
+  const output = await util.promisify(cp.exec)(command, { cwd: dir })
 
   // Get first file that ends with `.tgz` in the pack destination.
   // Also double-check against stdout as usually the package manager also prints

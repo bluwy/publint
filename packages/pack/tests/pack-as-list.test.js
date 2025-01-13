@@ -147,8 +147,8 @@ for (const pm of packageManagers) {
     })
 
     // prettier-ignore
-    // skipping for yarn as it has a weird requirement to have a lockfile when "scripts" exists
-    test.skipIf(isWindowsCI).only(`packlist - ${pm} / ${strategy} / ignore-scripts-true`, testOpts, async ({ expect }) => {
+    // skipping yarn as it does not support ignoring scripts
+    test.skipIf(isWindowsCI || pm.startsWith('yarn'))(`packlist - ${pm} / ${strategy} / ignore-scripts-true`, testOpts, async ({ expect }) => {
       const fixture = await createFixture({
         'package.json': JSON.stringify({
           ...defaultPackageJsonData,
@@ -159,9 +159,6 @@ for (const pm of packageManagers) {
         }),
         'a.js': ''
       })
-
-      // yarn requires install when it sees scripts.prepack for some reason
-      if (pm.startsWith('yarn')) await exec('yarn install', { cwd: fixture.path })
 
       const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, true, expect)
       // NOTE: for some reason the below `exists` check is always false, even if prepack script
@@ -171,8 +168,8 @@ for (const pm of packageManagers) {
     })
 
     // prettier-ignore
-    // skipping for yarn as it has a weird requirement to have a lockfile when "scripts" exists
-    test.skipIf(isWindowsCI).only(`packlist - ${pm} / ${strategy} / ignore-scripts-false`, testOpts, async ({ expect }) => {
+    // skipping yarn as it does not support ignoring scripts
+    test.skipIf(isWindowsCI || pm.startsWith('yarn'))(`packlist - ${pm} / ${strategy} / ignore-scripts-false`, testOpts, async ({ expect }) => {
       const fixture = await createFixture({
         'package.json': JSON.stringify({
           ...defaultPackageJsonData,
@@ -183,9 +180,6 @@ for (const pm of packageManagers) {
         }),
         'a.js': ''
       })
-
-      // yarn requires install when it sees scripts.prepack for some reason
-      if (pm.startsWith('yarn')) await exec('yarn install', { cwd: fixture.path })
 
       const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, false, expect)
       expect(list.sort()).toEqual(['a.js', 'package.json', 'prepack.js'])

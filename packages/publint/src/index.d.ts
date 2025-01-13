@@ -159,7 +159,8 @@ export interface Options {
    *
    * **Environment notes:**
    * - **Node.js**: Defaults to `'auto'`. All options above are supported. When using a package manager
-   *                to pack, lifecycle scripts like `prepack` and `postpack` are ignored.
+   *                to pack, lifecycle scripts like `prepack` and `postpack` are ignored
+   *                (except for yarn as it does not allow ignoring lifecycle scripts).
    * - **Browser**: Only `{ tarball }` and `{ files }` are supported and either **must be passed** to work,
    *                as the browser does not have access to the file system.
    */
