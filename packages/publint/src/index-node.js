@@ -44,9 +44,11 @@ export async function publint(options) {
         packageManager = detected
       }
 
-      packedFiles = (await packAsList(pkgDir, { packageManager })).map((file) =>
-        path.join(pkgDir, file)
-      )
+      // We want to ignore scripts as `publint` itself could be used in one of them and could
+      // cause an infinite loop. Also, running scripts might be slow and unexpected.
+      packedFiles = (
+        await packAsList(pkgDir, { packageManager, ignoreScripts: true })
+      ).map((file) => path.join(pkgDir, file))
     }
     vfs = createNodeVfs()
   }

@@ -12,6 +12,7 @@ export async function pack(dir, opts) {
     command = command.replace('bun', 'bun pm')
   }
 
+  // Handle tarball output
   const packDestination = opts?.destination ?? dir
   if (opts?.destination) {
     switch (packageManager) {
@@ -27,7 +28,23 @@ export async function pack(dir, opts) {
     }
   }
 
-  const output = await util.promisify(cp.exec)(command, { cwd: dir })
+  // Handle ignore-scripts
+  let env = process.env
+  if (opts?.ignoreScripts) {
+    switch (packageManager) {
+      case 'pnpm':
+        command += ' --config.ignore-scripts=true'
+        break
+      case 'yarn':
+        env = { ...env, YARN_ENABLE_SCRIPTS: 'false' }
+        break
+      default:
+        command += ' --ignore-scripts'
+        break
+    }
+  }
+
+  const output = await util.promisify(cp.exec)(command, { cwd: dir, env })
 
   // Get first file that ends with `.tgz` in the pack destination.
   // Also double-check against stdout as usually the package manager also prints

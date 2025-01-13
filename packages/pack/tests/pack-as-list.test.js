@@ -41,12 +41,14 @@ await setupCorepackAndTestHooks()
  * @param {import('fs-fixture').FsFixture} fixture
  * @param {string | undefined} fallbackPackageManager
  * @param {string} strategy
+ * @param {boolean} ignoreScripts
  * @param {import('vitest').ExpectStatic} expect
  */
 async function packlistWithFixture(
   fixture,
   fallbackPackageManager,
   strategy,
+  ignoreScripts,
   expect
 ) {
   const pkgJson = await fixture.readFile('package.json', 'utf8')
@@ -64,7 +66,7 @@ async function packlistWithFixture(
       strategy === 'json' ? packAsListWithJson : packAsListWithPack
     const pm = packageManager?.split('@')[0] ?? fallbackPackageManager ?? 'npm'
 
-    return await packAsList(fixture.path, pm)
+    return await packAsList(fixture.path, pm, ignoreScripts)
   } finally {
     await fixture.rm()
   }
@@ -105,7 +107,7 @@ for (const pm of packageManagers) {
         'a.js': ''
       })
 
-      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, expect)
+      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, false, expect)
       expect(list.sort()).toEqual(['a.js', 'package.json'])
     })
 
@@ -121,7 +123,7 @@ for (const pm of packageManagers) {
         'b.js': ''
       })
 
-      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, expect)
+      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, false, expect)
       expect(list.sort()).toEqual(['a.js', 'package.json'])
     })
 
@@ -140,8 +142,53 @@ for (const pm of packageManagers) {
         'dir/b.js': ''
       })
 
-      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, expect)
+      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, false, expect)
       expect(list.sort()).toEqual(['dir/a.js', 'package.json'])
+    })
+
+    // prettier-ignore
+    // skipping for yarn as it has a weird requirement to have a lockfile when "scripts" exists
+    test.skipIf(isWindowsCI).only(`packlist - ${pm} / ${strategy} / ignore-scripts-true`, testOpts, async ({ expect }) => {
+      const fixture = await createFixture({
+        'package.json': JSON.stringify({
+          ...defaultPackageJsonData,
+          ...packageManagerValue,
+          scripts: {
+            prepack: "node -e \"require('fs').writeFileSync('prepack.js', '')\""
+          }
+        }),
+        'a.js': ''
+      })
+
+      // yarn requires install when it sees scripts.prepack for some reason
+      if (pm.startsWith('yarn')) await exec('yarn install', { cwd: fixture.path })
+
+      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, true, expect)
+      // NOTE: for some reason the below `exists` check is always false, even if prepack script
+      // is run. But the next expect should still verify that prepack.js is not packed.
+      expect(await fixture.exists('prepack.js')).toBe(false)
+      expect(list.sort()).toEqual(['a.js', 'package.json'])
+    })
+
+    // prettier-ignore
+    // skipping for yarn as it has a weird requirement to have a lockfile when "scripts" exists
+    test.skipIf(isWindowsCI).only(`packlist - ${pm} / ${strategy} / ignore-scripts-false`, testOpts, async ({ expect }) => {
+      const fixture = await createFixture({
+        'package.json': JSON.stringify({
+          ...defaultPackageJsonData,
+          ...packageManagerValue,
+          scripts: {
+            prepack: "node -e \"require('fs').writeFileSync('prepack.js', '')\""
+          }
+        }),
+        'a.js': ''
+      })
+
+      // yarn requires install when it sees scripts.prepack for some reason
+      if (pm.startsWith('yarn')) await exec('yarn install', { cwd: fixture.path })
+
+      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, false, expect)
+      expect(list.sort()).toEqual(['a.js', 'package.json', 'prepack.js'])
     })
   }
 }

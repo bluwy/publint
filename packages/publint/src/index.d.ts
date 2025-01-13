@@ -152,15 +152,16 @@ export interface Options {
    * - `'auto'`: Automatically detects the package manager using
    *             [`package-manager-detector`](https://github.com/antfu-collective/package-manager-detector).
    * - `'npm'`/`'yarn'`/`'pnpm'`/`'bun'`: Uses the respective package manager to pack.
-   * - `{ tarball }`: Packs the package from the specified tarball represented as an ArrayBuffer or ReadableStream.
+   * - `{ tarball }`: Packs the package from the specified tarball represented as an`ArrayBuffer` or `ReadableStream`.
    * - `{ files }`: Packs the package using the specified files.
    * - `false`: Skips packing the package. This should only be used if all the files
    *            in `pkgDir` are assumed to be published, e.g. in `node_modules`.
    *
    * **Environment notes:**
-   * - **Node.js**: Defaults to `'auto'`. All options above are supported.
-   * - **Browser**: Only `{ tarball: ArrayBuffer | ReadableStream }` and `{ files: PackFile[] }` are supported
-   *                and either **must be passed** to work, as the browser does not have access to the file system.
+   * - **Node.js**: Defaults to `'auto'`. All options above are supported. When using a package manager
+   *                to pack, lifecycle scripts like `prepack` and `postpack` are ignored.
+   * - **Browser**: Only `{ tarball }` and `{ files }` are supported and either **must be passed** to work,
+   *                as the browser does not have access to the file system.
    */
   pack?:
     | 'auto'

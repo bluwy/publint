@@ -12,29 +12,69 @@ export async function packAsJson(dir, opts) {
 
   let command = `${packageManager} pack --json`
 
+  // Handle tarball output. Try `--dry-run` if possible to not output any tarball,
+  // otherwise pack to a temporary directory and delete it later
   const supportsDryRun = packageManager === 'npm' || packageManager === 'yarn'
   /** @type {string | undefined} */
   let packDestination
   if (supportsDryRun) {
     command += ' --dry-run'
   } else {
-    // For package managers that don't support `--dry-run`, we need to pack to a temporary directory
-    // and delete it later
     packDestination = await getTempPackDir()
     command += ` --pack-destination ${packDestination}`
   }
 
-  const { stdout } = await util.promisify(cp.exec)(command, { cwd: dir })
+  // Handle ignore-scripts
+  let env = process.env
+  if (opts?.ignoreScripts) {
+    switch (packageManager) {
+      case 'pnpm':
+        command += ' --config.ignore-scripts=true'
+        break
+      case 'yarn':
+        env = { ...env, YARN_ENABLE_SCRIPTS: 'false' }
+        break
+      default:
+        command += ' --ignore-scripts'
+        break
+    }
+  }
+
+  let { stdout } = await util.promisify(cp.exec)(command, { cwd: dir, env })
 
   try {
-    return JSON.parse(
-      packageManager === 'yarn' ? fixYarnStdout(stdout) : stdout
-    )
+    stdout = stdout.trim()
+    if (packageManager === 'pnpm') {
+      stdout = fixPnpmStdout(stdout)
+    } else if (packageManager === 'yarn') {
+      stdout = fixYarnStdout(stdout)
+    }
+    return JSON.parse(stdout)
   } finally {
     if (!supportsDryRun && packDestination) {
       await fs.rm(packDestination, { recursive: true })
     }
   }
+}
+
+// pnpm outputs lifecycle script logs if not ignoring scripts
+/**
+ * @param {string} stdout
+ */
+function fixPnpmStdout(stdout) {
+  // If starts with `{`, it's likely a valid JSON
+  if (stdout.startsWith('{')) return stdout
+
+  // Otherwise try to find its usual output format, `{\n  "name": ...`
+  const usualStartIndex = /\{\s"name"/.exec(stdout)?.index
+  if (usualStartIndex != null) return stdout.slice(usualStartIndex)
+
+  // Otherwise, simply try to find the first `{` character
+  const firstBraceIndex = stdout.indexOf('{')
+  if (firstBraceIndex !== -1) return stdout.slice(firstBraceIndex)
+
+  // If all fails, return the original stdout
+  return stdout
 }
 
 // yarn outputs invalid json for some reason
