@@ -4,6 +4,6 @@ export default defineConfig({
   test: {
     include: ['tests/*.test.js'],
     isolate: false,
-    slowTestThreshold: 600
-  }
+    slowTestThreshold: 600,
+  },
 })

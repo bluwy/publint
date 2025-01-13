@@ -85,7 +85,7 @@ const { messages } = await publint({
   /**
    * Report warnings as errors.
    */
-  strict: true
+  strict: true,
 })
 
 console.log(messages)
@@ -98,7 +98,7 @@ import { formatMessage } from 'publint/utils'
 import fs from 'node:fs/promises'
 
 const pkg = JSON.parse(
-  await fs.readFile('./path/to/package/package.json', 'utf8')
+  await fs.readFile('./path/to/package/package.json', 'utf8'),
 )
 
 for (const message of messages) {
@@ -125,7 +125,7 @@ import { publint } from 'publint'
 
 // Fetch tarball
 const response = await fetch(
-  'https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz'
+  'https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz',
 )
 if (!response.body) throw new Error('Failed to fetch tarball')
 
@@ -149,7 +149,7 @@ import { unpack } from '@publint/pack'
 
 // Fetch tarball
 const response = await fetch(
-  'https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz'
+  'https://registry.npmjs.org/mylib/-/mylib-1.0.0.tgz',
 )
 if (!response.body) throw new Error('Failed to fetch tarball')
 

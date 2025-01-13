@@ -49,9 +49,9 @@
       `${import.meta.env.VITE_JSDELIVR_API}/packages/npm/${encodeURIComponent(pkgName)}`,
       {
         headers: {
-          Accept: 'application/json'
-        }
-      }
+          Accept: 'application/json',
+        },
+      },
     )
       .then((data) => data.ok && data.json())
       .then((data) => {

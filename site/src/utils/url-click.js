@@ -31,7 +31,7 @@ export function listenUrlClick() {
       url.push(href)
       window.scrollTo({
         top: 0,
-        behavior: 'instant'
+        behavior: 'instant',
       })
       e.preventDefault()
     }

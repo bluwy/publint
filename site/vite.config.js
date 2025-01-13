@@ -9,25 +9,25 @@ export default defineConfig({
     // Vite's scanner doesn't scan references via `new URL(...)`.
     // In this app, we import the worker with the syntax, so manually add the worker for now.
     // TODO: Fix this in Vite
-    entries: ['**/*.html', './src/utils/worker.js']
+    entries: ['**/*.html', './src/utils/worker.js'],
   },
   plugins: [serveAnalysisJson(), unocss(), svelte(), markdown()],
   esbuild: {
-    legalComments: 'none'
+    legalComments: 'none',
   },
   build: {
     rollupOptions: {
       input: {
         main: new URL('/index.html', import.meta.url).pathname,
-        rules: new URL('/rules.html', import.meta.url).pathname
-      }
-    }
-  }
+        rules: new URL('/rules.html', import.meta.url).pathname,
+      },
+    },
+  },
 })
 
 const analysisJsonUrl = new URL(
   '../analysis/cache/_results.json',
-  import.meta.url
+  import.meta.url,
 )
 
 /**
@@ -54,7 +54,7 @@ function serveAnalysisJson() {
         // try pre-analysed result
         try {
           const result = await fetch(
-            'https://gist.github.com/bluwy/64b0c283d8f0f3f8a8f4eea03c75a3b8/raw/publint_analysis.json'
+            'https://gist.github.com/bluwy/64b0c283d8f0f3f8a8f4eea03c75a3b8/raw/publint_analysis.json',
           )
           const buffer = await result.arrayBuffer()
           res.end(new Uint8Array(buffer))
@@ -75,6 +75,6 @@ function serveAnalysisJson() {
     },
     configurePreviewServer(server) {
       addMiddleware(server.middlewares)
-    }
+    },
   }
 }

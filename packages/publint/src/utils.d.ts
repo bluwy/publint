@@ -17,5 +17,5 @@ export declare function getPkgPathValue(pkg: Pkg, path: string[]): any
 export declare function formatMessage(
   msg: Message,
   pkg: Pkg,
-  opts?: FormatMessageOptions
+  opts?: FormatMessageOptions,
 ): string | undefined

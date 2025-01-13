@@ -12,7 +12,7 @@ import {
   isGitUrl,
   isShorthandGitHubOrGitLabUrl,
   isShorthandRepositoryUrl,
-  stripComments
+  stripComments,
 } from '../src/shared/utils.js'
 import { createNodeVfs } from '../src/node/vfs-node.js'
 
@@ -24,7 +24,7 @@ const cjsCode = [
   `exports.default = 'bla'`,
   `Object.defineProperty(exports, 'foo', { value: 'bla' })`,
   `Object.defineProperties(exports, { foo: { value: 'bla' } })`,
-  `Object.assign(exports, { foo: 'bla' })`
+  `Object.assign(exports, { foo: 'bla' })`,
 ]
 
 const esmCode = [
@@ -34,7 +34,7 @@ const esmCode = [
   `import { foo as bar } from 'bla'`,
   'export default "bla"',
   'export const foo = "bla"',
-  'export function foo() { return "bla" }'
+  'export function foo() { return "bla" }',
 ]
 
 const isoCode = [`console.log('hello')`, `document.title = 'bla`]
@@ -90,7 +90,7 @@ test('isFileContentLintable', () => {
     isFileContentLintable(`
 /**
  * @flow
- */`)
+ */`),
   ).toEqual(false)
 })
 
@@ -137,10 +137,10 @@ test('isGitUrl', () => {
 
 test('isDeprecatedGitHubGitUrl', () => {
   expect(isDeprecatedGitHubGitUrl('git://github.com/user/project.git')).toEqual(
-    true
+    true,
   )
   expect(isDeprecatedGitHubGitUrl('https://github.com/user/project')).toEqual(
-    false
+    false,
   )
 })
 
@@ -166,7 +166,7 @@ test('isShortHandRepositoryUrl', () => {
 
   expect(isShorthandRepositoryUrl('foobar')).toEqual(false)
   expect(isShorthandRepositoryUrl('https://github.com/user/project')).toEqual(
-    false
+    false,
   )
 })
 

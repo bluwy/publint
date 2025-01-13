@@ -2,7 +2,7 @@ import picocolors from 'picocolors'
 import {
   formatMessagePath as fp,
   getPkgPathValue,
-  replaceLast
+  replaceLast,
 } from '../shared/utils.js'
 
 /** @type { import('picocolors/types.js').Colors | undefined } */

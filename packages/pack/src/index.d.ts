@@ -31,7 +31,7 @@ export interface PackAsListOptions extends SharedPackOptions {}
  */
 export function packAsList(
   dir: string,
-  opts?: PackAsListOptions
+  opts?: PackAsListOptions,
 ): Promise<string[]>
 
 export interface PackAsJsonOptions extends SharedPackOptions {}
@@ -71,5 +71,5 @@ export interface UnpackResult {
  * its returned response: `response.arrayBuffer()` or `response.body`.
  */
 export function unpack(
-  tarball: ArrayBuffer | ReadableStream<Uint8Array>
+  tarball: ArrayBuffer | ReadableStream<Uint8Array>,
 ): Promise<UnpackResult>

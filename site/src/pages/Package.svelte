@@ -36,7 +36,7 @@
 
   function createWorker() {
     const worker = new Worker(new URL('../utils/worker.js', import.meta.url), {
-      type: 'module'
+      type: 'module',
     })
 
     worker.addEventListener('message', (e) => {
@@ -128,7 +128,7 @@
     } else {
       fetch(
         // prettier-ignore
-        `${import.meta.env.VITE_NPM_REGISTRY}/${encodeURIComponent(npmPkgName)}/latest`
+        `${import.meta.env.VITE_NPM_REGISTRY}/${encodeURIComponent(npmPkgName)}/latest`,
       )
         .then(async (res) => {
           const result = await res.json()
@@ -154,19 +154,19 @@
       worker.postMessage({
         npmPkgName,
         npmPkgVersion,
-        isPkgPrNew
+        isPkgPrNew,
       })
     }
   })
 
   let suggestionCount = $derived(
-    result?.messages.filter((v) => v.type === 'suggestion').length
+    result?.messages.filter((v) => v.type === 'suggestion').length,
   )
   let warningCount = $derived(
-    result?.messages.filter((v) => v.type === 'warning').length
+    result?.messages.filter((v) => v.type === 'warning').length,
   )
   let errorCount = $derived(
-    result?.messages.filter((v) => v.type === 'error').length
+    result?.messages.filter((v) => v.type === 'error').length,
   )
 
   // Add debug logs for future self
@@ -179,11 +179,11 @@
   let repo = $derived(
     result?.pkgJson?.repository
       ? extractRepoUrl(result?.pkgJson?.repository)
-      : undefined
+      : undefined,
   )
   let npmUrl = $derived(`https://www.npmjs.com/package/${npmPkgName}`)
   let jsdelivrUrl = $derived(
-    `https://www.jsdelivr.com/package/npm/${npmPkgName}`
+    `https://www.jsdelivr.com/package/npm/${npmPkgName}`,
   )
 </script>
 

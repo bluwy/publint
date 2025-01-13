@@ -25,7 +25,7 @@ export function markdown() {
       properties: {
         ariaHidden: 'true',
         tabIndex: -1,
-        className: 'anchor'
+        className: 'anchor',
       },
       test: ['h2', 'h3', 'h4', 'h5', 'h6'],
       content: {
@@ -34,18 +34,18 @@ export function markdown() {
         properties: {
           width: '24',
           height: '24',
-          fill: 'currentColor'
+          fill: 'currentColor',
         },
         children: [
           {
             type: 'element',
             tagName: 'use',
             properties: {
-              'xlink:href': '#autolink-icon' // Symbol defined in rules.html
-            }
-          }
-        ]
-      }
+              'xlink:href': '#autolink-icon', // Symbol defined in rules.html
+            },
+          },
+        ],
+      },
     })
     .use(rehypeStringify)
 
@@ -71,10 +71,10 @@ export function markdown() {
       if (ctx.file === rulesPath) {
         ctx.server.ws.send({
           type: 'full-reload',
-          path: '/rules'
+          path: '/rules',
         })
       }
-    }
+    },
   }
 }
 

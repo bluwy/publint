@@ -9,7 +9,7 @@ export function arrayBufferToReadableStream(arrayBuffer) {
     start(controller) {
       controller.enqueue(new Uint8Array(arrayBuffer))
       controller.close()
-    }
+    },
   })
 }
 

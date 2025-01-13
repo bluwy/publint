@@ -50,12 +50,12 @@ export async function pack(dir, opts) {
   // the tarball file name there, in case the directory has existing tarballs.
   const tarballFile = await fs.readdir(packDestination).then((files) => {
     return files.find(
-      (file) => file.endsWith('.tgz') && output.stdout.includes(file)
+      (file) => file.endsWith('.tgz') && output.stdout.includes(file),
     )
   })
   if (!tarballFile) {
     throw new Error(
-      `Failed to find packed tarball file in ${packDestination}. Command output:\n${JSON.stringify(output, null, 2)}`
+      `Failed to find packed tarball file in ${packDestination}. Command output:\n${JSON.stringify(output, null, 2)}`,
     )
   }
 

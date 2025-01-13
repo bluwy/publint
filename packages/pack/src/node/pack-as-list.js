@@ -51,7 +51,7 @@ export async function packAsListWithPack(dir, packageManager, ignoreScripts) {
   const tarballPath = await pack(dir, {
     packageManager,
     ignoreScripts,
-    destination
+    destination,
   })
 
   try {

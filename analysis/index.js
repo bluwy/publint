@@ -36,7 +36,7 @@ try {
       if (!usedCacheFileBaseNames.includes(file)) {
         await fs.rm(new URL(`./cache/${file}`, import.meta.url))
       }
-    })
+    }),
   )
 }
 
@@ -67,8 +67,8 @@ async function mainCommand() {
           console.error(`Failed to lint ${pkg}`, e)
           return null
         }
-      })
-    )
+      }),
+    ),
   )
 
   /** @type {Record<string, number>} */
@@ -100,8 +100,8 @@ async function benchCommand() {
           console.error(`Failed to fetch ${pkg}`, e)
           return null
         }
-      })
-    )
+      }),
+    ),
   )
 
   console.log('Linting packages...')
@@ -117,8 +117,8 @@ async function benchCommand() {
           console.error(`Failed to lint ${d.pkg}`, e)
           return null
         }
-      })
-    )
+      }),
+    ),
   )
   const duration = performance.now() - start
 
@@ -164,7 +164,7 @@ async function fetchPkgData(pkg) {
 function getCacheTarFileUrl(pkg, version) {
   return new URL(
     `./cache/${pkg.replace('/', '__')}-${version}.tgz`,
-    import.meta.url
+    import.meta.url,
   )
 }
 
@@ -177,8 +177,8 @@ async function fetchPkg(pkg, version) {
   const tarballUrl = getNpmTarballUrl(pkg, version)
   const fetchResult = await fetch(tarballUrl, {
     headers: {
-      'User-Agent': 'publint-analysis'
-    }
+      'User-Agent': 'publint-analysis',
+    },
   })
   return await fetchResult.arrayBuffer()
 }
@@ -192,9 +192,9 @@ async function fetchPkgLatestVersion(pkg) {
     `https://registry.npmjs.org/${encodeURIComponent(pkg)}/latest`,
     {
       headers: {
-        'User-Agent': 'publint-analysis'
-      }
-    }
+        'User-Agent': 'publint-analysis',
+      },
+    },
   )
     .then((v) => v.ok && v.json())
     .then((v) => v.version)

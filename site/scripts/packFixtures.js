@@ -17,13 +17,13 @@ await Promise.all(
   fixtures.map((fixture) => {
     const fixturePath = path.resolve(fixtureDir, fixture)
     const proc = cp.exec(
-      `npm pack ${fixturePath} --pack-destination=./public/temp/`
+      `npm pack ${fixturePath} --pack-destination=./public/temp/`,
     )
     return new Promise((resolve, reject) => {
       proc.addListener('exit', () => resolve())
       proc.addListener('error', () => reject())
     })
-  })
+  }),
 )
 
 console.log('Done')

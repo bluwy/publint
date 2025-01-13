@@ -42,7 +42,7 @@ export async function setupCorepackAndTestHooks() {
   else if (isCI && !isCorepackNpmEnabled) {
     beforeAll(async () => {
       console.info(
-        'Corepack npm support not enabled for `@publint/pack` tests. Enabling.'
+        'Corepack npm support not enabled for `@publint/pack` tests. Enabling.',
       )
       await exec('corepack enable npm', { cwd })
     })

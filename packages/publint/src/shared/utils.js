@@ -134,7 +134,7 @@ export async function exportsGlob(globStr, vfs, packedFiles) {
   /** @type {string[]} */
   const filePaths = []
   const globStrRe = new RegExp(
-    `^${slash(globStr).split('*').map(escapeRegExp).join('(.+)')}$`
+    `^${slash(globStr).split('*').map(escapeRegExp).join('(.+)')}$`,
   )
   // the longest directory that doesn't contain `*`
   const topDir = globStr.split('*')[0].match(/(.+)[/\\]/)?.[1]
@@ -371,7 +371,7 @@ export function createPromiseQueue() {
   const promises = []
   return {
     push: (/** @type {Function} */ fn) => promises.push(fn()),
-    wait: () => Promise.all(promises)
+    wait: () => Promise.all(promises),
   }
 }
 
@@ -434,7 +434,7 @@ export function resolveExports(
   exportsValue,
   conditions,
   currentPath = [],
-  _metadata = { dualPublish: false }
+  _metadata = { dualPublish: false },
 ) {
   if (typeof exportsValue === 'string') {
     // prettier-ignore
@@ -444,7 +444,7 @@ export function resolveExports(
       exportsValue[0],
       conditions,
       currentPath.concat('0'),
-      _metadata
+      _metadata,
     )
   }
 
@@ -464,7 +464,7 @@ export function resolveExports(
         exportsValue[key],
         conditions,
         currentPath.concat(key),
-        _metadata
+        _metadata,
       )
     }
   }

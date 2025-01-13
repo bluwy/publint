@@ -6,9 +6,9 @@ export async function onRequestGet() {
       // https://developers.cloudflare.com/workers/examples/cache-using-fetch/
       cf: {
         cacheTtl: 86400, // Cloudflare caches 1 day. GitHub sets 5 minutes by default, but we don't need that frequency.
-        cacheEverything: true
-      }
-    }
+        cacheEverything: true,
+      },
+    },
   )
 
   if (!result.ok)
@@ -19,7 +19,7 @@ export async function onRequestGet() {
       'Access-Control-Allow-Origin': '*',
       'Content-Type': 'application/json',
       'Content-Length': result.headers.get('Content-Length'),
-      'Cache-Control': 'public, max-age=43200' // Browser caches half day.
-    }
+      'Cache-Control': 'public, max-age=43200', // Browser caches half day.
+    },
   })
 }

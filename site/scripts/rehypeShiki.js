@@ -22,7 +22,7 @@ export function rehypeShiki() {
 
       const language = codeNode.properties?.className?.[0]?.replace(
         'language-',
-        ''
+        '',
       )
       if (!language) return
 
@@ -33,15 +33,15 @@ export function rehypeShiki() {
         lang: language,
         themes: {
           light: 'light-plus',
-          dark: 'dark-plus'
-        }
+          dark: 'dark-plus',
+        },
       })
 
       const preHast = codeHast.children[0]
       // too bright
       preHast.properties.style = preHast.properties.style.replace(
         'background-color:#FFFFFF',
-        'background-color:#f3f0f0'
+        'background-color:#f3f0f0',
       )
 
       Object.assign(node, preHast)

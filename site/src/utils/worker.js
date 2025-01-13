@@ -73,8 +73,8 @@ self.addEventListener('message', async (e) => {
     type: 'result',
     data: {
       messages,
-      pkgJson
-    }
+      pkgJson,
+    },
   })
 })
 

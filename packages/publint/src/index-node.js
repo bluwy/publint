@@ -43,7 +43,7 @@ export async function publint(options) {
     vfs,
     level: options?.level ?? 'suggestion',
     strict: options?.strict ?? false,
-    _packedFiles: packedFiles
+    _packedFiles: packedFiles,
   })
 }
 
@@ -81,7 +81,7 @@ async function detectAndPack(pkgDir, pack) {
     throw new Error(
       `[publint] publint requires running \`yarn pack\` to lint the package, however, ` +
         `it is also being executed in the "${process.env.npm_lifecycle_event}" lifecycle event, ` +
-        `which causes an infinite loop. Try to run publint outside of the lifecycle event instead.`
+        `which causes an infinite loop. Try to run publint outside of the lifecycle event instead.`,
     )
   }
 

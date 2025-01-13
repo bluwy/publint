@@ -9,7 +9,7 @@ export async function publint(options) {
   const pack = options?.pack
   if (!pack || typeof pack !== 'object') {
     throw new Error(
-      '[publint] The `pack` option must be set to an object with `tarball` or `files` to work in the browser'
+      '[publint] The `pack` option must be set to an object with `tarball` or `files` to work in the browser',
     )
   }
 
@@ -29,6 +29,6 @@ export async function publint(options) {
     pkgDir: options.pkgDir ?? overridePkgDir ?? '/',
     vfs,
     level: options.level ?? 'suggestion',
-    strict: options?.strict ?? false
+    strict: options?.strict ?? false,
   })
 }

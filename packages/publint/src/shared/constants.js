@@ -13,7 +13,7 @@ export const knownBrowserishConditions = [
   // Cloudflare Workers: https://runtime-keys.proposal.wintercg.org/#workerd
   'workerd',
   // Vercel Edge: https://runtime-keys.proposal.wintercg.org/#edge-light
-  'edge-light'
+  'edge-light',
 ]
 
 // NOTE: this list is intentionally non-exhaustive and subjective as it's used for
@@ -28,7 +28,7 @@ export const commonInternalPaths = [
   '.prettierrc',
   'prettier.config.js',
   '.eslintrc',
-  '.eslintrc.js'
+  '.eslintrc.js',
 ]
 
 // https://github.com/npm/npm-packlist/blob/53b2a4f42b7fef0f63e8f26a3ea4692e23a58fed/lib/index.js#L284-L286

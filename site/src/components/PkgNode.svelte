@@ -26,7 +26,7 @@
     comma = false,
     indent = 0,
     messages,
-    pkg
+    pkg,
   } = $props()
 
   const paths = key ? getContext(KEY).concat(key) : []
@@ -37,7 +37,7 @@
   let keyText = $derived(key && isNaN(parseInt(`${key}`)) ? `"${key}": ` : '')
 
   let matchedMessages = $derived(
-    messages.filter((v) => v.path.length && isArrayEqual(paths, v.path))
+    messages.filter((v) => v.path.length && isArrayEqual(paths, v.path)),
   )
 
   const maxShownMessages = 5
@@ -45,7 +45,7 @@
   let shownMessages = $derived(
     showAllMessages
       ? matchedMessages
-      : matchedMessages.slice(0, maxShownMessages)
+      : matchedMessages.slice(0, maxShownMessages),
   )
 </script>
 

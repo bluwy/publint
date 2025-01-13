@@ -16,7 +16,7 @@ export function createTarballVfs(files) {
     isPathExist: async (path) => {
       const pathDirVariant = path.endsWith('/') ? path : path + '/'
       return files.some(
-        (file) => file.name === path || file.name.startsWith(pathDirVariant)
+        (file) => file.name === path || file.name.startsWith(pathDirVariant),
       )
     },
     pathJoin: (...parts) =>
@@ -41,6 +41,6 @@ export function createTarballVfs(files) {
         decoder ??= new TextDecoder()
         return decoder.decode(file.data)
       }
-    }
+    },
   }
 }

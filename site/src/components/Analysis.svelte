@@ -84,7 +84,7 @@
     {#each Object.entries(results) as [key, value]}
       <a
         class="analysis-block inline-block items-center gap-1 w-60 p-2 rounded-md border-2 border-solid decoration-none text-ellipsis whitespace-nowrap overflow-x-hidden transition-background-color {numberToClass(
-          value
+          value,
         )}"
         href="/{key}"
       >

@@ -9,7 +9,7 @@ export async function unpack(tarball) {
   let buffer
   if (tarball instanceof ReadableStream) {
     buffer = await readableStreamToArrayBuffer(
-      tarball.pipeThrough(new DecompressionStream('gzip'))
+      tarball.pipeThrough(new DecompressionStream('gzip')),
     )
   } else {
     const nodeBuffer = await util.promisify(zlib.gunzip)(tarball)

@@ -24,5 +24,5 @@ window.addEventListener('hashchange', updateHref)
 export const url = {
   subscribe: derived(href, ($href) => new URL($href)).subscribe,
   push: (/** @type {string} */ url) => history.pushState(null, '', url),
-  replace: (/** @type {string} */ url) => history.replaceState(null, '', url)
+  replace: (/** @type {string} */ url) => history.replaceState(null, '', url),
 }

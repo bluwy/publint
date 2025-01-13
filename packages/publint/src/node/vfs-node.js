@@ -35,6 +35,6 @@ export function createNodeVfs() {
     },
     getExtName(path) {
       return nodePath.extname(path)
-    }
+    },
   }
 }

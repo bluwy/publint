@@ -3,7 +3,7 @@ import util from 'node:util'
 import { test } from 'vitest'
 import {
   packAsListWithJson,
-  packAsListWithPack
+  packAsListWithPack,
 } from '../src/node/pack-as-list.js'
 import { createFixture } from 'fs-fixture'
 import { isBunInstalled, setupCorepackAndTestHooks } from './utils.js'
@@ -16,7 +16,7 @@ const exec = util.promisify(cp.exec)
 const defaultPackageJsonData = {
   name: 'test-package',
   version: '1.0.0',
-  private: true
+  private: true,
 }
 
 // NOTE: npm tests are only run in CI because corepack npm support can delete your
@@ -31,7 +31,7 @@ const packageManagers = /** @type {string[]} */ (
     'yarn@4.5.3',
     'pnpm@8.15.9',
     'pnpm@9.15.1',
-    'bun'
+    'bun',
   ].filter(Boolean)
 )
 
@@ -49,7 +49,7 @@ async function packlistWithFixture(
   fallbackPackageManager,
   strategy,
   ignoreScripts,
-  expect
+  expect,
 ) {
   const pkgJson = await fixture.readFile('package.json', 'utf8')
   const packageManager = JSON.parse(pkgJson).packageManager
@@ -97,92 +97,139 @@ for (const pm of packageManagers) {
     /** @type {import('vitest').TestOptions} */
     const testOpts = { concurrent: true, timeout: process.env.CI ? 8000 : 5000 }
 
-    // prettier-ignore
-    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / no-files`, testOpts, async ({ expect }) => {
-      const fixture = await createFixture({
-        'package.json': JSON.stringify({
-          ...defaultPackageJsonData,
-          ...packageManagerValue
-        }),
-        'a.js': ''
-      })
+    test.skipIf(isWindowsCI)(
+      `packlist - ${pm} / ${strategy} / no-files`,
+      testOpts,
+      async ({ expect }) => {
+        const fixture = await createFixture({
+          'package.json': JSON.stringify({
+            ...defaultPackageJsonData,
+            ...packageManagerValue,
+          }),
+          'a.js': '',
+        })
 
-      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, false, expect)
-      expect(list.sort()).toEqual(['a.js', 'package.json'])
-    })
+        const list = await packlistWithFixture(
+          fixture,
+          fallbackPackageManager,
+          strategy,
+          false,
+          expect,
+        )
+        expect(list.sort()).toEqual(['a.js', 'package.json'])
+      },
+    )
 
-    // prettier-ignore
-    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / with-files`, testOpts, async ({ expect }) => {
-      const fixture = await createFixture({
-        'package.json': JSON.stringify({
-          ...defaultPackageJsonData,
-          ...packageManagerValue,
-          files: ['a.js']
-        }),
-        'a.js': '',
-        'b.js': ''
-      })
+    test.skipIf(isWindowsCI)(
+      `packlist - ${pm} / ${strategy} / with-files`,
+      testOpts,
+      async ({ expect }) => {
+        const fixture = await createFixture({
+          'package.json': JSON.stringify({
+            ...defaultPackageJsonData,
+            ...packageManagerValue,
+            files: ['a.js'],
+          }),
+          'a.js': '',
+          'b.js': '',
+        })
 
-      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, false, expect)
-      expect(list.sort()).toEqual(['a.js', 'package.json'])
-    })
+        const list = await packlistWithFixture(
+          fixture,
+          fallbackPackageManager,
+          strategy,
+          false,
+          expect,
+        )
+        expect(list.sort()).toEqual(['a.js', 'package.json'])
+      },
+    )
 
-    // prettier-ignore
-    test.skipIf(isWindowsCI)(`packlist - ${pm} / ${strategy} / with-files-and-glob`, testOpts, async ({ expect }) => {
-      // Bun packs this wrongly
-      if (pm === 'bun') return
+    test.skipIf(isWindowsCI)(
+      `packlist - ${pm} / ${strategy} / with-files-and-glob`,
+      testOpts,
+      async ({ expect }) => {
+        // Bun packs this wrongly
+        if (pm === 'bun') return
 
-      const fixture = await createFixture({
-        'package.json': JSON.stringify({
-          ...defaultPackageJsonData,
-          ...packageManagerValue,
-          files: ['dir', '!dir/b.js']
-        }),
-        'dir/a.js': '',
-        'dir/b.js': ''
-      })
+        const fixture = await createFixture({
+          'package.json': JSON.stringify({
+            ...defaultPackageJsonData,
+            ...packageManagerValue,
+            files: ['dir', '!dir/b.js'],
+          }),
+          'dir/a.js': '',
+          'dir/b.js': '',
+        })
 
-      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, false, expect)
-      expect(list.sort()).toEqual(['dir/a.js', 'package.json'])
-    })
+        const list = await packlistWithFixture(
+          fixture,
+          fallbackPackageManager,
+          strategy,
+          false,
+          expect,
+        )
+        expect(list.sort()).toEqual(['dir/a.js', 'package.json'])
+      },
+    )
 
-    // prettier-ignore
     // skipping yarn as it does not support ignoring scripts
-    test.skipIf(isWindowsCI || pm.startsWith('yarn'))(`packlist - ${pm} / ${strategy} / ignore-scripts-true`, testOpts, async ({ expect }) => {
-      const fixture = await createFixture({
-        'package.json': JSON.stringify({
-          ...defaultPackageJsonData,
-          ...packageManagerValue,
-          scripts: {
-            prepack: "node -e \"require('fs').writeFileSync('prepack.js', '')\""
-          }
-        }),
-        'a.js': ''
-      })
+    test.skipIf(isWindowsCI || pm.startsWith('yarn'))(
+      `packlist - ${pm} / ${strategy} / ignore-scripts-true`,
+      testOpts,
+      async ({ expect }) => {
+        const fixture = await createFixture({
+          'package.json': JSON.stringify({
+            ...defaultPackageJsonData,
+            ...packageManagerValue,
+            scripts: {
+              prepack:
+                "node -e \"require('fs').writeFileSync('prepack.js', '')\"",
+            },
+          }),
+          'a.js': '',
+        })
 
-      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, true, expect)
-      // NOTE: for some reason the below `exists` check is always false, even if prepack script
-      // is run. But the next expect should still verify that prepack.js is not packed.
-      expect(await fixture.exists('prepack.js')).toBe(false)
-      expect(list.sort()).toEqual(['a.js', 'package.json'])
-    })
+        const list = await packlistWithFixture(
+          fixture,
+          fallbackPackageManager,
+          strategy,
+          true,
+          expect,
+        )
+        // NOTE: for some reason the below `exists` check is always false, even if prepack script
+        // is run. But the next expect should still verify that prepack.js is not packed.
+        expect(await fixture.exists('prepack.js')).toBe(false)
+        expect(list.sort()).toEqual(['a.js', 'package.json'])
+      },
+    )
 
-    // prettier-ignore
     // skipping yarn as it does not support ignoring scripts
-    test.skipIf(isWindowsCI || pm.startsWith('yarn'))(`packlist - ${pm} / ${strategy} / ignore-scripts-false`, testOpts, async ({ expect }) => {
-      const fixture = await createFixture({
-        'package.json': JSON.stringify({
-          ...defaultPackageJsonData,
-          ...packageManagerValue,
-          scripts: {
-            prepack: "node -e \"require('fs').writeFileSync('prepack.js', '')\""
-          }
-        }),
-        'a.js': ''
-      })
+    test.skipIf(isWindowsCI || pm.startsWith('yarn'))(
+      `packlist - ${pm} / ${strategy} / ignore-scripts-false`,
+      testOpts,
+      async ({ expect }) => {
+        const fixture = await createFixture({
+          'package.json': JSON.stringify({
+            ...defaultPackageJsonData,
+            ...packageManagerValue,
+            scripts: {
+              prepack:
+                "node -e \"require('fs').writeFileSync('prepack.js', '')\"",
+            },
+          }),
+          'a.js': '',
+        })
 
-      const list = await packlistWithFixture(fixture, fallbackPackageManager, strategy, false, expect)
-      expect(list.sort()).toEqual(['a.js', 'package.json', 'prepack.js'])
-    })
+        const list = await packlistWithFixture(
+          fixture,
+          fallbackPackageManager,
+          strategy,
+          false,
+          expect,
+        )
+        expect(list.sort()).toEqual(['a.js', 'package.json', 'prepack.js'])
+      },
+    )
   }
 }

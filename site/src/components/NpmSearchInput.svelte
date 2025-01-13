@@ -32,7 +32,7 @@
       options[0] &&
       options[0].value.toLowerCase().startsWith(npmPkgName.toLowerCase())
       ? npmPkgName + options[0].value.slice(npmPkgName.length)
-      : ''
+      : '',
   )
 
   function handleKeyDown(e) {
@@ -90,7 +90,7 @@
     const search = npmPkgName
     const result = await fetch(
       // prettier-ignore
-      `${import.meta.env.VITE_NPM_REGISTRY}/-/v1/search?text=${encodeURIComponent(npmPkgName)}&size=5&quality=0.0&popularity=1.0&maintenance=0.0`
+      `${import.meta.env.VITE_NPM_REGISTRY}/-/v1/search?text=${encodeURIComponent(npmPkgName)}&size=5&quality=0.0&popularity=1.0&maintenance=0.0`,
     )
 
     // `npmPkgName` may have changed when the user types more stuff
@@ -99,7 +99,7 @@
       options = json.objects.map((v) => ({
         value: v.package.name,
         description: v.package.description,
-        version: v.package.version
+        version: v.package.version,
       }))
     }
   }, 500)

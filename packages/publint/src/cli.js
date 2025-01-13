@@ -16,18 +16,18 @@ const cli = sade('publint', false)
   .option(
     '--level',
     `Level of messages to log ('suggestion' | 'warning' | 'error')`,
-    'suggestion'
+    'suggestion',
   )
   .option(
     '--pack',
     `Package manager to use for packing ('auto' | 'npm' | 'yarn' | 'pnpm' | 'bun' | false)`,
-    'auto'
+    'auto',
   )
   .option('--strict', `Report warnings as errors`, false)
 
 cli
   .command('run [dir]', 'Lint a directory (defaults to current directory)', {
-    default: true
+    default: true,
   })
   .action(async (dir, opts) => {
     opts = normalizeOpts(opts)
@@ -93,7 +93,7 @@ cli
               // is already packed, so we don't need to pack it again by passing `false`.
               // Otherwise if it's a local-linked dependency, we use the pack option.
               depDir.includes('node_modules') ? false : opts.pack,
-              true
+              true,
             )
           : []
         // log this lint result
@@ -149,7 +149,7 @@ async function lintDir(pkgDir, level, strict, pack, compact = false) {
     if (suggestions.length) {
       logs.push(c.bold(c.blue('Suggestions:')))
       suggestions.forEach((m, i) =>
-        logs.push(c.dim(`${i + 1}. `) + formatMessage(m, rootPkg))
+        logs.push(c.dim(`${i + 1}. `) + formatMessage(m, rootPkg)),
       )
     }
 
@@ -157,7 +157,7 @@ async function lintDir(pkgDir, level, strict, pack, compact = false) {
     if (warnings.length) {
       logs.push(c.bold(c.yellow('Warnings:')))
       warnings.forEach((m, i) =>
-        logs.push(c.dim(`${i + 1}. `) + formatMessage(m, rootPkg))
+        logs.push(c.dim(`${i + 1}. `) + formatMessage(m, rootPkg)),
       )
     }
 
@@ -165,7 +165,7 @@ async function lintDir(pkgDir, level, strict, pack, compact = false) {
     if (errors.length) {
       logs.push(c.bold(c.red('Errors:')))
       errors.forEach((m, i) =>
-        logs.push(c.dim(`${i + 1}. `) + formatMessage(m, rootPkg))
+        logs.push(c.dim(`${i + 1}. `) + formatMessage(m, rootPkg)),
       )
       process.exitCode = 1
     }

@@ -8,7 +8,7 @@ import { formatMessage } from '../src/utils-node.js'
 
 testFixture('exports-browser-conflict', [
   'EXPORTS_VALUE_CONFLICTS_WITH_BROWSER',
-  'USE_EXPORTS_OR_IMPORTS_BROWSER'
+  'USE_EXPORTS_OR_IMPORTS_BROWSER',
 ])
 
 testFixture('exports-styles', [
@@ -16,31 +16,31 @@ testFixture('exports-styles', [
   'FILE_DOES_NOT_EXIST',
   'FILE_DOES_NOT_EXIST',
   'FILE_INVALID_FORMAT',
-  'FILE_INVALID_FORMAT'
+  'FILE_INVALID_FORMAT',
 ])
 
 testFixture('glob', [])
 
 testFixture('glob-deprecated', [
   'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
-  'EXPORTS_GLOB_NO_MATCHED_FILES'
+  'EXPORTS_GLOB_NO_MATCHED_FILES',
 ])
 
 testFixture('invalid-field-types', [
   'FIELD_INVALID_VALUE_TYPE',
   'FIELD_INVALID_VALUE_TYPE',
   'FIELD_INVALID_VALUE_TYPE',
-  'FIELD_INVALID_VALUE_TYPE'
+  'FIELD_INVALID_VALUE_TYPE',
 ])
 
 testFixture('invalid-jsx-extensions', [
-  ...Array(4).fill('FILE_INVALID_JSX_EXTENSION')
+  ...Array(4).fill('FILE_INVALID_JSX_EXTENSION'),
 ])
 
 testFixture('missing-files', [
   ...Array(8).fill('FILE_DOES_NOT_EXIST'),
   'FILE_NOT_PUBLISHED',
-  'USE_EXPORTS_OR_IMPORTS_BROWSER'
+  'USE_EXPORTS_OR_IMPORTS_BROWSER',
 ])
 
 testFixture('missing-license', ['USE_LICENSE'])
@@ -60,7 +60,7 @@ testFixture('test-1', [
   'LOCAL_DEPENDENCY',
   'LOCAL_DEPENDENCY',
   'TYPES_NOT_EXPORTED',
-  'USE_FILES'
+  'USE_FILES',
 ])
 
 testFixture('test-2', [
@@ -71,7 +71,7 @@ testFixture('test-2', [
   'FILE_DOES_NOT_EXIST',
   'FILE_INVALID_FORMAT',
   'FILE_INVALID_FORMAT',
-  'USE_EXPORTS_BROWSER'
+  'USE_EXPORTS_BROWSER',
 ])
 
 testFixture(
@@ -82,9 +82,9 @@ testFixture(
     'EXPORTS_VALUE_INVALID',
     'FILE_DOES_NOT_EXIST',
     'FILE_INVALID_FORMAT',
-    'FILE_INVALID_FORMAT'
+    'FILE_INVALID_FORMAT',
   ],
-  { level: 'warning' }
+  { level: 'warning' },
 )
 
 testFixture(
@@ -92,9 +92,9 @@ testFixture(
   [
     'EXPORTS_MODULE_SHOULD_BE_ESM',
     'EXPORTS_VALUE_INVALID',
-    'FILE_DOES_NOT_EXIST'
+    'FILE_DOES_NOT_EXIST',
   ],
-  { level: 'error' }
+  { level: 'error' },
 )
 
 testFixture(
@@ -105,9 +105,9 @@ testFixture(
     'EXPORTS_VALUE_INVALID',
     'FILE_DOES_NOT_EXIST',
     'FILE_INVALID_FORMAT',
-    'FILE_INVALID_FORMAT'
+    'FILE_INVALID_FORMAT',
   ],
-  { level: 'error', strict: true }
+  { level: 'error', strict: true },
 )
 
 testFixture(
@@ -120,9 +120,9 @@ testFixture(
     { code: 'FILE_DOES_NOT_EXIST', type: 'error' },
     { code: 'FILE_INVALID_FORMAT', type: 'error' },
     { code: 'FILE_INVALID_FORMAT', type: 'error' },
-    { code: 'USE_EXPORTS_BROWSER', type: 'suggestion' }
+    { code: 'USE_EXPORTS_BROWSER', type: 'suggestion' },
   ],
-  { strict: true }
+  { strict: true },
 )
 
 testFixture('types', ['TYPES_NOT_EXPORTED'])
@@ -132,16 +132,16 @@ testFixture('types-exports-resolution', [])
 testFixture('types-exports-resolution-cjs', [])
 
 testFixture('types-exports-resolution-cjs-explicit', [
-  'EXPORT_TYPES_INVALID_FORMAT'
+  'EXPORT_TYPES_INVALID_FORMAT',
 ])
 
 testFixture('types-exports-resolution-dual', [
   'TYPES_NOT_EXPORTED',
-  'TYPES_NOT_EXPORTED'
+  'TYPES_NOT_EXPORTED',
 ])
 
 testFixture('types-exports-resolution-dual-explicit', [
-  'EXPORT_TYPES_INVALID_FORMAT'
+  'EXPORT_TYPES_INVALID_FORMAT',
 ])
 
 testFixture('types-versions', [])
@@ -151,14 +151,14 @@ testFixture('umd', ['FILE_INVALID_FORMAT', 'FILE_INVALID_FORMAT'])
 testFixture('deprecated-fields', [
   'DEPRECATED_FIELD_JSNEXT',
   'DEPRECATED_FIELD_JSNEXT',
-  'USE_TYPE'
+  'USE_TYPE',
 ])
 
 testFixture('invalid-repository-value-string-not-url', [
   {
     code: 'INVALID_REPOSITORY_VALUE',
-    type: 'warning'
-  }
+    type: 'warning',
+  },
 ])
 
 testFixture('invalid-repository-value-shorthand', [])
@@ -168,22 +168,22 @@ testFixture('invalid-repository-value-shorthand-nested', [])
 testFixture('invalid-repository-value-object-not-git-url', [
   {
     code: 'INVALID_REPOSITORY_VALUE',
-    type: 'warning'
-  }
+    type: 'warning',
+  },
 ])
 
 testFixture('invalid-repository-value-object-shorthand-site', [
   {
     code: 'INVALID_REPOSITORY_VALUE',
-    type: 'suggestion'
-  }
+    type: 'suggestion',
+  },
 ])
 
 testFixture('invalid-repository-value-object-deprecated', [
   {
     code: 'INVALID_REPOSITORY_VALUE',
-    type: 'suggestion'
-  }
+    type: 'suggestion',
+  },
 ])
 
 /**
@@ -206,7 +206,7 @@ function testFixture(name, expectCodes, options) {
     const { messages } = await publint({
       pkgDir,
       level: options?.level,
-      strict: options?.strict
+      strict: options?.strict,
     })
 
     // unfortunately the messages are not always in order as checks are ran in parallel,
@@ -215,7 +215,7 @@ function testFixture(name, expectCodes, options) {
 
     if (options?.debug) {
       const pkg = JSON.parse(
-        await fs.readFile(path.join(pkgDir, 'package.json'), 'utf-8')
+        await fs.readFile(path.join(pkgDir, 'package.json'), 'utf-8'),
       )
       console.log()
       console.log('Logs:', name)

@@ -2,7 +2,7 @@ import {
   commonInternalPaths,
   invalidJsxExtensions,
   knownBrowserishConditions,
-  licenseFiles
+  licenseFiles,
 } from './constants.js'
 import {
   exportsGlob,
@@ -27,7 +27,7 @@ import {
   isGitUrl,
   isShorthandRepositoryUrl,
   isShorthandGitHubOrGitLabUrl,
-  isDeprecatedGitHubGitUrl
+  isDeprecatedGitHubGitUrl,
 } from './utils.js'
 
 /**
@@ -88,7 +88,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             code: 'USE_FILES',
             args: {},
             path: ['name'],
-            type: 'suggestion'
+            type: 'suggestion',
           })
           break
         }
@@ -114,7 +114,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           code: 'USE_LICENSE',
           args: { licenseFilePath: matchedLicenseFilePath },
           path: ['name'],
-          type: 'suggestion'
+          type: 'suggestion',
         })
       }
     })
@@ -131,7 +131,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             code: 'LOCAL_DEPENDENCY',
             args: {},
             path: ['dependencies', depName],
-            type: 'error'
+            type: 'error',
           })
         }
       }
@@ -145,7 +145,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       code: 'USE_TYPE',
       args: {},
       path: ['name'],
-      type: 'suggestion'
+      type: 'suggestion',
     })
   }
 
@@ -170,10 +170,10 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             code: 'IMPLICIT_INDEX_JS_INVALID_FORMAT',
             args: {
               actualFormat,
-              expectFormat
+              expectFormat,
             },
             path: ['name'],
-            type: 'warning'
+            type: 'warning',
           })
         }
       }
@@ -191,7 +191,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       const mainPath = vfs.pathJoin(pkgDir, main)
       const mainContent = await readFile(mainPath, mainPkgPath, [
         '.js',
-        '/index.js'
+        '/index.js',
       ])
       if (mainContent === false) return
       if (hasInvalidJsxExtension(main, mainPkgPath)) return
@@ -212,10 +212,10 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             actualFormat,
             expectFormat,
             actualExtension,
-            expectExtension: getCodeFormatExtension(actualFormat)
+            expectExtension: getCodeFormatExtension(actualFormat),
           },
           path: mainPkgPath,
-          type: 'warning'
+          type: 'warning',
         })
       }
       if (actualFormat === 'ESM' && exports == null) {
@@ -223,7 +223,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           code: 'HAS_ESM_MAIN_BUT_NO_EXPORTS',
           args: {},
           path: mainPkgPath,
-          type: 'suggestion'
+          type: 'suggestion',
         })
       }
     })
@@ -241,7 +241,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       const modulePath = vfs.pathJoin(pkgDir, module)
       const moduleContent = await readFile(modulePath, modulePkgPath, [
         '.js',
-        '/index.js'
+        '/index.js',
       ])
       if (moduleContent === false) return
       if (hasInvalidJsxExtension(module, modulePkgPath)) return
@@ -252,7 +252,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           code: 'MODULE_SHOULD_BE_ESM',
           args: {},
           path: modulePkgPath,
-          type: 'error'
+          type: 'error',
         })
       }
       // TODO: Check valid content too?
@@ -261,7 +261,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           code: 'HAS_MODULE_BUT_NO_EXPORTS',
           args: {},
           path: modulePkgPath,
-          type: 'suggestion'
+          type: 'suggestion',
         })
       }
     })
@@ -289,7 +289,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         code: 'EXPORTS_MISSING_ROOT_ENTRYPOINT',
         args: { mainFields },
         path: exportsPkgPath,
-        type: 'warning'
+        type: 'warning',
       })
     }
   }
@@ -307,7 +307,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     'jsnext:main',
     'jsnext',
     'unpkg',
-    'jsdelivr'
+    'jsdelivr',
   ]
   // if has typesVersions field, it complicates `types`/`typings` field resolution a lot.
   // for now skip it, but further improvements are tracked at
@@ -336,7 +336,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             path: fieldPkgPath,
             // `module` should be used instead, but if it's already specified, downgrade as a suggestion
             // as the jsnext fields are likely for compat only.
-            type: module ? 'suggestion' : 'warning'
+            type: module ? 'suggestion' : 'warning',
           })
         }
       })
@@ -355,14 +355,14 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           code: 'USE_EXPORTS_BROWSER',
           args: {},
           path: browserPkgPath,
-          type: 'suggestion'
+          type: 'suggestion',
         })
       } else {
         messages.push({
           code: 'USE_EXPORTS_OR_IMPORTS_BROWSER',
           args: {},
           path: browserPkgPath,
-          type: 'suggestion'
+          type: 'suggestion',
         })
       }
     }
@@ -379,7 +379,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       const files = await exportsGlob(
         vfs.pathJoin(pkgDir, './*'),
         vfs,
-        _packedFiles
+        _packedFiles,
       )
       const pq = createPromiseQueue()
       for (const filePath of files) {
@@ -387,7 +387,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           hasInvalidJsxExtension(
             filePath,
             ['name'],
-            '/' + vfs.pathRelative(pkgDir, filePath)
+            '/' + vfs.pathRelative(pkgDir, filePath),
           )
         )
           continue
@@ -419,7 +419,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             const expectFilePath = replaceLast(
               filePath,
               actualExtension,
-              expectExtension
+              expectExtension,
             )
             if (await vfs.isPathExist(expectFilePath)) return
 
@@ -432,10 +432,10 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
                 expectFormat,
                 actualExtension,
                 expectExtension,
-                actualFilePath: '/' + vfs.pathRelative(pkgDir, filePath)
+                actualFilePath: '/' + vfs.pathRelative(pkgDir, filePath),
               },
               path: ['name'],
-              type: 'warning'
+              type: 'warning',
             })
           }
         })
@@ -495,7 +495,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           code: 'FILE_DOES_NOT_EXIST',
           args: {},
           path: pkgPath,
-          type: 'error'
+          type: 'error',
         })
       }
       return false
@@ -518,7 +518,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           code: 'INVALID_REPOSITORY_VALUE',
           args: { type: 'invalid-string-shorthand' },
           path: ['repository'],
-          type: 'warning'
+          type: 'warning',
         })
       }
     } else if (
@@ -531,21 +531,21 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           code: 'INVALID_REPOSITORY_VALUE',
           args: { type: 'invalid-git-url' },
           path: ['repository', 'url'],
-          type: 'warning'
+          type: 'warning',
         })
       } else if (isDeprecatedGitHubGitUrl(repository.url)) {
         messages.push({
           code: 'INVALID_REPOSITORY_VALUE',
           args: { type: 'deprecated-github-git-protocol' },
           path: ['repository', 'url'],
-          type: 'suggestion'
+          type: 'suggestion',
         })
       } else if (isShorthandGitHubOrGitLabUrl(repository.url)) {
         messages.push({
           code: 'INVALID_REPOSITORY_VALUE',
           args: { type: 'shorthand-git-sites' },
           path: ['repository', 'url'],
-          type: 'suggestion'
+          type: 'suggestion',
         })
       }
     }
@@ -559,7 +559,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       code: 'FILE_NOT_PUBLISHED',
       args: {},
       path: pkgPath,
-      type: 'error'
+      type: 'error',
     })
   }
 
@@ -575,10 +575,10 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         code: 'FILE_INVALID_JSX_EXTENSION',
         args: {
           actualExtension: matched,
-          globbedFilePath
+          globbedFilePath,
         },
         path: currentPath,
-        type: 'error'
+        type: 'error',
       })
       return true
     }
@@ -597,10 +597,10 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         code: 'FIELD_INVALID_VALUE_TYPE',
         args: {
           actualType: typeof fieldValue,
-          expectTypes
+          expectTypes,
         },
         path: pkgPath,
-        type: 'error'
+        type: 'error',
       })
       return false
     }
@@ -645,7 +645,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
   function crawlExports(
     exportsValue,
     currentPath,
-    isAfterNodeCondition = false
+    isAfterNodeCondition = false,
   ) {
     if (typeof exportsValue === 'string') {
       promiseQueue.push(async () => {
@@ -660,12 +660,12 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             code: 'EXPORTS_GLOB_NO_DEPRECATED_SUBPATH_MAPPING',
             args: {
               expectPath,
-              expectValue: exportsValue + '*'
+              expectValue: exportsValue + '*',
             },
             path: currentPath,
             // if a trailing glob is also specified, that means this key is for backwards compat only.
             // lower severity to suggestion instead.
-            type: expectPathAlreadyExist ? 'suggestion' : 'warning'
+            type: expectPathAlreadyExist ? 'suggestion' : 'warning',
           })
           // help fix glob so we can further analyze other issues
           exportsValue += '*'
@@ -676,10 +676,10 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           messages.push({
             code: 'EXPORTS_VALUE_INVALID',
             args: {
-              suggestValue: './' + exportsValue.replace(/^[\/]+/, '')
+              suggestValue: './' + exportsValue.replace(/^[\/]+/, ''),
             },
             path: currentPath,
-            type: 'error'
+            type: 'error',
           })
         }
 
@@ -691,7 +691,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             code: 'EXPORTS_GLOB_NO_MATCHED_FILES',
             args: {},
             path: currentPath,
-            type: 'warning'
+            type: 'warning',
           })
           return
         }
@@ -701,17 +701,17 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         // if so, warn about this conflict as it's often unexpected behaviour.
         if (typeof browser === 'object' && exportsValue in browser) {
           const browserishCondition = knownBrowserishConditions.find((c) =>
-            currentPath.includes(c)
+            currentPath.includes(c),
           )
           if (browserishCondition) {
             messages.push({
               code: 'EXPORTS_VALUE_CONFLICTS_WITH_BROWSER',
               args: {
                 browserPath: browserPkgPath.concat(exportsValue),
-                browserishCondition
+                browserishCondition,
               },
               path: currentPath,
-              type: 'warning'
+              type: 'warning',
             })
           }
         }
@@ -724,7 +724,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             hasInvalidJsxExtension(
               filePath,
               currentPath,
-              isGlob ? './' + vfs.pathRelative(pkgDir, filePath) : undefined
+              isGlob ? './' + vfs.pathRelative(pkgDir, filePath) : undefined,
             )
           )
             continue
@@ -750,7 +750,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
                   code: 'EXPORTS_MODULE_SHOULD_BE_ESM',
                   args: {},
                   path: currentPath,
-                  type: 'error'
+                  type: 'error',
                 })
               }
               return
@@ -783,7 +783,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
                 const expectFilePath = replaceLast(
                   filePath,
                   actualExtension,
-                  expectExtension
+                  expectExtension,
                 )
                 if (await vfs.isPathExist(expectFilePath)) return
               }
@@ -799,10 +799,10 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
                   expectExtension,
                   actualFilePath: isGlob
                     ? './' + vfs.pathRelative(pkgDir, filePath)
-                    : exportsValue
+                    : exportsValue,
                 },
                 path: currentPath,
-                type: 'warning'
+                type: 'warning',
               })
             }
           })
@@ -837,7 +837,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             code: 'EXPORTS_TYPES_SHOULD_BE_FIRST',
             args: {},
             path: currentPath.concat('types'),
-            type: 'error'
+            type: 'error',
           })
         }
       }
@@ -853,7 +853,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           code: 'EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE',
           args: {},
           path: currentPath.concat('module'),
-          type: 'error'
+          type: 'error',
         })
       }
 
@@ -866,7 +866,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
           code: 'EXPORTS_DEFAULT_SHOULD_BE_LAST',
           args: {},
           path: currentPath.concat('default'),
-          type: 'error'
+          type: 'error',
         })
       }
 
@@ -878,7 +878,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         crawlExports(
           exportsValue[key],
           currentPath.concat(key),
-          isKeyAfterNodeCondition
+          isKeyAfterNodeCondition,
         )
         if (key === 'node') {
           isKeyAfterNodeCondition = true
@@ -935,7 +935,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
               exportsRootValue,
               // @ts-expect-error till this day, ts still doesn't understand `filter(Boolean)`
               ['types', format, env].filter(Boolean),
-              exportsPath
+              exportsPath,
             )
 
             if (!result) continue
@@ -961,7 +961,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
               // check if we're hitting this case :(
               const dtsActualFormat = await getDtsFilePathFormat(
                 resolvedPath,
-                vfs
+                vfs,
               )
 
               /** @type {'ESM' | 'CJS' | undefined} */
@@ -978,17 +978,17 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
                   exportsRootValue,
                   // @ts-expect-error till this day, ts still doesn't understand `filter(Boolean)`
                   [format, env].filter(Boolean),
-                  exportsPath
+                  exportsPath,
                 )
                 if (nonTypesResult?.value) {
                   const nonTypesResolvedPath = vfs.pathJoin(
                     pkgDir,
-                    nonTypesResult.value
+                    nonTypesResult.value,
                   )
                   if (await vfs.isPathExist(nonTypesResolvedPath)) {
                     dtsExpectFormat = await getFilePathFormat(
                       nonTypesResolvedPath,
-                      vfs
+                      vfs,
                     )
                   }
                 }
@@ -1009,16 +1009,16 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
                     actualFormat: dtsActualFormat,
                     expectFormat: dtsExpectFormat,
                     actualExtension: vfs.getExtName(result.value),
-                    expectExtension: getDtsCodeFormatExtension(dtsExpectFormat)
+                    expectExtension: getDtsCodeFormatExtension(dtsExpectFormat),
                   },
                   path: result.path,
-                  type: 'warning'
+                  type: 'warning',
                 })
               }
             } else {
               // adjacent dts file here is always in the correct format
               const hasAdjacentDtsFile = await vfs.isPathExist(
-                vfs.pathJoin(pkgDir, getAdjacentDtsPath(result.value))
+                vfs.pathJoin(pkgDir, getAdjacentDtsPath(result.value)),
               )
               // if there's no adjacent dts file, it's likely they don't support moduleResolution: bundler.
               // try to provide a warning.
@@ -1027,7 +1027,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
                 // it's of a matching format
                 const dtsActualFormat = await getDtsFilePathFormat(
                   vfs.pathJoin(pkgDir, typesFilePath),
-                  vfs
+                  vfs,
                 )
                 const dtsExpectFormat = format === 'import' ? 'ESM' : 'CJS'
                 // if it's a matching format, we can recommend using the types file for this exports condition too.
@@ -1043,10 +1043,10 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
                       : vfs.getExtName(typesFilePath),
                     expectExtension: isMatchingFormat
                       ? undefined
-                      : getDtsCodeFormatExtension(dtsExpectFormat)
+                      : getDtsCodeFormatExtension(dtsExpectFormat),
                   },
                   path: result.path,
-                  type: 'warning'
+                  type: 'warning',
                 })
               }
             }

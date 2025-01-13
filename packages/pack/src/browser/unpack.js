@@ -1,6 +1,6 @@
 import {
   arrayBufferToReadableStream,
-  readableStreamToArrayBuffer
+  readableStreamToArrayBuffer,
 } from '../shared/buffer-stream.js'
 import { getFilesRootDir, parseTar } from '../shared/parse-tar.js'
 
@@ -11,7 +11,7 @@ export async function unpack(tarball) {
       ? tarball
       : arrayBufferToReadableStream(tarball)
   const buffer = await readableStreamToArrayBuffer(
-    stream.pipeThrough(new DecompressionStream('gzip'))
+    stream.pipeThrough(new DecompressionStream('gzip')),
   )
   const files = parseTar(buffer)
   const rootDir = getFilesRootDir(files)
