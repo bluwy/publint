@@ -29,13 +29,13 @@
 
 - `publint` now runs your project's package manager's `pack` command to get the list of packed files for linting. The previous `npm-packlist` dependency is now removed. ([#120](https://github.com/publint/publint/pull/120))
 
+  > NOTE: In this release (v0.3.0), the `pack` command also runs lifecycle scripts like `prepare`, `prepack`, and `postpack`. This behavior is unintentional and is fixed in v0.3.2, where they will no longer run (except for yarn as it does not support ignoring lifecycle scripts for local projects). This returns to the behavior in v0.2.
+
   A new `pack` option is added to the node API to allow configuring this. It defaults to `'auto'` and will automatically detect your project's package manager using [`package-manager-detector`](https://github.com/antfu-collective/package-manager-detector). See its JSDoc for more information of the option.
 
   This change is made as package managers have different behaviors for packing files, so running their `pack` command directly allows for more accurate linting. However, as a result of executing these commands in a child process, it may take 200-500ms longer to lint depending on the package manager used and the project size. The new handling also does not support yarn 1. See [this comment](https://github.com/publint/publint/issues/11#issuecomment-2176160022) for more information.
 
   If you use yarn 1, you should upgrade to the latest yarn version or a different package manager. Otherwise, no other changes are required for this new behavior.
-
-  > NOTE: In this release (v0.3.0), the `pack` command also runs lifecycle scripts like `prepare`, `prepack`, and `postpack`. This behavior is unintentional and is fixed in v0.3.2, where they will no longer run (except for yarn as it does not support ignoring lifecycle scripts for local projects). This returns to the behavior in v0.2.
 
 ### Patch Changes
 
