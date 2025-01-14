@@ -35,6 +35,8 @@
 
   If you use yarn 1, you should upgrade to the latest yarn version or a different package manager. Otherwise, no other changes are required for this new behavior.
 
+  > NOTE: In this release (v0.3.0), the `pack` command also runs lifecycle scripts like `prepare`, `prepack`, and `postpack`. This behavior is unintentional and is fixed in v0.3.2, where they will no longer run (except for yarn as it does not support ignoring lifecycle scripts for local projects). This returns to the behavior in v0.2.
+
 ### Patch Changes
 
 - Initial setup to publish with Changesets ([`24a62f5`](https://github.com/publint/publint/commit/24a62f57dd1e5fc6e6410d3e2f99811475b61480))
