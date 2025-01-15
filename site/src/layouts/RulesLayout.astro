@@ -1,0 +1,75 @@
+---
+import '../global.css'
+import BaseLayout from './BaseLayout.astro'
+import Header from '../components/Header.astro'
+
+const headings = Astro.props.headings
+  .filter((h) => h.depth === 2)
+  .map((h) => h.slug)
+---
+
+<BaseLayout title="publint - rules" description="Lint rules for npm packages">
+  <main class="w-full mx-auto p-4 pt-10">
+    <div style="display: none">
+      <svg>
+        <symbol id="autolink-icon" width="24" height="24" fill="currentColor">
+          <path
+            d="M14.828 12l1.414 1.414 2.828-2.828a4 4 0 0 0-5.657-5.657l-2.828 2.828L12 9.172l2.828-2.828a2 2 0 0 1 2.828 2.828L14.828 12zM12 14.83l1.414 1.414-2.828 2.828a4 4 0 0 1-5.657-5.657l2.828-2.828L9.172 12l-2.828 2.83a2 2 0 0 0 2.828 2.828L12 14.83zm2.83-4.244a1 1 0 1 0-1.414-1.414l-4.243 4.243a1 1 0 0 0 1.414 1.414l4.243-4.243z"
+          ></path>
+        </symbol>
+      </svg>
+    </div>
+    <Header />
+    <div class="flex justify-center">
+      <div class="docs w-full max-w-3xl xl:ml-32">
+        <slot />
+        <footer class="my-16">
+          <a class="anchor-link" href="/"> ➥ Back to main page </a>
+        </footer>
+      </div>
+      <div class="relative hidden xl:block">
+        <aside class="rules-aside-toc pt-18 sticky top-10">
+          <p class="font-semibold mt-0 mb-2">On this page</p>
+          <ul>
+            {
+              headings.map((heading) => (
+                <li>
+                  <a href={`#${heading}`}>{heading}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </aside>
+      </div>
+    </div>
+  </main>
+  <script>
+    setHashActive(window.location.hash, true)
+
+    window.addEventListener('hashchange', (e) => {
+      setHashActive(new URL(e.oldURL).hash, false)
+      setHashActive(new URL(e.newURL).hash, true)
+    })
+
+    /**
+     * @param {string} hash
+     * @param {boolean} active
+     */
+    function setHashActive(hash, active) {
+      hash = hash.replace('#', '')
+      if (!hash) return
+      const heading = document.getElementById(hash)
+      const tocLink = document.querySelector(
+        `.rules-aside-toc [href="#${hash}"]`
+      )
+      if (!heading || !tocLink) return
+      if (active) {
+        heading.classList.add('active')
+        tocLink.classList.add('active')
+      } else {
+        heading.classList.remove('active')
+        tocLink.classList.remove('active')
+      }
+    }
+  </script>
+</BaseLayout>

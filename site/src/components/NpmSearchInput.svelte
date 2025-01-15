@@ -118,23 +118,32 @@
     e.preventDefault()
     if (!npmPkgName) return
 
+    const isHomePage = location.pathname === '/'
+    const push = (pathname) => {
+      if (isHomePage) {
+        location.pathname = pathname
+      } else {
+        url.push(pathname)
+      }
+    }
+
     // Support raw npm links
     if (isNpmUrl(npmPkgName)) {
       const link = new URL(npmPkgName)
-      url.push(link.pathname.slice('/package'.length))
+      push(link.pathname.slice('/package'.length))
     }
     // Support pkg.pr.new links
     else if (isPkgPrNewUrl(npmPkgName)) {
       const link = new URL(npmPkgName)
-      url.push(`/pkg.pr.new${link.pathname}`)
+      push(`/pkg.pr.new${link.pathname}`)
     }
     // Fallback navigate
     else {
       const npmPkgVersion = options.find((o) => o.value === npmPkgName)?.version
       if (npmPkgVersion) {
-        url.push(`/${npmPkgName}@${npmPkgVersion}`)
+        push(`/${npmPkgName}@${npmPkgVersion}`)
       } else {
-        url.push(`/${npmPkgName}`)
+        push(`/${npmPkgName}`)
       }
     }
 

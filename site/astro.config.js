@@ -1,26 +1,45 @@
-import fs from 'node:fs/promises'
-import { defineConfig } from 'vite'
-import { svelte } from '@sveltejs/vite-plugin-svelte'
-import unocss from '@unocss/vite'
-import { markdown } from './scripts/vitePluginMarkdown.js'
+import { defineConfig } from 'astro/config'
+import starlight from '@astrojs/starlight'
+import svelte from '@astrojs/svelte'
+import unocss from '@unocss/astro'
 
+// https://astro.build/config
 export default defineConfig({
-  optimizeDeps: {
-    // Vite's scanner doesn't scan references via `new URL(...)`.
-    // In this app, we import the worker with the syntax, so manually add the worker for now.
-    // TODO: Fix this in Vite
-    entries: ['**/*.html', './src/utils/worker.js'],
-  },
-  plugins: [serveAnalysisJson(), unocss(), svelte(), markdown()],
-  esbuild: {
-    legalComments: 'none',
-  },
+  // Don't need sitemap for now
+  // site: 'https://publint.dev',
+  devToolbar: { enabled: false },
+  trailingSlash: 'never',
   build: {
-    rollupOptions: {
-      input: {
-        main: new URL('/index.html', import.meta.url).pathname,
-        rules: new URL('/rules.html', import.meta.url).pathname,
+    format: 'file',
+  },
+  integrations: [
+    starlight({
+      title: 'publint',
+      social: {
+        github: 'https://github.com/publint/publint',
       },
+      sidebar: [],
+      disable404Route: true,
+      expressiveCode: {
+        themes: ['dark-plus', 'light-plus'],
+      },
+      // Re-enable this when have actual docs
+      pagefind: false,
+    }),
+    svelte(),
+    unocss(),
+  ],
+  vite: {
+    envPrefix: 'VITE_',
+    optimizeDeps: {
+      // Vite's scanner doesn't scan references via `new URL(...)`.
+      // In this app, we import the worker with the syntax, so manually add the worker for now.
+      // TODO: Fix this in Vite
+      entries: ['./src/components/*.svelte', './src/utils/worker.js'],
+    },
+    plugins: [serveAnalysisJson()],
+    esbuild: {
+      legalComments: 'none',
     },
   },
 })

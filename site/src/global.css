@@ -47,15 +47,11 @@ button {
   padding: 0.15rem 0.25rem;
 }
 
-.docs code[class*='language-'] {
-  display: block;
-  padding: 0.5rem 0.8rem;
-}
-
-.docs .shiki {
+.docs .expressive-code pre {
   border-radius: 0.25rem;
-  padding: 0.5rem;
-  overflow-x: auto;
+}
+.docs .expressive-code figure {
+  box-shadow: none;
 }
 
 .docs h2.active > code {

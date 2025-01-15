@@ -2,7 +2,6 @@
   import selectIcon from '../assets/select.svg'
   import Loading from './Loading.svelte'
   import { clickOutside } from '../utils/click-outside'
-  import { url } from '../utils/url'
 
   // maybe be undefined if visit page without version yet
 
@@ -22,14 +21,6 @@
   let tags = {}
   let versionsLoading = $state(false)
   let versionsLoaded = $state(false)
-
-  // reset fetched version when changing packages
-  $effect(() => {
-    if ($url) {
-      versionsLoading = false
-      versionsLoaded = false
-    }
-  })
 
   let open = $state(false)
 
@@ -87,7 +78,7 @@
       {#if !versionsLoading}
         <img
           class="block p-0 m-0 @dark:filter-invert"
-          src={selectIcon}
+          src={selectIcon.src}
           alt="select icon"
           height="16"
         />
