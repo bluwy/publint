@@ -4,21 +4,14 @@
   import severityWarning from '../assets/severity-warning.svg'
   import severityError from '../assets/severity-error.svg'
 
-  let open = $state(false)
-  /** @type {Record<string, number> | undefined} */
-  let results = $state()
+  /**
+   * @typedef {Object} Props
+   * @property {Record<string, number>} results
+   */
+  /** @type {Props} */
+  let { results } = $props()
 
-  fetch('/analysis.json')
-    .then(async (res) => {
-      results = await res.json()
-      // This is kinda hacky, but it works. Since the analysis usually takes up a lot of height,
-      // we don't want to set a fixed height here, so remove it
-      document.querySelector('main')?.classList.remove('min-h-screen')
-    })
-    .catch((e) => {
-      // best effort. simply log if fail
-      console.log(e)
-    })
+  let open = $state(false)
 
   /**
    * @param {number} num
@@ -79,53 +72,51 @@
   }
 </script>
 
-{#if results}
-  <div class="relative w-full mt-16">
-    <h2 class="text-center font-medium text-xl">Popular packages</h2>
+<div class="relative w-full mt-16">
+  <h2 class="text-center font-medium text-xl">Popular packages</h2>
 
-    <div
-      class="flex justify-center items-center flex-wrap gap-4 max-w-300 mx-auto transition-height {open
-        ? 'mb-16'
-        : 'h-50 overflow-y-hidden'}"
-    >
-      {#each Object.entries(results) as [key, value]}
-        <a
-          class="analysis-block inline-block items-center gap-1 w-60 p-2 rounded-md border-2 border-solid decoration-none text-ellipsis whitespace-nowrap overflow-x-hidden transition-background-color {numberToClass(
-            value,
-          )}"
-          href="/{key}"
-        >
-          <img
-            class="inline-block h-5 mr-0.75 align-middle"
-            src={numberToSeveritySrc(value)}
-            alt={numberToSeverityText(value)}
-          />
-          <span class="opacity-90 align-middle">{getPackageName(key)}</span>
-        </a>
-      {/each}
-    </div>
-
-    <!-- fade shadow -->
-    {#if !open}
-      <div
-        class="absolute bottom-0 w-full h-32 bg-gradient-to-b from-transparent to-gray-300 @dark:to-gray-800 pointer-events-none"
-      ></div>
-      <div
-        class="blur-mask absolute bottom-0 w-full h-28 backdrop-blur pointer-events-none"
-      ></div>
-      <div
-        class="absolute flex justify-center items-center bottom-0 w-full h-16 pointer-events-none"
+  <div
+    class="flex justify-center items-center flex-wrap gap-4 max-w-300 mx-auto transition-height {open
+      ? 'mb-16'
+      : 'h-50 overflow-y-hidden'}"
+  >
+    {#each Object.entries(results) as [key, value]}
+      <a
+        class="analysis-block inline-block items-center gap-1 w-60 p-2 rounded-md border-2 border-solid decoration-none text-ellipsis whitespace-nowrap overflow-x-hidden transition-background-color {numberToClass(
+          value,
+        )}"
+        href="/{key}"
       >
-        <button
-          class="action-button pointer-events-initial"
-          onclick={() => (open = true)}
-        >
-          View all {Object.keys(results).length} packages
-        </button>
-      </div>
-    {/if}
+        <img
+          class="inline-block h-5 mr-0.75 align-middle"
+          src={numberToSeveritySrc(value)}
+          alt={numberToSeverityText(value)}
+        />
+        <span class="opacity-90 align-middle">{getPackageName(key)}</span>
+      </a>
+    {/each}
   </div>
-{/if}
+
+  <!-- fade shadow -->
+  {#if !open}
+    <div
+      class="absolute bottom-0 w-full h-32 bg-gradient-to-b from-transparent to-gray-300 @dark:to-gray-800 pointer-events-none"
+    ></div>
+    <div
+      class="blur-mask absolute bottom-0 w-full h-28 backdrop-blur pointer-events-none"
+    ></div>
+    <div
+      class="absolute flex justify-center items-center bottom-0 w-full h-16 pointer-events-none"
+    >
+      <button
+        class="action-button pointer-events-initial"
+        onclick={() => (open = true)}
+      >
+        View all {Object.keys(results).length} packages
+      </button>
+    </div>
+  {/if}
+</div>
 
 <style>
   /*

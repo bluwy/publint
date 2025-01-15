@@ -6,11 +6,12 @@
   import npmLogo from '../assets/npm.svg'
   import pkgPrNewLogo from '../assets/stackblitz.svg'
   import jsdelivrLogo from '../assets/jsdelivr.svg'
-  import Label from './Label.svelte'
-  import Loading from './Loading.svelte'
-  import NpmSearchInput from './NpmSearchInput.svelte'
-  import PackageVersion from './PackageVersion.svelte'
-  import PkgNode from './PkgNode.svelte'
+  import Header from '../../components/Header.svelte'
+  import Label from '../components/Label.svelte'
+  import Loading from '../components/Loading.svelte'
+  import NpmSearchInput from '../components/NpmSearchInput.svelte'
+  import PackageVersion from '../components/PackageVersion.svelte'
+  import PkgNode from '../components/PkgNode.svelte'
   import { isLocalPkg } from '../utils/common'
   import { url } from '../utils/url'
 
@@ -102,7 +103,7 @@
     // /foo
     // /foo@1.0.0
     // /@foo/bar@1.0.0
-    const parts = location.pathname.slice(1).split('@')
+    const parts = $url.pathname.slice(1).split('@')
     if (parts[0] === '') {
       parts.shift()
       parts[0] = '@' + parts[0]
@@ -194,108 +195,111 @@
   <title>{npmPkgName} - {npmPkgVersion ? npmPkgVersion + ' - ' : ''} publint</title>
 </svelte:head>
 
-{#if npmPkgName}
-  <h1 class="mt-10 mb-0 font-600">
-    {npmPkgName}
-    {#if !error}
-      <PackageVersion
-        version={npmPkgVersion}
-        pkgName={npmPkgName}
-        {isPkgPrNew}
-      />
-    {/if}
-  </h1>
-
-  <p class="flex flex-row justify-center items-end gap-4 mb-10">
-    {#if repo}
-      <a class="inline-block rounded @light:filter-invert" href={repo.url}>
-        <img class="block" src={repo.logo} alt="repo logo" height="20" />
-      </a>
-    {:else}
-      <span class="w-5 h-5"></span>
-    {/if}
-
-    {#if !isPkgPrNew}
-      <a class="inline-block rounded" href={npmUrl}>
-        <img class="block" src={npmLogo.src} alt="npm logo" height="18" />
-      </a>
-
-      <a class="inline-block rounded bg-gray" href={jsdelivrUrl}>
-        <img
-          class="block"
-          src={jsdelivrLogo.src}
-          alt="jsdelivr logo"
-          height="20"
+<main class="flex flex-col items-center min-h-screen p-4">
+  <Header />
+  {#if npmPkgName}
+    <h1 class="mt-10 mb-0 font-600">
+      {npmPkgName}
+      {#if !error}
+        <PackageVersion
+          version={npmPkgVersion}
+          pkgName={npmPkgName}
+          {isPkgPrNew}
         />
-      </a>
-    {:else}
-      <a
-        class="inline-block rounded"
-        href={`https://pkg.pr.new/${npmPkgName}@${npmPkgVersion}`}
-      >
-        <img
-          class="block"
-          src={pkgPrNewLogo.src}
-          alt="pkg.pr.new logo"
-          height="18"
-        />
-      </a>
-    {/if}
-  </p>
-
-  <NpmSearchInput {npmPkgName} />
-  {#if result}
-    <section class="mt-4 flex justify-center items-center gap-4">
-      {#if result.messages.length <= 0}
-        <Label type="success">All good 🎉</Label>
-      {:else}
-        {#if suggestionCount}
-          <Label type="suggestion">
-            {suggestionCount} suggestion{suggestionCount === 1 ? '' : 's'}
-          </Label>
-        {/if}
-        {#if warningCount}
-          <Label type="warning">
-            {warningCount} warning{warningCount === 1 ? '' : 's'}
-          </Label>
-        {/if}
-        {#if errorCount}
-          <Label type="error">
-            {errorCount} error{errorCount === 1 ? '' : 's'}
-          </Label>
-        {/if}
       {/if}
-    </section>
-    <section
-      class="w-full max-w-3xl my-4 bg-gray-200 @dark:bg-gray-900 rounded-md"
-    >
-      <p
-        class="px-4 py-2 m-0 bg-gray-300 @dark:bg-gray-800 font-mono text-sm font-bold"
+    </h1>
+
+    <p class="flex flex-row justify-center items-end gap-4 mb-10">
+      {#if repo}
+        <a class="inline-block rounded @light:filter-invert" href={repo.url}>
+          <img class="block" src={repo.logo} alt="repo logo" height="20" />
+        </a>
+      {:else}
+        <span class="w-5 h-5"></span>
+      {/if}
+
+      {#if !isPkgPrNew}
+        <a class="inline-block rounded" href={npmUrl}>
+          <img class="block" src={npmLogo.src} alt="npm logo" height="18" />
+        </a>
+
+        <a class="inline-block rounded bg-gray" href={jsdelivrUrl}>
+          <img
+            class="block"
+            src={jsdelivrLogo.src}
+            alt="jsdelivr logo"
+            height="20"
+          />
+        </a>
+      {:else}
+        <a
+          class="inline-block rounded"
+          href={`https://pkg.pr.new/${npmPkgName}@${npmPkgVersion}`}
+        >
+          <img
+            class="block"
+            src={pkgPrNewLogo.src}
+            alt="pkg.pr.new logo"
+            height="18"
+          />
+        </a>
+      {/if}
+    </p>
+
+    <NpmSearchInput {npmPkgName} />
+    {#if result}
+      <section class="mt-4 flex justify-center items-center gap-4">
+        {#if result.messages.length <= 0}
+          <Label type="success">All good 🎉</Label>
+        {:else}
+          {#if suggestionCount}
+            <Label type="suggestion">
+              {suggestionCount} suggestion{suggestionCount === 1 ? '' : 's'}
+            </Label>
+          {/if}
+          {#if warningCount}
+            <Label type="warning">
+              {warningCount} warning{warningCount === 1 ? '' : 's'}
+            </Label>
+          {/if}
+          {#if errorCount}
+            <Label type="error">
+              {errorCount} error{errorCount === 1 ? '' : 's'}
+            </Label>
+          {/if}
+        {/if}
+      </section>
+      <section
+        class="w-full max-w-3xl my-4 bg-gray-200 @dark:bg-gray-900 rounded-md"
       >
-        package.json
-      </p>
-      <pre
-        class="relative w-full px-4 py-3 m-0 whitespace-normal text-sm md:text-base overflow-x-auto overflow-y-hidden">
+        <p
+          class="px-4 py-2 m-0 bg-gray-300 @dark:bg-gray-800 font-mono text-sm font-bold"
+        >
+          package.json
+        </p>
+        <pre
+          class="relative w-full px-4 py-3 m-0 whitespace-normal text-sm md:text-base overflow-x-auto overflow-y-hidden">
           <ul class="m-0 p-0 list-none">
             <PkgNode
-            value={result.pkgJson}
-            messages={result.messages}
-            pkg={result.pkgJson}
-          />
+              value={result.pkgJson}
+              messages={result.messages}
+              pkg={result.pkgJson}
+            />
           </ul>
         </pre>
-    </section>
-  {:else}
-    <section class="text-center py-8 opacity-70">
-      {#if error}
-        <p>{error}</p>
-      {:else}
-        <Loading />
-        <p>{status}</p>
-      {/if}
-    </section>
+      </section>
+    {:else}
+      <section class="text-center py-8 opacity-70">
+        {#if error}
+          <p>{error}</p>
+        {:else}
+          <Loading />
+          <p>{status}</p>
+        {/if}
+      </section>
+    {/if}
+  {:else if versionFetched}
+    <h1>Package not found</h1>
+    <NpmSearchInput {npmPkgName} />
   {/if}
-{:else if versionFetched}
-  <h1>Package not found</h1>
-  <NpmSearchInput {npmPkgName} />
-{/if}
+</main>

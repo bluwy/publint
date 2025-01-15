@@ -2,42 +2,10 @@
 import '../global.css'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Footer from '../components/Footer.astro'
-import HomeBackground from '../components/HomeBackground.astro'
-import Logo from '../components/Logo.astro'
-import NpmSearchInput from '../components/NpmSearchInput.svelte'
-import Analysis from '../components/Analysis.svelte'
+import App from '../app/App.svelte'
 ---
 
 <BaseLayout>
-  <main class="flex flex-col items-center min-h-screen">
-    <HomeBackground />
-    <section class="main-section flex flex-col items-center w-full px-4 mb-10">
-      <Logo />
-      <NpmSearchInput client:load autofocus />
-      <p class="my-8">
-        <a class="anchor-link" href="#docs">How it works</a>
-        <strong class="inline-block mx-1">·</strong>
-        <a class="anchor-link" href="/rules.html">Lint rules</a>
-        <strong class="inline-block mx-1">·</strong>
-        <a class="anchor-link" href="https://github.com/publint/publint">
-          GitHub
-        </a>
-      </p>
-    </section>
-    <Analysis client:only />
-  </main>
+  <App client:only />
   <Footer />
 </BaseLayout>
-
-<style>
-  /*
-    try to center the main section with a margin. not using flex center trick since we want the
-    Analysis component to also flow naturally pass the page.
-
-    the main section is 280px average (or 17.5rem), but increase to 19rem so the search input is
-    slightly higher.
-  */
-  .main-section {
-    margin-top: max(calc((100vh - 19rem) / 2), 2rem);
-  }
-</style>

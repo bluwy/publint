@@ -1,7 +1,7 @@
----
-import homeIcon from '../assets/home.svg'
-import githubIcon from '../assets/github.svg'
----
+<script>
+  import homeIcon from '../assets/home.svg'
+  import githubIcon from '../assets/github.svg'
+</script>
 
 <header class="absolute xl:fixed top-0 left-0 w-full z-10 px-4">
   <nav class="bookmark-nav flex gap-4 justify-end max-w-3xl mx-auto">
