@@ -2,6 +2,8 @@ import { defineConfig } from 'astro/config'
 import starlight from '@astrojs/starlight'
 import svelte from '@astrojs/svelte'
 import unocss from '@unocss/astro'
+import { rehypeHeadingIds } from '@astrojs/markdown-remark'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 
 // https://astro.build/config
 export default defineConfig({
@@ -11,6 +13,41 @@ export default defineConfig({
   trailingSlash: 'never',
   build: {
     format: 'file',
+  },
+  markdown: {
+    rehypePlugins: [
+      rehypeHeadingIds,
+      [
+        rehypeAutolinkHeadings,
+        {
+          behavior: 'append',
+          properties: {
+            ariaHidden: 'true',
+            tabIndex: -1,
+            className: 'anchor',
+          },
+          test: ['h2', 'h3', 'h4', 'h5', 'h6'],
+          content: {
+            type: 'element',
+            tagName: 'svg',
+            properties: {
+              width: '24',
+              height: '24',
+              fill: 'currentColor',
+            },
+            children: [
+              {
+                type: 'element',
+                tagName: 'use',
+                properties: {
+                  'xlink:href': '#autolink-icon', // Symbol defined in rules.html
+                },
+              },
+            ],
+          },
+        },
+      ],
+    ],
   },
   integrations: [
     starlight({
@@ -35,25 +72,49 @@ export default defineConfig({
       // Vite's scanner doesn't scan references via `new URL(...)`.
       // In this app, we import the worker with the syntax, so manually add the worker for now.
       // TODO: Fix this in Vite
-      entries: ['./src/components/*.svelte', './src/utils/worker.js'],
+      entries: ['./src/app/**/*.svelte', './src/app/utils/worker.js'],
     },
-    plugins: [serveAnalysisJson()],
+    plugins: [spaFallback(), serveAnalysisJson()],
     esbuild: {
       legalComments: 'none',
     },
   },
 })
 
-const analysisJsonUrl = new URL(
-  '../analysis/cache/_results.json',
-  import.meta.url,
-)
+/**
+ * We need `src/pages/index.astro` to be an SPA fallback, matching the same behavior after deploying
+ * on Cloudflare Pages. We can't use `[...slug].astro` as it only supports specifying known routes.
+ * @returns {import('vite').Plugin}
+ */
+function spaFallback() {
+  return {
+    name: 'spa-fallback',
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        if (
+          req.headers.accept?.includes('text/html') &&
+          !req.url.startsWith('/rules') &&
+          !req.url.startsWith('/docs/')
+        ) {
+          req.url = '/index.html'
+        }
+
+        next()
+      })
+    },
+  }
+}
 
 /**
  * Serve /analysis.json in dev (Handled as Cloudflare worker in prod)
  * @returns {import('vite').Plugin}
  */
 function serveAnalysisJson() {
+  const analysisJsonUrl = new URL(
+    '../analysis/cache/_results.json',
+    import.meta.url,
+  )
+
   /**
    * @param {import('vite').Connect.Server} middlewares
    */
