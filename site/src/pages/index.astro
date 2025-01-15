@@ -6,6 +6,8 @@ import App from '../app/App.svelte'
 ---
 
 <BaseLayout>
-  <App client:only />
+  <div class="min-h-screen">
+    <App client:only />
+  </div>
   <Footer />
 </BaseLayout>
