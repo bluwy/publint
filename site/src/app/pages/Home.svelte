@@ -6,6 +6,7 @@
 
   /** @type {Record<string, number> | undefined} */
   let analysis = $state()
+
   fetch('/analysis.json')
     .then(async (res) => {
       analysis = await res.json()
@@ -43,6 +44,7 @@
   /*
     try to center the main section with a margin. not using flex center trick since we want the
     Analysis component to also flow naturally pass the page.
+
     the main section is 280px average (or 17.5rem), but increase to 19rem so the search input is
     slightly higher.
   */

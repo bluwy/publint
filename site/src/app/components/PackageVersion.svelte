@@ -2,8 +2,7 @@
   import selectIcon from '../assets/select.svg'
   import Loading from './Loading.svelte'
   import { clickOutside } from '../utils/click-outside'
-
-  // maybe be undefined if visit page without version yet
+  import { url } from '../utils/url'
 
   /**
    * @typedef {Object} Props
@@ -12,6 +11,7 @@
    * @property {boolean} isPkgPrNew
    */
 
+  // version may be undefined if visit page without version yet
   /** @type {Props} */
   let { version, pkgName, isPkgPrNew } = $props()
 
@@ -21,6 +21,14 @@
   let tags = {}
   let versionsLoading = $state(false)
   let versionsLoaded = $state(false)
+
+  // reset fetched version when changing packages
+  $effect(() => {
+    if ($url) {
+      versionsLoading = false
+      versionsLoaded = false
+    }
+  })
 
   let open = $state(false)
 

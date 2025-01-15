@@ -118,32 +118,23 @@
     e.preventDefault()
     if (!npmPkgName) return
 
-    const isHomePage = location.pathname === '/'
-    const push = (pathname) => {
-      if (isHomePage) {
-        location.pathname = pathname
-      } else {
-        url.push(pathname)
-      }
-    }
-
     // Support raw npm links
     if (isNpmUrl(npmPkgName)) {
       const link = new URL(npmPkgName)
-      push(link.pathname.slice('/package'.length))
+      url.push(link.pathname.slice('/package'.length))
     }
     // Support pkg.pr.new links
     else if (isPkgPrNewUrl(npmPkgName)) {
       const link = new URL(npmPkgName)
-      push(`/pkg.pr.new${link.pathname}`)
+      url.push(`/pkg.pr.new${link.pathname}`)
     }
     // Fallback navigate
     else {
       const npmPkgVersion = options.find((o) => o.value === npmPkgName)?.version
       if (npmPkgVersion) {
-        push(`/${npmPkgName}@${npmPkgVersion}`)
+        url.push(`/${npmPkgName}@${npmPkgVersion}`)
       } else {
-        push(`/${npmPkgName}`)
+        url.push(`/${npmPkgName}`)
       }
     }
 

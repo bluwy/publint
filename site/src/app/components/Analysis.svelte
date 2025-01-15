@@ -8,6 +8,7 @@
    * @typedef {Object} Props
    * @property {Record<string, number>} results
    */
+
   /** @type {Props} */
   let { results } = $props()
 
