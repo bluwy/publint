@@ -7,7 +7,7 @@
     "dev": "astro dev",
     "build": "astro build && rm -rf dist/temp",
     "preview": "astro preview",
-    "typecheck": "tsc",
+    "typecheck": "astro sync && tsc",
     "packfix": "node ./scripts/packFixtures.js"
   },
   "dependencies": {
