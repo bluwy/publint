@@ -1,5 +1,5 @@
 <script>
-  import selectIcon from '../assets/select.svg'
+  import selectIcon from '../../assets/select.svg'
   import Loading from './Loading.svelte'
   import { clickOutside } from '../utils/click-outside'
   import { url } from '../utils/url'

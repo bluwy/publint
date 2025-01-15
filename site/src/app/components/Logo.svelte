@@ -1,6 +1,6 @@
----
-import logo from '../assets/logo.svg'
----
+<script>
+  import logo from '../../assets/logo.svg'
+</script>
 
 <section class="flex flex-col items-center">
   <div class="flex items-center">
