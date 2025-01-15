@@ -84,9 +84,12 @@
     } else if (url.startsWith('gitlab:')) {
       return { logo: gitlabLogo.src, url: `https://gitlab.com/${url.slice(7)}` }
     } else if (url.startsWith('bitbucket:')) {
-      return { logo: gitLogo.src, url: `https://bitbucket.org/${url.slice(10)}` }
+      return {
+        logo: gitLogo.src,
+        url: `https://bitbucket.org/${url.slice(10)}`,
+      }
     } else if (url.split('/').length === 2) {
-      return { logo: githubLogo, url: `https://github.com/${url}` }
+      return { logo: githubLogo.src, url: `https://github.com/${url}` }
     } else if (url) {
       return { logo: gitLogo.src, url }
     }
@@ -206,7 +209,7 @@
   <p class="flex flex-row justify-center items-end gap-4 mb-10">
     {#if repo}
       <a class="inline-block rounded @light:filter-invert" href={repo.url}>
-        <img class="block" src={repo.logo.src} alt="repo logo" height="20" />
+        <img class="block" src={repo.logo} alt="repo logo" height="20" />
       </a>
     {:else}
       <span class="w-5 h-5"></span>
@@ -218,7 +221,12 @@
       </a>
 
       <a class="inline-block rounded bg-gray" href={jsdelivrUrl}>
-        <img class="block" src={jsdelivrLogo.src} alt="jsdelivr logo" height="20" />
+        <img
+          class="block"
+          src={jsdelivrLogo.src}
+          alt="jsdelivr logo"
+          height="20"
+        />
       </a>
     {:else}
       <a
