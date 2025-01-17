@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build && rm -rf dist/temp",
-    "preview": "astro preview",
+    "preview": "node ./scripts/preview.js",
     "typecheck": "astro sync && tsc",
     "packfix": "node ./scripts/packFixtures.js"
   },
@@ -26,6 +26,7 @@
     "@unocss/vite": "^65.4.0",
     "astro": "^5.1.7",
     "rehype-autolink-headings": "^7.1.0",
-    "svelte": "^5.17.3"
+    "svelte": "^5.17.3",
+    "vite": "^6.0.7"
   }
 }

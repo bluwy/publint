@@ -125,6 +125,9 @@ importers:
       svelte:
         specifier: ^5.17.3
         version: 5.17.3
+      vite:
+        specifier: ^6.0.7
+        version: 6.0.7(@types/node@22.10.5)
 
 packages:
 
