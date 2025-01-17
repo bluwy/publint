@@ -1,3 +1,7 @@
+---
+layout: ../layouts/RulesLayout.astro
+---
+
 # Rules
 
 Below is an unordered list of rules used by `publint` for linting.

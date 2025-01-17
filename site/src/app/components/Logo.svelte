@@ -1,5 +1,5 @@
 <script>
-  import logo from '../assets/logo.svg'
+  import logo from '../../assets/logo.svg?url'
 </script>
 
 <section class="flex flex-col items-center">

@@ -1,8 +1,8 @@
 <script>
-  import severitySuccess from '../assets/severity-success.svg'
-  import severityInfo from '../assets/severity-info.svg'
-  import severityWarning from '../assets/severity-warning.svg'
-  import severityError from '../assets/severity-error.svg'
+  import severitySuccess from '../../assets/severity-success.svg?url'
+  import severityInfo from '../../assets/severity-info.svg?url'
+  import severityWarning from '../../assets/severity-warning.svg?url'
+  import severityError from '../../assets/severity-error.svg?url'
 
   /**
    * @typedef {Object} Props

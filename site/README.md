@@ -2,12 +2,6 @@
 
 The website for https://publint.dev.
 
-Stack:
-
-- Vite
-- Svelte
-- UnoCSS
-
 ## Development
 
 ```bash

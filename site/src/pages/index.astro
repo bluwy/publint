@@ -1,0 +1,13 @@
+---
+import '../global.css'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Footer from '../components/Footer.astro'
+import App from '../app/App.svelte'
+---
+
+<BaseLayout>
+  <div class="min-h-screen">
+    <App client:only />
+  </div>
+  <Footer />
+</BaseLayout>

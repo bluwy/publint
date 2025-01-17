@@ -5,6 +5,12 @@ import presetUno from '@unocss/preset-uno'
 export default defineConfig({
   extractors: [extractorSvelte],
   presets: [presetUno()],
+  content: {
+    filesystem: ['src/app/**/*'],
+    pipeline: {
+      include: [/\.(svelte|mdx?|astro|html)($|\?)/, 'src/app/utils/colors.js'],
+    },
+  },
   theme: {
     colors: {
       primary: '#E69B57',

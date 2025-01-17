@@ -1,12 +1,12 @@
 <script>
   import { onDestroy } from 'svelte'
-  import githubLogo from '../assets/github.svg'
-  import gitlabLogo from '../assets/gitlab.svg'
-  import gitLogo from '../assets/git.svg'
-  import npmLogo from '../assets/npm.svg'
-  import pkgPrNewLogo from '../assets/stackblitz.svg'
-  import jsdelivrLogo from '../assets/jsdelivr.svg'
-  import Header from '../components/Header.svelte'
+  import githubLogo from '../../assets/github.svg?url'
+  import gitlabLogo from '../../assets/gitlab.svg?url'
+  import gitLogo from '../../assets/git.svg?url'
+  import npmLogo from '../../assets/npm.svg?url'
+  import pkgPrNewLogo from '../../assets/stackblitz.svg?url'
+  import jsdelivrLogo from '../../assets/jsdelivr.svg?url'
+  import Header from '../../components/Header.svelte'
   import Label from '../components/Label.svelte'
   import Loading from '../components/Loading.svelte'
   import NpmSearchInput from '../components/NpmSearchInput.svelte'
@@ -85,7 +85,10 @@
     } else if (url.startsWith('gitlab:')) {
       return { logo: gitlabLogo, url: `https://gitlab.com/${url.slice(7)}` }
     } else if (url.startsWith('bitbucket:')) {
-      return { logo: gitLogo, url: `https://bitbucket.org/${url.slice(10)}` }
+      return {
+        logo: gitLogo,
+        url: `https://bitbucket.org/${url.slice(10)}`,
+      }
     } else if (url.split('/').length === 2) {
       return { logo: githubLogo, url: `https://github.com/${url}` }
     } else if (url) {

@@ -1,5 +1,3 @@
-// @unocss-include
-
 /**
  * @param {'error' | 'warning' | 'suggestion' | 'success'} type
  * @returns
