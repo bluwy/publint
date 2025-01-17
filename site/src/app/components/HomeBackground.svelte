@@ -5,7 +5,7 @@
     position: absolute;
     width: 100%;
     height: 70vh;
-    background-image: url('../../assets/home-background.svg');
+    background-image: url('../../assets/home-background.svg?url');
     background-repeat: repeat;
     background-position: center 6px;
     pointer-events: none;

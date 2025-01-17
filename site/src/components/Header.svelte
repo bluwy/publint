@@ -1,6 +1,6 @@
 <script>
-  import homeIcon from '../assets/home.svg'
-  import githubIcon from '../assets/github.svg'
+  import homeIcon from '../assets/home.svg?url'
+  import githubIcon from '../assets/github.svg?url'
 
   /**
    * @typedef {Object} Props
@@ -22,14 +22,14 @@
       href="/"
       title="Go to main page"
     >
-      <img src={homeIcon.src} alt="home icon" width="20" height="20" />
+      <img src={homeIcon} alt="home icon" width="20" height="20" />
     </a>
     <a
       class="bookmark decoration-none pointer-events-auto"
       href="https://github.com/publint/publint"
       title="Go to GitHub repo"
     >
-      <img src={githubIcon.src} alt="github logo" width="20" height="20" />
+      <img src={githubIcon} alt="github logo" width="20" height="20" />
     </a>
   </nav>
 </header>

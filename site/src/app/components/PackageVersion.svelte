@@ -1,5 +1,5 @@
 <script>
-  import selectIcon from '../../assets/select.svg'
+  import selectIcon from '../../assets/select.svg?url'
   import Loading from './Loading.svelte'
   import { clickOutside } from '../utils/click-outside'
   import { url } from '../utils/url'
@@ -86,7 +86,7 @@
       {#if !versionsLoading}
         <img
           class="block p-0 m-0 @dark:filter-invert"
-          src={selectIcon.src}
+          src={selectIcon}
           alt="select icon"
           height="16"
         />

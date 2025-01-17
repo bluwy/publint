@@ -1,11 +1,11 @@
 <script>
-  import logo from '../../assets/logo.svg'
+  import logo from '../../assets/logo.svg?url'
 </script>
 
 <section class="flex flex-col items-center">
   <div class="flex items-center">
     <div class="w-16 h-16 mr-2">
-      <img src={logo.src} alt="publint logo" class="w-full h-full" />
+      <img src={logo} alt="publint logo" class="w-full h-full" />
     </div>
     <h1 class="text-3xl font-light m-0 opacity-70">publint</h1>
   </div>
