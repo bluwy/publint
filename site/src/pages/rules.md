@@ -15,7 +15,7 @@ An invalid format is defined as whether it has correct [ESM](https://nodejs.org/
 - If the file extension is `.mjs`, or if the closest `package.json` has `"type": "module"`, it's interpreted as ESM.
 - If the file extension is `.cjs`, or if the closest `package.json` does not have `"type": "module"`, it's interpreted as CJS.
 
-`publint` will check these two behaviour if the file will be intepreted correctly.
+`publint` will check these two behaviour if the file will be interpreted correctly.
 
 ## `FILE_INVALID_FORMAT`
 
@@ -220,7 +220,7 @@ Some `package.json` fields has a set of allowed types, e.g. `string` or `object`
 
 ## `EXPORTS_VALUE_CONFLICTS_WITH_BROWSER`
 
-When an `"exports"` value resolved with a browser-ish condition matches a key in the `"browser"` field object, this means the `"exports"` value is overriden by that matching `"browser"` key. This may cause build issues as the intended `"exports"` value is no longer used. For example, given this setup:
+When an `"exports"` value resolved with a browser-ish condition matches a key in the `"browser"` field object, this means the `"exports"` value is overridden by that matching `"browser"` key. This may cause build issues as the intended `"exports"` value is no longer used. For example, given this setup:
 
 ```json
 {
@@ -256,7 +256,7 @@ The `"jsnext:main"` and `"jsnext"` fields are deprecated. The `"module"` field s
 - The `git://` protocol for GitHub repos should not be used due [security concerns](https://github.blog/security/application-security/improving-git-protocol-security-github/).
 - GitHub or GitLab links should be prefixed with `git+` and postfixed with `.git`. (This is also warned by npm when publishing a package).
 
-An example config that meets these criterias may look like this:
+An example config that meets these criteria may look like this:
 
 ```json
 {
