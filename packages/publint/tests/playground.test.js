@@ -201,15 +201,13 @@ function testFixture(name, expectCodes, options) {
   /** @type {import('vitest').TestOptions} */
   const testOpts = { concurrent: true, timeout: process.env.CI ? 10000 : 5000 }
 
+  const fixtureDir = path.resolve(process.cwd(), 'tests/fixtures')
+
   test(name, testOpts, async ({ expect }) => {
     const fixtureName = name.replace(/\(.*$/, '').trim() + '.js'
-    const fixturePath = path.resolve(
-      process.cwd(),
-      'tests/fixtures',
-      fixtureName,
-    )
+    const fixturePath = path.resolve(fixtureDir, fixtureName)
     const fixtureContent = (await import(fixturePath)).default
-    const fixture = await createFixture(fixtureContent)
+    const fixture = await createFixture(fixtureContent, { tempDir: fixtureDir })
 
     try {
       const { messages } = await publint({
