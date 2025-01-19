@@ -49,7 +49,7 @@ const { messages } = await publint({
    * Path to your package that contains a package.json file.
    *
    * **Environment notes:**
-   * - **Node.js**: Defualts to `process.cwd()`.
+   * - **Node.js**: Defaults to `process.cwd()`.
    * - **Browser**: Automatically inferred from `{ tarball: ArrayBuffer | ReadableStream }`. If `{ files: PackFile[] }` is used,
    *                this must be the shared directory of all files in `files`. e.g. if `name` has `"package/src/index.js",
    *                the `pkgDir` should be `"package"`.
