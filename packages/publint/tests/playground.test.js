@@ -203,10 +203,13 @@ function testFixture(name, expectCodes, options) {
 
   test(name, testOpts, async ({ expect }) => {
     const fixtureName = name.replace(/\(.*$/, '').trim() + '.js'
-    const fixtureDir = path.resolve(process.cwd(), 'tests/fixtures')
-    const fixturePath = path.resolve(fixtureDir, fixtureName)
+    const fixturePath = path.resolve(
+      process.cwd(),
+      'tests/fixtures',
+      fixtureName,
+    )
     const fixtureContent = (await import(fixturePath)).default
-    const fixture = await createFixture(fixtureContent, { tempDir: fixtureDir })
+    const fixture = await createFixture(fixtureContent)
 
     try {
       const { messages } = await publint({
