@@ -1,5 +1,6 @@
 import path from 'node:path'
 import { test, expect } from 'vitest'
+import { createFixture } from 'fs-fixture'
 import {
   exportsGlob,
   getAdjacentDtsPath,
@@ -186,23 +187,31 @@ test('stripComments', () => {
 })
 
 test('exportsGlob', async () => {
-  const r = (/** @type {string} */ s) =>
-    path.resolve(process.cwd(), 'tests/fixtures/glob', s)
+  const fixturePath = path.resolve(process.cwd(), 'tests/fixtures/glob.js')
+  const fixtureContent = (await import(fixturePath)).default
+  const fixture = await createFixture(fixtureContent)
+
+  const r = (/** @type {string} */ s) => fixture.getPath(s)
   const v = createNodeVfs()
-  // prettier-ignore
-  expect(await exportsGlob(r('./*.js'), v)).toEqual([r('alpha.js'), r('dual-extension/index.js')])
-  // prettier-ignore
-  expect(await exportsGlob(r('./*.mjs'), v)).toEqual([r('bravo.mjs'), r('dual-extension/index.mjs')])
-  // prettier-ignore
-  expect(await exportsGlob(r('./*.css'), v)).toEqual([r('charlie.css'), r('quebec/romeo.css')])
-  // prettier-ignore
-  expect(await exportsGlob(r('./*.json'), v)).toEqual([r('delta.json'), r('package.json')])
-  expect(await exportsGlob(r('./*.cjs'), v)).toEqual([r('quebec/sierra.cjs')])
-  // prettier-ignore
-  expect(await exportsGlob(r('./quebec/*'), v)).toEqual([r('quebec/romeo.css'), r('quebec/sierra.cjs')])
-  expect(await exportsGlob(r('./*lph*.js'), v)).toEqual([r('alpha.js')])
-  // prettier-ignore
-  expect(await exportsGlob(r('./qu*b*c/si*rra.cjs'), v)).toEqual([r('quebec/sierra.cjs')])
+
+  try {
+    // prettier-ignore
+    expect(await exportsGlob(r('./*.js'), v)).toEqual([r('alpha.js'), r('dual-extension/index.js')])
+    // prettier-ignore
+    expect(await exportsGlob(r('./*.mjs'), v)).toEqual([r('bravo.mjs'), r('dual-extension/index.mjs')])
+    // prettier-ignore
+    expect(await exportsGlob(r('./*.css'), v)).toEqual([r('charlie.css'), r('quebec/romeo.css')])
+    // prettier-ignore
+    expect(await exportsGlob(r('./*.json'), v)).toEqual([r('delta.json'), r('package.json')])
+    expect(await exportsGlob(r('./*.cjs'), v)).toEqual([r('quebec/sierra.cjs')])
+    // prettier-ignore
+    expect(await exportsGlob(r('./quebec/*'), v)).toEqual([r('quebec/romeo.css'), r('quebec/sierra.cjs')])
+    expect(await exportsGlob(r('./*lph*.js'), v)).toEqual([r('alpha.js')])
+    // prettier-ignore
+    expect(await exportsGlob(r('./qu*b*c/si*rra.cjs'), v)).toEqual([r('quebec/sierra.cjs')])
+  } finally {
+    await fixture.rm()
+  }
 })
 
 test('getAdjacentDtsPath', () => {

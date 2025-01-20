@@ -1,10 +1,10 @@
-import fs from 'node:fs/promises'
 import path from 'node:path'
 import { test } from 'vitest'
+import { createFixture } from 'fs-fixture'
 import { publint } from '../src/index-node.js'
 import { formatMessage } from '../src/utils-node.js'
 
-// TODO: migrate these to fs-fixture
+const isWindowsCI = process.env.CI !== undefined && process.platform === 'win32'
 
 testFixture('exports-browser-conflict', [
   'EXPORTS_VALUE_CONFLICTS_WITH_BROWSER',
@@ -200,36 +200,50 @@ testFixture('invalid-repository-value-object-deprecated', [
  * @param {TestOptions} [options]
  */
 function testFixture(name, expectCodes, options) {
-  test(name, { concurrent: true }, async ({ expect }) => {
-    const fixtureName = name.replace(/\(.*$/, '').trim()
-    const pkgDir = path.resolve(process.cwd(), 'tests/fixtures', fixtureName)
-    const { messages } = await publint({
-      pkgDir,
-      level: options?.level,
-      strict: options?.strict,
+  /** @type {import('vitest').TestOptions} */
+  const testOpts = { concurrent: true, timeout: process.env.CI ? 8000 : 5000 }
+
+  test(name, testOpts, async ({ expect }) => {
+    const fixtureName = name.replace(/\(.*$/, '').trim() + '.js'
+    const fixtureDir = path.resolve(process.cwd(), 'tests/fixtures')
+    const fixturePath = path.resolve(fixtureDir, fixtureName)
+    const fixtureContent = (await import(fixturePath)).default
+    const fixture = await createFixture(fixtureContent, {
+      // For some reason, fs-fixture writes files to the system temporary directory
+      // very slowly on GitHub actions Windows CI. Writing to somewhere else in the
+      // project is much faster.
+      tempDir: isWindowsCI ? fixtureDir : undefined,
     })
 
-    // unfortunately the messages are not always in order as checks are ran in parallel,
-    // here we sort it to make the tests more consistent
-    messages.sort((a, b) => a.code.localeCompare(b.code))
+    try {
+      const { messages } = await publint({
+        pkgDir: fixture.path,
+        level: options?.level,
+        strict: options?.strict,
+      })
 
-    if (options?.debug) {
-      const pkg = JSON.parse(
-        await fs.readFile(path.join(pkgDir, 'package.json'), 'utf-8'),
-      )
-      console.log()
-      console.log('Logs:', name)
-      messages.forEach((m) => console.log(formatMessage(m, pkg)))
-      console.log()
-    }
+      // unfortunately the messages are not always in order as checks are ran in parallel,
+      // here we sort it to make the tests more consistent
+      messages.sort((a, b) => a.code.localeCompare(b.code))
 
-    // you can test an array of objects
-    if (typeof expectCodes[0] === 'object') {
-      const codes = messages.map((v) => ({ code: v.code, type: v.type }))
-      expect(codes).toEqual(expectCodes)
-    } else {
-      const codes = messages.map((v) => v.code)
-      expect(codes).toEqual(expectCodes)
+      if (options?.debug) {
+        const pkg = JSON.parse(await fixture.readFile('package.json', 'utf-8'))
+        console.log()
+        console.log('Logs:', name)
+        messages.forEach((m) => console.log(formatMessage(m, pkg)))
+        console.log()
+      }
+
+      // you can test an array of objects
+      if (typeof expectCodes[0] === 'object') {
+        const codes = messages.map((v) => ({ code: v.code, type: v.type }))
+        expect(codes).toEqual(expectCodes)
+      } else {
+        const codes = messages.map((v) => v.code)
+        expect(codes).toEqual(expectCodes)
+      }
+    } finally {
+      await fixture.rm()
     }
   })
 }
