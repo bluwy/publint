@@ -4,6 +4,8 @@ import { createFixture } from 'fs-fixture'
 import { publint } from '../src/index-node.js'
 import { formatMessage } from '../src/utils-node.js'
 
+const isWindowsCI = process.env.CI !== undefined && process.platform === 'win32'
+
 testFixture('exports-browser-conflict', [
   'EXPORTS_VALUE_CONFLICTS_WITH_BROWSER',
   'USE_EXPORTS_OR_IMPORTS_BROWSER',
@@ -199,17 +201,19 @@ testFixture('invalid-repository-value-object-deprecated', [
  */
 function testFixture(name, expectCodes, options) {
   /** @type {import('vitest').TestOptions} */
-  const testOpts = { concurrent: true, timeout: process.env.CI ? 10000 : 5000 }
+  const testOpts = { concurrent: true, timeout: process.env.CI ? 8000 : 5000 }
 
   test(name, testOpts, async ({ expect }) => {
     const fixtureName = name.replace(/\(.*$/, '').trim() + '.js'
-    const fixturePath = path.resolve(
-      process.cwd(),
-      'tests/fixtures',
-      fixtureName,
-    )
+    const fixtureDir = path.resolve(process.cwd(), 'tests/fixtures')
+    const fixturePath = path.resolve(fixtureDir, fixtureName)
     const fixtureContent = (await import(fixturePath)).default
-    const fixture = await createFixture(fixtureContent)
+    const fixture = await createFixture(fixtureContent, {
+      // For some reason, fs-fixture writes files to the system temporary directory
+      // very slowly on GitHub actions Windows CI. Writing to somewhere else in the
+      // project is much faster.
+      tempDir: isWindowsCI ? fixtureDir : undefined,
+    })
 
     try {
       const { messages } = await publint({
