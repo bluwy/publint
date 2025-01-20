@@ -5,5 +5,6 @@ export default defineConfig({
     include: ['tests/*.test.js'],
     isolate: false,
     slowTestThreshold: 600,
+    fileParallelism: false,
   },
 })
