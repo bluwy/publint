@@ -198,7 +198,10 @@ testFixture('invalid-repository-value-object-deprecated', [
  * @param {TestOptions} [options]
  */
 function testFixture(name, expectCodes, options) {
-  test(name, { concurrent: true }, async ({ expect }) => {
+  /** @type {import('vitest').TestOptions} */
+  const testOpts = { concurrent: true, timeout: process.env.CI ? 8000 : 5000 }
+
+  test(name, testOpts, async ({ expect }) => {
     const fixtureName = name.replace(/\(.*$/, '').trim() + '.js'
     const fixtureDir = path.resolve(process.cwd(), 'tests/fixtures')
     const fixturePath = path.resolve(fixtureDir, fixtureName)
