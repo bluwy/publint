@@ -28,6 +28,6 @@
     "fs-fixture": "^2.6.0",
     "rehype-autolink-headings": "^7.1.0",
     "svelte": "^5.17.3",
-    "vite": "^6.0.7"
+    "vite": "^6.0.9"
   }
 }
