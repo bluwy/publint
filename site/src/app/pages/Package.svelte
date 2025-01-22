@@ -103,16 +103,18 @@
     // /foo
     // /foo@1.0.0
     // /@foo/bar@1.0.0
-    const parts = $url.pathname.slice(1).split('@')
+    // /pkg.pr.new/foo@1.0.0
+    // /pkg.pr.new/@foo/bar@1.0.0
+    const pathname = $url.pathname
+
+    isPkgPrNew = pathname.startsWith('/pkg.pr.new/')
+
+    // e.g. `foo@1.0.0` or `@foo/bar@1.0.0`
+    const packageSpecifier = pathname.slice(isPkgPrNew ? 12 : 1)
+    const parts = packageSpecifier.split('@')
     if (parts[0] === '') {
       parts.shift()
       parts[0] = '@' + parts[0]
-    }
-    if (parts[0].startsWith('pkg.pr.new')) {
-      parts[0] = parts[0].slice('pkg.pr.new/'.length)
-      isPkgPrNew = true
-    } else {
-      isPkgPrNew = false
     }
     npmPkgName = parts[0]
     npmPkgVersion = isLocalPkg(npmPkgName) ? '0.0.1' : parts[1]
