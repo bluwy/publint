@@ -16,6 +16,10 @@
   <a href="https://publint.dev">
     <strong>Try it online</strong>
   </a>
+  ·
+  <a href="https://publint.dev/docs/">
+    <strong>Read the docs</strong>
+  </a>
 </p>
 
 <br>
@@ -33,7 +37,7 @@ $ npx publint ./node_modules/some-lib
 $ npx publint deps
 ```
 
-Or try it online at https://publint.dev. For JavaScript usage, see [packages/publint/README.md](./packages/publint/README.md).
+Or try it online at https://publint.dev. Read the [docs](https://publint.dev/docs/) for more information.
 
 ## Development
 

@@ -134,6 +134,9 @@ importers:
       vite:
         specifier: ^6.0.11
         version: 6.0.11(@types/node@22.10.7)
+      vite-plugin-cloudflare-redirect:
+        specifier: ^1.0.0
+        version: 1.0.0(vite@6.0.11(@types/node@22.10.7))
 
 packages:
 
@@ -1080,6 +1083,9 @@ packages:
   cli-boxes@3.0.0:
     resolution: {integrity: sha512-/lzGpEWL/8PfI0BmBOPRwp0c/wFNX1RdUML3jK/RcSBA9T8mZDdQpqYBKtCFTOfQbwPqWEOpjqW+Fnayc0969g==}
     engines: {node: '>=10'}
+
+  cloudflare-redirect-parser@1.0.0:
+    resolution: {integrity: sha512-puEB3wmP47RICu/CboTHd237Up/r3Nagsr622mJxWgvEVfRxNlKceNfpPieMYDe/E1nYJsf6iempsrkitgQZVw==}
 
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
@@ -2411,6 +2417,14 @@ packages:
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
     hasBin: true
 
+  vite-plugin-cloudflare-redirect@1.0.0:
+    resolution: {integrity: sha512-wUVm2vg9PWtYgNaUFHIDMwP0bha7XSwVLvBpJU69t40d80u7bBj0+si2EYpeA3+DAbI0JbCcNjtffafl2ef8LA==}
+    peerDependencies:
+      vite: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+    peerDependenciesMeta:
+      vite:
+        optional: true
+
   vite@6.0.11:
     resolution: {integrity: sha512-4VL9mQPKoHy4+FE0NnRE/kbY51TOfaknxAjt3fJbGJxhIpBZiqVzlZDEesWWsuREXHwNdAoOFZ9MkPEVXczHwg==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
@@ -3732,6 +3746,8 @@ snapshots:
   ci-info@4.1.0: {}
 
   cli-boxes@3.0.0: {}
+
+  cloudflare-redirect-parser@1.0.0: {}
 
   clsx@2.1.1: {}
 
@@ -5565,6 +5581,12 @@ snapshots:
       - terser
       - tsx
       - yaml
+
+  vite-plugin-cloudflare-redirect@1.0.0(vite@6.0.11(@types/node@22.10.7)):
+    dependencies:
+      cloudflare-redirect-parser: 1.0.0
+    optionalDependencies:
+      vite: 6.0.11(@types/node@22.10.7)
 
   vite@6.0.11(@types/node@22.10.7):
     dependencies:

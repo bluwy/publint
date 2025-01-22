@@ -1,0 +1,8 @@
+.site-title {
+  gap: 0.6rem;
+}
+
+.site-title > img {
+  height: 30px;
+  transform: translateY(2px);
+}

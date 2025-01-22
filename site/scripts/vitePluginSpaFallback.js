@@ -8,12 +8,18 @@ export function spaFallback() {
     name: 'spa-fallback',
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
-        if (
-          req.headers.accept?.includes('text/html') &&
-          !req.url.startsWith('/rules') &&
-          !req.url.startsWith('/docs/')
-        ) {
-          req.url = '/index.html'
+        if (req.headers.accept?.includes('text/html')) {
+          // Redirect to clean URL as otherwise `index.html` is interpreted as a package
+          if (req.url === '/index.html') {
+            res.writeHead(301, { Location: '/' })
+            res.end()
+            return
+          }
+
+          // Fallback to root for all unknown routes (should be better inferred but this will do)
+          if (!req.url.startsWith('/rules') && !req.url.startsWith('/docs/')) {
+            req.url = '/'
+          }
         }
 
         next()
