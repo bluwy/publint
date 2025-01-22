@@ -17,17 +17,17 @@
   },
   "devDependencies": {
     "@astrojs/markdown-remark": "^6.0.2",
-    "@astrojs/starlight": "^0.31.0",
-    "@astrojs/svelte": "^7.0.3",
-    "@unocss/astro": "^65.4.0",
-    "@unocss/core": "^65.4.0",
-    "@unocss/extractor-svelte": "^65.4.0",
-    "@unocss/preset-uno": "^65.4.0",
-    "@unocss/vite": "^65.4.0",
-    "astro": "^5.1.7",
+    "@astrojs/starlight": "^0.31.1",
+    "@astrojs/svelte": "^7.0.4",
+    "@unocss/astro": "^65.4.2",
+    "@unocss/core": "^65.4.2",
+    "@unocss/extractor-svelte": "^65.4.2",
+    "@unocss/preset-uno": "^65.4.2",
+    "@unocss/vite": "^65.4.2",
+    "astro": "^5.1.8",
     "fs-fixture": "^2.6.0",
     "rehype-autolink-headings": "^7.1.0",
-    "svelte": "^5.17.3",
-    "vite": "^6.0.7"
+    "svelte": "^5.19.1",
+    "vite": "^6.0.11"
   }
 }

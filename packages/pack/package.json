@@ -39,6 +39,6 @@
   ],
   "devDependencies": {
     "fs-fixture": "^2.6.0",
-    "vitest": "^3.0.0-beta.4"
+    "vitest": "^3.0.3"
   }
 }
