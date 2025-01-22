@@ -28,6 +28,7 @@
     "fs-fixture": "^2.6.0",
     "rehype-autolink-headings": "^7.1.0",
     "svelte": "^5.19.1",
-    "vite": "^6.0.11"
+    "vite": "^6.0.11",
+    "vite-plugin-cloudflare-redirect": "^1.0.0"
   }
 }

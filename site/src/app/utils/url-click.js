@@ -1,6 +1,6 @@
 import { url } from './url'
 
-const specialPages = ['/rules']
+const specialPages = ['/rules', '/docs/']
 
 export function listenUrlClick() {
   document.addEventListener('click', (e) => {
