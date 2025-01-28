@@ -8,7 +8,6 @@ export default {
     exports: {
       '.': {
         'types@>=5.2': './ts5.2/main.d.ts',
-        blah: './main.js',
         'types@>=4.6': './ts4.6/main.d.ts',
         types: './main.d.ts',
         default: './main.js',
