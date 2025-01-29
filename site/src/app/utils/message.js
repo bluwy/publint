@@ -110,7 +110,7 @@ function messageToString(m, pkg) {
         return `The types is not exported. Consider adding ${bold(fp(m.path) + '.types')}: "${bold(typesFilePath)}" to be compatible with TypeScript's ${bold('"moduleResolution": "bundler"')} compiler option.`
       }
     }
-    case 'EXPORT_TYPES_INVALID_FORMAT': {
+    case 'EXPORTS_TYPES_INVALID_FORMAT': {
       // convert ['exports', 'types'] -> ['exports', '<condition>', 'types']
       // convert ['exports', 'types', 'node'] -> ['exports', 'types', 'node', '<condition>']
       const expectPath = m.path.slice()
