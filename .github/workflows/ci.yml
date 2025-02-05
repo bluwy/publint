@@ -46,7 +46,8 @@ jobs:
           cache: pnpm
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
-      # https://github.com/nodejs/corepack/issues/612
+      # Resolve issue: https://github.com/nodejs/corepack/issues/612
+      # Corepack is only used in tests. This isn't required for other workflows.
       - name: Install latest corepack
         run: npm install -g corepack@latest
       - name: Install dependencies
