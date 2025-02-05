@@ -47,12 +47,12 @@
   ],
   "dependencies": {
     "@publint/pack": "workspace:^",
-    "package-manager-detector": "^0.2.8",
+    "package-manager-detector": "^0.2.9",
     "picocolors": "^1.1.1",
     "sade": "^1.8.1"
   },
   "devDependencies": {
-    "fs-fixture": "^2.6.0",
-    "vitest": "^3.0.3"
+    "fs-fixture": "^2.7.0",
+    "vitest": "^3.0.5"
   }
 }

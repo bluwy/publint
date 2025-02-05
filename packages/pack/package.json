@@ -38,7 +38,7 @@
     "npm"
   ],
   "devDependencies": {
-    "fs-fixture": "^2.6.0",
-    "vitest": "^3.0.3"
+    "fs-fixture": "^2.7.0",
+    "vitest": "^3.0.5"
   }
 }
