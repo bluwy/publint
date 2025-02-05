@@ -10,18 +10,18 @@
     "typecheck": "pnpm --parallel --no-bail run typecheck",
     "test": "pnpm --filter \"./packages/*\" run test"
   },
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@10.2.0",
   "engines": {
     "node": ">=18"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.11",
+    "@changesets/cli": "^2.27.12",
     "@svitejs/changesets-changelog-github-compact": "^1.2.0",
-    "@types/node": "^22.10.7",
+    "@types/node": "^22.13.1",
     "@types/pnpapi": "^0.0.5",
     "prettier": "^3.4.2",
     "prettier-plugin-svelte": "^3.3.3",
-    "svelte": "^5.19.1",
+    "svelte": "^5.19.7",
     "typescript": "^5.7.3"
   },
   "pnpm": {
