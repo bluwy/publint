@@ -37,30 +37,39 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+
       - name: Setup node
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
           cache: pnpm
+
       # Bun is only used in tests. This isn't required for other workflows.
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
+
       # Resolve issue: https://github.com/nodejs/corepack/issues/612
       # Corepack is only used in tests. This isn't required for other workflows.
       - name: Install latest corepack
         run: pnpm install -g corepack@latest
+
       - name: Install dependencies
         run: pnpm install
+
       - if: ${{ matrix.os == 'ubuntu-latest' && matrix.node == 22 }}
         name: Lint
         run: pnpm lint
+
       - if: ${{ matrix.os == 'ubuntu-latest' && matrix.node == 22 }}
         name: Typecheck
         run: pnpm typecheck
+
       - if: ${{ matrix.os == 'ubuntu-latest' && matrix.node == 22 }}
         name: Lint with publint
         run: pnpm lint-publint
+
       - name: Run tests
         run: pnpm test
