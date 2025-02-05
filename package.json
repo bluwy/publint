@@ -10,7 +10,7 @@
     "typecheck": "pnpm --parallel --no-bail run typecheck",
     "test": "pnpm --filter \"./packages/*\" run test"
   },
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@10.2.0",
   "engines": {
     "node": ">=18"
   },
