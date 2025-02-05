@@ -144,6 +144,8 @@ testFixture('types-exports-resolution-dual-explicit', [
   'EXPORTS_TYPES_INVALID_FORMAT',
 ])
 
+testFixture('types-exports-versioned', [])
+
 testFixture('types-versions', [])
 
 testFixture('umd', ['FILE_INVALID_FORMAT', 'FILE_INVALID_FORMAT'])

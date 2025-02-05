@@ -819,9 +819,21 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       if ('types' in exportsValue && exportsKeys[0] !== 'types') {
         // check preceding conditions before the `types` condition, if there are nested
         // conditions, check if they also have the `types` condition. If they do, there's
-        // a good chance those take precendence over this non-first `types` condition, which
-        // is fine and is usually used as fallback instead.
-        const precedingKeys = exportsKeys.slice(0, exportsKeys.indexOf('types'))
+        // a good chance those take precedence over this non-first `types` condition, which
+        // is fine and is usually used as fallback instead. Versioned `types` conditions
+        // are allowed to precede the `types` condition.
+        const precedingKeys = exportsKeys
+          .slice(0, exportsKeys.indexOf('types'))
+          .filter((key) => !key.startsWith('types'))
+
+        // TODO: check that versioned types are valid and the ranges don't overlap.
+
+        // TODO: check the order of the conditions are correct. For example,
+        //  1. Nested conditions
+        //  2. Versioned `types` conditions
+        //  3. `types` condition
+        //  4. All other conditions
+
         let isPrecededByNestedTypesCondition = false
         for (const key of precedingKeys) {
           if (
@@ -832,7 +844,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             break
           }
         }
-        if (!isPrecededByNestedTypesCondition) {
+        if (precedingKeys.length > 0 && !isPrecededByNestedTypesCondition) {
           messages.push({
             code: 'EXPORTS_TYPES_SHOULD_BE_FIRST',
             args: {},
