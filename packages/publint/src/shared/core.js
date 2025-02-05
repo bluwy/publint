@@ -1003,7 +1003,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
 
               if (dtsActualFormat !== dtsExpectFormat) {
                 messages.push({
-                  code: 'EXPORT_TYPES_INVALID_FORMAT',
+                  code: 'EXPORTS_TYPES_INVALID_FORMAT',
                   args: {
                     condition: format,
                     actualFormat: dtsActualFormat,

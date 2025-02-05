@@ -130,7 +130,7 @@ export function formatMessage(m, pkg, opts = {}) {
         return `${c.bold(fp(m.path))} types is not exported. Consider adding ${c.bold(fp(m.path) + '.types')}: "${c.bold(typesFilePath)}" to be compatible with TypeScript's ${c.bold('"moduleResolution": "bundler"')} compiler option.`
       }
     }
-    case 'EXPORT_TYPES_INVALID_FORMAT': {
+    case 'EXPORTS_TYPES_INVALID_FORMAT': {
       // convert ['exports', 'types'] -> ['exports', '<condition>', 'types']
       // convert ['exports', 'types', 'node'] -> ['exports', 'types', 'node', '<condition>']
       const expectPath = m.path.slice()

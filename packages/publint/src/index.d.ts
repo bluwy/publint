@@ -80,9 +80,8 @@ export type Message =
         expectExtension?: string
       }
     >
-  // TODO: rename EXPORT to EXPORTS (i messed up)
   | BaseMessage<
-      'EXPORT_TYPES_INVALID_FORMAT',
+      'EXPORTS_TYPES_INVALID_FORMAT',
       {
         condition: string
         actualFormat: string
