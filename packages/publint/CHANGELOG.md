@@ -1,5 +1,13 @@
 # publint
 
+## 0.3.3
+
+### Patch Changes
+
+- Rename `EXPORT_TYPES_INVALID_FORMAT` message to `EXPORTS_TYPES_INVALID_FORMAT` ([#139](https://github.com/publint/publint/pull/139))
+
+- Allow versioned types conditions (e.g. `"types@>=5.2"`) in `"exports"` when checking for `"types"` condition ordering ([#138](https://github.com/publint/publint/pull/138))
+
 ## 0.3.2
 
 ### Patch Changes
