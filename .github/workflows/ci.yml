@@ -48,6 +48,9 @@ jobs:
         uses: oven-sh/setup-bun@v2
       - name: Install dependencies
         run: pnpm install
+      # https://github.com/nodejs/corepack/issues/612
+      - name: Install latest corepack
+        run: pnpm install -g corepack@latest
       - if: ${{ matrix.os == 'ubuntu-latest' && matrix.node == 22 }}
         name: Lint
         run: pnpm lint
