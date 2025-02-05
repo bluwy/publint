@@ -51,13 +51,13 @@ jobs:
       - name: Setup bun
         uses: oven-sh/setup-bun@v2
 
+      - name: Install dependencies
+        run: pnpm install
+
       # Resolve issue: https://github.com/nodejs/corepack/issues/612
       # Corepack is only used in tests. This isn't required for other workflows.
       - name: Install latest corepack
         run: pnpm install -g corepack@latest
-
-      - name: Install dependencies
-        run: pnpm install
 
       - if: ${{ matrix.os == 'ubuntu-latest' && matrix.node == 22 }}
         name: Lint
