@@ -66,7 +66,7 @@ function messageToString(m, pkg) {
       return `${bold(fp(m.path))} maps to a path that ends with ${bold('/')} which is deprecated. Use ${bold(fp(m.args.expectPath))}: "${bold(m.args.expectValue)}" instead.`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
-      return `Should be the first in the object as required by TypeScript.`
+      return `Should be the first in the object as conditions are order-sensitive so it can be resolved by TypeScript.`
     case 'EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE': {
       // prettier-ignore
       return `Should come before the "require" condition so it can take precedence when used by a bundler.`

@@ -73,9 +73,7 @@ Ensure the `"module"` condition comes before the `"require"` condition. Due to t
 
 ## `EXPORTS_TYPES_SHOULD_BE_FIRST`
 
-Ensure `"types"` condition to be the first. The [TypeScript docs](https://www.typescriptlang.org/docs/handbook/esm-node.html#packagejson-exports-imports-and-self-referencing) recommends so, but it's also because the `"exports"` field is order-based.
-
-For example, a scenario where both the `"types"` and `"import"` condition could be active, `"types"` should be first so that it matches and returns a `.d.ts` file, rather than a `.js` file from the `"import"` condition.
+Ensure `"types"` condition to be the first. As `"exports"` conditions are order-sensitive, in order for TypeScript to be able to resolve the types first, the `"types"` condition should be the first condition before any other JS exports. See the [TypeScript docs](https://www.typescriptlang.org/docs/handbook/modules/reference.html#packagejson-exports) for more information.
 
 ## `TYPES_NOT_EXPORTED`
 

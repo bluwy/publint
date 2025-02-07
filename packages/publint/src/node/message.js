@@ -83,7 +83,7 @@ export function formatMessage(m, pkg, opts = {}) {
       return `${c.bold(fp(m.path))} maps to a path that ends with ${c.bold('/')} which is deprecated. Use ${c.bold(fp(m.args.expectPath))}: "${c.bold(m.args.expectValue)}" instead.`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
-      return `${c.bold(fp(m.path))} should be the first in the object as required by TypeScript.`
+      return `${c.bold(fp(m.path))} should be the first in the object as conditions are order-sensitive so it can be resolved by TypeScript.`
     case 'EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE': {
       // prettier-ignore
       return `${c.bold(fp(m.path))} should come before the "require" condition so it can take precedence when used by a bundler.`
