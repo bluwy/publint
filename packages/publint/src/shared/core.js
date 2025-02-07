@@ -937,42 +937,52 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
 
         // keyed strings for seen resolved paths, so we don't trigger duplicate messages for the same thing
         const seenResolvedKeys = new Set()
+        /**
+         * @param {(string | undefined)[]} conditions
+         */
+        const _resolveExports = (conditions) => {
+          return resolveExports(
+            exportsRootValue,
+            // @ts-expect-error ts still doesn't understand `filter(Boolean)`
+            conditions.filter(Boolean),
+            exportsPath,
+          )
+        }
 
         // NOTE: got lazy. here we check for the import/require result in different environments
         // to make sure we cover possible cases. however, a better way it to resolve the exports
         // and scan also the possible environment conditions, and return an array instead.
         for (const env of [undefined, 'node', 'browser', 'worker']) {
+          const importResult = _resolveExports(['import', env])
+          const requireResult = _resolveExports(['require', env])
+          const isDualPublish =
+            importResult &&
+            requireResult &&
+            importResult.value !== requireResult.value
+
           for (const format of ['import', 'require']) {
-            const result = resolveExports(
-              exportsRootValue,
-              // @ts-expect-error till this day, ts still doesn't understand `filter(Boolean)`
-              ['types', format, env].filter(Boolean),
-              exportsPath,
-            )
+            // the types resolved result for the corresponding js
+            const typesResult = _resolveExports(['types', format, env])
+            if (!typesResult) continue
 
-            if (!result) continue
-
-            // check if we've seen this resolve before. we also key by format as we want to distinguish
-            // incorrect exports, but only when the "exports -> path" contains that format, otherwise
-            // it's intentional fallback behaviour by libraries and we don't want to trigger a false alarm.
-            // e.g. libraries that only `"exports": "./index.mjs"` means it's ESM only, so we don't key
-            // the format, so the next run with `"require"` condition is skipped.
-            // different env can share the same key as code can usually be used for multiple environments.
+            // cache by the types path to help deduplicate the linting if we've already done so
+            // for the same environment or format. if it's dual publishing, we want to lint both times
+            // so we add the `format` to the key here.
             const seenKey =
-              result.path.join('.') + (result.dualPublish ? format : '')
+              typesResult.path.join('.') + (isDualPublish ? format : '')
             if (seenResolvedKeys.has(seenKey)) continue
             seenResolvedKeys.add(seenKey)
 
-            const resolvedPath = vfs.pathJoin(pkgDir, result.value)
             // if path doesn't exist, let the missing file error message take over instead
-            if (!(await vfs.isPathExist(resolvedPath))) continue
+            const typesResolvedPath = vfs.pathJoin(pkgDir, typesResult.value)
+            if (!(await vfs.isPathExist(typesResolvedPath))) continue
 
-            if (isDtsFile(result.value)) {
+            if (isDtsFile(typesResult.value)) {
               // if we have resolve to a dts file, it might not be ours because typescript requires
               // `.d.mts` and `.d.cts` for esm and cjs (`.js` and nearest type: module behaviour applies).
               // check if we're hitting this case :(
               const dtsActualFormat = await getDtsFilePathFormat(
-                resolvedPath,
+                typesResolvedPath,
                 vfs,
               )
 
@@ -985,21 +995,14 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
               // only run this if not dual publish since we know dual publish should have both ESM and CJS
               // versions of the dts file, and we don't need to be lenient.
               // NOTE: could there be setups with CJS code and ESM types? seems a bit weird.
-              if (!result.dualPublish) {
-                const nonTypesResult = resolveExports(
-                  exportsRootValue,
-                  // @ts-expect-error till this day, ts still doesn't understand `filter(Boolean)`
-                  [format, env].filter(Boolean),
-                  exportsPath,
-                )
-                if (nonTypesResult?.value) {
-                  const nonTypesResolvedPath = vfs.pathJoin(
-                    pkgDir,
-                    nonTypesResult.value,
-                  )
-                  if (await vfs.isPathExist(nonTypesResolvedPath)) {
+              if (!isDualPublish) {
+                const jsResult =
+                  format === 'import' ? importResult : requireResult
+                if (jsResult) {
+                  const jsResolvedPath = vfs.pathJoin(pkgDir, jsResult.value)
+                  if (await vfs.isPathExist(jsResolvedPath)) {
                     dtsExpectFormat = await getFilePathFormat(
-                      nonTypesResolvedPath,
+                      jsResolvedPath,
                       vfs,
                     )
                   }
@@ -1020,17 +1023,17 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
                     condition: format,
                     actualFormat: dtsActualFormat,
                     expectFormat: dtsExpectFormat,
-                    actualExtension: vfs.getExtName(result.value),
+                    actualExtension: vfs.getExtName(typesResult.value),
                     expectExtension: getDtsCodeFormatExtension(dtsExpectFormat),
                   },
-                  path: result.path,
+                  path: typesResult.path,
                   type: 'warning',
                 })
               }
             } else {
               // adjacent dts file here is always in the correct format
               const hasAdjacentDtsFile = await vfs.isPathExist(
-                vfs.pathJoin(pkgDir, getAdjacentDtsPath(result.value)),
+                vfs.pathJoin(pkgDir, getAdjacentDtsPath(typesResult.value)),
               )
               // if there's no adjacent dts file, it's likely they don't support moduleResolution: bundler.
               // try to provide a warning.
@@ -1057,7 +1060,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
                       ? undefined
                       : getDtsCodeFormatExtension(dtsExpectFormat),
                   },
-                  path: result.path,
+                  path: typesResult.path,
                   type: 'warning',
                 })
               }

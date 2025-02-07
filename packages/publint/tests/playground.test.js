@@ -144,6 +144,11 @@ testFixture('types-exports-resolution-dual-explicit', [
   'EXPORTS_TYPES_INVALID_FORMAT',
 ])
 
+testFixture('types-exports-resolution-custom-conditions', [
+  'EXPORTS_TYPES_INVALID_FORMAT',
+  'EXPORTS_TYPES_INVALID_FORMAT',
+])
+
 testFixture('types-exports-versioned', [])
 
 testFixture('types-versions', [])

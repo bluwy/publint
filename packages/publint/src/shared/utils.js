@@ -423,49 +423,30 @@ export function isDtsFile(filePath) {
 /**
  * simplified `exports` field resolver that expects `exportsValue` to be the path value directly.
  * no path matching will happen. `exportsValue` should be an object that contains only conditions
- * and their values, or a string
+ * and their values, or a string.
+ *
+ * TODO: look into using https://github.com/lukeed/resolve.exports
  * @param {Record<string, any> | string | string[]} exportsValue
  * @param {string[]} conditions
  * @param {string[]} [currentPath] matched conditions while resolving the exports
- * @param {{ dualPublish: boolean }} [_metadata]
- * @returns {{ value: string, path: string[], dualPublish: boolean } | undefined}
+ * @returns {{ value: string, path: string[] } | undefined}
  */
-export function resolveExports(
-  exportsValue,
-  conditions,
-  currentPath = [],
-  _metadata = { dualPublish: false },
-) {
+export function resolveExports(exportsValue, conditions, currentPath = []) {
   if (typeof exportsValue === 'string') {
     // prettier-ignore
-    return { value: exportsValue, path: currentPath, dualPublish: _metadata.dualPublish }
+    return { value: exportsValue, path: currentPath }
   } else if (Array.isArray(exportsValue)) {
-    return resolveExports(
-      exportsValue[0],
-      conditions,
-      currentPath.concat('0'),
-      _metadata,
-    )
-  }
-
-  // while traversing the exports object, also keep info it the path we're traversing
-  // intends to dual export. helpful for better logging heuristics.
-  if (
-    _metadata.dualPublish === false &&
-    'import' in exportsValue &&
-    'require' in exportsValue
-  ) {
-    _metadata.dualPublish = true
+    return resolveExports(exportsValue[0], conditions, currentPath.concat('0'))
   }
 
   for (const key in exportsValue) {
     if (conditions.includes(key) || key === 'default') {
-      return resolveExports(
+      const result = resolveExports(
         exportsValue[key],
         conditions,
         currentPath.concat(key),
-        _metadata,
       )
+      if (result || key === 'default') return result
     }
   }
 }
