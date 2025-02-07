@@ -37,6 +37,8 @@ JSX extensions such as `.cjsx`, `.mjsx`, `.ctsx`, and `.mtsx` are invalid and ar
 
 The specified file does not exist.
 
+> NOTE: This triggers for all `@types/*` packages `"main"` field because it [sets an empty string](https://github.com/microsoft/DefinitelyTyped-tools/blob/b9601d3b849eafcb802d040cb8200eeeabae0028/packages/publisher/src/generate-packages.ts#L133). It's unclear whether it's intentional, but it should be safe to remove and not affect anything in practice. Keeping it may be confusing or misleading.
+
 ## `FILE_NOT_PUBLISHED`
 
 The specified file exists locally but isn't published to npm. This error only appears when running `publint` locally.
