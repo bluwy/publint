@@ -91,7 +91,7 @@ export function isDeprecatedGitHubGitUrl(url) {
 
 // Reference: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#repository
 const SHORTHAND_REPOSITORY_URL_RE =
-  /^(?:(?:github|bitbucket|gitlab):[\w\-]+\/[\w\-/]+|gist:\w+|[\w\-]+\/[\w\-]+)$/
+  /^(?:(?:github|bitbucket|gitlab):[^/]+\/.+|gist:.+|[^/]+\/[^/]+)$/
 /**
  * @param {string} url
  */
