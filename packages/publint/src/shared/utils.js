@@ -128,9 +128,17 @@ export function getCodeFormat(code) {
  * @param {string} globStr An absolute glob string that must contain one `*`
  * @param {import('./core.js').Vfs} vfs
  * @param {string[]} [packedFiles]
+ * @param {string} [exportsKey]
+ * @param {Record<string, any>} [exports]
  * @returns {Promise<string[]>} Matched file paths
  */
-export async function exportsGlob(globStr, vfs, packedFiles) {
+export async function exportsGlob(
+  globStr,
+  vfs,
+  packedFiles,
+  exportsKey,
+  exports,
+) {
   /** @type {string[]} */
   const filePaths = []
   const globStrRe = new RegExp(
@@ -138,6 +146,20 @@ export async function exportsGlob(globStr, vfs, packedFiles) {
   )
   // the longest directory that doesn't contain `*`
   const topDir = globStr.split('*')[0].match(/(.+)[/\\]/)?.[1]
+  // compute an array of regexes that are marked `null` in the `exports` field.
+  // these keys will be matched later on to ensure they are not included in the final result.
+  // note: may need to consider in the future if conditions should be taken into account.
+  /** @type {RegExp[]} */
+  const excludedExportKeys = []
+  if (exportsKey && exports) {
+    for (const key in exports) {
+      if (exports[key] === null) {
+        excludedExportKeys.push(
+          new RegExp(`^${key.split('*').map(escapeRegExp).join('(.+)')}$`),
+        )
+      }
+    }
+  }
 
   // TODO: maybe error if no topDir?
   if (topDir && (await vfs.isPathDir(topDir))) {
@@ -149,9 +171,11 @@ export async function exportsGlob(globStr, vfs, packedFiles) {
    * @param {string} dirPath
    */
   async function scanDir(dirPath) {
+    // TODO: flatten this function body
     const items = await vfs.readDir(dirPath)
     for (const item of items) {
       const itemPath = vfs.pathJoin(dirPath, item)
+      // ensure the file is within the packed files (if provided)
       if (
         !packedFiles ||
         packedFiles.some((file) => file.startsWith(itemPath))
@@ -160,9 +184,9 @@ export async function exportsGlob(globStr, vfs, packedFiles) {
           await scanDir(itemPath)
         } else {
           const matched = slash(itemPath).match(globStrRe)
-          // if have multiple `*`, all matched should be the same because the key
-          // can only have one `*`
           if (matched) {
+            // if have multiple `*`, all matched should be the same because the key
+            // can only have one `*`
             if (matched.length > 2) {
               let allGlobSame = true
               for (let i = 2; i < matched.length; i++) {
@@ -171,12 +195,23 @@ export async function exportsGlob(globStr, vfs, packedFiles) {
                   break
                 }
               }
-              if (allGlobSame) {
-                filePaths.push(itemPath)
+              if (!allGlobSame) {
+                continue // skip this file because it doesn't match the glob
               }
-            } else {
-              filePaths.push(itemPath)
             }
+            // lastly, also make sure that the matched file is not excluded by
+            // exports keys that are marked null. we detect that by replacing the
+            // matched `*` result back to the exports key, and make sure it doesn't
+            // match any of the excludedExportsKeys.
+            if (exportsKey && exports && excludedExportKeys.length) {
+              const replacedExportsKey = exportsKey.replace('*', matched[1])
+              if (
+                excludedExportKeys.some((re) => re.test(replacedExportsKey))
+              ) {
+                continue
+              }
+            }
+            filePaths.push(itemPath)
           }
         }
       }

@@ -626,14 +626,16 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
 
   /**
    * @param {string} exportsValue
+   * @param {string} exportsKey
+   * @param {Record<string, any>} exports
    */
-  async function getExportsFiles(exportsValue) {
+  async function getExportsFiles(exportsValue, exportsKey, exports) {
     const exportsPath = isRelativePath(exportsValue)
       ? vfs.pathJoin(pkgDir, exportsValue)
       : exportsValue
     const isGlob = exportsValue.includes('*')
     return isGlob
-      ? await exportsGlob(exportsPath, vfs, _packedFiles)
+      ? await exportsGlob(exportsPath, vfs, _packedFiles, exportsKey, exports)
       : [exportsPath]
   }
 
@@ -684,7 +686,12 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         }
 
         const isGlob = exportsValue.includes('*')
-        const exportsFiles = await getExportsFiles(exportsValue)
+        const exportsKey = currentPath[1]
+        const exportsFiles = await getExportsFiles(
+          exportsValue,
+          exportsKey,
+          exports,
+        )
 
         if (isGlob && !exportsFiles.length) {
           messages.push({
