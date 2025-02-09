@@ -496,3 +496,10 @@ export function replaceLast(str, search, replace) {
   if (index === -1) return str
   return str.slice(0, index) + replace + str.slice(index + search.length)
 }
+
+/**
+ * @param {string} code
+ */
+export function startsWithNodeShebang(code) {
+  return code.startsWith('#!/usr/bin/env node')
+}

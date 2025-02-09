@@ -38,7 +38,7 @@ testFixture('invalid-jsx-extensions', [
 ])
 
 testFixture('missing-files', [
-  ...Array(8).fill('FILE_DOES_NOT_EXIST'),
+  ...Array(9).fill('FILE_DOES_NOT_EXIST'),
   'FILE_NOT_PUBLISHED',
   'USE_EXPORTS_OR_IMPORTS_BROWSER',
 ])
@@ -192,6 +192,8 @@ testFixture('invalid-repository-value-object-deprecated', [
     type: 'suggestion',
   },
 ])
+
+testFixture('bin-file-missing-node-shebang', ['BIN_FILE_MISSING_NODE_SHEBANG'])
 
 /**
  * @typedef {{

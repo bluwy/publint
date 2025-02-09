@@ -184,6 +184,9 @@ function messageToString(m, pkg) {
     case 'LOCAL_DEPENDENCY':
       // prettier-ignore
       return `This dependency references a local package that will likely not work when installed by end-users.`
+    case 'BIN_FILE_MISSING_NODE_SHEBANG':
+      // prettier-ignore
+      return `${bold(pv(m.path))} does not start with ${bold('#!/usr/bin/env node')}.`
     default:
       return
   }

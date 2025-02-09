@@ -120,6 +120,7 @@ export type Message =
       }
     >
   | BaseMessage<'LOCAL_DEPENDENCY'>
+  | BaseMessage<'BIN_FILE_MISSING_NODE_SHEBANG'>
 
 export interface PackFile {
   name: string
