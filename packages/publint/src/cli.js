@@ -64,6 +64,15 @@ cli
   .option('-P, --prod', 'Only check dependencies')
   .option('-D, --dev', 'Only check devDependencies')
   .action(async (dir, opts) => {
+    console.log(
+      c.bold(
+        c.yellow(
+          'The `publint deps` command is deprecated. You can use a different tool to run `publint` in dependencies instead. ' +
+            'e.g. `npx renoma --filter-rules "publint"`',
+        ),
+      ),
+    )
+
     opts = normalizeOpts(opts)
 
     const pkgDir = dir ? path.resolve(dir) : process.cwd()
