@@ -28,6 +28,10 @@
     "overrides": {
       "prettier": "$prettier",
       "unconfig": "npm:@bluwy/unconfig@^0.6.1"
-    }
+    },
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
   }
 }
