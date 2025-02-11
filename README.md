@@ -23,14 +23,11 @@
 ## Usage
 
 ```bash
-# Lint your library project
+# Lint a library project
 $ npx publint
 
-# Lint a dependency
-$ npx publint ./node_modules/some-lib
-
-# Lint your project's dependencies based on package.json
-$ npx publint deps
+# Lint a given path
+$ npx publint ./packages/my-library
 ```
 
 Or try it online at https://publint.dev. For JavaScript usage, see [packages/publint/README.md](./packages/publint/README.md).
