@@ -28,7 +28,7 @@ import {
   isShorthandRepositoryUrl,
   isShorthandGitHubOrGitLabUrl,
   isDeprecatedGitHubGitUrl,
-  startsWithNodeShebang,
+  startsWithShebang,
 } from './utils.js'
 
 /**
@@ -1116,10 +1116,10 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         const binPath = vfs.pathJoin(pkgDir, binValue)
         const binContent = await readFile(binPath, currentPath)
         if (binContent === false) return
-        // Check that file has node shebang
-        if (!startsWithNodeShebang(binContent)) {
+        // Check that file has shebang
+        if (!startsWithShebang(binContent)) {
           messages.push({
-            code: 'BIN_FILE_MISSING_NODE_SHEBANG',
+            code: 'BIN_FILE_NOT_EXECUTABLE',
             args: {},
             path: currentPath,
             type: 'error',

@@ -500,6 +500,6 @@ export function replaceLast(str, search, replace) {
 /**
  * @param {string} code
  */
-export function startsWithNodeShebang(code) {
-  return code.startsWith('#!/usr/bin/env node')
+export function startsWithShebang(code) {
+  return code.startsWith('#!/usr/bin/env')
 }

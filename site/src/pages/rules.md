@@ -275,6 +275,6 @@ An example config that meets these criteria may look like this:
 
 When a dependency with the `file:` or `link:` protocol is used, e.g. `file:../path/to/local/package`, this error is shown as it's likely to not work when installed by end-users. This helps prevent accidentally publishing a package that references local dependencies that were used for testing or debugging.
 
-## `BIN_FILE_MISSING_NODE_SHEBANG`
+## `BIN_FILE_NOT_EXECUTABLE`
 
-Ensure the file referenced in `bin` starts with `#!/usr/bin/env node` so that the script is run using Node.js. See [package.json#bin](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#bin).
+Ensure the file referenced in `bin` starts with `#!/usr/bin/env` so that the script is executable. See [package.json#bin](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#bin).
