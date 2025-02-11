@@ -193,7 +193,7 @@ testFixture('invalid-repository-value-object-deprecated', [
   },
 ])
 
-testFixture('bin-file-missing-node-shebang', ['BIN_FILE_NOT_EXECUTABLE'])
+testFixture('bin-file-missing-shebang', ['BIN_FILE_NOT_EXECUTABLE'])
 
 /**
  * @typedef {{
