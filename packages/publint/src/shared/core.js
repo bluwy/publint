@@ -1114,7 +1114,10 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     if (typeof binValue === 'string') {
       promiseQueue.push(async () => {
         const binPath = vfs.pathJoin(pkgDir, binValue)
-        const binContent = await readFile(binPath, currentPath)
+        const binContent = await readFile(binPath, currentPath, [
+          '.js',
+          '/index.js',
+        ])
         if (binContent === false) return
         // Skip checks if file is not lintable
         if (!isFilePathLintable(binValue)) return
