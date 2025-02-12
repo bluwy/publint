@@ -4,7 +4,7 @@ export default {
     version: '0.0.1',
     private: true,
     type: 'commonjs',
-    bin: 'cli.js',
+    bin: 'cli',
   }),
-  'cli.js': "console.log('foo')",
+  cli: '',
 }

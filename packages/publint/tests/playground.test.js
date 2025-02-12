@@ -195,6 +195,8 @@ testFixture('invalid-repository-value-object-deprecated', [
 
 testFixture('bin-file-missing-shebang', ['BIN_FILE_NOT_EXECUTABLE'])
 
+testFixture('bin-file-not-lintable', [])
+
 /**
  * @typedef {{
  *  level?: import('../src/index.d.ts').Options['level']
