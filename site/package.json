@@ -24,11 +24,11 @@
     "@unocss/extractor-svelte": "^65.4.3",
     "@unocss/preset-uno": "^65.4.3",
     "@unocss/vite": "^65.4.3",
-    "astro": "^5.2.5",
+    "astro": "^5.2.6",
     "fs-fixture": "^2.7.0",
     "rehype-autolink-headings": "^7.1.0",
-    "svelte": "^5.19.7",
-    "vite": "^6.0.11",
+    "svelte": "^5.19.10",
+    "vite": "^6.1.0",
     "vite-plugin-cloudflare-redirect": "^1.0.0"
   }
 }
