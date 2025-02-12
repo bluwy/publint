@@ -277,4 +277,12 @@ When a dependency with the `file:` or `link:` protocol is used, e.g. `file:../pa
 
 ## `BIN_FILE_NOT_EXECUTABLE`
 
-Ensure the file referenced in `bin` starts with `#!/usr/bin/env` so that the script is executable. See [package.json#bin](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#bin).
+Ensure the file referenced in the `"bin"` field starts with a shebang, e.g. `#!/usr/bin/env node`, so that the script is executable. See [package.json#bin](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#bin) for more information.
+
+For example, the bin file should look like this:
+
+```js
+#!/usr/bin/env node
+
+console.log('CLI is running')
+```

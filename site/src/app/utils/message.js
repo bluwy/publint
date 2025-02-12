@@ -186,7 +186,7 @@ function messageToString(m, pkg) {
       return `This dependency references a local package that will likely not work when installed by end-users.`
     case 'BIN_FILE_NOT_EXECUTABLE':
       // prettier-ignore
-      return `${bold(pv(m.path))} does not start with ${bold('#!/usr/bin/env')}.`
+      return `This bin file is not executable. It should start with a shebang, e.g. ${bold('#!/usr/bin/env node')}.`
     default:
       return
   }
