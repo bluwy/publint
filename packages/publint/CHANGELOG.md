@@ -1,5 +1,13 @@
 # publint
 
+## 0.3.5
+
+### Patch Changes
+
+- Check the `"bin"` field if the referenced file exists, has the correct JS format, and can be executed ([#150](https://github.com/publint/publint/pull/150))
+
+- Deprecate the `deps` command. The command has been tricky to maintain and incomplete (e.g. doesn't lint recursively). A separate tool can be used to run publint on dependencies instead, e.g. `npx renoma --filter-rules "publint"`. ([#149](https://github.com/publint/publint/pull/149))
+
 ## 0.3.4
 
 ### Patch Changes
