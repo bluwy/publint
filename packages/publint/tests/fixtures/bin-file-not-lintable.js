@@ -1,6 +1,6 @@
 export default {
   'package.json': JSON.stringify({
-    name: 'publint-bin-file-missing-shebang',
+    name: 'publint-bin-not-lintable',
     version: '0.0.1',
     private: true,
     type: 'commonjs',
