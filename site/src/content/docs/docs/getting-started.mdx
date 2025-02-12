@@ -1,0 +1,111 @@
+---
+title: Getting started
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components'
+
+`publint` is a [linter](<https://en.wikipedia.org/wiki/Lint_(software)>) that checks [npm](https://npmjs.com) packages for compatibility issues across environments, such as [Vite](https://vite.dev), [Webpack](https://webpack.js.org), [Rollup](https://rollupjs.org), [Node.js](https://nodejs.org), etc. It also reports best practices and common configuration mistakes that aims to improve the overall quality of the package.
+
+## Installation
+
+You can use `publint` online at [publint.dev](https://publint.dev) (this website!) or install it locally, if you prefer to run it in CI or before publishing your package.
+
+<Tabs syncKey="pm">
+<TabItem label="npm">
+
+```bash
+npm install --save-dev publint
+```
+
+</TabItem>
+<TabItem label="pnpm">
+
+```bash
+pnpm add --save-dev publint
+```
+
+</TabItem>
+<TabItem label="yarn">
+
+```bash
+yarn add --dev publint
+```
+
+</TabItem>
+</Tabs>
+
+Then, setup a script to execute `publint` in your `package.json`:
+
+```json title="package.json"
+{
+  "scripts": {
+    "publint": "publint"
+  }
+}
+```
+
+And run the `publint` script with your package manager:
+
+<Tabs syncKey="pm">
+<TabItem label="npm">
+
+```bash
+npm run publint
+```
+
+</TabItem>
+<TabItem label="pnpm">
+
+```bash
+pnpm publint
+```
+
+</TabItem>
+<TabItem label="yarn">
+
+```bash
+yarn publint
+```
+
+</TabItem>
+</Tabs>
+
+You can also run a one-off check in your project like so:
+
+<Tabs syncKey="pm">
+<TabItem label="npm">
+
+```bash
+npx publint
+```
+
+</TabItem>
+<TabItem label="pnpm">
+
+```bash
+pnpm dlx publint
+```
+
+</TabItem>
+<TabItem label="yarn">
+
+```bash
+yarn dlx publint
+```
+
+</TabItem>
+</Tabs>
+
+If you'd like to lint a package in a different directory, you can pass the path as an argument, like `publint ./dir`. See the [CLI documentation](/docs/cli) for more information.
+
+If you'd like to use `publint` programmatically, check out the [JavaScript API documentation](/docs/javascript-api).
+
+:::note
+If the package has a build step, it must be run first before running `publint` so that it can lint against the files to be published.
+:::
+
+## IDE integrations
+
+`publint` can also be used in your IDE that lints as you write code.
+
+- [vscode-publint](https://github.com/kravetsone/vscode-publint) ([Marketplace](https://marketplace.visualstudio.com/items?itemName=kravets.vscode-publint))

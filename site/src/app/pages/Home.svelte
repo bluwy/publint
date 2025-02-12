@@ -27,9 +27,9 @@
     <Logo />
     <NpmSearchInput autofocus />
     <p class="my-8">
-      <a class="anchor-link" href="#docs">How it works</a>
+      <a class="anchor-link" href="/docs/">Docs</a>
       <strong class="inline-block mx-1">·</strong>
-      <a class="anchor-link" href="/rules.html">Lint rules</a>
+      <a class="anchor-link" href="/rules">Lint rules</a>
       <strong class="inline-block mx-1">·</strong>
       <a class="anchor-link" href="https://github.com/publint/publint">GitHub</a
       >

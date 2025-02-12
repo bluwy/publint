@@ -1,0 +1,60 @@
+/* Dark mode colors. */
+:root {
+  --sl-color-accent-low: #2f2012;
+  --sl-color-accent: #915c22;
+  --sl-color-accent-high: #d9c4b3;
+  --sl-color-white: #ffffff;
+  --sl-color-gray-1: #eeeeee;
+  --sl-color-gray-2: #c2c2c2;
+  --sl-color-gray-3: #8b8b8b;
+  --sl-color-gray-4: #585858;
+  --sl-color-gray-5: #383838;
+  --sl-color-gray-6: #272727;
+  --sl-color-black: #181818;
+}
+/* Light mode colors. */
+:root[data-theme='light'] {
+  --sl-color-accent-low: #e3d4c6;
+  --sl-color-accent: #935e24;
+  --sl-color-accent-high: #442c15;
+  --sl-color-white: #181818;
+  --sl-color-gray-1: #272727;
+  --sl-color-gray-2: #383838;
+  --sl-color-gray-3: #585858;
+  --sl-color-gray-4: #8b8b8b;
+  --sl-color-gray-5: #c2c2c2;
+  --sl-color-gray-6: #eeeeee;
+  --sl-color-gray-7: #f6f6f6;
+  --sl-color-black: #ffffff;
+}
+
+/* remove indents in sidebar items. the dimmer opacity already conveys it. */
+#starlight__sidebar li {
+  margin-inline-start: 0;
+  padding-inline-start: 0;
+  border-inline-start: 0;
+}
+
+/* align text among sidebar on the same line */
+#_top {
+  margin-top: 0;
+  line-height: 1;
+}
+#starlight__on-this-page {
+  margin-top: 0.5rem;
+  line-height: 1;
+}
+
+.site-title {
+  gap: 0.6rem;
+}
+
+.site-title > img {
+  height: 30px;
+  transform: translateY(2px);
+}
+
+/* todo */
+a.anchor {
+  display: none;
+}

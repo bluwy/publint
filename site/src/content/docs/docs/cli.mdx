@@ -1,0 +1,28 @@
+---
+title: Command line interface
+---
+
+Run `publint --help` to see the available options.
+
+```bash
+vite-plugin-publint-help
+```
+
+## Common usage
+
+```bash
+# Run publint on the current directory
+publint
+
+# Run publint on a specific directory
+publint ./directory
+
+# Ignore suggestions (only show warnings and errors)
+publint --level warning
+
+# Treat warnings as errors
+publint --strict
+
+# Use a specific package manager to pack the package (default auto-detects)
+publint --pack npm
+```
