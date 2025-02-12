@@ -9,6 +9,8 @@ export default {
     typings: "./doesn't-exist.d.ts",
     exports: {
       './*.js': './lib/*.js',
+      './internal.js': null,
+      './internal-dir/*': null,
       './browser': {
         browser: './lib/foo.js',
       },
@@ -43,6 +45,10 @@ export default {
     'cjs.js': "module.exports = 'foo'",
     'foo.js': "export const foo = 'foo'",
     'publish-excluded.js': '',
+    'internal.js': "export const internal = 'internal'",
+    'internal-dir': {
+      'index.js': "export const internalDir = 'internalDir'",
+    },
   },
   types: {
     'dual-extension': {

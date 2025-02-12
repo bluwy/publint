@@ -37,6 +37,8 @@ JSX extensions such as `.cjsx`, `.mjsx`, `.ctsx`, and `.mtsx` are invalid and ar
 
 The specified file does not exist.
 
+> NOTE: This triggers for all `@types/*` packages `"main"` field because it [sets an empty string](https://github.com/microsoft/DefinitelyTyped-tools/blob/b9601d3b849eafcb802d040cb8200eeeabae0028/packages/publisher/src/generate-packages.ts#L133). It's unclear whether it's intentional, but it should be safe to remove and not affect anything in practice. Keeping it may be confusing or misleading.
+
 ## `FILE_NOT_PUBLISHED`
 
 The specified file exists locally but isn't published to npm. This error only appears when running `publint` locally.
@@ -71,9 +73,7 @@ Ensure the `"module"` condition comes before the `"require"` condition. Due to t
 
 ## `EXPORTS_TYPES_SHOULD_BE_FIRST`
 
-Ensure `"types"` condition to be the first. The [TypeScript docs](https://www.typescriptlang.org/docs/handbook/esm-node.html#packagejson-exports-imports-and-self-referencing) recommends so, but it's also because the `"exports"` field is order-based.
-
-For example, a scenario where both the `"types"` and `"import"` condition could be active, `"types"` should be first so that it matches and returns a `.d.ts` file, rather than a `.js` file from the `"import"` condition.
+Ensure `"types"` condition to be the first. As `"exports"` conditions are order-sensitive, in order for TypeScript to be able to resolve the types first, the `"types"` condition should be the first condition before any other JS exports. See the [TypeScript docs](https://www.typescriptlang.org/docs/handbook/modules/reference.html#packagejson-exports) for more information.
 
 ## `TYPES_NOT_EXPORTED`
 
@@ -90,6 +90,10 @@ The root `"types"` field is ignored to respect the `"exports"` field module reso
 This message may also provide helpful hints depending on the types format, which is explained below.
 
 ## `EXPORT_TYPES_INVALID_FORMAT`
+
+Renamed to [EXPORTS_TYPES_INVALID_FORMAT](#exports_types_invalid_format).
+
+## `EXPORTS_TYPES_INVALID_FORMAT`
 
 Since TypeScript 5.0, it has emphasized that type files (`*.d.ts`) are also affected by its ESM and CJS context, and both contexts affect how the exported types is interpreted. This means that you can't share a single type file for both ESM and CJS exports of your library. You need to have two type files (albeit largely similar contents) when dual-publishing your library.
 
@@ -270,3 +274,15 @@ An example config that meets these criteria may look like this:
 ## `LOCAL_DEPENDENCY`
 
 When a dependency with the `file:` or `link:` protocol is used, e.g. `file:../path/to/local/package`, this error is shown as it's likely to not work when installed by end-users. This helps prevent accidentally publishing a package that references local dependencies that were used for testing or debugging.
+
+## `BIN_FILE_NOT_EXECUTABLE`
+
+Ensure the file referenced in the `"bin"` field starts with a shebang, e.g. `#!/usr/bin/env node`, so that the script is executable. See [package.json#bin](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#bin) for more information.
+
+For example, the bin file should look like this:
+
+```js
+#!/usr/bin/env node
+
+console.log('CLI is running')
+```

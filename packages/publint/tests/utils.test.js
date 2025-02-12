@@ -159,16 +159,26 @@ test('isShorthandGitHubOrGitLabUrl', () => {
 })
 
 test('isShortHandRepositoryUrl', () => {
-  expect(isShorthandRepositoryUrl('user/project')).toEqual(true)
-  expect(isShorthandRepositoryUrl('github:user/project')).toEqual(true)
-  expect(isShorthandRepositoryUrl('gist:11081aaa281')).toEqual(true)
-  expect(isShorthandRepositoryUrl('bitbucket:user/project')).toEqual(true)
-  expect(isShorthandRepositoryUrl('gitlab:user/project')).toEqual(true)
+  const f = isShorthandRepositoryUrl // shorten to please prettier
+  expect(f('user/project')).toEqual(true)
+  expect(f('github:user/project')).toEqual(true)
+  expect(f('gist:11081aaa281')).toEqual(true)
+  expect(f('bitbucket:user/project')).toEqual(true)
+  expect(f('gitlab:user/project')).toEqual(true)
 
-  expect(isShorthandRepositoryUrl('foobar')).toEqual(false)
-  expect(isShorthandRepositoryUrl('https://github.com/user/project')).toEqual(
-    false,
-  )
+  expect(f('us-er/project')).toEqual(true)
+  expect(f('user/pro-ject')).toEqual(true)
+  expect(f('us.er/project')).toEqual(true)
+  expect(f('user/pro.ject')).toEqual(true)
+  expect(f('us.-er/pro.-ject')).toEqual(true)
+  expect(f('github:us-er/project')).toEqual(true)
+  expect(f('github:user/pro-ject')).toEqual(true)
+  expect(f('github:us.er/project')).toEqual(true)
+  expect(f('github:user/pro.ject')).toEqual(true)
+  expect(f('github:us.-er/pro.-ject')).toEqual(true)
+
+  expect(f('foobar')).toEqual(false)
+  expect(f('https://github.com/user/project')).toEqual(false)
 })
 
 test('stripComments', () => {

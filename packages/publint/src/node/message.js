@@ -68,10 +68,10 @@ export function formatMessage(m, pkg, opts = {}) {
       return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but the file is not published. Is it specified in ${c.bold('pkg.files')}?`
     case 'HAS_ESM_MAIN_BUT_NO_EXPORTS':
       // prettier-ignore
-      return `${c.bold('pkg.main')} is an ESM file, but it is usually better to use ${c.bold('pkg.exports')} instead. If you don't support NodeJS 12.6 and below, you can also remove ${c.bold('pkg.main')}. (This will be a breaking change)`
+      return `${c.bold('pkg.main')} is an ESM file, but it is usually better to use ${c.bold('pkg.exports')} instead. If you don't support Node.js 12.6 and below, you can also remove ${c.bold('pkg.main')}. (This will be a breaking change)`
     case 'HAS_MODULE_BUT_NO_EXPORTS':
       // prettier-ignore
-      return `${c.bold('pkg.module')} is used to output ESM, but ${c.bold('pkg.exports')} is not defined. As NodeJS doesn't read ${c.bold('pkg.module')}, the ESM output may be skipped. Consider adding ${c.bold('pkg.exports')} to export the ESM output. ${c.bold('pkg.module')} can usually be removed alongside too. (This will be a breaking change)`
+      return `${c.bold('pkg.module')} is used to output ESM, but ${c.bold('pkg.exports')} is not defined. As Node.js doesn't read ${c.bold('pkg.module')}, the ESM output may be skipped. Consider adding ${c.bold('pkg.exports')} to export the ESM output. ${c.bold('pkg.module')} can usually be removed alongside too. (This will be a breaking change)`
     case 'MODULE_SHOULD_BE_ESM':
       // prettier-ignore
       return `${c.bold('pkg.module')} should be ESM, but the code is written in CJS.`
@@ -83,7 +83,7 @@ export function formatMessage(m, pkg, opts = {}) {
       return `${c.bold(fp(m.path))} maps to a path that ends with ${c.bold('/')} which is deprecated. Use ${c.bold(fp(m.args.expectPath))}: "${c.bold(m.args.expectValue)}" instead.`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
-      return `${c.bold(fp(m.path))} should be the first in the object as required by TypeScript.`
+      return `${c.bold(fp(m.path))} should be the first in the object as conditions are order-sensitive so it can be resolved by TypeScript.`
     case 'EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE': {
       // prettier-ignore
       return `${c.bold(fp(m.path))} should come before the "require" condition so it can take precedence when used by a bundler.`
@@ -114,7 +114,7 @@ export function formatMessage(m, pkg, opts = {}) {
       return `The package ${c.bold('publishes internal tests or config files')}. You can use ${c.bold('pkg.files')} to only publish certain files and save user bandwidth.`
     case 'USE_TYPE':
       // prettier-ignore
-      return `The package does not specify the ${c.bold('"type"')} field. NodeJS may attempt to detect the package type causing a small performance hit. Consider adding ${c.bold('"type"')}: "${c.bold('commonjs')}".`
+      return `The package does not specify the ${c.bold('"type"')} field. Node.js may attempt to detect the package type causing a small performance hit. Consider adding ${c.bold('"type"')}: "${c.bold('commonjs')}".`
     case 'USE_LICENSE':
       // prettier-ignore
       return `The package does not specify the ${c.bold('"license"')} field but a license file was detected at ${c.bold(m.args.licenseFilePath)}. Consider adding a ${c.bold('"license"')} field so it's displayed on npm.`
@@ -130,7 +130,7 @@ export function formatMessage(m, pkg, opts = {}) {
         return `${c.bold(fp(m.path))} types is not exported. Consider adding ${c.bold(fp(m.path) + '.types')}: "${c.bold(typesFilePath)}" to be compatible with TypeScript's ${c.bold('"moduleResolution": "bundler"')} compiler option.`
       }
     }
-    case 'EXPORT_TYPES_INVALID_FORMAT': {
+    case 'EXPORTS_TYPES_INVALID_FORMAT': {
       // convert ['exports', 'types'] -> ['exports', '<condition>', 'types']
       // convert ['exports', 'types', 'node'] -> ['exports', 'types', 'node', '<condition>']
       const expectPath = m.path.slice()
@@ -204,6 +204,9 @@ export function formatMessage(m, pkg, opts = {}) {
     case 'LOCAL_DEPENDENCY':
       // prettier-ignore
       return `The "${c.bold(m.path[m.path.length - 1])}" dependency references "${c.bold(pv(m.path))}" that will likely not work when installed by end-users.`
+    case 'BIN_FILE_NOT_EXECUTABLE':
+      // prettier-ignore
+      return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but the file is not executable. It should start with shebang, e.g. ${c.bold('#!/usr/bin/env node')}.`
     default:
       return
   }

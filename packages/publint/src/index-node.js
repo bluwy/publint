@@ -10,6 +10,8 @@ import { createTarballVfs } from './shared/vfs-tarball.js'
  */
 export async function publint(options) {
   const pack = options?.pack ?? 'auto'
+  // @ts-expect-error internal property passed from cli.js
+  const log = options?._log ?? false
 
   /** @type {import('./shared/core.js').Vfs} */
   let vfs
@@ -33,9 +35,13 @@ export async function publint(options) {
   else {
     if (pack !== false) {
       const pkgDir = options?.pkgDir ?? process.cwd()
-      packedFiles = await detectAndPack(pkgDir, pack)
+      packedFiles = await detectAndPack(pkgDir, pack, log)
     }
     vfs = createNodeVfs()
+  }
+
+  if (log) {
+    console.log('Linting...')
   }
 
   return core({
@@ -55,8 +61,9 @@ export async function publint(options) {
 /**
  * @param {string} pkgDir
  * @param {ExtractStringLiteral<import('./index.d.ts').Options['pack']>} pack
+ * @param {boolean} log
  */
-async function detectAndPack(pkgDir, pack) {
+async function detectAndPack(pkgDir, pack, log) {
   let packageManager = pack
 
   if (packageManager === 'auto') {
@@ -83,6 +90,10 @@ async function detectAndPack(pkgDir, pack) {
         `it is also being executed in the "${process.env.npm_lifecycle_event}" lifecycle event, ` +
         `which causes an infinite loop. Try to run publint outside of the lifecycle event instead.`,
     )
+  }
+
+  if (log) {
+    console.log(`Packing files with \`${packageManager} pack\`...`)
   }
 
   const list = await packAsList(pkgDir, { packageManager, ignoreScripts: true })

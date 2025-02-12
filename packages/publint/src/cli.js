@@ -33,8 +33,30 @@ cli
     opts = normalizeOpts(opts)
 
     const pkgDir = dir ? path.resolve(dir) : process.cwd()
-    const logs = await lintDir(pkgDir, opts.level, opts.strict, opts.pack)
-    logs.forEach((l) => console.log(l))
+    const packageJson = await getPackageJson(pkgDir).catch(() => {
+      console.log(c.red(`Unable to read package.json at ${pkgDir}`))
+      process.exitCode = 1
+    })
+    if (packageJson == null) return
+    const { pkgName, pkgJson } = packageJson
+
+    console.log(
+      `Running ${c.bold(`publint v${version}`)} for ${c.bold(pkgName)}...`,
+    )
+
+    const { messages } = await publint({
+      pkgDir,
+      level: opts.level,
+      strict: opts.strict,
+      pack: opts.pack,
+      // @ts-expect-error internal property to log packing progress
+      _log: true,
+    })
+    if (messages.length === 0) {
+      console.log(c.bold(c.green('All good!')))
+    } else {
+      formatMessages(messages, pkgJson).forEach((l) => console.log(l))
+    }
   })
 
 cli
@@ -42,27 +64,40 @@ cli
   .option('-P, --prod', 'Only check dependencies')
   .option('-D, --dev', 'Only check devDependencies')
   .action(async (dir, opts) => {
+    console.log(
+      c.bold(
+        c.yellow(
+          'The `publint deps` command is deprecated. You can use a different tool to run `publint` in dependencies instead. ' +
+            'e.g. `npx renoma --filter-rules "publint"`',
+        ),
+      ),
+    )
+
     opts = normalizeOpts(opts)
 
     const pkgDir = dir ? path.resolve(dir) : process.cwd()
-    const rootPkgContent = await fs
-      .readFile(path.join(pkgDir, 'package.json'), 'utf8')
-      .catch(() => {
-        console.log(c.red(`Unable to read package.json at ${pkgDir}`))
-        process.exitCode = 1
-      })
-    if (!rootPkgContent) return
+    const packageJson = await getPackageJson(pkgDir).catch(() => {
+      console.log(c.red(`Unable to read package.json at ${pkgDir}`))
+      process.exitCode = 1
+    })
+    if (packageJson == null) return
+    const { pkgName, pkgJson } = packageJson
 
-    const rootPkg = JSON.parse(rootPkgContent)
+    console.log(
+      `Running ${c.bold(`publint v${version}`)} for ${c.bold(pkgName)} deps...`,
+    )
+
     /** @type {string[]} */
     const deps = []
-    if (!opts.dev) deps.push(...Object.keys(rootPkg.dependencies || {}))
-    if (!opts.prod) deps.push(...Object.keys(rootPkg.devDependencies || {}))
+    if (!opts.dev) deps.push(...Object.keys(pkgJson.dependencies || {}))
+    if (!opts.prod) deps.push(...Object.keys(pkgJson.devDependencies || {}))
 
     if (deps.length === 0) {
       console.log(c.yellow('No dependencies found'))
       return
     }
+
+    let hasMessages = false
 
     const pq = createPromiseQueue()
     let waitingDepIndex = 0
@@ -84,24 +119,43 @@ cli
     for (let i = 0; i < deps.length; i++) {
       pq.push(async () => {
         const depDir = await findDepPath(deps[i], pkgDir)
-        const logs = depDir
-          ? await lintDir(
-              depDir,
-              opts.level,
-              opts.strict,
-              // Linting dependencies in node_modules also means that the dependency
-              // is already packed, so we don't need to pack it again by passing `false`.
-              // Otherwise if it's a local-linked dependency, we use the pack option.
-              depDir.includes('node_modules') ? false : opts.pack,
-              true,
-            )
-          : []
-        // log this lint result
-        const log = () => {
-          logs.forEach((l, j) => console.log((j > 0 ? '  ' : '') + l))
+        /** @type {Function} */
+        let log = () => {
           waitingDepIndex++
           waitingDepIndexListeners.forEach((cb) => cb())
         }
+
+        if (depDir) {
+          const depPackageJson = await getPackageJson(depDir).catch(() => {
+            console.log(c.red(`Unable to read package.json at ${depDir}`))
+            process.exitCode = 1
+          })
+          if (depPackageJson) {
+            const { pkgName: depPkgName, pkgJson: depPkgJson } = depPackageJson
+            const { messages } = await publint({
+              pkgDir: depDir,
+              level: opts.level,
+              strict: opts.strict,
+              // Linting dependencies in node_modules also means that the dependency
+              // is already packed, so we don't need to pack it again by passing `false`.
+              // Otherwise if it's a local-linked dependency, we use the pack option.
+              pack: depDir.includes('node_modules') ? false : opts.pack,
+            })
+            const logs = formatMessages(messages, depPkgJson)
+            if (messages.length > 0) {
+              logs.unshift(c.bold(`${c.red('x')} ${depPkgName}`))
+              logs.push('') // insert new line so easier to read
+              hasMessages = true
+            }
+
+            log = () => {
+              logs.forEach((l) => console.log(l))
+              waitingDepIndex++
+              waitingDepIndexListeners.forEach((cb) => cb())
+            }
+          }
+        }
+
         // log when it's our turn so that the results are ordered alphabetically,
         // though all deps are linted in parallel
         if (waitingDepIndex === i) {
@@ -118,75 +172,61 @@ cli
     }
 
     await pq.wait()
+
+    if (!hasMessages) {
+      console.log(c.bold(c.green('All good!')))
+    }
   })
 
 cli.parse(process.argv)
 
 /**
  * @param {string} pkgDir
- * @param {import('./index.js').Options['level']} level
- * @param {import('./index.js').Options['strict']} strict
- * @param {import('./index.js').Options['pack']} pack
- * @param {boolean} [compact]
  */
-async function lintDir(pkgDir, level, strict, pack, compact = false) {
+async function getPackageJson(pkgDir) {
+  const pkgJsonPath = path.join(pkgDir, 'package.json')
+  const rootPkgContent = await fs.readFile(pkgJsonPath, 'utf8')
+  const pkgJson = JSON.parse(rootPkgContent)
+  /** @type {string} */
+  const pkgName = pkgJson.name || path.basename(pkgDir)
+  return { pkgName, pkgJson }
+}
+
+/**
+ *
+ * @param {import('./index.d.ts').Message[]} messages
+ * @param {any} pkgJson
+ */
+function formatMessages(messages, pkgJson) {
   /** @type {string[]} */
   const logs = []
 
-  const rootPkgContent = await fs
-    .readFile(path.join(pkgDir, 'package.json'), 'utf8')
-    .catch(() => {
-      logs.push(c.red(`Unable to read package.json at ${pkgDir}`))
-      process.exitCode = 1
-    })
-  if (!rootPkgContent) return logs
-  const rootPkg = JSON.parse(rootPkgContent)
-  const pkgName = rootPkg.name || path.basename(pkgDir)
-  const { messages } = await publint({ pkgDir, level, strict, pack })
-
-  if (messages.length) {
-    const suggestions = messages.filter((v) => v.type === 'suggestion')
-    if (suggestions.length) {
-      logs.push(c.bold(c.blue('Suggestions:')))
-      suggestions.forEach((m, i) =>
-        logs.push(c.dim(`${i + 1}. `) + formatMessage(m, rootPkg)),
-      )
-    }
-
-    const warnings = messages.filter((v) => v.type === 'warning')
-    if (warnings.length) {
-      logs.push(c.bold(c.yellow('Warnings:')))
-      warnings.forEach((m, i) =>
-        logs.push(c.dim(`${i + 1}. `) + formatMessage(m, rootPkg)),
-      )
-    }
-
-    const errors = messages.filter((v) => v.type === 'error')
-    if (errors.length) {
-      logs.push(c.bold(c.red('Errors:')))
-      errors.forEach((m, i) =>
-        logs.push(c.dim(`${i + 1}. `) + formatMessage(m, rootPkg)),
-      )
-      process.exitCode = 1
-    }
-
-    if (compact) {
-      logs.unshift(`${c.red('x')} ${c.bold(pkgName)}`)
-    } else {
-      logs.unshift(`${c.bold(pkgName)} lint results:`)
-    }
-
-    return logs
-  } else {
-    if (compact) {
-      logs.unshift(`${c.green('✓')} ${c.bold(pkgName)}`)
-    } else {
-      logs.unshift(`${c.bold(pkgName)} lint results:`)
-      logs.push(c.bold(c.green('All good!')))
-    }
-
-    return logs
+  const errors = messages.filter((v) => v.type === 'error')
+  if (errors.length) {
+    logs.push(c.bold(c.red('Errors:')))
+    errors.forEach((m, i) =>
+      logs.push(c.dim(`${i + 1}. `) + formatMessage(m, pkgJson)),
+    )
+    process.exitCode = 1
   }
+
+  const warnings = messages.filter((v) => v.type === 'warning')
+  if (warnings.length) {
+    logs.push(c.bold(c.yellow('Warnings:')))
+    warnings.forEach((m, i) =>
+      logs.push(c.dim(`${i + 1}. `) + formatMessage(m, pkgJson)),
+    )
+  }
+
+  const suggestions = messages.filter((v) => v.type === 'suggestion')
+  if (suggestions.length) {
+    logs.push(c.bold(c.blue('Suggestions:')))
+    suggestions.forEach((m, i) =>
+      logs.push(c.dim(`${i + 1}. `) + formatMessage(m, pkgJson)),
+    )
+  }
+
+  return logs
 }
 
 /** @type {import('pnpapi')} */

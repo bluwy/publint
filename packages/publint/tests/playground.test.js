@@ -38,7 +38,7 @@ testFixture('invalid-jsx-extensions', [
 ])
 
 testFixture('missing-files', [
-  ...Array(8).fill('FILE_DOES_NOT_EXIST'),
+  ...Array(9).fill('FILE_DOES_NOT_EXIST'),
   'FILE_NOT_PUBLISHED',
   'USE_EXPORTS_OR_IMPORTS_BROWSER',
 ])
@@ -132,7 +132,7 @@ testFixture('types-exports-resolution', [])
 testFixture('types-exports-resolution-cjs', [])
 
 testFixture('types-exports-resolution-cjs-explicit', [
-  'EXPORT_TYPES_INVALID_FORMAT',
+  'EXPORTS_TYPES_INVALID_FORMAT',
 ])
 
 testFixture('types-exports-resolution-dual', [
@@ -141,8 +141,15 @@ testFixture('types-exports-resolution-dual', [
 ])
 
 testFixture('types-exports-resolution-dual-explicit', [
-  'EXPORT_TYPES_INVALID_FORMAT',
+  'EXPORTS_TYPES_INVALID_FORMAT',
 ])
+
+testFixture('types-exports-resolution-custom-conditions', [
+  'EXPORTS_TYPES_INVALID_FORMAT',
+  'EXPORTS_TYPES_INVALID_FORMAT',
+])
+
+testFixture('types-exports-versioned', [])
 
 testFixture('types-versions', [])
 
@@ -185,6 +192,10 @@ testFixture('invalid-repository-value-object-deprecated', [
     type: 'suggestion',
   },
 ])
+
+testFixture('bin-file-missing-shebang', ['BIN_FILE_NOT_EXECUTABLE'])
+
+testFixture('bin-file-not-lintable', [])
 
 /**
  * @typedef {{

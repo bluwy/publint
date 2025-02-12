@@ -91,7 +91,7 @@ export function isDeprecatedGitHubGitUrl(url) {
 
 // Reference: https://docs.npmjs.com/cli/v10/configuring-npm/package-json#repository
 const SHORTHAND_REPOSITORY_URL_RE =
-  /^(?:(?:github|bitbucket|gitlab):[\w\-]+\/[\w\-/]+|gist:\w+|[\w\-]+\/[\w\-]+)$/
+  /^(?:(?:github|bitbucket|gitlab):[^/]+\/.+|gist:.+|[^/]+\/[^/]+)$/
 /**
  * @param {string} url
  */
@@ -128,9 +128,17 @@ export function getCodeFormat(code) {
  * @param {string} globStr An absolute glob string that must contain one `*`
  * @param {import('./core.js').Vfs} vfs
  * @param {string[]} [packedFiles]
+ * @param {string} [exportsKey]
+ * @param {Record<string, any>} [exports]
  * @returns {Promise<string[]>} Matched file paths
  */
-export async function exportsGlob(globStr, vfs, packedFiles) {
+export async function exportsGlob(
+  globStr,
+  vfs,
+  packedFiles,
+  exportsKey,
+  exports,
+) {
   /** @type {string[]} */
   const filePaths = []
   const globStrRe = new RegExp(
@@ -138,6 +146,20 @@ export async function exportsGlob(globStr, vfs, packedFiles) {
   )
   // the longest directory that doesn't contain `*`
   const topDir = globStr.split('*')[0].match(/(.+)[/\\]/)?.[1]
+  // compute an array of regexes that are marked `null` in the `exports` field.
+  // these keys will be matched later on to ensure they are not included in the final result.
+  // note: may need to consider in the future if conditions should be taken into account.
+  /** @type {RegExp[]} */
+  const excludedExportKeys = []
+  if (exportsKey && exports) {
+    for (const key in exports) {
+      if (exports[key] === null) {
+        excludedExportKeys.push(
+          new RegExp(`^${key.split('*').map(escapeRegExp).join('(.+)')}$`),
+        )
+      }
+    }
+  }
 
   // TODO: maybe error if no topDir?
   if (topDir && (await vfs.isPathDir(topDir))) {
@@ -149,9 +171,11 @@ export async function exportsGlob(globStr, vfs, packedFiles) {
    * @param {string} dirPath
    */
   async function scanDir(dirPath) {
+    // TODO: flatten this function body
     const items = await vfs.readDir(dirPath)
     for (const item of items) {
       const itemPath = vfs.pathJoin(dirPath, item)
+      // ensure the file is within the packed files (if provided)
       if (
         !packedFiles ||
         packedFiles.some((file) => file.startsWith(itemPath))
@@ -160,9 +184,9 @@ export async function exportsGlob(globStr, vfs, packedFiles) {
           await scanDir(itemPath)
         } else {
           const matched = slash(itemPath).match(globStrRe)
-          // if have multiple `*`, all matched should be the same because the key
-          // can only have one `*`
           if (matched) {
+            // if have multiple `*`, all matched should be the same because the key
+            // can only have one `*`
             if (matched.length > 2) {
               let allGlobSame = true
               for (let i = 2; i < matched.length; i++) {
@@ -171,12 +195,23 @@ export async function exportsGlob(globStr, vfs, packedFiles) {
                   break
                 }
               }
-              if (allGlobSame) {
-                filePaths.push(itemPath)
+              if (!allGlobSame) {
+                continue // skip this file because it doesn't match the glob
               }
-            } else {
-              filePaths.push(itemPath)
             }
+            // lastly, also make sure that the matched file is not excluded by
+            // exports keys that are marked null. we detect that by replacing the
+            // matched `*` result back to the exports key, and make sure it doesn't
+            // match any of the excludedExportsKeys.
+            if (exportsKey && exports && excludedExportKeys.length) {
+              const replacedExportsKey = exportsKey.replace('*', matched[1])
+              if (
+                excludedExportKeys.some((re) => re.test(replacedExportsKey))
+              ) {
+                continue
+              }
+            }
+            filePaths.push(itemPath)
           }
         }
       }
@@ -423,49 +458,30 @@ export function isDtsFile(filePath) {
 /**
  * simplified `exports` field resolver that expects `exportsValue` to be the path value directly.
  * no path matching will happen. `exportsValue` should be an object that contains only conditions
- * and their values, or a string
+ * and their values, or a string.
+ *
+ * TODO: look into using https://github.com/lukeed/resolve.exports
  * @param {Record<string, any> | string | string[]} exportsValue
  * @param {string[]} conditions
  * @param {string[]} [currentPath] matched conditions while resolving the exports
- * @param {{ dualPublish: boolean }} [_metadata]
- * @returns {{ value: string, path: string[], dualPublish: boolean } | undefined}
+ * @returns {{ value: string, path: string[] } | undefined}
  */
-export function resolveExports(
-  exportsValue,
-  conditions,
-  currentPath = [],
-  _metadata = { dualPublish: false },
-) {
+export function resolveExports(exportsValue, conditions, currentPath = []) {
   if (typeof exportsValue === 'string') {
     // prettier-ignore
-    return { value: exportsValue, path: currentPath, dualPublish: _metadata.dualPublish }
+    return { value: exportsValue, path: currentPath }
   } else if (Array.isArray(exportsValue)) {
-    return resolveExports(
-      exportsValue[0],
-      conditions,
-      currentPath.concat('0'),
-      _metadata,
-    )
-  }
-
-  // while traversing the exports object, also keep info it the path we're traversing
-  // intends to dual export. helpful for better logging heuristics.
-  if (
-    _metadata.dualPublish === false &&
-    'import' in exportsValue &&
-    'require' in exportsValue
-  ) {
-    _metadata.dualPublish = true
+    return resolveExports(exportsValue[0], conditions, currentPath.concat('0'))
   }
 
   for (const key in exportsValue) {
     if (conditions.includes(key) || key === 'default') {
-      return resolveExports(
+      const result = resolveExports(
         exportsValue[key],
         conditions,
         currentPath.concat(key),
-        _metadata,
       )
+      if (result || key === 'default') return result
     }
   }
 }
@@ -479,4 +495,11 @@ export function replaceLast(str, search, replace) {
   const index = str.lastIndexOf(search)
   if (index === -1) return str
   return str.slice(0, index) + replace + str.slice(index + search.length)
+}
+
+/**
+ * @param {string} code
+ */
+export function startsWithShebang(code) {
+  return code.startsWith('#!/usr/bin/env')
 }

@@ -1,5 +1,68 @@
 # publint
 
+## 0.3.5
+
+### Patch Changes
+
+- Check the `"bin"` field if the referenced file exists, has the correct JS format, and can be executed ([#150](https://github.com/publint/publint/pull/150))
+
+- Deprecate the `deps` command. The command has been tricky to maintain and incomplete (e.g. doesn't lint recursively). A separate tool can be used to run publint on dependencies instead, e.g. `npx renoma --filter-rules "publint"`. ([#149](https://github.com/publint/publint/pull/149))
+
+## 0.3.4
+
+### Patch Changes
+
+- When globbing `"exports"` values that contains `*`, also respect `"exports"` keys that mark paths as null. For example: ([`b9605ae`](https://github.com/publint/publint/commit/b9605ae17be4370be65fd584f8aada26e7236799))
+
+  ```json
+  {
+    "exports": {
+      "./*": "./dist/*",
+      "./browser/*": null
+    }
+  }
+  ```
+
+  The glob in `"./*": "./dist/*"` will no longer match and lint files in `"./browser/*"` as it's marked null (internal).
+
+- Update logs when running the `publint` CLI: ([`58d96a2`](https://github.com/publint/publint/commit/58d96a25ced0d74aa1cc41b98c79bccb663802f9))
+
+  - The `publint` version is now displayed.
+  - The packing command is also displayed.
+  - Messages are now logged in the order of errors, warnings, and suggestions, instead of the other way round, to prioritize errors.
+  - The `publint deps` command no longer logs passing dependencies. Only failing dependencies are logged.
+
+  Examples:
+
+  ```bash
+  $ npx publint
+  $ Running publint v0.X.X for my-library...
+  $ Packing files with `npm pack`...
+  $ All good!
+  ```
+
+  ```bash
+  $ npx publint deps
+  $ Running publint v0.X.X for my-library deps...
+  $ x my-dependency
+  $ Errors:
+  $ 1. ...
+  ```
+
+- Fix detecting shorthand repository URLs with the `.` character ([`09d8cbb`](https://github.com/publint/publint/commit/09d8cbb933a530d1f96eec8d516f9b0a6aa3f7f2))
+
+- Clarify message when `"types"` is not the first condition in the `"exports"` field ([`5a6ba00`](https://github.com/publint/publint/commit/5a6ba00b3d3734b6d9c7b3b2ee6ae22004a358f6))
+
+- Correctly detect if a `"types"` value in `"exports"` is used for dual publishing ([`3f3d8b2`](https://github.com/publint/publint/commit/3f3d8b297359e293dba86a7132764846ab2e2384))
+
+## 0.3.3
+
+### Patch Changes
+
+- Rename `EXPORT_TYPES_INVALID_FORMAT` message to `EXPORTS_TYPES_INVALID_FORMAT` ([#139](https://github.com/publint/publint/pull/139))
+
+- Allow versioned types conditions (e.g. `"types@>=5.2"`) in `"exports"` when checking for `"types"` condition ordering ([#138](https://github.com/publint/publint/pull/138))
+
 ## 0.3.2
 
 ### Patch Changes

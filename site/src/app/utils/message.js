@@ -50,10 +50,10 @@ function messageToString(m, pkg) {
       return `${bold(fp(m.path))} is ${bold(pv(m.path))} but the file is not published. Is it specified in ${bold('pkg.files')}?`
     case 'HAS_ESM_MAIN_BUT_NO_EXPORTS':
       // prettier-ignore
-      return `${bold('pkg.main')} is an ESM file, but it is usually better to use ${bold('pkg.exports')} instead. If you don't support NodeJS 12.6 and below, you can also remove ${bold('pkg.main')}. (This will be a breaking change)`
+      return `${bold('pkg.main')} is an ESM file, but it is usually better to use ${bold('pkg.exports')} instead. If you don't support Node.js 12.6 and below, you can also remove ${bold('pkg.main')}. (This will be a breaking change)`
     case 'HAS_MODULE_BUT_NO_EXPORTS':
       // prettier-ignore
-      return `${bold('pkg.module')} is used to output ESM, but ${bold('pkg.exports')} is not defined. As NodeJS doesn't read ${bold('pkg.module')}, the ESM output may be skipped. Consider adding ${bold('pkg.exports')} to export the ESM output. ${bold('pkg.module')} can usually be removed alongside too. (This will be a breaking change)`
+      return `${bold('pkg.module')} is used to output ESM, but ${bold('pkg.exports')} is not defined. As Node.js doesn't read ${bold('pkg.module')}, the ESM output may be skipped. Consider adding ${bold('pkg.exports')} to export the ESM output. ${bold('pkg.module')} can usually be removed alongside too. (This will be a breaking change)`
     case 'MODULE_SHOULD_BE_ESM':
     case 'EXPORTS_MODULE_SHOULD_BE_ESM':
       // prettier-ignore
@@ -66,7 +66,7 @@ function messageToString(m, pkg) {
       return `${bold(fp(m.path))} maps to a path that ends with ${bold('/')} which is deprecated. Use ${bold(fp(m.args.expectPath))}: "${bold(m.args.expectValue)}" instead.`
     case 'EXPORTS_TYPES_SHOULD_BE_FIRST':
       // prettier-ignore
-      return `Should be the first in the object as required by TypeScript.`
+      return `Should be the first in the object as conditions are order-sensitive so it can be resolved by TypeScript.`
     case 'EXPORTS_MODULE_SHOULD_PRECEDE_REQUIRE': {
       // prettier-ignore
       return `Should come before the "require" condition so it can take precedence when used by a bundler.`
@@ -94,7 +94,7 @@ function messageToString(m, pkg) {
       return `The package ${bold('publishes internal tests or config files')}. You can use ${bold('pkg.files')} to only publish certain files and save user bandwidth.`
     case 'USE_TYPE':
       // prettier-ignore
-      return `The package does not specify the ${bold('"type"')} field. NodeJS may attempt to detect the package type causing a small performance hit. Consider adding ${bold('"type"')}: "${bold('commonjs')}".`
+      return `The package does not specify the ${bold('"type"')} field. Node.js may attempt to detect the package type causing a small performance hit. Consider adding ${bold('"type"')}: "${bold('commonjs')}".`
     case 'USE_LICENSE':
       // prettier-ignore
       return `The package does not specify the ${bold('"license"')} field but a license file was detected at ${bold(m.args.licenseFilePath)}. Consider adding a ${bold('"license"')} field so it's displayed on npm.`
@@ -110,7 +110,7 @@ function messageToString(m, pkg) {
         return `The types is not exported. Consider adding ${bold(fp(m.path) + '.types')}: "${bold(typesFilePath)}" to be compatible with TypeScript's ${bold('"moduleResolution": "bundler"')} compiler option.`
       }
     }
-    case 'EXPORT_TYPES_INVALID_FORMAT': {
+    case 'EXPORTS_TYPES_INVALID_FORMAT': {
       // convert ['exports', 'types'] -> ['exports', '<condition>', 'types']
       // convert ['exports', 'types', 'node'] -> ['exports', 'types', 'node', '<condition>']
       const expectPath = m.path.slice()
@@ -184,6 +184,9 @@ function messageToString(m, pkg) {
     case 'LOCAL_DEPENDENCY':
       // prettier-ignore
       return `This dependency references a local package that will likely not work when installed by end-users.`
+    case 'BIN_FILE_NOT_EXECUTABLE':
+      // prettier-ignore
+      return `This bin file is not executable. It should start with a shebang, e.g. ${bold('#!/usr/bin/env node')}.`
     default:
       return
   }
