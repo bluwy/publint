@@ -1116,6 +1116,9 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
         const binPath = vfs.pathJoin(pkgDir, binValue)
         const binContent = await readFile(binPath, currentPath)
         if (binContent === false) return
+        // Skip checks if file is not lintable
+        if (!isFilePathLintable(binValue)) return
+
         // Check that file has shebang
         if (!startsWithShebang(binContent)) {
           messages.push({
@@ -1125,6 +1128,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
             type: 'error',
           })
         }
+
         // Check format of file
         const actualFormat = getCodeFormat(binContent)
         const expectFormat = await getFilePathFormat(binPath, vfs)
