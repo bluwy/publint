@@ -10,6 +10,8 @@ import { createTarballVfs } from './shared/vfs-tarball.js'
  */
 export async function publint(options) {
   const pack = options?.pack ?? 'auto'
+  // @ts-expect-error internal property passed from cli.js
+  const log = options?._log ?? false
 
   /** @type {import('./shared/core.js').Vfs} */
   let vfs
@@ -33,11 +35,13 @@ export async function publint(options) {
   else {
     if (pack !== false) {
       const pkgDir = options?.pkgDir ?? process.cwd()
-      // @ts-expect-error internal property passed from cli.js
-      const log = options?._log ?? false
       packedFiles = await detectAndPack(pkgDir, pack, log)
     }
     vfs = createNodeVfs()
+  }
+
+  if (log) {
+    console.log('Linting...')
   }
 
   return core({
