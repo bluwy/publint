@@ -204,6 +204,9 @@ export function formatMessage(m, pkg, opts = {}) {
     case 'LOCAL_DEPENDENCY':
       // prettier-ignore
       return `The "${c.bold(m.path[m.path.length - 1])}" dependency references "${c.bold(pv(m.path))}" that will likely not work when installed by end-users.`
+    case 'BIN_FILE_NOT_EXECUTABLE':
+      // prettier-ignore
+      return `${c.bold(fp(m.path))} is ${c.bold(pv(m.path))} but the file is not executable. It should start with shebang, e.g. ${c.bold('#!/usr/bin/env node')}.`
     default:
       return
   }

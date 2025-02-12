@@ -184,6 +184,9 @@ function messageToString(m, pkg) {
     case 'LOCAL_DEPENDENCY':
       // prettier-ignore
       return `This dependency references a local package that will likely not work when installed by end-users.`
+    case 'BIN_FILE_NOT_EXECUTABLE':
+      // prettier-ignore
+      return `This bin file is not executable. It should start with a shebang, e.g. ${bold('#!/usr/bin/env node')}.`
     default:
       return
   }

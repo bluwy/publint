@@ -28,6 +28,7 @@ import {
   isShorthandRepositoryUrl,
   isShorthandGitHubOrGitLabUrl,
   isDeprecatedGitHubGitUrl,
+  startsWithShebang,
 } from './utils.js'
 
 /**
@@ -444,6 +445,12 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
     })
   }
 
+  // check file existence for bin field
+  const [bin, binPkgPath] = getPublishedField(rootPkg, 'bin')
+  if (bin) {
+    crawlBin(bin, binPkgPath)
+  }
+
   await promiseQueue.wait()
 
   if (strict) {
@@ -763,7 +770,7 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
               return
             }
             // file format checks isn't required for `browser` condition or exports
-            // after the node condtion, as nodejs doesn't use it, only bundlers do,
+            // after the node condition, as nodejs doesn't use it, only bundlers do,
             // which doesn't care of the format
             if (isAfterNodeCondition || currentPath.includes('browser')) return
             const actualFormat = getCodeFormat(fileContent)
@@ -1097,5 +1104,62 @@ export async function core({ pkgDir, vfs, level, strict, _packedFiles }) {
       // TODO: handle nested exports key
     }
     return typesFilePath
+  }
+
+  /**
+   * @param {any} binValue
+   * @param {string[]} currentPath
+   */
+  function crawlBin(binValue, currentPath) {
+    if (typeof binValue === 'string') {
+      promiseQueue.push(async () => {
+        const binPath = vfs.pathJoin(pkgDir, binValue)
+        const binContent = await readFile(binPath, currentPath)
+        if (binContent === false) return
+        // Skip checks if file is not lintable
+        if (!isFilePathLintable(binValue)) return
+
+        // Check that file has shebang
+        if (!startsWithShebang(binContent)) {
+          messages.push({
+            code: 'BIN_FILE_NOT_EXECUTABLE',
+            args: {},
+            path: currentPath,
+            type: 'error',
+          })
+        }
+
+        // Check format of file
+        const actualFormat = getCodeFormat(binContent)
+        const expectFormat = await getFilePathFormat(binPath, vfs)
+        if (
+          actualFormat !== expectFormat &&
+          actualFormat !== 'unknown' &&
+          actualFormat !== 'mixed'
+        ) {
+          const actualExtension = vfs.getExtName(binPath)
+          messages.push({
+            code: isExplicitExtension(actualExtension)
+              ? 'FILE_INVALID_EXPLICIT_FORMAT'
+              : 'FILE_INVALID_FORMAT',
+            args: {
+              actualFormat,
+              expectFormat,
+              actualExtension,
+              expectExtension: getCodeFormatExtension(actualFormat),
+            },
+            path: currentPath,
+            type: 'warning',
+          })
+        }
+      })
+    } else if (typeof binValue === 'object') {
+      for (const key in binValue) {
+        const binPath = currentPath.concat(key)
+        // Nested commands are not allowed
+        if (!ensureTypeOfField(binValue[key], ['string'], binPath)) continue
+        crawlBin(binValue[key], binPath)
+      }
+    }
   }
 }

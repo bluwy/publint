@@ -21,6 +21,7 @@ export default {
       './not-published': './not-published.js',
     },
     files: ['package.json'],
+    bin: 'missing.js',
   }),
   'not-published.js': '',
 }
