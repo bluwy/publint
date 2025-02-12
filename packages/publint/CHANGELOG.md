@@ -1,5 +1,11 @@
 # publint
 
+## 0.3.6
+
+### Patch Changes
+
+- Fix checking bin field file path that omits `.js` or `/index.js` ([`04f289e`](https://github.com/publint/publint/commit/04f289ec2a8f9ff6967b7da95c19670825ea062c))
+
 ## 0.3.5
 
 ### Patch Changes
